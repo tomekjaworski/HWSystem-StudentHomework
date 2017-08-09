@@ -1,0 +1,47 @@
+/**
+ * Users.js
+ *
+ * @description :: TODO: You might write a short summary of how this model works and what it represents here.
+ * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
+ */
+
+module.exports = {
+
+    attributes: {
+
+        name: {type: 'string'},
+
+        surname: {type: 'string'},
+
+        email: {
+            type: 'email'
+        },
+
+        password: {type: 'string'},
+
+        salt: {type: 'string'},
+
+        activated: {type: 'boolean'},
+
+        roles: {
+            collection: 'roles',
+            via: 'users'
+        },
+
+        deanGroups: {
+            collection: 'deangroups',
+            via: 'students'
+        },
+
+        labGroups: {
+            collection: 'labgroups',
+            via: 'students'
+        },
+
+        subjects: {
+            collection: 'subjects',
+            via: 'students'
+        }
+    }
+};
+
