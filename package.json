@@ -35,5 +35,8 @@
     "url": "git://github.com/david/Homework.git"
   },
   "author": "david",
-  "license": ""
+  "license": "",
+  "devDependencies": {
+    "grunt-contrib-sass": "^1.0.0"
+  }
 }

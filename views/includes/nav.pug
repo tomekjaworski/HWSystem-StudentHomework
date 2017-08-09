@@ -1,0 +1,35 @@
+.container
+    nav.navbar.navbar-light.bg-faded.rounded.navbar-toggleable-md
+        if isLoggedin === true
+            button.navbar-toggler.navbar-toggler-right(type='button', data-toggle='collapse', data-target='#containerNavbar', aria-controls='containerNavbar', aria-expanded='false', aria-label='Toggle navigation')
+                span.navbar-toggler-icon
+        a.navbar-brand(href='#')= brand
+        if isLoggedin === true
+            #containerNavbar.collapse.navbar-collapse
+                ul.navbar-nav.mr-auto
+                        li.nav-item.active
+                            a.nav-link(href='#')
+                                | Home
+                                span.sr-only (current)
+                        li.nav-item
+                            a.nav-link(href='#') Link
+                        li.nav-item
+                            a.nav-link.disabled(href='#') Disabled
+                        li.nav-item.dropdown
+                            a#dropdown04.nav-link.dropdown-toggle(href='http://example.com', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false') Dropdown
+                            .dropdown-menu(aria-labelledby='dropdown04')
+                                a.dropdown-item(href='#') Action
+                                a.dropdown-item(href='#') Another action
+                                a.dropdown-item(href='#') Something else here
+        else
+            form.form-inline.ml-md-auto.float-right(id='nav-form', action="/index2" type="post")
+                input.form-control.mr-sm-2(type='email', placeholder='Email', id='nav-form-email', style="display: none")
+                input.form-control.mr-sm-2(type='password', placeholder='Password', id='nav-form-pass', style="display: none")
+                input.btn.btn-outline-success.my-2.my-sm-0.l-email(id='nav-form-button', type="button", value="Login")
+            //ul.navbar-nav
+            //    li.nav-item
+            //        a.btn.btn-primary(href='#') Login
+
+            //form.form-inline.my-2.my-md-0
+            //    input.form-control.mr-sm-2(type='text', placeholder='Search')
+            //    button.btn.btn-outline-success.my-2.my-sm-0(type='submit') Search

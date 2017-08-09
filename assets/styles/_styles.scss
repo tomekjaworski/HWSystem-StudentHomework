@@ -1,0 +1,25 @@
+.navbar {
+  margin: 1rem 0;
+}
+.navbar-nav {
+  padding-top: 3px;
+}
+
+// fucking safari
+@media (max-width: 991px) and (min-width: 576px) {
+  #nav-form {
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+  }
+}
+
+@media (min-width: 576px) {
+  #nav-form {
+    height: 2.5rem;
+  }
+}
+
+#nav-form-button {
+  width: 5.5em;
+}
