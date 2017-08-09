@@ -1,0 +1,4 @@
+DB
+    nazwa: homework
+    user: homework
+    password: uP6CStHmy76YhMZS

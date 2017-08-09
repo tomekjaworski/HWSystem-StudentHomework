@@ -1,5 +1,3 @@
-# StudentHomework
-:<
+# Homework
 
-## Stage 1
-Której technologii użyć?
+a [Sails](http://sailsjs.org) application
