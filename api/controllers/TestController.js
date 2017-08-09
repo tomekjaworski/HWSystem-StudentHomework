@@ -32,6 +32,10 @@ module.exports = {
             return res.send(html);
         });
     },
+    login: function (req, res) {
+        req.session.user=1;
+        res.redirect('test/second');
+    },
     second: function (req, res) {
         return res.view('test/second', {title: 'Testsite Loggedin'}, function (err, html) {
 

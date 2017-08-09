@@ -291,18 +291,16 @@ block body
             //
                <h1>Getting started</h1>
                       <p>Don't worry, we've got your back.</p>
-            ul.getting-started
-                li.clearfix
-                    .step
-                        .sprite.one
-                        h3 Testowa strona
-                        p
-                            | Zaloguj się, wejdź
-                            a(href='test/login')  tu
-                li.clearfix
-                    .step
-                        .sprite.two
-                        h3 Testowa strona
-                        p
-                            | Strona z uprawnieniami
-                            a(href='test/second')  tu
+            if error
+                h2= error
+
+            form(method='post', action='/login')
+                div
+                    label(for='email')
+                        | Email:
+                    input(id='email', type='email', name='email', placeholder='email')
+                div
+                    label(for='password')
+                        | Password:
+                    input(id='password', type='password', name='password', placeholder='haslo')
+                input(type='submit')
