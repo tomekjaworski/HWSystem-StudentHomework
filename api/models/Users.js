@@ -41,6 +41,10 @@ const Users = module.exports = {
         subjects: {
             collection: 'subjects',
             via: 'students'
+        },
+
+        fullName: function(){
+            return this.name + ' ' + this.surname;
         }
     }
 };

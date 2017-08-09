@@ -37,6 +37,7 @@ module.exports.routes = {
     },
 
     '/login': 'AccountController.login',
+    'GET /logout': 'AccountController.logout',
 
 
 
