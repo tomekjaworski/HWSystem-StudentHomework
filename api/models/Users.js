@@ -21,7 +21,10 @@ const Users = module.exports = {
 
         salt: {type: 'string'},
 
-        activated: {type: 'boolean'},
+        activated: {
+            type: 'boolean',
+            default: false
+        },
 
         roles: {
             collection: 'roles',

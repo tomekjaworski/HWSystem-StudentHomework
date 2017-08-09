@@ -94,14 +94,39 @@ const AccountController = module.exports = {
      * `AccountController.register()`
      */
     register: function (req, res) {
-        return res.json({
-            todo: 'register() is not implemented yet!'
-        });
+        let data = {title: 'Rejestracja', error: null}
+        switch (req.method) {
+            case 'GET':
+                break;
+            case 'POST':
+                let name = req.param('name'), surname = req.param('surname'), email = req.param('email'),
+                    password = req.param('password');
+                let deangroups = req.param('deangroups'), labgroups = req.param('labgroups'),
+                    subjects = req.param('subjects');
+                if (!name && !surname && !email && !password && !!deangroups && !labgroups && !subjects) {
+                    data.error = 'Proszę uzupełnić wszystkie pola';
+                    break;
+                }
+                User.create({
+                    name: name,
+                    surname: surname,
+                    email: email,
+                    password: password,
+                    salt: "aaaa",
+                    activated: false,
+                    roles: 'rola',
+                    deanGroups: deangroups,
+                    labGroups: labgroups,
+                    subjects: subjects
+                }).exec(function (err) {
+
+                });
+        }
     },
 
     profile: function (req, res){
         return res.json({
-            todo: 'register() is not implemented yet!'
+            todo: 'profile() is not implemented yet!'
         });
     }
 };
