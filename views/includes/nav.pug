@@ -7,25 +7,23 @@
         if localUser
             #containerNavbar.collapse.navbar-collapse
                 ul.navbar-nav.mr-auto
-                        li.nav-item.active
-                            a.nav-link(href='/')
-                                | Home
-                                span.sr-only (current)
-                        li.nav-item
-                            a.nav-link(href='#') Link
-                        li.nav-item
-                            a.nav-link.disabled(href='#') Disabled
-                        li.nav-item.dropdown
-                            a#dropdown04.nav-link.dropdown-toggle(href='http://example.com', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false') Dropdown
-                            .dropdown-menu(aria-labelledby='dropdown04')
-                                a.dropdown-item(href='#') Action
-                                a.dropdown-item(href='#') Another action
-                                a.dropdown-item(href='#') Something else here
+                    li.nav-item
+                        a.nav-link(href='/') Home
+                    li.nav-item.active
+                        a.nav-link(href='/account') Tasks
+                    li.nav-item
+                        a.nav-link.disabled(href='#') Disabled
+                    //-li.nav-item.dropdown
+                        a#dropdown04.nav-link.dropdown-toggle(href='http://example.com', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false') Dropdown
+                        .dropdown-menu(aria-labelledby='dropdown04')
+                            a.dropdown-item(href='#') Action
+                            a.dropdown-item(href='#') Another action
+                            a.dropdown-item(href='#') Something else here
                 ul.navbar-nav.navbar-right
-                        li.nav-item
-                            a.nav-link Witaj #{localUser.fullName()}
-                        li.nav-item
-                            a.btn.btn-danger(href='/logout') Wyloguj
+                    li.nav-item
+                        a.nav-link Witaj #{localUser.fullName()}
+                    li.nav-item
+                        a.btn.btn-danger(href='/logout') Wyloguj
         else
             form.form-inline.ml-md-auto.float-right#nav-form(action='/login' method='post', data-step='0')
                 a.btn.btn-outline-primary.mr-2.l-email#nav-form-register(href='/register') Register

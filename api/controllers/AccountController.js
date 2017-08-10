@@ -79,7 +79,7 @@ const AccountController = module.exports = {
                             return res.redirect(req.param('redirect'));
                         }
                         else {
-                            return res.redirect('/?loginSuccess');
+                            return res.redirect('/account');
                         }
                     }
                     else{
@@ -158,10 +158,8 @@ const AccountController = module.exports = {
         }
     },
 
-    profile: function (req, res){
-        return res.json({
-            todo: 'profile() is not implemented yet!'
-        });
+    index: function (req, res){
+        return res.view('account/index');
     }
 };
 
