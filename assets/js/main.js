@@ -1,4 +1,5 @@
 var formbutton = $('#nav-form-button');
+var formregister = $('#nav-form-register');
 var emailfield = $('#nav-form-email');
 var passfield = $('#nav-form-pass');
 var navform = $('#nav-form');
@@ -8,6 +9,7 @@ formbutton.on('click', function () {
 
     var regexEmail = /^\w+@(p\.lodz\.pl)|\w+@(edu\.p\.lodz\.pl)$/;
     if (navform.data('step') === 0) {
+        formregister.hide();
         emailfield.show();
         emailfield.focus();
         $(this).removeClass("btn-outline-success");
