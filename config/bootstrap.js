@@ -49,6 +49,7 @@ module.exports.bootstrap = function (cb) {
                         Users.create([{
                             name: 'Test1',
                             surname: 'Tester1',
+                            album: 123456,
                             email: '1@p.lodz.pl',
                             password: 'a150f0e3b050a2d9907288d84eee05312eaa384eba3d5775688b4cba26e0af38',
                             salt: 'aaaa',
@@ -57,6 +58,7 @@ module.exports.bootstrap = function (cb) {
                         },{
                             name: 'Test2',
                             surname: 'Tester2',
+                            album: 654321,
                             email: '2@p.lodz.pl',
                             password: 'a150f0e3b050a2d9907288d84eee05312eaa384eba3d5775688b4cba26e0af38',
                             salt: 'aaaa',
@@ -65,6 +67,7 @@ module.exports.bootstrap = function (cb) {
                         },{
                             name: 'Test3',
                             surname: 'Tester3',
+                            album: 456123,
                             email: '3@p.lodz.pl',
                             password: 'a150f0e3b050a2d9907288d84eee05312eaa384eba3d5775688b4cba26e0af38',
                             salt: 'aaaa',
@@ -73,6 +76,7 @@ module.exports.bootstrap = function (cb) {
                         },{
                             name: 'Test4',
                             surname: 'Tester4',
+                            album: 321654,
                             email: '4@p.lodz.pl',
                             password: 'a150f0e3b050a2d9907288d84eee05312eaa384eba3d5775688b4cba26e0af38',
                             salt: 'aaaa',
