@@ -113,7 +113,9 @@ const AccountController = module.exports = {
 
         switch (req.method) {
             case 'GET':
-                return res.view('account/registration', {title: 'Rejestracja'});
+                DeanGroups.find({}).exec(function (err, dean) {
+                    return res.view('account/register', {title: 'Rejestracja', dea: dean});
+                });
                 break;
             case 'POST':
                 let name = req.param('name'), album=req.param('album'), surname = req.param('surname'),
@@ -127,21 +129,31 @@ const AccountController = module.exports = {
                 if(password !== repassword){
                     return AccountController.registerError(res, 'Hasła nie są identyczne');
                 }
-                Users.create({
-                    name: name,
-                    surname: surname,
-                    album: album,
-                    email: email,
-                    password: AccountController.hashPassword(password, st),
-                    salt: st,
-                    activated: true,
-                    roles: null,
-                }).exec(function (err) {
-                    if (err) {
-                        return res.serverError(err);
+                Roles.findOneByName('student').exec(function (err, role) {
+                    if (err){
+                        return jsonx(err)
                     }
+                    DeanGroups.find({}).exec(function (err, dean) {
 
-                    return ok();
+                        Users.create({
+                            name: name,
+                            surname: surname,
+                            album: album,
+                            email: email,
+                            password: AccountController.hashPassword(password, st),
+                            salt: st,
+                            activated: true,
+                            roles: role,
+                            deanGroups: dean,
+                        }).exec(function (err) {
+                            if (err) {
+                                return res.serverError(err);
+                            }
+
+                            return res.redirect('/login?registerSuccess');
+                        });
+
+                    });
                 });
         }
     },
