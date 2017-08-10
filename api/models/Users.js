@@ -46,7 +46,8 @@ const Users = module.exports = {
 
         labGroups: {
             collection: 'labgroups',
-            via: 'students'
+            via: 'students',
+            through: 'studentslabgroups'
         },
 
         subjects: {

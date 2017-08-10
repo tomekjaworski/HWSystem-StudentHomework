@@ -101,7 +101,7 @@ const AccountController = module.exports = {
         if(req.session.authed){
             req.session.authed = null;
         }
-        return res.redirect('/');
+        return res.redirect('/login');
     },
 
 
