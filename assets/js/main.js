@@ -1,25 +1,29 @@
 var formbutton = $('#nav-form-button');
 var emailfield = $('#nav-form-email');
 var passfield = $('#nav-form-pass');
+var navform = $('#nav-form');
 
 formbutton.on('click', function () {
 
 
     var regexEmail = /^\w+@(p\.lodz\.pl)|\w+@(edu\.p\.lodz\.pl)$/;
-    if (emailfield.val() === "") {
+    if (navform.data('step') === 0) {
         emailfield.show();
         emailfield.focus();
         $(this).removeClass("btn-outline-success");
         $(this).addClass("btn-outline-primary");
         $(this).val("Next");
+        navform.data('step', 1);
+        console.log(navform.data('step'));
     } else {
         if (regexEmail.test(emailfield.val())) {
-            if (passfield.val() !== "") {
+            if ((passfield.val() !== "") && (navform.data('step') === 2)) {
                 $(this).attr('type', 'submit');
                 $(this).submit();
                 console.log(":thinking:");
-            } else {
-                $('#nav-form').removeClass('has-danger');
+                console.log(navform.data('step'));
+            } else if (navform.data('step') === 1) {
+                navform.removeClass('has-danger');
                 emailfield.hide();
                 passfield.show();
                 passfield.focus();
@@ -27,11 +31,13 @@ formbutton.on('click', function () {
                 $(this).addClass("btn-outline-success");
                 $(this).removeClass("btn-outline-primary");
                 $(this).val("Login");
-
+                console.log(navform.data('step'));
+                navform.data('step', 2);
 
             }
         } else {
-            $('#nav-form').addClass('has-danger')
+            console.log(navform.data('step'));
+            navform.addClass('has-danger')
         }
     }
 });

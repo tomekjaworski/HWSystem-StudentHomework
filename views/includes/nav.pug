@@ -3,12 +3,12 @@
         if localUser
             button.navbar-toggler.navbar-toggler-right(type='button', data-toggle='collapse', data-target='#containerNavbar', aria-controls='containerNavbar', aria-expanded='false', aria-label='Toggle navigation')
                 span.navbar-toggler-icon
-        a.navbar-brand(href='#')= brand
+        a.navbar-brand(href='/')= brand
         if localUser
             #containerNavbar.collapse.navbar-collapse
                 ul.navbar-nav.mr-auto
                         li.nav-item.active
-                            a.nav-link(href='#')
+                            a.nav-link(href='/')
                                 | Home
                                 span.sr-only (current)
                         li.nav-item
@@ -25,12 +25,12 @@
                         li.nav-item
                             a.nav-link Witaj #{localUser.fullName()}
                         li.nav-item
-                            a.nav-link(href='/logout') Wyloguj
+                            a.btn.btn-danger(href='/logout') Wyloguj
         else
-            form.form-inline.ml-md-auto.float-right(id='nav-form', action="/login" method="post")
-                input.form-control.mr-sm-2(type='email', name='email' placeholder='Email', id='nav-form-email', style="display: none")
-                input.form-control.mr-sm-2(type='password', name='password' placeholder='Password', id='nav-form-pass', style="display: none")
-                input.btn.btn-outline-success.my-2.my-sm-0.l-email(id='nav-form-button', type="button", value="Login")
+            form.form-inline.ml-md-auto.float-right(id='nav-form', action='/login' method='post', data-step='0')
+                input.form-control.mr-sm-2(type='email', name='email' placeholder='Email', id='nav-form-email', style='display: none')
+                input.form-control.mr-sm-2(type='password', name='password' placeholder='Password', id='nav-form-pass', style='display: none')
+                input.btn.btn-outline-success.my-2.my-sm-0.l-email(id='nav-form-button', type='button', value='Login')
             //ul.navbar-nav
             //    li.nav-item
             //        a.btn.btn-primary(href='#') Login

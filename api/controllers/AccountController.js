@@ -94,7 +94,7 @@ const AccountController = module.exports = {
      * `AccountController.register()`
      */
     register: function (req, res) {
-        let data = {title: 'Rejestracja', error: null}
+        let data = {title: 'Rejestracja', error: null};
         switch (req.method) {
             case 'GET':
                 break;
