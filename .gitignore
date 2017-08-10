@@ -81,3 +81,7 @@ typings/
 *.iml
 out
 gen
+.tmp/*
+.sass-cache/
+
+config/connections\.js

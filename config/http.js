@@ -30,34 +30,50 @@ module.exports.http = {
          *                                                                          *
          ***************************************************************************/
 
-        // order: [
-        //   'startRequestTimer',
-        //   'cookieParser',
-        //   'session',
-        //   'myRequestLogger',
-        //   'bodyParser',
-        //   'handleBodyParserError',
-        //   'compress',
-        //   'methodOverride',
-        //   'poweredBy',
-        //   '$custom',
-        //   'router',
-        //   'www',
-        //   'favicon',
-        //   '404',
-        //   '500'
-        // ],
+        order: [
+            'startRequestTimer',
+            'cookieParser',
+            'session',
+            'bodyParser',
+            'handleBodyParserError',
+            'xframe',
+            'compress',
+            'methodOverride',
+            'localsInject',
+            'userInject',
+            'router',
+            'www',
+            'favicon',
+            '404',
+            '500'
+        ],
 
-        /****************************************************************************
-         *                                                                           *
-         * Example custom middleware; logs each request to the console.              *
-         *                                                                           *
-         ****************************************************************************/
+        localsInject: function(req, res, next){
+            req.options = req.options || {};
+            req.options.locals = req.options.locals || {};
+            req.options.locals.brand = 'HW System';
+            next();
+        },
 
-        // myRequestLogger: function (req, res, next) {
-        //     console.log("Requested :: ", req.method, req.url);
-        //     return next();
-        // }
+        userInject: function(req,res,next){
+            req.options.locals.localUser = req.localUser = null;
+            if(req.session.authed) {
+                Users.findOneById(req.session.authed).exec((err, user) => {
+                    if (err)
+                        return res.jsonx(err);
+                    if (!user) {
+                        return res.serverError('Nie znaleziono zalogowanego użytkownika');
+                    }
+                    req.options.locals.localUser = req.localUser = user;
+                    next();
+                });
+            }
+            else{
+                next();
+            }
+        },
+
+        xframe: require('lusca').xframe('SAMEORIGIN'),
 
 
         /***************************************************************************

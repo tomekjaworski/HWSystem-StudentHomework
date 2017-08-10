@@ -5,7 +5,7 @@
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
  */
 
-module.exports = {
+const Users = module.exports = {
 
     attributes: {
 
@@ -21,7 +21,10 @@ module.exports = {
 
         salt: {type: 'string'},
 
-        activated: {type: 'boolean'},
+        activated: {
+            type: 'boolean',
+            default: false
+        },
 
         roles: {
             collection: 'roles',
@@ -41,6 +44,10 @@ module.exports = {
         subjects: {
             collection: 'subjects',
             via: 'students'
+        },
+
+        fullName: function(){
+            return this.name + ' ' + this.surname;
         }
     }
 };
