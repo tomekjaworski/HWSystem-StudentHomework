@@ -36,8 +36,14 @@ block content
             div
                 label(for='d', style='width:100px;')
                 |Grupa D
-                select(id='d' style='width:200px', )
+                select(id='d' style='width:200px', name='groupd')
                     each d in dea
-                        option= d.name
+                        option(value=d.name)= d.name
+            div
+                label(for='l', style='width:100px')
+                |Grupa l
+                select(id='l' style="width:200px", name='groupl')
+                    each l in labs
+                        option(value=l.name)= l.name + l.owner.fullName()
 
             input(type='submit')
