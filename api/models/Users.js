@@ -23,7 +23,7 @@ const Users = module.exports = {
 
         activated: {
             type: 'boolean',
-            default: false
+            defaultsTo: true
         },
 
         roles: {
@@ -38,7 +38,8 @@ const Users = module.exports = {
 
         labGroups: {
             collection: 'labgroups',
-            via: 'students'
+            via: 'students',
+            through: 'studentslabgroups'
         },
 
         subjects: {
