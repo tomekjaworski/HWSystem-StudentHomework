@@ -32,6 +32,21 @@ const AccountController = module.exports = {
             .update(password, 'utf8').digest('hex');
     },
 
+    generateSalt: function () {
+        crypto.randomBytes(20).toString('hex');
+    },
+
+    /**
+     *
+     * @param res
+     * @param err
+     */
+
+    registerError: function(res, err){
+        return res.view('account/registration', {title: 'Rejestracja', error: err});
+    },
+
+
     // Controller Actions
 
     /**
@@ -90,36 +105,43 @@ const AccountController = module.exports = {
     },
 
 
+
     /**
      * `AccountController.register()`
      */
     register: function (req, res) {
-        let data = {title: 'Rejestracja', error: null}
+
         switch (req.method) {
             case 'GET':
+                return res.view('account/registration', {title: 'Rejestracja'});
                 break;
             case 'POST':
-                let name = req.param('name'), surname = req.param('surname'), email = req.param('email'),
-                    password = req.param('password');
+                let name = req.param('name'), album=req.param('album'), surname = req.param('surname'),
+                    email = req.param('email'), password = req.param('password'), repassword = req.param('repassword');
                 let deangroups = req.param('deangroups'), labgroups = req.param('labgroups'),
                     subjects = req.param('subjects');
-                if (!name && !surname && !email && !password && !!deangroups && !labgroups && !subjects) {
-                    data.error = 'Proszę uzupełnić wszystkie pola';
-                    break;
+                let st =crypto.randomBytes(20).toString('hex');
+                if (!name && !surname && !email && !password) {
+                    return AccountController.registerError(res, 'Proszę uzupełnić wszystkie pola.');
                 }
-                User.create({
+                if(password !== repassword){
+                    return AccountController.registerError(res, 'Hasła nie są identyczne');
+                }
+                Users.create({
                     name: name,
                     surname: surname,
+                    album: album,
                     email: email,
-                    password: password,
-                    salt: "aaaa",
-                    activated: false,
-                    roles: 'rola',
-                    deanGroups: deangroups,
-                    labGroups: labgroups,
-                    subjects: subjects
+                    password: AccountController.hashPassword(password, st),
+                    salt: st,
+                    activated: true,
+                    roles: null,
                 }).exec(function (err) {
+                    if (err) {
+                        return res.serverError(err);
+                    }
 
+                    return ok();
                 });
         }
     },

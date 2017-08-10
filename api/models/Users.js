@@ -13,6 +13,14 @@ const Users = module.exports = {
 
         surname: {type: 'string'},
 
+        album: {
+            type: 'string',
+            unique: true,
+            required: true,
+            minLength: 6,
+            maxLength: 6
+        },
+
         email: {
             type: 'email'
         },
@@ -23,7 +31,7 @@ const Users = module.exports = {
 
         activated: {
             type: 'boolean',
-            default: false
+            defaultsTo: true
         },
 
         roles: {
