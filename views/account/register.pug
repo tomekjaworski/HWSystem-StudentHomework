@@ -4,10 +4,11 @@ extends ../includes/layout
 block content
     .jumbotron
         h1.display-3 Zarejestruj się
+
         if error
             h2= error
 
-        form(method='post', action='/registration')
+        form(method='post', action='/register')
             div
                 label(for='name', style='width:100px;')
                     | Imię:
@@ -32,5 +33,11 @@ block content
                 label(for='repassword', style='width:100px;')
                     | Powtórz hasło:
                 input(id='repassword', style='width:200px;', type='password', name='repassword', placeholder='powtorz haslo', required)
+            div
+                label(for='d', style='width:100px;')
+                |Grupa D
+                select(id='d' style='width:200px', )
+                    each d in dea
+                        option= d.name
 
             input(type='submit')
