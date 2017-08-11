@@ -32,8 +32,13 @@ mixin form
                 select#inputGroupD.custom-select(name='groupd', required)
                     each d in dea
                         option(value=d.name)= d.name
-
-
+        .form-group.row
+            label.col-sm-4.col-form-label(for='inputGroupL') Lab Group
+            .col-sm-8
+                select#inputGroupL.custom-select(name='groupl', required)
+                    each l in labs
+                        option(value=l.name)= l.name + l.owner.fullName()
+                        
         if error
             input.btn.btn-lg.btn-danger.btn-block(type='submit' value='Register')
         else
@@ -51,4 +56,5 @@ block content
         .card
             .card-block
                 +form
+
 
