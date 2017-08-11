@@ -39,11 +39,15 @@ const AccountController = module.exports = {
     /**
      *
      * @param res
-     * @param err
+     * @param error
      */
 
-    registerError: function ( res, err ) {
-        return res.view('account/registration', { title: 'Rejestracja', error: err });
+    registerError: function ( res, error ) {
+        DeanGroups.find({}).exec(function (err, dean) {
+            LabGroups.find({}).populate('owner').exec(function (err, labs) {
+                return res.view('account/register', {title: 'Rejestracja', dea: dean, labs:labs, error: error});
+            });
+        });
     },
 
 
