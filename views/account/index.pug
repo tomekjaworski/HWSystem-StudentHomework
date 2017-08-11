@@ -9,37 +9,7 @@ mixin entry(id)
 
 block content
     .row
-        .col-sm-4
-            .list-group
-                a.list-group-item.list-group-item-action.flex-column.align-items-start.active(href='#')
-                    .d-flex.w-100.justify-content-between
-                        h5.mb-1 List group item heading
-                        small 3 days ago
-                    p.mb-1
-                        | Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.
-                    small Donec id elit non mi porta.
-                a.list-group-item.list-group-item-action.flex-column.align-items-start(href='#')
-                    .d-flex.w-100.justify-content-between
-                        h5.mb-1 List group item heading
-                        small.text-muted 3 days ago
-                    p.mb-1
-                        | Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.
-                    small.text-muted Donec id elit non mi porta.
-                a.list-group-item.list-group-item-action.flex-column.align-items-start(href='#')
-                    .d-flex.w-100.justify-content-between
-                        h5.mb-1 List group item heading
-                        small.text-muted 3 days ago
-                    p.mb-1
-                        | Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.
-                    small.text-muted Donec id elit non mi porta.
-        .col-sm-8
-            table.table.table-striped.responsive
-                thead
-                    tr
-                        th #
-                        th First Name
-                        th Last Name
-                        th Username
-                tbody
-                    each val in [1, 2, 3, 4, 5,6,7,8,9,10,11,12,13,14,15,16,17]
-                        +entry(val)
+        .col-md-12.col-lg-4
+            include topics
+        .hidden-md-down.col-lg-8
+            include tasks
