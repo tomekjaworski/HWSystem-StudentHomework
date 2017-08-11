@@ -9,17 +9,19 @@ const LabGroups = module.exports = {
 
     attributes: {
 
-        name: {type: 'string'},
+        name: { type: 'string' },
 
-        subject: {model: 'subjects'},
+        subject: { model: 'subjects' },
 
-        owner: {model: 'users'},
+        message: { type: 'string' },
 
-        time: {type: 'string'},
+        owner: { model: 'users' },
+
+        time: { type: 'string' },
 
         date: {
             type: 'integer',
-            enum: [0, 1, 2, 3, 4, 5, 6]
+            enum: [ 0, 1, 2, 3, 4, 5, 6 ]
         },
 
         students: {

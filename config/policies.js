@@ -54,7 +54,7 @@ module.exports.policies = {
         'login': true
     },
 
-    AccountsController:{
+    AccountsController: {
         '*': true
 
     }

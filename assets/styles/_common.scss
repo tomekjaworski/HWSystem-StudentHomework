@@ -5,6 +5,12 @@
   padding-top: 3px;
 }
 
+
+@media (min-width: 992px) {
+  .navbar-right {
+    height: 2.5rem;
+  }
+}
 // fucking safari
 @media (max-width: 991px) and (min-width: 576px) {
   #nav-form {

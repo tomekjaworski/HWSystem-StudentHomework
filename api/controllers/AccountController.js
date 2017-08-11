@@ -17,8 +17,8 @@ const AccountController = module.exports = {
      * @param res   :: Response object
      * @param err   :: Error message
      */
-    loginError: function(res, err){
-        return res.view('account/login', {title: 'Logowanie', error: err});
+    loginError: function ( res, err ) {
+        return res.view('account/login', { title: 'Logowanie', error: err });
     },
 
     /**
@@ -27,7 +27,7 @@ const AccountController = module.exports = {
      * @param salt      :: Salt to hash password
      * @returns {*}     :: Hashed password
      */
-    hashPassword: function(password, salt){
+    hashPassword: function ( password, salt ) {
         return crypto.createHmac('sha256', salt)
             .update(password, 'utf8').digest('hex');
     },
@@ -42,8 +42,8 @@ const AccountController = module.exports = {
      * @param err
      */
 
-    registerError: function(res, err){
-        return res.view('account/registration', {title: 'Rejestracja', error: err});
+    registerError: function ( res, err ) {
+        return res.view('account/registration', { title: 'Rejestracja', error: err });
     },
 
 
@@ -52,37 +52,39 @@ const AccountController = module.exports = {
     /**
      * `AccountController.login()`
      */
-    login: function (req, res) {
-        if(req.session.authed)
+    login: function ( req, res ) {
+        if ( req.session.authed ) {
             return res.redirect('/');
-        switch (req.method) {
+        }
+        switch ( req.method ) {
             case 'GET':
-                return res.view('account/login', {title: 'Logowanie'});
+                return res.view('account/login', { title: 'Logowanie' });
                 break;
             case 'POST':
                 let email = req.param('email'), password = req.param('password');
-                if(!_.isString( email ) || !_.isString( password )){
-                    return AccountController.loginError(res, 'Źle wporwadzone dane')
+                if ( !_.isString(email) || !_.isString(password) ) {
+                    return AccountController.loginError(res, 'Źle wporwadzone dane');
                 }
-                Users.findOneByEmail(email).exec(function(err,user){
-                    if(err)
+                Users.findOneByEmail(email).exec(function ( err, user ) {
+                    if ( err ) {
                         return res.jsonx(err);
-                    if(!user){
+                    }
+                    if ( !user ) {
                         return AccountController.loginError(res, 'Błędna kombinacja użytkownika i hasła');
                     }
-                    if(user.password === AccountController.hashPassword(password,user.salt)){
-                        if(!user.activated){
+                    if ( user.password === AccountController.hashPassword(password, user.salt) ) {
+                        if ( !user.activated ) {
                             return AccountController.loginError(res, 'Konto nie jest aktywne');
                         }
-                        req.session.authed=user.id;
-                        if(_.isString( req.param('redirect') )){
+                        req.session.authed = user.id;
+                        if ( _.isString(req.param('redirect')) ) {
                             return res.redirect(req.param('redirect'));
                         }
                         else {
-                            return res.redirect('/?loginSuccess');
+                            return res.redirect('/account');
                         }
                     }
-                    else{
+                    else {
                         return AccountController.loginError(res, 'Błędna kombinacja użytkownika i hasła');
                     }
 
@@ -97,21 +99,20 @@ const AccountController = module.exports = {
     /**
      * `AccountController.logout()`
      */
-    logout: function (req, res) {
-        if(req.session.authed){
+    logout: function ( req, res ) {
+        if ( req.session.authed ) {
             req.session.authed = null;
         }
         return res.redirect('/login');
     },
 
 
-
     /**
      * `AccountController.register()`
      */
-    register: function (req, res) {
+    register: function ( req, res ) {
 
-        switch (req.method) {
+        switch ( req.method ) {
             case 'GET':
                 DeanGroups.find({}).exec(function (err, dean) {
                     LabGroups.find({}).populate('owner').exec(function (err, labs) {
@@ -120,7 +121,7 @@ const AccountController = module.exports = {
                 });
                 break;
             case 'POST':
-                let name = req.param('name'), album=req.param('album'), surname = req.param('surname'),
+                let name = req.param('name'), album = req.param('album'), surname = req.param('surname'),
                     email = req.param('email'), password = req.param('password'), repassword = req.param('repassword');
                 let deangroups = req.param('groupd'), labgroups = req.param('groupl');
                 let st =crypto.randomBytes(20).toString('hex');
@@ -185,10 +186,8 @@ const AccountController = module.exports = {
         }
     },
 
-    profile: function (req, res){
-        return res.json({
-            todo: 'profile() is not implemented yet!'
-        });
+    index: function (req, res){
+        return res.view('account/index');
     }
 };
 

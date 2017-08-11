@@ -14,4 +14,7 @@
  * or any other Grunt tasks you like.)
  */
 
-@import 'styles.scss';
+@import 'common';
+@import 'login';
+@import 'register';
+@import 'topics';

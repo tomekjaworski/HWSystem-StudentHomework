@@ -9,9 +9,9 @@ const Sunjects = module.exports = {
 
     attributes: {
 
-        name: {type: 'string'},
+        name: { type: 'string' },
 
-        desc: {type: 'string'},
+        desc: { type: 'string' },
 
         students: {
             collection: 'users',
