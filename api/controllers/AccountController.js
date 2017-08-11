@@ -81,7 +81,7 @@ const AccountController = module.exports = {
                             return res.redirect(req.param('redirect'));
                         }
                         else {
-                            return res.redirect('/?loginSuccess');
+                            return res.redirect('/account');
                         }
                     }
                     else {
@@ -114,43 +114,80 @@ const AccountController = module.exports = {
 
         switch ( req.method ) {
             case 'GET':
-                return res.view('account/registration', { title: 'Rejestracja' });
+                DeanGroups.find({}).exec(function (err, dean) {
+                    LabGroups.find({}).populate('owner').exec(function (err, labs) {
+                        return res.view('account/register', {title: 'Rejestracja', dea: dean, labs:labs});
+                    });
+                });
                 break;
             case 'POST':
                 let name = req.param('name'), album = req.param('album'), surname = req.param('surname'),
                     email = req.param('email'), password = req.param('password'), repassword = req.param('repassword');
-                let deangroups = req.param('deangroups'), labgroups = req.param('labgroups'),
-                    subjects = req.param('subjects');
-                let st = crypto.randomBytes(20).toString('hex');
-                if ( !name && !surname && !email && !password ) {
+                let deangroups = req.param('groupd'), labgroups = req.param('groupl');
+                let st =crypto.randomBytes(20).toString('hex');
+                if (!name && !surname && !email && !password) {
                     return AccountController.registerError(res, 'Proszę uzupełnić wszystkie pola.');
                 }
-                if ( password !== repassword ) {
+                let regexEmail = /^\w+@(p\.lodz\.pl)|\w+@(edu\.p\.lodz\.pl)$/;
+                if (!regexEmail.test(email)){
+                    return AccountController.registerError(res, 'Rejestracja dostępna tylko z uczelnienych maili');
+                }
+                if(password !== repassword){
                     return AccountController.registerError(res, 'Hasła nie są identyczne');
                 }
-                Users.create({
-                    name: name,
-                    surname: surname,
-                    album: album,
-                    email: email,
-                    password: AccountController.hashPassword(password, st),
-                    salt: st,
-                    activated: true,
-                    roles: null
-                }).exec(function ( err ) {
-                    if ( err ) {
-                        return res.serverError(err);
-                    }
+                if (password.length < 8) {
+                    return AccountController.registerError(res, 'Hasło jest za krótkie. Powinno zawierać 8 znaków.');
+                }
+                let hasUpperCase = /[A-Z]/.test(password);
+                let hasLowerCase = /[a-z]/.test(password);
+                let hasNumbers = /\d/.test(password);
+                let hasNonalphas = /\W/.test(password);
+                if (hasUpperCase + hasLowerCase + hasNumbers + hasNonalphas < 3) {
+                    return AccountController.registerError(res, 'Twoje hasło powinno zawierać dużą i małą litere');
+                }
 
-                    return ok();
+                //TODO: sprawdzic Dean & Lab
+                Roles.findOneByName('student').exec(function (err, role) {
+                    if (err){
+                        return jsonx(err)
+                    }
+                    DeanGroups.findOneByName(deangroups).exec(function (err, dean) {
+                        if (err){
+                            res.jsonx(err);
+                        }
+                        LabGroups.findOneByName(labgroups).exec(function (err, lab) {
+                            if (err){
+                                res.jsonx(err);
+                            }
+                            Users.create({
+                                name: name,
+                                surname: surname,
+                                album: album,
+                                email: email,
+                                password: AccountController.hashPassword(password, st),
+                                salt: st,
+                                activated: true,
+                                roles: role,
+                                deanGroups: [dean],
+                                labGroups:[lab]
+                            }).exec(function (err) {
+                                if (err) {
+                                    return res.serverError(err);
+                                }
+
+                                return res.redirect('/login?registerSuccess');
+                            });
+                        });
+
+                    });
+
                 });
+
         }
     },
 
-    profile: function ( req, res ) {
-        return res.json({
-            todo: 'profile() is not implemented yet!'
-        });
+    index: function (req, res){
+        return res.view('account/index');
     }
 };
 

@@ -1,0 +1,16 @@
+/*.topic-entry {
+  .list-inline > .list-inline-item:not(:last-child) {
+    margin-right: 5px;
+    border-right: 1px solid rgba(0,0,0,0.125);
+    padding-right: 4px;
+  }
+}*/
+
+.points-scroller {
+  flex-wrap: wrap;
+}
+
+.topic-title {
+  //noinspection CssInvalidPropertyValue
+  word-break: break-word;
+}
