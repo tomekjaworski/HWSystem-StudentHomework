@@ -55,3 +55,9 @@ passfield.keydown(function (handler) {
         formbutton.click();
     }
 });
+
+$( '.button-topicview' ).click(function( event ) {
+    event.preventDefault();
+    $( '#tasks-column' ).append("ajax<br>"); //todo: ajax
+    return false;
+});
