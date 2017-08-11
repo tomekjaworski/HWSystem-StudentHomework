@@ -58,7 +58,7 @@ module.exports.http = {
         userInject: function ( req, res, next ) {
             req.options.locals.localUser = req.localUser = null;
             if ( req.session.authed ) {
-                Users.findOneById(req.session.authed).exec(( err, user ) => {
+                Users.findOneById(req.session.authed).populate('roles').exec(( err, user ) => {
                     if ( err ) {
                         return res.jsonx(err);
                     }
