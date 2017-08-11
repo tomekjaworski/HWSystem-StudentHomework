@@ -5,28 +5,28 @@
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
  */
 
-const TaskReplays = module.exports = {
+const TaskReplies = module.exports = {
 
     attributes: {
 
-        student: {model: 'users'},
+        student: { model: 'users' },
 
-        task: {model: 'tasks'},
+        task: { model: 'tasks' },
 
         files: {
-            collection: 'taskreplayfiles',
-            via: 'replay'
+            collection: 'taskreplyfiles',
+            via: 'reply'
         },
 
         teacherStatus: {
             type: 'integer',
-            enum: [0,1,2],
+            enum: [ 0, 1, 2 ],
             defaultsTo: 0
         },
 
         machineStatus: {
             type: 'integer',
-            enum: [0,1,2,3],
+            enum: [ 0, 1, 2, 3 ],
             defaultsTo: 0
         },
 
@@ -37,8 +37,8 @@ const TaskReplays = module.exports = {
         },
 
         comments: {
-            collection: 'taskreplaycomments',
-            via: 'replay'
+            collection: 'taskreplycomments',
+            via: 'reply'
         }
     }
 };

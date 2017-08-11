@@ -46,7 +46,7 @@ module.exports.connections = {
         user: 'root', //optional
         password: 'qwerty', //optional
         database: 'homework' //optional
-    },
+    }
 
     /***************************************************************************
      *                                                                          *

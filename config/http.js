@@ -48,32 +48,33 @@ module.exports.http = {
             '500'
         ],
 
-        localsInject: function(req, res, next){
+        localsInject: function ( req, res, next ) {
             req.options = req.options || {};
             req.options.locals = req.options.locals || {};
             req.options.locals.brand = 'HW System';
             next();
         },
 
-        userInject: function(req,res,next){
+        userInject: function ( req, res, next ) {
             req.options.locals.localUser = req.localUser = null;
-            if(req.session.authed) {
-                Users.findOneById(req.session.authed).exec((err, user) => {
-                    if (err)
+            if ( req.session.authed ) {
+                Users.findOneById(req.session.authed).exec(( err, user ) => {
+                    if ( err ) {
                         return res.jsonx(err);
-                    if (!user) {
+                    }
+                    if ( !user ) {
                         return res.serverError('Nie znaleziono zalogowanego użytkownika');
                     }
                     req.options.locals.localUser = req.localUser = user;
                     next();
                 });
             }
-            else{
+            else {
                 next();
             }
         },
 
-        xframe: require('lusca').xframe('SAMEORIGIN'),
+        xframe: require('lusca').xframe('SAMEORIGIN')
 
 
         /***************************************************************************
@@ -93,7 +94,7 @@ module.exports.http = {
 
         // bodyParser: require('skipper')({strict: true})
 
-    },
+    }
 
     /***************************************************************************
      *                                                                          *
