@@ -19,10 +19,10 @@ module.exports.bootstrap = function (cb) {
             Roles.create([{
                 name: 'admin'
             },{
-                name: 'lecturer'
+                name: 'teacher'
             },{
                 name: 'student'
-            }]).exec(function (err, finn){
+            }]).exec(function (err, roles){
                 if (err) { throw err; }
 
                 DeanGroups.create([{
@@ -34,10 +34,10 @@ module.exports.bootstrap = function (cb) {
                     desc: 'Grupa testowa 2',
                     owner: null
                 },{
-                    name: 'Testowa 2',
-                    desc: 'Grupa testowa 2',
+                    name: 'Testowa 3',
+                    desc: 'Grupa testowa 3',
                     owner: null
-                }]).exec(function (err, finn){
+                }]).exec(function (err, dean){
                     if (err) { throw err; }
 
                     Subjects.create({
@@ -54,7 +54,8 @@ module.exports.bootstrap = function (cb) {
                             password: 'a150f0e3b050a2d9907288d84eee05312eaa384eba3d5775688b4cba26e0af38',
                             salt: 'aaaa',
                             activated: true,
-                            roles: [finn[0]]
+                            roles: [roles[0]],
+                            deanGroups: [dean[0]]
                         },{
                             name: 'Test2',
                             surname: 'Tester2',
@@ -63,7 +64,8 @@ module.exports.bootstrap = function (cb) {
                             password: 'a150f0e3b050a2d9907288d84eee05312eaa384eba3d5775688b4cba26e0af38',
                             salt: 'aaaa',
                             activated: true,
-                            roles: [finn[1]]
+                            roles: [roles[1]],
+                            deanGroups: [dean[1]]
                         },{
                             name: 'Test3',
                             surname: 'Tester3',
@@ -72,7 +74,8 @@ module.exports.bootstrap = function (cb) {
                             password: 'a150f0e3b050a2d9907288d84eee05312eaa384eba3d5775688b4cba26e0af38',
                             salt: 'aaaa',
                             activated: true,
-                            roles: [finn[2]]
+                            roles: [roles[2]],
+                            deanGroups: [dean[2]]
                         },{
                             name: 'Test4',
                             surname: 'Tester4',
@@ -81,51 +84,154 @@ module.exports.bootstrap = function (cb) {
                             password: 'a150f0e3b050a2d9907288d84eee05312eaa384eba3d5775688b4cba26e0af38',
                             salt: 'aaaa',
                             activated: true,
-                            roles: [finn[2]]
-                        }]).exec(function (err, finn){
+                            roles: [roles[2]],
+                            deanGroups: [dean[0]]
+                        }]).exec(function (err, users){
                             if (err) { throw err; }
 
                             LabGroups.create([{
                                 name: 'd3dx9_41',
                                 subject: sub,
-                                owner: finn[1],
+                                owner: users[1],
                                 time: '8:15 - 10:00',
                                 date: 0,
-                                students: [finn[2]]
+                                students: [users[2]]
                             },{
                                 name: 'd3dx10_20',
                                 subject: sub,
-                                owner: finn[1],
+                                owner: users[1],
                                 time: '10:15 - 12:00',
                                 date: 1,
-                                students: [finn[3]]
+                                students: [users[3]]
                             },{
                                 name: 'd3dx11',
                                 subject: sub,
-                                owner: finn[1],
+                                owner: users[1],
                                 time: '12:15 - 14:00',
                                 date: 2
                             },{
                                 name: 'd3dx2',
                                 subject: sub,
-                                owner: finn[1],
+                                owner: users[1],
                                 time: '14:15 - 16:00',
                                 date: 3
-                            }]).exec(function (err, finn){
+                            }]).exec(function (err, lab){
                                 if (err) { throw err; }
 
-                                return cb();
+                                Topics.create([{
+                                    number: '1a',
+                                    title: 'Testowy temat 1',
+                                    visible: true,
+                                    deadline: new Date(),
+                                    group: lab[0]
+                                },{
+                                    number: '1b',
+                                    title: 'Testowy temat 2',
+                                    visible: true,
+                                    deadline: new Date(),
+                                    group: lab[1]
+                                },{
+                                    number: '2a',
+                                    title: 'Testowy temat 2',
+                                    visible: true,
+                                    deadline: new Date(),
+                                    group: lab[1]
+                                },{
+                                    number: '2b',
+                                    title: 'Testowy temat 2',
+                                    visible: true,
+                                    deadline: new Date(),
+                                    group: lab[1]
+                                }]).exec(function (err, topics) {
+                                    if (err) {
+                                        throw err;
+                                    }
+
+                                    Tasks.create([{
+                                        number: '1a',
+                                        title: 'Testowe zadanie 1',
+                                        visible: true,
+                                        description: 'Opis zadania',
+                                        topic: topics[0]
+                                    },{
+                                        number: '2a',
+                                        title: 'Testowe zadanie 2',
+                                        visible: true,
+                                        description: 'Opis zadania',
+                                        topic: topics[0]
+                                    },{
+                                        number: '3a',
+                                        title: 'Testowe zadanie 3',
+                                        visible: true,
+                                        description: 'Opis zadania',
+                                        topic: topics[0]
+                                    },{
+                                        number: '1b',
+                                        title: 'Testowe zadanie 1',
+                                        visible: true,
+                                        description: 'Opis zadania',
+                                        topic: topics[1]
+                                    },{
+                                        number: '2b',
+                                        title: 'Testowe zadanie 2',
+                                        visible: true,
+                                        description: 'Opis zadania',
+                                        topic: topics[1]
+                                    },{
+                                        number: '3b',
+                                        title: 'Testowe zadanie 3',
+                                        visible: true,
+                                        description: 'Opis zadania',
+                                        topic: topics[1]
+                                    }]).exec(function (err, tasks) {
+                                        if (err) {
+                                            throw err;
+                                        }
+
+                                        TaskReplays.create([{
+                                            student: users[2],
+                                            task: tasks[0],
+                                            teacherStatus: 1,
+                                            machineStatus: 2
+                                        },{
+                                            student: users[2],
+                                            task: tasks[1],
+                                            teacherStatus: 0,
+                                            machineStatus: 2
+                                        },{
+                                            student: users[2],
+                                            task: tasks[2],
+                                            teacherStatus: 2,
+                                            machineStatus: 0
+                                        },{
+                                            student: users[3],
+                                            task: tasks[3],
+                                            teacherStatus: 0,
+                                            machineStatus: 0
+                                        },{
+                                            student: users[3],
+                                            task: tasks[4],
+                                            teacherStatus: 0,
+                                            machineStatus: 3
+                                        },{
+                                            student: users[3],
+                                            task: tasks[5],
+                                            teacherStatus: 1,
+                                            machineStatus: 1
+                                        }]).exec(function (err, tr) {
+                                            if (err) {
+                                                throw err;
+                                            }
+
+                                            return cb();
+                                        });
+                                    });
+                                });
                             });
                         });
-
-
                     });
-
                 });
-
-
             });
-
         }
         else{
             cb();

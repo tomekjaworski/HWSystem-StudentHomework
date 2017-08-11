@@ -13,6 +13,8 @@ const LabGroups = module.exports = {
 
         subject: {model: 'subjects'},
 
+        message : {type: 'string'},
+
         owner: {model: 'users'},
 
         time: {type: 'string'},

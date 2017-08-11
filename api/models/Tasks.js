@@ -1,22 +1,31 @@
 /**
- * StudentsLabGroups.js
+ * Tasks.js
  *
  * @description :: TODO: You might write a short summary of how this model works and what it represents here.
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
  */
 
-const StudentsLabGroups = module.exports = {
+const Tasks = module.exports = {
 
     attributes: {
 
-        student: {model: 'users'},
+        number: {type: 'string'},
 
-        active: {
+        title: {type: 'string'},
+
+        visible: {
             type: 'boolean',
             defaultsTo: false
         },
 
-        labgroup: {model: 'labgroups'}
+        description: {type: 'longtext'},
+
+        replies: {
+            collection: 'taskreplays',
+            via: 'task'
+        },
+
+        topic: {model: 'topics'}
     }
 };
 
