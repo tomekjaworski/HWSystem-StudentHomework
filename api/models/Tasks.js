@@ -9,23 +9,23 @@ const Tasks = module.exports = {
 
     attributes: {
 
-        number: {type: 'string'},
+        number: { type: 'string' },
 
-        title: {type: 'string'},
+        title: { type: 'string' },
 
         visible: {
             type: 'boolean',
             defaultsTo: false
         },
 
-        description: {type: 'longtext'},
+        description: { type: 'longtext' },
 
         replies: {
-            collection: 'taskreplays',
+            collection: 'taskreplies',
             via: 'task'
         },
 
-        topic: {model: 'topics'}
+        topic: { model: 'topics' }
     }
 };
 

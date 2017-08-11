@@ -1,21 +1,19 @@
 /**
- * TaskReplayComments.js
+ * CustomDeadlines.js
  *
  * @description :: TODO: You might write a short summary of how this model works and what it represents here.
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
  */
 
-const TaskReplayComments = module.exports = {
+module.exports = {
 
     attributes: {
 
-        replay: {model: 'taskreplays'},
+        student: { model: 'users' },
 
-        user: {model: 'Users'},
+        topic: { model: 'topics' },
 
-        comment: {type: 'text'},
-
-        viewed: {type: 'boolean'}
+        deadline: { type: 'datetime' }
     }
 };
 

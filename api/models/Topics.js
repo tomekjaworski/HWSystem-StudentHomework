@@ -9,18 +9,18 @@ const Topics = module.exports = {
 
     attributes: {
 
-        number: {type: 'string'},
+        number: { type: 'string' },
 
-        title: {type: 'string'},
+        title: { type: 'string' },
 
         visible: {
             type: 'boolean',
             defaultsTo: false
         },
 
-        deadline: {type: 'datetime'},
+        deadline: { type: 'datetime' },
 
-        group: {model: 'labgroups'},
+        group: { model: 'labgroups' },
 
         tasks: {
             collection: 'tasks',

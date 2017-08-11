@@ -46,7 +46,7 @@ module.exports.connections = {
         user: 'homework', //optional
         password: 'uP6CStHmy76YhMZS', //optional
         database: 'homework' //optional
-    },
+    }
 
     /***************************************************************************
      *                                                                          *

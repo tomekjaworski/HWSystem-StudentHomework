@@ -9,11 +9,11 @@ const DeanGroups = module.exports = {
 
     attributes: {
 
-        name: {type: 'string'},
+        name: { type: 'string' },
 
-        desc: {type: 'string'},
+        desc: { type: 'string' },
 
-        owner: {model: 'users'},
+        owner: { model: 'users' },
 
         students: {
             collection: 'users',

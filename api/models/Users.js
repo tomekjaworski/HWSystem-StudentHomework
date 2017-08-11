@@ -9,9 +9,9 @@ const Users = module.exports = {
 
     attributes: {
 
-        name: {type: 'string'},
+        name: { type: 'string' },
 
-        surname: {type: 'string'},
+        surname: { type: 'string' },
 
         album: {
             type: 'string',
@@ -25,9 +25,9 @@ const Users = module.exports = {
             type: 'email'
         },
 
-        password: {type: 'string'},
+        password: { type: 'string' },
 
-        salt: {type: 'string'},
+        salt: { type: 'string' },
 
         activated: {
             type: 'boolean',
@@ -55,7 +55,7 @@ const Users = module.exports = {
             via: 'students'
         },
 
-        fullName: function(){
+        fullName: function () {
             return this.name + ' ' + this.surname;
         }
     }
