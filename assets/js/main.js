@@ -58,6 +58,39 @@ passfield.keydown(function (handler) {
 
 $( '.button-topicview' ).click(function( event ) {
     event.preventDefault();
-    $( '#tasks-column' ).append("ajax<br>"); //todo: ajax
+
+    var taskscolumn = $( '#tasks-column' )[0];
+
+    var topicid = $(this).data('topicid');
+
+    var request = $.ajax({
+        url: "/topic/" + topicid + "/tasks",
+        // url: "/",
+        method: "GET",
+        dataType: "html"
+    });
+
+    request.done(function( msg ) {
+        taskscolumn.innerHTML = msg;
+
+        // $( "#log" ).html( msg );
+    });
+
+    request.fail(function( jqXHR, textStatus ) {
+        alert( "Request failed: " + textStatus );
+    });
+
+    history.replaceState(null, document.title, location.pathname+"#!/back");
+    history.pushState(null, document.title, "/topic/" + topicid + "/tasks");
+
+    window.addEventListener("popstate", function() {
+        if(location.hash === "#!/back") {
+            history.replaceState(null, document.title, location.pathname);
+            setTimeout(function(){
+                location.replace("/account");
+            },0);
+        }
+    }, false);
+
     return false;
 });

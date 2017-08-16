@@ -12,7 +12,7 @@ mixin topicentry(id, title, percent, values)
                 //-(href='/account/topics/'+ id + '/tasks')
                 .d-flex.w-100.justify-content-between.mb-2
                     h5.mb-2.mr-2.topic-title=title
-                    button.btn.btn-secondary.align-self-start.button-topicview(id='button-topicview-' + id,) ->
+                    button.btn.btn-secondary.align-self-start.button-topicview(id='button-topicview-' + id, data-topicid=id) ->
 
 
                 small.text-muted
@@ -38,13 +38,9 @@ mixin topicentry(id, title, percent, values)
 
 
 .list-group#topics-accordion(role='tablist', aria-multiselectable='true')
-    +topicentry(1, "1. Tablice jednowymiarowesssssssssssssss", 25, [22, 15, 8, 2, 2, 12, 0, 8])
-    +topicentry(2, "2. Tablice jednowymiarowe", 50, [24, 15, 8, 2, 2, 12, 0, 8])
-    +topicentry(3, "3. Tablice jednowymiarowe", 76, [25, 15, 8, 2, 2, 12, 0, 8])
-    +topicentry(4, "4. Tablice jednowymiarowe", 55, [26, 15, 8, 2, 2, 12, 0, 8])
-    +topicentry(5, "5. Tablice jednowymiarowe", 55, [29, 15, 8, 2, 2, 12, 0, 8])
-    +topicentry(6, "6. Tablice jednowymiarowe", 55, [17, 15, 8, 2, 2, 12, 0, 8])
-    +topicentry(7, "7. Tablice jednowymiarowe", 55, [10, 15, 8, 2, 2, 12, 0, 8])
+    //-code=JSON.stringify(data)
+    each t in data.topics
+        +topicentry(t.topicId, t.topicNumber + '. ' + t.topicTitle, t.repliesAccepted/t.taskCount*100, [t.taskCount, t.repliesCount, t.repliesTeacherAccepted, t.repliesBlocked, t.repliesCommented, t.repliesMachineAccepted, t.repliesMachineRejected, t.repliesAccepted])
 
 
 

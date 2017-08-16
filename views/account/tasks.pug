@@ -1,6 +1,4 @@
-
-
-table.table.table-striped.responsive
+table.table.table-striped.table-hover.responsive
     thead
         tr
             th #
@@ -8,5 +6,17 @@ table.table.table-striped.responsive
             th Last Name
             th Username
     tbody
-        each val in [1, 2, 3, 4, 5,6,7,8,9,10,11,12,13,14,15,16,17]
-            +entry(val)
+        tr
+            th(scope='row') 1
+            td Mark
+            td Otto
+            td @mdo
+        tr
+            th(scope='row') 2
+            td Jacob
+            td Thornton
+            td @fat
+        tr
+            th(scope='row') 3
+            td(colspan='2') Larry the Bird
+            td @twitter
