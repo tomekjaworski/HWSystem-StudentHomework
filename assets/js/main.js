@@ -59,8 +59,11 @@ passfield.keydown(function (handler) {
 $( '.button-topicview' ).click(function( event ) {
     event.preventDefault();
 
-    var taskscolumn = $( '#tasks-column' )[0];
+    var topicscolumn = $('#topics-column');
+    var taskscolumn = $('#tasks-column');
 
+    topicscolumn.addClass('hidden-md-down');
+    taskscolumn.removeClass('hidden-md-down');
     var topicid = $(this).data('topicid');
 
     var request = $.ajax({
@@ -70,25 +73,25 @@ $( '.button-topicview' ).click(function( event ) {
         dataType: "html"
     });
 
-    request.done(function( msg ) {
-        taskscolumn.innerHTML = msg;
+    request.done(function (msg) {
+        taskscolumn[0].innerHTML = msg;
 
         // $( "#log" ).html( msg );
     });
 
-    request.fail(function( jqXHR, textStatus ) {
-        alert( "Request failed: " + textStatus );
+    request.fail(function (jqXHR, textStatus) {
+        console.log("Request failed: " + textStatus);
     });
 
-    history.replaceState(null, document.title, location.pathname+"#!/back");
+    history.replaceState(null, document.title, location.pathname + "#!/back");
     history.pushState(null, document.title, "/topic/" + topicid + "/tasks");
 
-    window.addEventListener("popstate", function() {
-        if(location.hash === "#!/back") {
+    window.addEventListener("popstate", function () {
+        if (location.hash === "#!/back") {
             history.replaceState(null, document.title, location.pathname);
-            setTimeout(function(){
+            setTimeout(function () {
                 location.replace("/account");
-            },0);
+            }, 0);
         }
     }, false);
 

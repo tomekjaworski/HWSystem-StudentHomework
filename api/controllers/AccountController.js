@@ -215,9 +215,9 @@ const AccountController = module.exports = {
                         if ( err ) {
                             return res.serverError(err);
                         }
-                        let ret = { message: lab.message, topics: data };
+                        let ret = { message: lab.labgroup.message, topics: data };
+                        console.log(ret);
                         return res.view('account/index', { data: ret });
-                        console.log(data);
                     });
                 });
         }
