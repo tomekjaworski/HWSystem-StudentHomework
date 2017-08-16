@@ -174,37 +174,31 @@ module.exports.bootstrap = function ( cb ) {
                                             number: '1a',
                                             title: 'Testowe zadanie 1',
                                             visible: true,
-                                            description: 'Opis zadania',
                                             topic: topics[ 0 ]
                                         }, {
                                             number: '2a',
                                             title: 'Testowe zadanie 2',
                                             visible: true,
-                                            description: 'Opis zadania',
                                             topic: topics[ 0 ]
                                         }, {
                                             number: '3a',
                                             title: 'Testowe zadanie 3',
                                             visible: true,
-                                            description: 'Opis zadania',
                                             topic: topics[ 0 ]
                                         }, {
                                             number: '1b',
                                             title: 'Testowe zadanie 1',
                                             visible: true,
-                                            description: 'Opis zadania',
                                             topic: topics[ 1 ]
                                         }, {
                                             number: '2b',
                                             title: 'Testowe zadanie 2',
                                             visible: true,
-                                            description: 'Opis zadania',
                                             topic: topics[ 1 ]
                                         }, {
                                             number: '3b',
                                             title: 'Testowe zadanie 3',
                                             visible: true,
-                                            description: 'Opis zadania',
                                             topic: topics[ 1 ]
                                         }
                                     ]).exec(function ( err, tasks ) {
@@ -212,165 +206,196 @@ module.exports.bootstrap = function ( cb ) {
                                             throw err;
                                         }
 
-                                        TaskReplies.create([
+                                        TaskDescription.create([
                                             {
-                                                student: users[ 2 ],
-                                                task: tasks[ 0 ],
-                                                teacherStatus: 1,
-                                                machineStatus: 2
-                                            }, {
-                                                student: users[ 2 ],
-                                                task: tasks[ 1 ],
-                                                teacherStatus: 0,
-                                                machineStatus: 2
-                                            }, {
-                                                student: users[ 2 ],
-                                                task: tasks[ 2 ],
-                                                teacherStatus: 2,
-                                                machineStatus: 0
-                                            }, {
-                                                student: users[ 3 ],
-                                                task: tasks[ 3 ],
-                                                teacherStatus: 0,
-                                                machineStatus: 0
-                                            }, {
-                                                student: users[ 3 ],
-                                                task: tasks[ 4 ],
-                                                teacherStatus: 0,
-                                                machineStatus: 3
-                                            }, {
-                                                student: users[ 3 ],
-                                                task: tasks[ 5 ],
-                                                teacherStatus: 1,
-                                                machineStatus: 1
+                                                task: tasks[0],
+                                                description: 'Opis zadania'
+                                            },
+                                            {
+                                                task: tasks[1],
+                                                description: 'Opis zadania'
+                                            },
+                                            {
+                                                task: tasks[2],
+                                                description: 'Opis zadania'
+                                            },
+                                            {
+                                                task: tasks[3],
+                                                description: 'Opis zadania'
+                                            },
+                                            {
+                                                task: tasks[4],
+                                                description: 'Opis zadania'
+                                            },
+                                            {
+                                                task: tasks[5],
+                                                description: 'Opis zadania'
                                             }
-                                        ]).exec(function ( err, tr ) {
+                                        ]).exec(function ( err, td ) {
                                             if ( err ) {
                                                 throw err;
                                             }
 
-                                            TaskReplyFiles.create([
+                                            TaskReplies.create([
                                                 {
-                                                    reply: tr[ 0 ],
-                                                    filePath: 'xxx',
-                                                    fileName: 'main',
-                                                    fileSize: 200,
-                                                    fileExt: 'cpp',
-                                                    fileMimeType: 'text/plain'
+                                                    student: users[ 2 ],
+                                                    task: tasks[ 0 ],
+                                                    teacherStatus: 1,
+                                                    machineStatus: 2
                                                 }, {
-                                                    reply: tr[ 0 ],
-                                                    filePath: 'xxx',
-                                                    fileName: 'main',
-                                                    fileSize: 200,
-                                                    fileExt: 'h',
-                                                    fileMimeType: 'text/plain'
+                                                    student: users[ 2 ],
+                                                    task: tasks[ 1 ],
+                                                    teacherStatus: 0,
+                                                    machineStatus: 2
                                                 }, {
-                                                    reply: tr[ 1 ],
-                                                    filePath: 'xxx',
-                                                    fileName: 'main',
-                                                    fileSize: 200,
-                                                    fileExt: 'c',
-                                                    fileMimeType: 'text/plain'
+                                                    student: users[ 2 ],
+                                                    task: tasks[ 2 ],
+                                                    teacherStatus: 2,
+                                                    machineStatus: 0
                                                 }, {
-                                                    reply: tr[ 1 ],
-                                                    filePath: 'xxx',
-                                                    fileName: 'main',
-                                                    fileSize: 200,
-                                                    fileExt: 'cpp',
-                                                    fileMimeType: 'text/plain'
+                                                    student: users[ 3 ],
+                                                    task: tasks[ 3 ],
+                                                    teacherStatus: 0,
+                                                    machineStatus: 0
                                                 }, {
-                                                    reply: tr[ 2 ],
-                                                    filePath: 'xxx',
-                                                    fileName: 'main',
-                                                    fileSize: 200,
-                                                    fileExt: 'cpp',
-                                                    fileMimeType: 'text/plain'
+                                                    student: users[ 3 ],
+                                                    task: tasks[ 4 ],
+                                                    teacherStatus: 0,
+                                                    machineStatus: 3
                                                 }, {
-                                                    reply: tr[ 2 ],
-                                                    filePath: 'xxx',
-                                                    fileName: 'main',
-                                                    fileSize: 200,
-                                                    fileExt: 'cpp',
-                                                    fileMimeType: 'text/plain'
-                                                }, {
-                                                    reply: tr[ 3 ],
-                                                    filePath: 'xxx',
-                                                    fileName: 'main',
-                                                    fileSize: 200,
-                                                    fileExt: 'cpp',
-                                                    fileMimeType: 'text/plain'
-                                                }, {
-                                                    reply: tr[ 3 ],
-                                                    filePath: 'xxx',
-                                                    fileName: 'main',
-                                                    fileSize: 200,
-                                                    fileExt: 'cpp',
-                                                    fileMimeType: 'text/plain'
-                                                }, {
-                                                    reply: tr[ 4 ],
-                                                    filePath: 'xxx',
-                                                    fileName: 'main',
-                                                    fileSize: 200,
-                                                    fileExt: 'cpp',
-                                                    fileMimeType: 'text/plain'
-                                                }, {
-                                                    reply: tr[ 4 ],
-                                                    filePath: 'xxx',
-                                                    fileName: 'main',
-                                                    fileSize: 200,
-                                                    fileExt: 'cpp',
-                                                    fileMimeType: 'text/plain'
-                                                }, {
-                                                    reply: tr[ 5 ],
-                                                    filePath: 'xxx',
-                                                    fileName: 'main',
-                                                    fileSize: 200,
-                                                    fileExt: 'cpp',
-                                                    fileMimeType: 'text/plain'
-                                                }, {
-                                                    reply: tr[ 5 ],
-                                                    filePath: 'xxx',
-                                                    fileName: 'main',
-                                                    fileSize: 200,
-                                                    fileExt: 'cpp',
-                                                    fileMimeType: 'text/plain'
+                                                    student: users[ 3 ],
+                                                    task: tasks[ 5 ],
+                                                    teacherStatus: 1,
+                                                    machineStatus: 1
                                                 }
-                                            ]).exec(function ( err, trf ) {
+                                            ]).exec(function ( err, tr ) {
                                                 if ( err ) {
                                                     throw err;
                                                 }
 
-                                                TaskReplyComments.create([
+                                                TaskReplyFiles.create([
                                                     {
                                                         reply: tr[ 0 ],
-                                                        user: users[ 1 ],
-                                                        comment: 'Test message from Teacher',
-                                                        viewed: false
-                                                    },
-                                                    {
-                                                        reply: tr[ 1 ],
-                                                        user: users[ 1 ],
-                                                        comment: 'Test message from Teacher',
-                                                        viewed: false
-                                                    },
-                                                    {
+                                                        filePath: 'xxx',
+                                                        fileName: 'main',
+                                                        fileSize: 200,
+                                                        fileExt: 'cpp',
+                                                        fileMimeType: 'text/plain'
+                                                    }, {
                                                         reply: tr[ 0 ],
-                                                        user: users[ 2 ],
-                                                        comment: 'Test message from Student',
-                                                        viewed: false
-                                                    },
-                                                    {
+                                                        filePath: 'xxx',
+                                                        fileName: 'main',
+                                                        fileSize: 200,
+                                                        fileExt: 'h',
+                                                        fileMimeType: 'text/plain'
+                                                    }, {
                                                         reply: tr[ 1 ],
-                                                        user: users[ 2 ],
-                                                        comment: 'Test message from Student',
-                                                        viewed: false
+                                                        filePath: 'xxx',
+                                                        fileName: 'main',
+                                                        fileSize: 200,
+                                                        fileExt: 'c',
+                                                        fileMimeType: 'text/plain'
+                                                    }, {
+                                                        reply: tr[ 1 ],
+                                                        filePath: 'xxx',
+                                                        fileName: 'main',
+                                                        fileSize: 200,
+                                                        fileExt: 'cpp',
+                                                        fileMimeType: 'text/plain'
+                                                    }, {
+                                                        reply: tr[ 2 ],
+                                                        filePath: 'xxx',
+                                                        fileName: 'main',
+                                                        fileSize: 200,
+                                                        fileExt: 'cpp',
+                                                        fileMimeType: 'text/plain'
+                                                    }, {
+                                                        reply: tr[ 2 ],
+                                                        filePath: 'xxx',
+                                                        fileName: 'main',
+                                                        fileSize: 200,
+                                                        fileExt: 'cpp',
+                                                        fileMimeType: 'text/plain'
+                                                    }, {
+                                                        reply: tr[ 3 ],
+                                                        filePath: 'xxx',
+                                                        fileName: 'main',
+                                                        fileSize: 200,
+                                                        fileExt: 'cpp',
+                                                        fileMimeType: 'text/plain'
+                                                    }, {
+                                                        reply: tr[ 3 ],
+                                                        filePath: 'xxx',
+                                                        fileName: 'main',
+                                                        fileSize: 200,
+                                                        fileExt: 'cpp',
+                                                        fileMimeType: 'text/plain'
+                                                    }, {
+                                                        reply: tr[ 4 ],
+                                                        filePath: 'xxx',
+                                                        fileName: 'main',
+                                                        fileSize: 200,
+                                                        fileExt: 'cpp',
+                                                        fileMimeType: 'text/plain'
+                                                    }, {
+                                                        reply: tr[ 4 ],
+                                                        filePath: 'xxx',
+                                                        fileName: 'main',
+                                                        fileSize: 200,
+                                                        fileExt: 'cpp',
+                                                        fileMimeType: 'text/plain'
+                                                    }, {
+                                                        reply: tr[ 5 ],
+                                                        filePath: 'xxx',
+                                                        fileName: 'main',
+                                                        fileSize: 200,
+                                                        fileExt: 'cpp',
+                                                        fileMimeType: 'text/plain'
+                                                    }, {
+                                                        reply: tr[ 5 ],
+                                                        filePath: 'xxx',
+                                                        fileName: 'main',
+                                                        fileSize: 200,
+                                                        fileExt: 'cpp',
+                                                        fileMimeType: 'text/plain'
                                                     }
-                                                ]).exec(function ( err, trc ) {
+                                                ]).exec(function ( err, trf ) {
                                                     if ( err ) {
                                                         throw err;
                                                     }
 
-                                                    return cb();
+                                                    TaskReplyComments.create([
+                                                        {
+                                                            reply: tr[ 0 ],
+                                                            user: users[ 1 ],
+                                                            comment: 'Test message from Teacher',
+                                                            viewed: false
+                                                        },
+                                                        {
+                                                            reply: tr[ 1 ],
+                                                            user: users[ 1 ],
+                                                            comment: 'Test message from Teacher',
+                                                            viewed: false
+                                                        },
+                                                        {
+                                                            reply: tr[ 0 ],
+                                                            user: users[ 2 ],
+                                                            comment: 'Test message from Student',
+                                                            viewed: false
+                                                        },
+                                                        {
+                                                            reply: tr[ 1 ],
+                                                            user: users[ 2 ],
+                                                            comment: 'Test message from Student',
+                                                            viewed: false
+                                                        }
+                                                    ]).exec(function ( err, trc ) {
+                                                        if ( err ) {
+                                                            throw err;
+                                                        }
+
+                                                        return cb();
+                                                    });
                                                 });
                                             });
                                         });
