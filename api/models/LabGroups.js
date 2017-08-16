@@ -17,11 +17,9 @@ const LabGroups = module.exports = {
 
         owner: { model: 'users' },
 
-        time: { type: 'string' },
-
-        date: {
-            type: 'integer',
-            enum: [ 0, 1, 2, 3, 4, 5, 6 ]
+        customDeadlines: {
+            collection: 'labgrouptopicdeadline',
+            via: 'group'
         },
 
         students: {

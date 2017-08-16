@@ -11,15 +11,18 @@ const TaskReplyFiles = module.exports = {
 
         reply: { model: 'taskreplies' },
 
-        filePath: { type: 'string' },
-
         fileName: { type: 'string' },
 
         fileSize: { type: 'integer' },
 
         fileExt: { type: 'string' },
 
-        fileMimeType: { type: 'string' }
+        fileMimeType: { type: 'string' },
+
+        file: {
+            collection: 'taskreplyfilecontent',
+            via: 'file'
+        }
     }
 };
 

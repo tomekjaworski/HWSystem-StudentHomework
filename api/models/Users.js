@@ -39,11 +39,6 @@ const Users = module.exports = {
             via: 'users'
         },
 
-        deanGroups: {
-            collection: 'deangroups',
-            via: 'students'
-        },
-
         labGroups: {
             collection: 'labgroups',
             via: 'student',

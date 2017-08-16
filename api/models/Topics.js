@@ -20,10 +20,13 @@ const Topics = module.exports = {
 
         deadline: { type: 'datetime' },
 
-        group: { model: 'labgroups' },
-
         tasks: {
             collection: 'tasks',
+            via: 'topic'
+        },
+
+        customGroupDeadline: {
+            collection: 'labgrouptopicdeadline',
             via: 'topic'
         }
     }
