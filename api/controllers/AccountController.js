@@ -136,6 +136,9 @@ const AccountController = module.exports = {
                 if ( !regexEmail.test(email) ) {
                     return AccountController.registerError(res, 'Rejestracja dostępna tylko z uczelnienych maili');
                 }
+                if(album.length != 6){
+                    return AccountController.registerError(res, 'Numer albumu jest nieprawidłowy.');
+                }
                 if ( password !== repassword ) {
                     return AccountController.registerError(res, 'Hasła nie są identyczne');
                 }
@@ -159,9 +162,16 @@ const AccountController = module.exports = {
                         if ( err ) {
                             res.jsonx(err);
                         }
+
+                        if(!dean){
+                            return AccountController.registerError(res, 'Nieprawidłowa grupa dziekańska');
+                        }
                         LabGroups.findOneByName(labgroups).exec(function ( err, lab ) {
                             if ( err ) {
                                 res.jsonx(err);
+                            }
+                            if(!lab){
+                                return AccountController.registerError(res, 'Nieprawidłowa grupa laboratoryjna.');
                             }
                             Users.create({
                                 name: name,
