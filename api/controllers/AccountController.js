@@ -62,10 +62,10 @@ const AccountController = module.exports = {
         }
         switch ( req.method ) {
             case 'GET':
-                return res.view('account/login', { title: 'Logowanie' });
+                return res.view('account/login', { title: 'Logowanie', redirect: req.param('redirect') });
                 break;
             case 'POST':
-                let email = req.param('email'), password = req.param('password');
+                let email = req.param('email'), password = req.param('password'), red = req.param('redirect');;
                 if ( !_.isString(email) || !_.isString(password) ) {
                     return AccountController.loginError(res, 'Źle wporwadzone dane');
                 }
@@ -81,8 +81,8 @@ const AccountController = module.exports = {
                             return AccountController.loginError(res, 'Konto nie jest aktywne');
                         }
                         req.session.authed = user.id;
-                        if ( _.isString(req.param('redirect')) ) {
-                            return res.redirect(req.param('redirect'));
+                        if ( _.isString(red) ) {
+                            return res.redirect(red);
                         }
                         else {
                             return res.redirect('/account');
@@ -179,11 +179,9 @@ const AccountController = module.exports = {
                                 return res.serverError(err);
                             }
 
-                            return res.redirect('/login?registerSuccess');
+                                return res.redirect(sails.getUrlFor('AccountController.login'));
+                            });
                         });
-                    });
-
-
 
                 });
 
@@ -191,34 +189,48 @@ const AccountController = module.exports = {
     },
 
     index: function ( req, res ) {
-        StudentsLabGroups.findOne({ student: req.localUser.id/*, active: true*/ }).populate('labgroup')
-            .exec(function ( err, lab ) {
-                if ( err ) {
-                    return res.serverError(err);
-                }
-
-                Topics.query('SELECT topics.id topicId, topics.number topicNumber, topics.title topicTitle, topics.deadline topicDeadline, \n' +
-                    '    COUNT(tasks.id) taskCount, COUNT(replies.id) repliesCount, sum(case when replies.teacherStatus = 1 then 1 else 0 end) repliesTeacherAccepted,\n' +
-                    '    sum(case when replies.teacherStatus = 2 then 1 else 0 end) repliesTeacherRejected,\n' +
-                    '    sum(case when replies.blocked = 1 then 1 else 0 end) repliesBlocked,\n' +
-                    '    COUNT(DISTINCT comments.reply) repliesCommented,\n' +
-                    '    sum(case when replies.machineStatus = 2 then 1 else 0 end) repliesMachineAccepted,\n' +
-                    '    sum(case when replies.machineStatus = 3 then 1 else 0 end) repliesMachineRejected,\n' +
-                    '    sum(case when replies.machineStatus = 2 and replies.teacherStatus = 1 then 1 else 0 end) repliesAccepted\n' +
-                    '    FROM topics\n' +
-                    'LEFT JOIN tasks ON tasks.topic = topics.id\n' +
-                    'LEFT JOIN taskreplies AS replies ON replies.task = tasks.id\n' +
-                    'LEFT JOIN taskreplycomments AS comments ON replies.id = comments.reply\n' +
-                    'WHERE topics.group = ?\n' +
-                    'GROUP BY topics.id', [ lab.id ], ( err, data ) => {
+        if(req.localUser.hasRole('student')) {
+            StudentsLabGroups.findOne({ student: req.localUser.id/*, active: true*/ }).populate('labgroup')
+                .exec(function ( err, lab ) {
                     if ( err ) {
                         return res.serverError(err);
                     }
-                    let ret = { message: lab.message, topics: data };
-                    return res.view('account/index', { data: ret });
-                    console.log(data);
+
+                    Topics.query('SELECT topics.id topicId, topics.number topicNumber, topics.title topicTitle, topics.deadline topicDeadline, \n' +
+                        '    COUNT(tasks.id) taskCount, COUNT(replies.id) repliesCount, sum(case when replies.teacherStatus = 1 then 1 else 0 end) repliesTeacherAccepted,\n' +
+                        '    sum(case when replies.teacherStatus = 2 then 1 else 0 end) repliesTeacherRejected,\n' +
+                        '    sum(case when replies.blocked = 1 then 1 else 0 end) repliesBlocked,\n' +
+                        '    COUNT(DISTINCT comments.reply) repliesCommented,\n' +
+                        '    sum(case when replies.machineStatus = 2 then 1 else 0 end) repliesMachineAccepted,\n' +
+                        '    sum(case when replies.machineStatus = 3 then 1 else 0 end) repliesMachineRejected,\n' +
+                        '    sum(case when replies.machineStatus = 2 and replies.teacherStatus = 1 then 1 else 0 end) repliesAccepted\n' +
+                        '    FROM topics\n' +
+                        'LEFT JOIN tasks ON tasks.topic = topics.id\n' +
+                        'LEFT JOIN taskreplies AS replies ON replies.task = tasks.id\n' +
+                        'LEFT JOIN taskreplycomments AS comments ON replies.id = comments.reply\n' +
+                        'WHERE topics.group = ?\n' +
+                        'GROUP BY topics.id', [ lab.id ], ( err, data ) => {
+                        if ( err ) {
+                            return res.serverError(err);
+                        }
+                        let ret = { message: lab.labgroup.message, topics: data };
+                        console.log(ret);
+                        return res.view('account/index', { data: ret });
+                    });
                 });
-            });
+        }
+        else{
+            return res.view('/index');
+        }
+    },
+
+    tasks: function ( req, res ) {
+        let topicId = req.param('id');
+        Topics.findOneById(topicId).populate('tasks').exec((err, topic)=>{
+            console.log(topic);
+            return res.json(topic);
+        });
+        
     },
     
     task:function (req, res) {

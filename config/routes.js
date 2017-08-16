@@ -41,6 +41,7 @@ module.exports.routes = {
 
     '/register': 'AccountController.register',
 
+    'GET /topic/:id/tasks' : 'AccountController.tasks'
     'GET /topic/:topicid/task/:taskid': 'AccountController.task',
 
 

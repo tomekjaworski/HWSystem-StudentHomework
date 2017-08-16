@@ -1,42 +1,46 @@
-mixin topiclistinline(tooltip, value)
-    li.list-inline-item.btn.btn-secondary(data-toggle='tooltip', data-placement='bottom', title=tooltip)= value
+mixin topiclist(tooltip, value, color)
+    if color === undefined
+        - var color = 'primary'
+    li.list-group-item.flex-nowrap
+        span.badge.badge-pill.taskcount(class='badge-' + color)= value
+        | #{tooltip}
 
 mixin topicentry(id, title, percent, values)
-    a.list-group-item.list-group-item-action.flex-column.align-items-start.topic-entry(data-toggle='collapse', href='#collapse'+id, aria-expanded='false', aria-controls='collapseExample')
-        //-(href='/account/topics/'+ id + '/tasks')
-
-        .d-flex.w-100.justify-content-between.mb-2
-            h5.mb-2.topic-title=title
-            button.btn.btn-secondary.align-self-start ->
-
-
-        small.text-muted
-        .progress.w-100
-            if percent < 37
-                .progress-bar.bg-danger(role='progressbar', aria-valuenow=percent, aria-valuemin='0', aria-valuemax='100', style='width: ' + percent + '%')
-            else if percent < 75
-                .progress-bar.bg-warning(role='progressbar', aria-valuenow=percent, aria-valuemin='0', aria-valuemax='100', style='width: ' + percent +'%')
-            else
-                .progress-bar.bg-success(role='progressbar', aria-valuenow=percent, aria-valuemin='0', aria-valuemax='100', style='width: ' + percent +'%')
-
-            .progress-bar.progress-bar-striped.progress-bar-animated.bg-warning(role='progressbar', aria-valuenow=percwarning, aria-valuemin='0', aria-valuemax='100', style='width: ' + percwarning + '%')
-        .collapse(id='collapse'+id)
-            ul.list-inline.d-flex.w-100.justify-content-around.mt-2.points-scroller
-                +topiclistinline("Liczba wszystkich dostępnych zadań", values[0])
-                +topiclistinline("Liczba zadań przesłanych", values[1])
-                +topiclistinline("Liczba rozwiązań zatwierdzonych", values[2])
-                +topiclistinline("Liczba zadań niezaliczonych", values[3])
-                +topiclistinline("Liczba rozwiązań z uwagami/komentarzami Prowadzącego", values[4])
-                +topiclistinline("Liczba zadań z pozytywnym raportem maszynowym", values[5])
-                +topiclistinline("Liczba zadań z negatywnym raportem maszynowym", values[6])
-                +topiclistinline("Liczba zadań zaliczonych", values[7])
+    .card.list-group-item.list-group-item-hover.flex-column.align-items-start.topic-entry.collapsed(data-toggle='collapse', data-parent='#topics-accordion', href='#topic-collapse-' + id, aria-expanded='false', aria-controls='topic-collapse-' + id, id="topic-a-" + id)
+        .w-100(id='topic-entry-' + id, role='tab')
+            a
+                //-(href='/account/topics/'+ id + '/tasks')
+                .d-flex.w-100.justify-content-between.mb-2
+                    h5.mb-2.mr-2.topic-title=title
+                    button.btn.btn-secondary.align-self-start.button-topicview(id='button-topicview-' + id, data-topicid=id) ->
 
 
-.list-group
-    +topicentry(1, "5. Tablice jednowymiarowesssssssssssssss", 25, [20, 15, 8, 2, 2, 12, 0, 8])
-    +topicentry(2, "5. Tablice jednowymiarowe", 50, [20, 15, 8, 2, 2, 12, 0, 8])
-    +topicentry(3, "5. Tablice jednowymiarowe", 76, [20, 15, 8, 2, 2, 12, 0, 8])
-    +topicentry(4, "5. Tablice jednowymiarowe", 55, [20, 15, 8, 2, 2, 12, 0, 8])
-    +topicentry(5, "5. Tablice jednowymiarowe", 55, [20, 15, 8, 2, 2, 12, 0, 8])
-    +topicentry(6, "5. Tablice jednowymiarowe", 55, [20, 15, 8, 2, 2, 12, 0, 8])
-    +topicentry(7, "5. Tablice jednowymiarowe", 55, [20, 15, 8, 2, 2, 12, 0, 8])
+                small.text-muted
+
+                .progress.w-100
+                    if percent < 37
+                        .progress-bar.bg-danger(role='progressbar', aria-valuenow=percent, aria-valuemin='0', aria-valuemax='100', style='width: ' + percent + '%')
+                    else if percent < 75
+                        .progress-bar.bg-warning(role='progressbar', aria-valuenow=percent, aria-valuemin='0', aria-valuemax='100', style='width: ' + percent + '%')
+                    else
+                        .progress-bar.bg-success(role='progressbar', aria-valuenow=percent, aria-valuemin='0', aria-valuemax='100', style='width: ' + percent + '%')
+
+        .collapse.w-100(id='topic-collapse-' + id, role='tabpanel', aria-labelledby='topic-entry-' + id)
+            ul.list-group.w-100.mt-2
+                +topiclist("Wszystkie dostępne zadania", values[0])
+                +topiclist("Przesłane rozwiązania", values[1], 'info')
+                +topiclist("Zatwierdzone rozwiązania ", values[2],'success')
+                +topiclist("Niezaliczone zadania", values[3] , 'danger')
+                +topiclist("Rozwiązania z uwagami/komentarzami prowadzącego", values[4], 'warning')
+                +topiclist("Rozwiązania z pozytywnym raportem maszynowym", values[5], 'success')
+                +topiclist("Rozwiązania z negatywnym raportem maszynowym", values[6], 'danger')
+                +topiclist("Zadania zaliczone", values[7], 'success')
+
+
+.list-group#topics-accordion(role='tablist', aria-multiselectable='true')
+    //-code=JSON.stringify(data)
+    each t in data.topics
+        +topicentry(t.topicId, t.topicNumber + '. ' + t.topicTitle, t.repliesAccepted/t.taskCount*100, [t.taskCount, t.repliesCount, t.repliesTeacherAccepted, t.repliesTeacherRejected+t.repliesBlocked, t.repliesCommented, t.repliesMachineAccepted, t.repliesMachineRejected, t.repliesAccepted])
+
+
+

@@ -3,6 +3,8 @@ extends ../includes/layout
 mixin form
     form.form-signin(method='post', action='/login')
         h2.form-signin-heading Please sign in
+        if redirect
+            input(type='hidden', name='redirect', value=redirect)
         label.sr-only(for='inputEmail') Email address
         input#inputEmail.form-control(type='email', placeholder='Email address', required='', autofocus='' name='email')
         label.sr-only(for='inputPassword') Password
