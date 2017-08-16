@@ -118,16 +118,14 @@ const AccountController = module.exports = {
 
         switch ( req.method ) {
             case 'GET':
-                DeanGroups.find({}).exec(function ( err, dean ) {
-                    LabGroups.find({}).populate('owner').exec(function ( err, labs ) {
-                        return res.view('account/register', { title: 'Rejestracja', dea: dean, labs: labs });
-                    });
+                LabGroups.find({}).populate('owner').exec(function ( err, labs ) {
+                    return res.view('account/register', { title: 'Rejestracja',  labs: labs });
                 });
                 break;
             case 'POST':
                 let name = req.param('name'), album = req.param('album'), surname = req.param('surname'),
                     email = req.param('email'), password = req.param('password'), repassword = req.param('repassword');
-                let deangroups = req.param('groupd'), labgroups = req.param('groupl');
+                let labgroups = req.param('groupl');
                 let st = crypto.randomBytes(20).toString('hex');
                 if ( !name && !surname && !email && !password ) {
                     return AccountController.registerError(res, 'Proszę uzupełnić wszystkie pola.');
@@ -158,42 +156,34 @@ const AccountController = module.exports = {
                     if ( err ) {
                         return jsonx(err);
                     }
-                    DeanGroups.findOneByName(deangroups).exec(function ( err, dean ) {
+
+                    LabGroups.findOneByName(labgroups).exec(function ( err, lab ) {
                         if ( err ) {
                             res.jsonx(err);
                         }
-
-                        if(!dean){
-                            return AccountController.registerError(res, 'Nieprawidłowa grupa dziekańska');
+                        if(!lab){
+                            return AccountController.registerError(res, 'Nieprawidłowa grupa laboratoryjna.');
                         }
-                        LabGroups.findOneByName(labgroups).exec(function ( err, lab ) {
+                        Users.create({
+                            name: name,
+                            surname: surname,
+                            album: album,
+                            email: email,
+                            password: AccountController.hashPassword(password, st),
+                            salt: st,
+                            activated: true,
+                            roles: role,
+                            labGroups: [ lab ]
+                        }).exec(function ( err ) {
                             if ( err ) {
-                                res.jsonx(err);
+                                return res.serverError(err);
                             }
-                            if(!lab){
-                                return AccountController.registerError(res, 'Nieprawidłowa grupa laboratoryjna.');
-                            }
-                            Users.create({
-                                name: name,
-                                surname: surname,
-                                album: album,
-                                email: email,
-                                password: AccountController.hashPassword(password, st),
-                                salt: st,
-                                activated: true,
-                                roles: role,
-                                deanGroups: [ dean ],
-                                labGroups: [ lab ]
-                            }).exec(function ( err ) {
-                                if ( err ) {
-                                    return res.serverError(err);
-                                }
 
-                                return res.redirect('/login?registerSuccess');
-                            });
+                            return res.redirect('/login?registerSuccess');
                         });
-
                     });
+
+
 
                 });
 
@@ -229,6 +219,36 @@ const AccountController = module.exports = {
                     console.log(data);
                 });
             });
+    },
+    
+    task:function (req, res) {
+        switch (req.method){
+            case 'GET':
+
+                let topicparam = req.param('topicid'), taskparam = req.param('taskid');
+
+
+                Topics.findOneById(topicparam).exec(function (err, topic) {
+                    if (err){
+                        return res.badRequest(err);
+                    }
+
+                    Tasks.findOneById(taskparam).populate('description').exec(function (err, task) {
+                        if (err){
+                            return res.badRequest(err)
+                        }
+                        task.description = task.description[0].description;
+
+                        TaskReplies.find({student: req.localUser.id, task: task.id}).exec(function (err, taskReplie) {
+                            if (err){
+                                return res.badRequest(err);
+                            }
+
+                            return res.view('account/task', {topic: topic, task: task, taskReplie: taskReplie});
+                        });
+                    });
+                });
+        }
     }
 };
 

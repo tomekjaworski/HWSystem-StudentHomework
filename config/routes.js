@@ -39,7 +39,9 @@ module.exports.routes = {
     '/login': 'AccountController.login',
     'GET /logout': 'AccountController.logout',
 
-    '/register': 'AccountController.register'
+    '/register': 'AccountController.register',
+
+    'GET /topic/:topicid/task/:taskid': 'AccountController.task',
 
 
     /***************************************************************************

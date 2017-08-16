@@ -18,7 +18,10 @@ const Tasks = module.exports = {
             defaultsTo: false
         },
 
-        description: { model: 'taskdescription' },
+        description: {
+            collection: 'taskdescription',
+            via: 'task'
+        },
 
         replies: {
             collection: 'taskreplies',

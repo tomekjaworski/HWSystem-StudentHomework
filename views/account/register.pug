@@ -27,12 +27,6 @@ mixin form
             .col-sm-8
                 input#inputRePassword.form-control(type='password', placeholder='Confirm password', name='repassword', required)
         .form-group.row
-            label.col-sm-4.col-form-label(for='inputGroupD') Dean Group
-            .col-sm-8
-                select#inputGroupD.custom-select(name='groupd', required)
-                    each d in dea
-                        option(value=d.name)= d.name
-        .form-group.row
             label.col-sm-4.col-form-label(for='inputGroupL') Lab Group
             .col-sm-8
                 select#inputGroupL.custom-select(name='groupl', required)

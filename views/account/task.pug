@@ -1,0 +1,16 @@
+extends ../includes/layout
+
+block content
+    //h1 Topic: #{topic.id}
+    h1 Topic number: #{topic.number}
+    h1 Topic title: #{topic.title}
+    br
+
+    h1 Task number: #{task.number}
+    h1 Task name: #{task.title}
+    h1 Task description: #{task.description}
+
+    h1 Task replie student: #{taskReplie[0].student}
+    h1 Task replie task: #{taskReplie[0].task}
+    h1 Task replie teacherStatus: #{taskReplie[0].teacherStatus}
+    h1 Task replie machineStatus: #{taskReplie[0].machineStatus}
