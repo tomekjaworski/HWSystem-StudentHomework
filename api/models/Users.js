@@ -46,17 +46,16 @@ const Users = module.exports = {
 
         labGroups: {
             collection: 'labgroups',
-            via: 'students',
+            via: 'student',
             through: 'studentslabgroups'
-        },
-
-        subjects: {
-            collection: 'subjects',
-            via: 'students'
         },
 
         fullName: function () {
             return this.name + ' ' + this.surname;
+        },
+
+        hasRole: function (name) {
+            return !!this.roles.filter((role)=>role.name==name)[0];
         }
     }
 };

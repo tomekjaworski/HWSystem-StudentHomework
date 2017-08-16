@@ -18,7 +18,7 @@ const Tasks = module.exports = {
             defaultsTo: false
         },
 
-        description: { type: 'longtext' },
+        description: { model: 'taskdescription' },
 
         replies: {
             collection: 'taskreplies',
