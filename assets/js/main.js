@@ -56,18 +56,22 @@ passfield.keydown(function (handler) {
     }
 });
 
-$( '.button-topicview' ).click(function( event ) {
+$( '.button-topicview' ).click(function ( event ) {
     event.preventDefault();
+    loadTaskView($(this).data('topicid'));
+    return false;
+});
+
+function loadTaskView( topicid ) {
 
     var topicscolumn = $('#topics-column');
     var taskscolumn = $('#tasks-column');
 
     topicscolumn.addClass('hidden-md-down');
     taskscolumn.removeClass('hidden-md-down');
-    var topicid = $(this).data('topicid');
 
     var request = $.ajax({
-        url: "/topic/" + topicid + "/tasks",
+        url: "/ajax/topic/" + topicid + "/tasks",
         // url: "/",
         method: "GET",
         dataType: "html"
@@ -96,4 +100,8 @@ $( '.button-topicview' ).click(function( event ) {
     }, false);
 
     return false;
-});
+}
+
+if(typeof taskView !== "undefined"){
+    loadTaskView(taskView);
+}

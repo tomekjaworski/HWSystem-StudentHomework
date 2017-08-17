@@ -31,371 +31,331 @@ module.exports.bootstrap = function ( cb ) {
                     throw err;
                 }
 
-                DeanGroups.create([
-                    {
-                        name: 'Testowa',
-                        desc: 'Grupa testowa 1',
-                        owner: null
-                    }, {
-                        name: 'Testowa 2',
-                        desc: 'Grupa testowa 2',
-                        owner: null
-                    }, {
-                        name: 'Testowa 3',
-                        desc: 'Grupa testowa 3',
-                        owner: null
-                    }
-                ]).exec(function ( err, dean ) {
+                Subjects.create({
+                    name: 'Podstawy Programowania',
+                    desc: 'Podstawy podstaw'
+                }).exec(function ( err, sub ) {
                     if ( err ) {
                         throw err;
                     }
 
-                    Subjects.create({
-                        name: 'Podstawy Programowania',
-                        desc: 'Podstawy podstaw'
-                    }).exec(function ( err, sub ) {
+                    Users.create([
+                        {
+                            name: 'Test1',
+                            surname: 'Tester1',
+                            album: 123456,
+                            email: '1@p.lodz.pl',
+                            password: 'a150f0e3b050a2d9907288d84eee05312eaa384eba3d5775688b4cba26e0af38',
+                            salt: 'aaaa',
+                            activated: true,
+                            roles: [ roles[ 0 ] ]
+                        }, {
+                            name: 'Test2',
+                            surname: 'Tester2',
+                            album: 654321,
+                            email: '2@p.lodz.pl',
+                            password: 'a150f0e3b050a2d9907288d84eee05312eaa384eba3d5775688b4cba26e0af38',
+                            salt: 'aaaa',
+                            activated: true,
+                            roles: [ roles[ 1 ] ]
+                        }, {
+                            name: 'Test3',
+                            surname: 'Tester3',
+                            album: 456123,
+                            email: '3@p.lodz.pl',
+                            password: 'a150f0e3b050a2d9907288d84eee05312eaa384eba3d5775688b4cba26e0af38',
+                            salt: 'aaaa',
+                            activated: true,
+                            roles: [ roles[ 2 ] ]
+                        }, {
+                            name: 'Test4',
+                            surname: 'Tester4',
+                            album: 321654,
+                            email: '4@p.lodz.pl',
+                            password: 'a150f0e3b050a2d9907288d84eee05312eaa384eba3d5775688b4cba26e0af38',
+                            salt: 'aaaa',
+                            activated: true,
+                            roles: [ roles[ 2 ] ]
+                        }
+                    ]).exec(function ( err, users ) {
                         if ( err ) {
                             throw err;
                         }
 
-                        Users.create([
+                        LabGroups.create([
                             {
-                                name: 'Test1',
-                                surname: 'Tester1',
-                                album: 123456,
-                                email: '1@p.lodz.pl',
-                                password: 'a150f0e3b050a2d9907288d84eee05312eaa384eba3d5775688b4cba26e0af38',
-                                salt: 'aaaa',
-                                activated: true,
-                                roles: [ roles[ 0 ] ],
-                                deanGroups: [ dean[ 0 ] ]
+                                name: 'd3dx9_41',
+                                subject: sub,
+                                owner: users[ 1 ],
+                                time: '8:15 - 10:00',
+                                date: 0,
+                                students: [ users[ 2 ] ]
                             }, {
-                                name: 'Test2',
-                                surname: 'Tester2',
-                                album: 654321,
-                                email: '2@p.lodz.pl',
-                                password: 'a150f0e3b050a2d9907288d84eee05312eaa384eba3d5775688b4cba26e0af38',
-                                salt: 'aaaa',
-                                activated: true,
-                                roles: [ roles[ 1 ] ],
-                                deanGroups: [ dean[ 1 ] ]
+                                name: 'd3dx10_20',
+                                subject: sub,
+                                owner: users[ 1 ],
+                                time: '10:15 - 12:00',
+                                date: 1,
+                                students: [ users[ 3 ] ]
                             }, {
-                                name: 'Test3',
-                                surname: 'Tester3',
-                                album: 456123,
-                                email: '3@p.lodz.pl',
-                                password: 'a150f0e3b050a2d9907288d84eee05312eaa384eba3d5775688b4cba26e0af38',
-                                salt: 'aaaa',
-                                activated: true,
-                                roles: [ roles[ 2 ] ],
-                                deanGroups: [ dean[ 2 ] ]
+                                name: 'd3dx11',
+                                subject: sub,
+                                owner: users[ 1 ],
+                                time: '12:15 - 14:00',
+                                date: 2
                             }, {
-                                name: 'Test4',
-                                surname: 'Tester4',
-                                album: 321654,
-                                email: '4@p.lodz.pl',
-                                password: 'a150f0e3b050a2d9907288d84eee05312eaa384eba3d5775688b4cba26e0af38',
-                                salt: 'aaaa',
-                                activated: true,
-                                roles: [ roles[ 2 ] ],
-                                deanGroups: [ dean[ 0 ] ]
+                                name: 'd3dx2',
+                                subject: sub,
+                                owner: users[ 1 ],
+                                time: '14:15 - 16:00',
+                                date: 3
                             }
-                        ]).exec(function ( err, users ) {
+                        ]).exec(function ( err, lab ) {
                             if ( err ) {
                                 throw err;
                             }
 
-                            LabGroups.create([
+                            Topics.create([
                                 {
-                                    name: 'd3dx9_41',
-                                    subject: sub,
-                                    owner: users[ 1 ],
-                                    time: '8:15 - 10:00',
-                                    date: 0,
-                                    students: [ users[ 2 ] ]
+                                    number: '1a',
+                                    title: 'Testowy temat 1',
+                                    visible: true,
+                                    deadline: new Date()
                                 }, {
-                                    name: 'd3dx10_20',
-                                    subject: sub,
-                                    owner: users[ 1 ],
-                                    time: '10:15 - 12:00',
-                                    date: 1,
-                                    students: [ users[ 3 ] ]
+                                    number: '1b',
+                                    title: 'Testowy temat 2',
+                                    visible: true,
+                                    deadline: new Date()
                                 }, {
-                                    name: 'd3dx11',
-                                    subject: sub,
-                                    owner: users[ 1 ],
-                                    time: '12:15 - 14:00',
-                                    date: 2
+                                    number: '2a',
+                                    title: 'Testowy temat 2',
+                                    visible: true,
+                                    deadline: new Date()
                                 }, {
-                                    name: 'd3dx2',
-                                    subject: sub,
-                                    owner: users[ 1 ],
-                                    time: '14:15 - 16:00',
-                                    date: 3
+                                    number: '2b',
+                                    title: 'Testowy temat 2',
+                                    visible: true,
+                                    deadline: new Date()
                                 }
-                            ]).exec(function ( err, lab ) {
+                            ]).exec(function ( err, topics ) {
                                 if ( err ) {
                                     throw err;
                                 }
 
-                                Topics.create([
+                                Tasks.create([
                                     {
                                         number: '1a',
-                                        title: 'Testowy temat 1',
+                                        title: 'Testowe zadanie 1',
                                         visible: true,
-                                        deadline: new Date(),
-                                        group: lab[ 0 ]
-                                    }, {
-                                        number: '1b',
-                                        title: 'Testowy temat 2',
-                                        visible: true,
-                                        deadline: new Date(),
-                                        group: lab[ 1 ]
+                                        topic: topics[ 0 ]
                                     }, {
                                         number: '2a',
-                                        title: 'Testowy temat 2',
+                                        title: 'Testowe zadanie 2',
                                         visible: true,
-                                        deadline: new Date(),
-                                        group: lab[ 1 ]
+                                        topic: topics[ 0 ]
+                                    }, {
+                                        number: '3a',
+                                        title: 'Testowe zadanie 3',
+                                        visible: true,
+                                        topic: topics[ 0 ]
+                                    }, {
+                                        number: '1b',
+                                        title: 'Testowe zadanie 1',
+                                        visible: true,
+                                        topic: topics[ 1 ]
                                     }, {
                                         number: '2b',
-                                        title: 'Testowy temat 2',
+                                        title: 'Testowe zadanie 2',
                                         visible: true,
-                                        deadline: new Date(),
-                                        group: lab[ 1 ]
+                                        topic: topics[ 1 ]
+                                    }, {
+                                        number: '3b',
+                                        title: 'Testowe zadanie 3',
+                                        visible: true,
+                                        topic: topics[ 1 ]
                                     }
-                                ]).exec(function ( err, topics ) {
+                                ]).exec(function ( err, tasks ) {
                                     if ( err ) {
                                         throw err;
                                     }
 
-                                    Tasks.create([
+                                    TaskDescription.create([
                                         {
-                                            number: '1a',
-                                            title: 'Testowe zadanie 1',
-                                            visible: true,
-                                            topic: topics[ 0 ]
-                                        }, {
-                                            number: '2a',
-                                            title: 'Testowe zadanie 2',
-                                            visible: true,
-                                            topic: topics[ 0 ]
-                                        }, {
-                                            number: '3a',
-                                            title: 'Testowe zadanie 3',
-                                            visible: true,
-                                            topic: topics[ 0 ]
-                                        }, {
-                                            number: '1b',
-                                            title: 'Testowe zadanie 1',
-                                            visible: true,
-                                            topic: topics[ 1 ]
-                                        }, {
-                                            number: '2b',
-                                            title: 'Testowe zadanie 2',
-                                            visible: true,
-                                            topic: topics[ 1 ]
-                                        }, {
-                                            number: '3b',
-                                            title: 'Testowe zadanie 3',
-                                            visible: true,
-                                            topic: topics[ 1 ]
+                                            task: tasks[ 0 ],
+                                            description: 'Opis zadania'
+                                        },
+                                        {
+                                            task: tasks[ 1 ],
+                                            description: 'Opis zadania'
+                                        },
+                                        {
+                                            task: tasks[ 2 ],
+                                            description: 'Opis zadania'
+                                        },
+                                        {
+                                            task: tasks[ 3 ],
+                                            description: 'Opis zadania'
+                                        },
+                                        {
+                                            task: tasks[ 4 ],
+                                            description: 'Opis zadania'
+                                        },
+                                        {
+                                            task: tasks[ 5 ],
+                                            description: 'Opis zadania'
                                         }
-                                    ]).exec(function ( err, tasks ) {
+                                    ]).exec(function ( err, td ) {
                                         if ( err ) {
                                             throw err;
                                         }
 
-                                        TaskDescription.create([
+                                        TaskReplies.create([
                                             {
-                                                task: tasks[0],
-                                                description: 'Opis zadania'
-                                            },
-                                            {
-                                                task: tasks[1],
-                                                description: 'Opis zadania'
-                                            },
-                                            {
-                                                task: tasks[2],
-                                                description: 'Opis zadania'
-                                            },
-                                            {
-                                                task: tasks[3],
-                                                description: 'Opis zadania'
-                                            },
-                                            {
-                                                task: tasks[4],
-                                                description: 'Opis zadania'
-                                            },
-                                            {
-                                                task: tasks[5],
-                                                description: 'Opis zadania'
+                                                student: users[ 2 ],
+                                                task: tasks[ 0 ],
+                                                teacherStatus: 1,
+                                                machineStatus: 2
+                                            }, {
+                                                student: users[ 2 ],
+                                                task: tasks[ 1 ],
+                                                teacherStatus: 0,
+                                                machineStatus: 2
+                                            }, {
+                                                student: users[ 2 ],
+                                                task: tasks[ 2 ],
+                                                teacherStatus: 2,
+                                                machineStatus: 0
+                                            }, {
+                                                student: users[ 3 ],
+                                                task: tasks[ 3 ],
+                                                teacherStatus: 0,
+                                                machineStatus: 0
+                                            }, {
+                                                student: users[ 3 ],
+                                                task: tasks[ 4 ],
+                                                teacherStatus: 0,
+                                                machineStatus: 3
+                                            }, {
+                                                student: users[ 3 ],
+                                                task: tasks[ 5 ],
+                                                teacherStatus: 1,
+                                                machineStatus: 1
                                             }
-                                        ]).exec(function ( err, td ) {
+                                        ]).exec(function ( err, tr ) {
                                             if ( err ) {
                                                 throw err;
                                             }
 
-                                            TaskReplies.create([
+                                            TaskReplyFiles.create([
                                                 {
-                                                    student: users[ 2 ],
-                                                    task: tasks[ 0 ],
-                                                    teacherStatus: 1,
-                                                    machineStatus: 2
+                                                    reply: tr[ 0 ],
+                                                    fileName: 'main',
+                                                    fileSize: 200,
+                                                    fileExt: 'cpp',
+                                                    fileMimeType: 'text/plain'
                                                 }, {
-                                                    student: users[ 2 ],
-                                                    task: tasks[ 1 ],
-                                                    teacherStatus: 0,
-                                                    machineStatus: 2
+                                                    reply: tr[ 0 ],
+                                                    fileName: 'main',
+                                                    fileSize: 200,
+                                                    fileExt: 'h',
+                                                    fileMimeType: 'text/plain'
                                                 }, {
-                                                    student: users[ 2 ],
-                                                    task: tasks[ 2 ],
-                                                    teacherStatus: 2,
-                                                    machineStatus: 0
+                                                    reply: tr[ 1 ],
+                                                    fileName: 'main',
+                                                    fileSize: 200,
+                                                    fileExt: 'c',
+                                                    fileMimeType: 'text/plain'
                                                 }, {
-                                                    student: users[ 3 ],
-                                                    task: tasks[ 3 ],
-                                                    teacherStatus: 0,
-                                                    machineStatus: 0
+                                                    reply: tr[ 1 ],
+                                                    fileName: 'main',
+                                                    fileSize: 200,
+                                                    fileExt: 'cpp',
+                                                    fileMimeType: 'text/plain'
                                                 }, {
-                                                    student: users[ 3 ],
-                                                    task: tasks[ 4 ],
-                                                    teacherStatus: 0,
-                                                    machineStatus: 3
+                                                    reply: tr[ 2 ],
+                                                    fileName: 'main',
+                                                    fileSize: 200,
+                                                    fileExt: 'cpp',
+                                                    fileMimeType: 'text/plain'
                                                 }, {
-                                                    student: users[ 3 ],
-                                                    task: tasks[ 5 ],
-                                                    teacherStatus: 1,
-                                                    machineStatus: 1
+                                                    reply: tr[ 2 ],
+                                                    fileName: 'main',
+                                                    fileSize: 200,
+                                                    fileExt: 'cpp',
+                                                    fileMimeType: 'text/plain'
+                                                }, {
+                                                    reply: tr[ 3 ],
+                                                    fileName: 'main',
+                                                    fileSize: 200,
+                                                    fileExt: 'cpp',
+                                                    fileMimeType: 'text/plain'
+                                                }, {
+                                                    reply: tr[ 3 ],
+                                                    fileName: 'main',
+                                                    fileSize: 200,
+                                                    fileExt: 'cpp',
+                                                    fileMimeType: 'text/plain'
+                                                }, {
+                                                    reply: tr[ 4 ],
+                                                    fileName: 'main',
+                                                    fileSize: 200,
+                                                    fileExt: 'cpp',
+                                                    fileMimeType: 'text/plain'
+                                                }, {
+                                                    reply: tr[ 4 ],
+                                                    fileName: 'main',
+                                                    fileSize: 200,
+                                                    fileExt: 'cpp',
+                                                    fileMimeType: 'text/plain'
+                                                }, {
+                                                    reply: tr[ 5 ],
+                                                    fileName: 'main',
+                                                    fileSize: 200,
+                                                    fileExt: 'cpp',
+                                                    fileMimeType: 'text/plain'
+                                                }, {
+                                                    reply: tr[ 5 ],
+                                                    fileName: 'main',
+                                                    fileSize: 200,
+                                                    fileExt: 'cpp',
+                                                    fileMimeType: 'text/plain'
                                                 }
-                                            ]).exec(function ( err, tr ) {
+                                            ]).exec(function ( err, trf ) {
                                                 if ( err ) {
                                                     throw err;
                                                 }
 
-                                                TaskReplyFiles.create([
+                                                TaskReplyComments.create([
                                                     {
                                                         reply: tr[ 0 ],
-                                                        filePath: 'xxx',
-                                                        fileName: 'main',
-                                                        fileSize: 200,
-                                                        fileExt: 'cpp',
-                                                        fileMimeType: 'text/plain'
-                                                    }, {
+                                                        user: users[ 1 ],
+                                                        comment: 'Test message from Teacher',
+                                                        viewed: false
+                                                    },
+                                                    {
+                                                        reply: tr[ 1 ],
+                                                        user: users[ 1 ],
+                                                        comment: 'Test message from Teacher',
+                                                        viewed: false
+                                                    },
+                                                    {
                                                         reply: tr[ 0 ],
-                                                        filePath: 'xxx',
-                                                        fileName: 'main',
-                                                        fileSize: 200,
-                                                        fileExt: 'h',
-                                                        fileMimeType: 'text/plain'
-                                                    }, {
+                                                        user: users[ 2 ],
+                                                        comment: 'Test message from Student',
+                                                        viewed: false
+                                                    },
+                                                    {
                                                         reply: tr[ 1 ],
-                                                        filePath: 'xxx',
-                                                        fileName: 'main',
-                                                        fileSize: 200,
-                                                        fileExt: 'c',
-                                                        fileMimeType: 'text/plain'
-                                                    }, {
-                                                        reply: tr[ 1 ],
-                                                        filePath: 'xxx',
-                                                        fileName: 'main',
-                                                        fileSize: 200,
-                                                        fileExt: 'cpp',
-                                                        fileMimeType: 'text/plain'
-                                                    }, {
-                                                        reply: tr[ 2 ],
-                                                        filePath: 'xxx',
-                                                        fileName: 'main',
-                                                        fileSize: 200,
-                                                        fileExt: 'cpp',
-                                                        fileMimeType: 'text/plain'
-                                                    }, {
-                                                        reply: tr[ 2 ],
-                                                        filePath: 'xxx',
-                                                        fileName: 'main',
-                                                        fileSize: 200,
-                                                        fileExt: 'cpp',
-                                                        fileMimeType: 'text/plain'
-                                                    }, {
-                                                        reply: tr[ 3 ],
-                                                        filePath: 'xxx',
-                                                        fileName: 'main',
-                                                        fileSize: 200,
-                                                        fileExt: 'cpp',
-                                                        fileMimeType: 'text/plain'
-                                                    }, {
-                                                        reply: tr[ 3 ],
-                                                        filePath: 'xxx',
-                                                        fileName: 'main',
-                                                        fileSize: 200,
-                                                        fileExt: 'cpp',
-                                                        fileMimeType: 'text/plain'
-                                                    }, {
-                                                        reply: tr[ 4 ],
-                                                        filePath: 'xxx',
-                                                        fileName: 'main',
-                                                        fileSize: 200,
-                                                        fileExt: 'cpp',
-                                                        fileMimeType: 'text/plain'
-                                                    }, {
-                                                        reply: tr[ 4 ],
-                                                        filePath: 'xxx',
-                                                        fileName: 'main',
-                                                        fileSize: 200,
-                                                        fileExt: 'cpp',
-                                                        fileMimeType: 'text/plain'
-                                                    }, {
-                                                        reply: tr[ 5 ],
-                                                        filePath: 'xxx',
-                                                        fileName: 'main',
-                                                        fileSize: 200,
-                                                        fileExt: 'cpp',
-                                                        fileMimeType: 'text/plain'
-                                                    }, {
-                                                        reply: tr[ 5 ],
-                                                        filePath: 'xxx',
-                                                        fileName: 'main',
-                                                        fileSize: 200,
-                                                        fileExt: 'cpp',
-                                                        fileMimeType: 'text/plain'
+                                                        user: users[ 2 ],
+                                                        comment: 'Test message from Student',
+                                                        viewed: false
                                                     }
-                                                ]).exec(function ( err, trf ) {
+                                                ]).exec(function ( err, trc ) {
                                                     if ( err ) {
                                                         throw err;
                                                     }
 
-                                                    TaskReplyComments.create([
-                                                        {
-                                                            reply: tr[ 0 ],
-                                                            user: users[ 1 ],
-                                                            comment: 'Test message from Teacher',
-                                                            viewed: false
-                                                        },
-                                                        {
-                                                            reply: tr[ 1 ],
-                                                            user: users[ 1 ],
-                                                            comment: 'Test message from Teacher',
-                                                            viewed: false
-                                                        },
-                                                        {
-                                                            reply: tr[ 0 ],
-                                                            user: users[ 2 ],
-                                                            comment: 'Test message from Student',
-                                                            viewed: false
-                                                        },
-                                                        {
-                                                            reply: tr[ 1 ],
-                                                            user: users[ 2 ],
-                                                            comment: 'Test message from Student',
-                                                            viewed: false
-                                                        }
-                                                    ]).exec(function ( err, trc ) {
-                                                        if ( err ) {
-                                                            throw err;
-                                                        }
-
-                                                        return cb();
-                                                    });
+                                                    return cb();
                                                 });
                                             });
                                         });

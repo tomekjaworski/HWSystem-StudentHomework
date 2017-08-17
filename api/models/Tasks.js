@@ -28,7 +28,12 @@ const Tasks = module.exports = {
             via: 'task'
         },
 
-        topic: { model: 'topics' }
+        topic: { model: 'topics' },
+
+        customDeadline: {
+            collection: 'studentcustomdeadlines',
+            via: 'student'
+        }
     }
 };
 

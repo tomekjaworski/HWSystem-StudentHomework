@@ -1,19 +1,17 @@
 /**
- * CustomDeadlines.js
+ * TaskReplyFileContent.js
  *
  * @description :: TODO: You might write a short summary of how this model works and what it represents here.
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
  */
 
-module.exports = {
+const TaskReplyFileContent = module.exports = {
 
-    attributes: {
+  attributes: {
 
-        student: { model: 'users' },
+    file : { model: 'taskreplyfiles' },
 
-        topic: { model: 'topics' },
-
-        deadline: { type: 'datetime' }
-    }
+    content : { type: 'longtext' }
+  }
 };
 

@@ -1,20 +1,19 @@
 /**
- * TaskDescription.js
+ * LabGroupTopicDeadline.js
  *
  * @description :: TODO: You might write a short summary of how this model works and what it represents here.
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
  */
 
-const TaskDescription = module.exports = {
+const LabGroupTopicDeadline = module.exports = {
 
-    attributes: {
+  attributes: {
 
-        task: {
-            model: 'tasks',
-            unique: true
-        },
+    group : { model: 'labgroups' },
 
-        description: { type: 'longtext' }
-    }
+    topic : { model: 'topics' },
+
+    deadline : { type: 'datetime' }
+  }
 };
 

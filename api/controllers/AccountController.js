@@ -65,7 +65,7 @@ const AccountController = module.exports = {
                 return res.view('account/login', { title: 'Logowanie', redirect: req.param('redirect') });
                 break;
             case 'POST':
-                let email = req.param('email'), password = req.param('password'), red = req.param('redirect');;
+                let email = req.param('email'), password = req.param('password'), red = req.param('redirect');
                 if ( !_.isString(email) || !_.isString(password) ) {
                     return AccountController.loginError(res, 'Źle wporwadzone dane');
                 }
@@ -189,8 +189,8 @@ const AccountController = module.exports = {
     },
 
     index: function ( req, res ) {
-        if(req.localUser.hasRole('student')) {
-            StudentsLabGroups.findOne({ student: req.localUser.id/*, active: true*/ }).populate('labgroup')
+        if ( req.localUser.hasRole('student') ) {
+            StudentsLabGroups.findOne({ student: req.localUser.id/*TODO: , active: true*/ }).populate('labgroup')
                 .exec(function ( err, lab ) {
                     if ( err ) {
                         return res.serverError(err);
@@ -208,31 +208,63 @@ const AccountController = module.exports = {
                         'LEFT JOIN tasks ON tasks.topic = topics.id\n' +
                         'LEFT JOIN taskreplies AS replies ON replies.task = tasks.id\n' +
                         'LEFT JOIN taskreplycomments AS comments ON replies.id = comments.reply\n' +
-                        'WHERE topics.group = ?\n' +
-                        'GROUP BY topics.id', [ lab.id ], ( err, data ) => {
+                        'GROUP BY topics.id', ( err, data ) => {
                         if ( err ) {
                             return res.serverError(err);
                         }
                         let ret = { message: lab.labgroup.message, topics: data };
+                        let taskView = req.param('topicid');
+                        if(taskView){
+                            ret.taskView = taskView;
+                        }
                         console.log(ret);
                         return res.view('account/index', { data: ret });
                     });
                 });
         }
-        else{
-            return res.view('/index');
+        else {
+            return res.view('homepage');
         }
     },
 
     tasks: function ( req, res ) {
-        let topicId = req.param('id');
-        Topics.findOneById(topicId).populate('tasks').exec((err, topic)=>{
-            console.log(topic);
-            return res.json(topic);
-        });
-        
+        if (req.localUser.hasRole('student')) {
+            StudentsLabGroups.findOne({student: req.localUser.id/*TODO: , active: true*/})
+                .exec(function (err, lab) {
+                    if (err) {
+                        return res.serverError(err);
+                    }
+                    let topicId = req.param('id');
+                    Tasks.query('SELECT tasks.id, tasks.number, tasks.title,\n' +
+                        '(case when reply.id IS NOT NULL then 1 else 0 end) hasReply,\n' +
+                        '(case when comments.reply IS NOT NULL then 1 else 0 end) hasComments,\n' +
+                        '(case when reply.id IS NOT NULL then reply.teacherStatus else 0 end) teacherStatus,\n' +
+                        '(case when reply.id IS NOT NULL then reply.machineStatus else 0 end) machineStatus,\n' +
+                        '(case when scd.task IS NOT NULL then scd.deadline else\n' +
+                        '\t(case when groupdeadline.deadline IS NOT NULL then groupdeadline.deadline else topics.deadline end)\n' +
+                        ' end) deadline\n' +
+                        'FROM tasks\n' +
+                        'LEFT JOIN taskreplies reply ON reply.task = tasks.id AND reply.student = ?\n' +
+                        'LEFT JOIN taskreplycomments comments ON comments.reply = reply.id AND comments.viewed = false\n' +
+                        'LEFT JOIN topics ON topics.id = tasks.topic\n' +
+                        '\n' +
+                        'LEFT JOIN studentcustomdeadlines scd ON scd.task = tasks.id AND scd.student = ?\n' +
+                        'LEFT JOIN labgrouptopicdeadline groupdeadline ON groupdeadline.group = ?\n' +
+                        'WHERE tasks.topic = ?\n' +
+                        'GROUP BY tasks.id, reply.id, tasks.topic, scd.deadline, groupdeadline.deadline',
+                        [req.localUser.id, req.localUser.id, lab.labgroup, topicId], (err, data) => {
+                            if (err) {
+                                return res.serverError(err);
+                            }
+                            console.log(data);
+                            return res.json(data);
+                        });
+                });
+        }
+        else {
+            return res.badRequest();
+        }
     },
-    
     task:function (req, res) {
         switch (req.method){
             case 'GET':

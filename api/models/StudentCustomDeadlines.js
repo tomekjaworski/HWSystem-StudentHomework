@@ -1,20 +1,19 @@
 /**
- * TaskDescription.js
+ * StudentCustomDeadlines.js
  *
  * @description :: TODO: You might write a short summary of how this model works and what it represents here.
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
  */
 
-const TaskDescription = module.exports = {
+const StudentCustomDeadlines = module.exports = {
 
     attributes: {
 
-        task: {
-            model: 'tasks',
-            unique: true
-        },
+        student: { model: 'users' },
 
-        description: { type: 'longtext' }
+        task: { model: 'tasks' },
+
+        deadline: { type: 'datetime' }
     }
 };
 
