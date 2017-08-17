@@ -326,23 +326,53 @@ const AccountController = module.exports = {
 
             case 'POST':
 
-                let taskReplie= req.param('taskReplie');
+                let taskReplie= req.param('taskReplie'), comment = req.param('comment');
+
+                // Ajax
                 TaskReplies.count({id: taskReplie, student: req.localUser.id}, (err, count)=>{
                     if(err) return res.serverError(err);
                     if(count==0){
                         return res.forbidden();
                     }
-
-
                     TaskReplyComments.update({ reply: taskReplie, user:req.localUser.id, viewed:false },{viewed:true}).exec(function (err ) {
                         if (err){
                             return console.log(err);
                         }
+                    });
+//TODO: Sprawdzanie ajaxowe komentarzy
+                    TaskReplyComments.create({ reply:taskReplie, user:req.localUser.id,  comment:comment, viewed:false }).exec(function ( err, comment ) {
+
 
                     });
 
+                });
+                // Dodawanie komentarzy
+
+
+        }
+    },
+
+    userSettings: function ( req, res ) {
+        switch (req.method){
+            case 'GET':
+
+                Users.findOneById(req.localUser.id).exec(function(err, user){
+                    if (err){
+                        return json(err);
+                    }
+                    LabGroups.find().populate('owner').exec(function(err, labs){
+                       if (err){
+                           return json(err);
+                       }
+
+                       return res.view('account/settings', {user: user, labs:labs});
+                    });
 
                 });
+
+            case 'POST':
+                let password = req.param('password'), repassword = req.param('repassword'), lab = req.param('lab');
+
         }
     }
 };
