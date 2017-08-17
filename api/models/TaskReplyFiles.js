@@ -22,6 +22,20 @@ const TaskReplyFiles = module.exports = {
         file: {
             collection: 'taskreplyfilecontent',
             via: 'file'
+        },
+
+        visible: {
+            type: 'boolean',
+            defaultsTo: true
+        },
+
+        firstFileId: {
+            type: 'integer'
+        },
+
+        lastFileId: {
+            type: 'integer',
+            defaultsTo: null
         }
     }
 };

@@ -69,7 +69,7 @@ const AccountController = module.exports = {
                 if ( !_.isString(email) || !_.isString(password) ) {
                     return AccountController.loginError(res, 'Źle wporwadzone dane');
                 }
-                Users.findOneByEmail(email).exec(function ( err, user ) {
+                Users.findOneByEmail(email).populate('roles').exec(function ( err, user ) {
                     if ( err ) {
                         return res.jsonx(err);
                     }
@@ -85,7 +85,10 @@ const AccountController = module.exports = {
                             return res.redirect(red);
                         }
                         else {
-                            return res.redirect('/account');
+                            if(user.hasRole('teacher')){
+                                return res.redirect(sails.getUrlFor('TeacherController.index'));
+                            }
+                            return res.redirect(sails.getUrlFor('AccountController.index'));
                         }
                     }
                     else {
@@ -219,13 +222,12 @@ const AccountController = module.exports = {
                         if(taskView){
                             ret.taskView = taskView;
                         }
-                        console.log(ret);
                         return res.view('account/index', { data: ret });
                     });
                 });
         }
         else {
-            return res.view('homepage');
+            return res.redirect(sails.getUrlFor('TeacherController.index'));
         }
     },
 
@@ -237,30 +239,37 @@ const AccountController = module.exports = {
                         return res.serverError(err);
                     }
                     let topicId = req.param('id');
-                    Tasks.query('SELECT tasks.id, tasks.number, tasks.title,\n' +
-                        '(case when reply.id IS NOT NULL then 1 else 0 end) hasReply,\n' +
-                        '(case when comments.reply IS NOT NULL then 1 else 0 end) hasComments,\n' +
-                        '(case when reply.id IS NOT NULL then reply.teacherStatus else 0 end) teacherStatus,\n' +
-                        '(case when reply.id IS NOT NULL then reply.machineStatus else 0 end) machineStatus,\n' +
-                        '(case when scd.task IS NOT NULL then scd.deadline else\n' +
-                        '\t(case when groupdeadline.deadline IS NOT NULL then groupdeadline.deadline else topics.deadline end)\n' +
-                        ' end) deadline\n' +
-                        'FROM tasks\n' +
-                        'LEFT JOIN taskreplies reply ON reply.task = tasks.id AND reply.student = ?\n' +
-                        'LEFT JOIN taskreplycomments comments ON comments.reply = reply.id AND comments.viewed = false\n' +
-                        'LEFT JOIN topics ON topics.id = tasks.topic\n' +
-                        '\n' +
-                        'LEFT JOIN studentcustomdeadlines scd ON scd.task = tasks.id AND scd.student = ?\n' +
-                        'LEFT JOIN labgrouptopicdeadline groupdeadline ON groupdeadline.group = ?\n' +
-                        'WHERE tasks.topic = ?\n' +
-                        'GROUP BY tasks.id, reply.id, tasks.topic, scd.deadline, groupdeadline.deadline',
-                        [ req.localUser.id, req.localUser.id, lab.labgroup, topicId ], ( err, data ) => {
-                            if ( err ) {
-                                return res.serverError(err);
-                            }
-                            console.log(data);
-                            return res.json(data);
-                        });
+                    Topics.count({'id':topicId}, (err,count)=>{
+                        if ( err ) {
+                            return res.serverError(err);
+                        }
+                        if(count!=1){
+                            return res.notFound();
+                        }
+                        Tasks.query('SELECT tasks.id, tasks.number, tasks.title,\n' +
+                            '(case when reply.id IS NOT NULL then 1 else 0 end) hasReply,\n' +
+                            '(case when comments.reply IS NOT NULL then 1 else 0 end) hasComments,\n' +
+                            '(case when reply.id IS NOT NULL then reply.teacherStatus else 0 end) teacherStatus,\n' +
+                            '(case when reply.id IS NOT NULL then reply.machineStatus else 0 end) machineStatus,\n' +
+                            '(case when scd.task IS NOT NULL then scd.deadline else\n' +
+                            '\t(case when groupdeadline.deadline IS NOT NULL then groupdeadline.deadline else topics.deadline end)\n' +
+                            ' end) deadline\n' +
+                            'FROM tasks\n' +
+                            'LEFT JOIN taskreplies reply ON reply.task = tasks.id AND reply.student = ?\n' +
+                            'LEFT JOIN taskreplycomments comments ON comments.reply = reply.id AND comments.viewed = false\n' +
+                            'LEFT JOIN topics ON topics.id = tasks.topic\n' +
+                            '\n' +
+                            'LEFT JOIN studentcustomdeadlines scd ON scd.task = tasks.id AND scd.student = ?\n' +
+                            'LEFT JOIN labgrouptopicdeadline groupdeadline ON groupdeadline.group = ?\n' +
+                            'WHERE tasks.topic = ?\n' +
+                            'GROUP BY tasks.id, reply.id, tasks.topic, scd.deadline, groupdeadline.deadline',
+                            [ req.localUser.id, req.localUser.id, lab.labgroup, topicId ], ( err, data ) => {
+                                if ( err ) {
+                                    return res.serverError(err);
+                                }
+                                return res.json(data);
+                            });
+                    });
                 });
         }
         else {

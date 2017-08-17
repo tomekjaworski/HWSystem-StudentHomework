@@ -60,6 +60,10 @@ module.exports.policies = {
         'register': true,
 
 
+    },
+
+    TeacherController: {
+        '*': ['isLoggedIn', 'hasRoleTeacher']
     }
 }
 ;

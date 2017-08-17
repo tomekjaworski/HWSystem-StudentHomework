@@ -36,23 +36,21 @@ module.exports.routes = {
         view: 'homepage'
     },
 
+    //Account
+
     '/login': 'AccountController.login',
     'GET /logout': 'AccountController.logout',
 
     '/register': 'AccountController.register',
 
+    'GET /account' : 'AccountController.index',
     'GET /topic/:topicid/tasks' : 'AccountController.index',
-    'GET /ajax/topic/:id/tasks' : 'AccountController.tasks'
+    'GET /ajax/topic/:id/tasks' : 'AccountController.tasks',
 
 
-    /***************************************************************************
-     *                                                                          *
-     * Custom routes here...                                                    *
-     *                                                                          *
-     * If a request to a URL doesn't match any of the custom routes above, it   *
-     * is matched against Sails route blueprints. See `config/blueprints.js`    *
-     * for configuration options and examples.                                  *
-     *                                                                          *
-     ***************************************************************************/
+    //Teachers
+
+    '/teacher' : 'TeacherController.index',
+    '/teacher/labgroups' : 'TeacherController.listLabGroups',
 
 };
