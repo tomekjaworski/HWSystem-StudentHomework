@@ -13,7 +13,7 @@ const TaskReplyComments = module.exports = {
             model: 'taskreplies'
         },
 
-        user: { model: 'Users' },
+        user: { model: 'users' },
 
         comment: { type: 'text' },
 

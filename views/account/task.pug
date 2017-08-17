@@ -10,7 +10,43 @@ block content
     h1 Task name: #{task.title}
     h1 Task description: #{task.description}
 
-    h1 Task replie student: #{taskReplie[0].student}
-    h1 Task replie task: #{taskReplie[0].task}
-    h1 Task replie teacherStatus: #{taskReplie[0].teacherStatus}
-    h1 Task replie machineStatus: #{taskReplie[0].machineStatus}
+
+    if !taskReplie
+        h1 nie ma
+
+    else
+        h1 Task replie student: #{taskReplie.student}
+        h1 Task replie task: #{taskReplie.task}
+        h1 Task replie teacherStatus: #{taskReplie.teacherStatus}
+        h1 Task replie machineStatus: #{taskReplie.machineStatus}
+
+
+    //h1 Task comments: #{taskComments[0].reply}
+    -var top = topic.id
+    -var tas = task.id
+    -var tasRep = taskReplie.id
+    button(onclick='viewed('+top+','+tas+','+tasRep+')')
+        |elo
+    each com in taskComments
+        h1 User add: #{com.user.fullName()}
+        h1 comment: #{com.comment}
+        p createdAt: #{com.createdAt}
+        if !com.viewed
+            h1#elo nieprzeczytane
+
+
+    script.
+        function viewed(topic, task, taskReplie) {
+            var response = $.ajax({
+                url: '/topic/' + topic + '/task/' + task,
+                method: "POST",
+                data: {
+                    'taskReplie': taskReplie
+                }
+            });
+
+            response.done(function ( msg ) {
+                console.log(msg);
+                
+            });
+        }

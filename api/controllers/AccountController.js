@@ -119,7 +119,7 @@ const AccountController = module.exports = {
         switch ( req.method ) {
             case 'GET':
                 LabGroups.find({}).populate('owner').exec(function ( err, labs ) {
-                    return res.view('account/register', { title: 'Rejestracja',  labs: labs });
+                    return res.view('account/register', { title: 'Rejestracja', labs: labs });
                 });
                 break;
             case 'POST':
@@ -134,7 +134,7 @@ const AccountController = module.exports = {
                 if ( !regexEmail.test(email) ) {
                     return AccountController.registerError(res, 'Rejestracja dostępna tylko z uczelnienych maili');
                 }
-                if(album.length != 6){
+                if ( album.length != 6 ) {
                     return AccountController.registerError(res, 'Numer albumu jest nieprawidłowy.');
                 }
                 if ( password !== repassword ) {
@@ -161,7 +161,7 @@ const AccountController = module.exports = {
                         if ( err ) {
                             res.jsonx(err);
                         }
-                        if(!lab){
+                        if ( !lab ) {
                             return AccountController.registerError(res, 'Nieprawidłowa grupa laboratoryjna.');
                         }
                         Users.create({
@@ -179,9 +179,9 @@ const AccountController = module.exports = {
                                 return res.serverError(err);
                             }
 
-                                return res.redirect(sails.getUrlFor('AccountController.login'));
-                            });
+                            return res.redirect(sails.getUrlFor('AccountController.login'));
                         });
+                    });
 
                 });
 
@@ -214,7 +214,7 @@ const AccountController = module.exports = {
                         }
                         let ret = { message: lab.labgroup.message, topics: data };
                         let taskView = req.param('topicid');
-                        if(taskView){
+                        if ( taskView ) {
                             ret.taskView = taskView;
                         }
                         console.log(ret);
@@ -228,10 +228,10 @@ const AccountController = module.exports = {
     },
 
     tasks: function ( req, res ) {
-        if (req.localUser.hasRole('student')) {
-            StudentsLabGroups.findOne({student: req.localUser.id/*TODO: , active: true*/})
-                .exec(function (err, lab) {
-                    if (err) {
+        if ( req.localUser.hasRole('student') ) {
+            StudentsLabGroups.findOne({ student: req.localUser.id/*TODO: , active: true*/ })
+                .exec(function ( err, lab ) {
+                    if ( err ) {
                         return res.serverError(err);
                     }
                     let topicId = req.param('id');
@@ -252,8 +252,8 @@ const AccountController = module.exports = {
                         'LEFT JOIN labgrouptopicdeadline groupdeadline ON groupdeadline.group = ?\n' +
                         'WHERE tasks.topic = ?\n' +
                         'GROUP BY tasks.id, reply.id, tasks.topic, scd.deadline, groupdeadline.deadline',
-                        [req.localUser.id, req.localUser.id, lab.labgroup, topicId], (err, data) => {
-                            if (err) {
+                        [ req.localUser.id, req.localUser.id, lab.labgroup, topicId ], ( err, data ) => {
+                            if ( err ) {
                                 return res.serverError(err);
                             }
                             console.log(data);
@@ -265,32 +265,83 @@ const AccountController = module.exports = {
             return res.badRequest();
         }
     },
-    task:function (req, res) {
-        switch (req.method){
+    task: function ( req, res ) {
+        switch ( req.method ) {
             case 'GET':
 
                 let topicparam = req.param('topicid'), taskparam = req.param('taskid');
 
 
-                Topics.findOneById(topicparam).exec(function (err, topic) {
-                    if (err){
+                Topics.findOneById(topicparam).exec(function ( err, topic ) {
+                    if ( err ) {
                         return res.badRequest(err);
                     }
 
-                    Tasks.findOneById(taskparam).populate('description').exec(function (err, task) {
-                        if (err){
-                            return res.badRequest(err)
+                    if ( !topic ) {
+                        return res.notFound();
+                    }
+
+                    Tasks.findOneById(taskparam).populate('description').exec(function ( err, task ) {
+                        if ( err ) {
+                            return res.badRequest(err);
                         }
-                        task.description = task.description[0].description;
 
-                        TaskReplies.find({student: req.localUser.id, task: task.id}).exec(function (err, taskReplie) {
-                            if (err){
-                                return res.badRequest(err);
-                            }
+                        if ( !task ) {
+                            return res.notFound();
+                        }
 
-                            return res.view('account/task', {topic: topic, task: task, taskReplie: taskReplie});
-                        });
+                        task.description = task.description[ 0 ].description;
+
+                        TaskReplies.findOne({ student: req.localUser.id, task: task.id })
+                            .exec(function ( err, taskReplie ) {
+                                if ( err ) {
+                                    return res.badRequest(err);
+                                }
+                                if ( !taskReplie ) {
+                                    return res.view('account/task',
+                                        { topic: topic, task: task, taskReplie: taskReplie, taskComments: null });
+                                }
+                                TaskReplyComments.find({ reply: taskReplie.id, user: req.localUser.id })
+                                    .populate('user').exec(function ( err, taskComments ) {
+                                    if ( err ) {
+                                        return res.badRequest(err);
+                                    }
+
+
+                                    return res.view('account/task', {
+                                        topic: topic,
+                                        task: task,
+                                        taskReplie: taskReplie,
+                                        taskComments: taskComments
+                                    });
+
+                                });
+
+                            });
+
                     });
+
+                });
+                break;
+
+            case 'POST':
+
+                let taskReplie= req.param('taskReplie');
+                TaskReplies.count({id: taskReplie, student: req.localUser.id}, (err, count)=>{
+                    if(err) return res.serverError(err);
+                    if(count==0){
+                        return res.forbidden();
+                    }
+
+
+                    TaskReplyComments.update({ reply: taskReplie, user:req.localUser.id, viewed:false },{viewed:true}).exec(function (err ) {
+                        if (err){
+                            return console.log(err);
+                        }
+
+                    });
+
+
                 });
         }
     }

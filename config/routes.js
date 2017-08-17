@@ -42,8 +42,9 @@ module.exports.routes = {
     '/register': 'AccountController.register',
 
     'GET /topic/:topicid/tasks' : 'AccountController.index',
-    'GET /ajax/topic/:id/tasks' : 'AccountController.tasks'
+    'GET /ajax/topic/:id/tasks' : 'AccountController.tasks',
     'GET /topic/:topicid/task/:taskid': 'AccountController.task',
+    'POST /topic/:topicid/task/:taskid': 'AccountController.task',
 
 
     /***************************************************************************
