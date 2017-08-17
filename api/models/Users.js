@@ -50,7 +50,21 @@ const Users = module.exports = {
         },
 
         hasRole: function (name) {
-            return !!this.roles.filter((role)=>role.name==name)[0];
+            if(this.roles.length!=0) {
+                return !!this.roles.filter(( role ) => role.name == name)[ 0 ];
+            }
+            else{
+                let hasrole = false;
+                let done = false;
+                Roles.findOneByName(name).populate('users',{id: this.id}).exec((err,role)=>{
+                    if(err) throw err;
+                    if(!role) done = true;
+                    hasrole = role.users.length==1;
+                    done = true;
+                });
+                require('deasync').loopWhile(()=>{return !done});
+                return hasrole;
+            }
         }
     }
 };
