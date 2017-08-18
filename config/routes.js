@@ -45,6 +45,8 @@ module.exports.routes = {
 
     '/settings': 'AccountController.userSettings',
 
+    'GET /account' : 'AccountController.index',
+
     'GET /topic/:topicid/tasks' : 'AccountController.index',
     'GET /ajax/topic/:id/tasks' : 'AccountController.tasks',
     'GET /topic/:topicid/task/:taskid': 'AccountController.task',

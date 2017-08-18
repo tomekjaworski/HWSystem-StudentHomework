@@ -216,8 +216,8 @@ const AccountController = module.exports = {
                             return res.serverError(err);
                         }
                         let ret = { message: lab.labgroup.message, topics: data };
-                        let taskView = req.param('topicid');
-                        if ( taskView ) {
+                        let taskView = parseInt(req.param('topicid'));
+                        if ( !isNaN(taskView) ) {
                             ret.taskView = taskView;
                         }
                         return res.view('account/index', { data: ret });

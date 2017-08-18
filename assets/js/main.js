@@ -1,3 +1,4 @@
+(function() {
 var formbutton = $('#nav-form-button');
 var formregister = $('#nav-form-register');
 var emailfield = $('#nav-form-email');
@@ -108,4 +109,4 @@ function loadTaskView( topicid ) {
 if(typeof taskView !== "undefined"){
     loadTaskView(taskView);
 }
-
+})();
