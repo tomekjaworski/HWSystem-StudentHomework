@@ -398,50 +398,63 @@ const AccountController = module.exports = {
                     lab = req.param('lab'), confpass = req.param('passlabconf');
 
                 Users.findOneById(req.localUser.id).exec(function ( err, user ) {
-                    if (err){
+                    if ( err ) {
                         return json(err);
                     }
-                    if(user.password === AccountController.hashPassword(oldPassword, user.salt) ){
+                    // if(user.password === AccountController.hashPassword(oldPassword, user.salt) ){
+                    //
+                    //     if ( password !== repassword ) {
+                    //         return AccountController.settingsMessage(res, 'Hasła nie są identyczne');
+                    //     }
+                    //     if ( password.length < 8 ) {
+                    //         return AccountController.settingsMessage(res, 'Hasło jest za krótkie. Powinno zawierać 8 znaków.');
+                    //     }
+                    //
+                    //     switch (Users.validatePassword(password)){
+                    //         case 1:
+                    //             return AccountController.settingsMessage(res, 'Hasło jest za krótkie. Powinno zawierać 8 znaków.');
+                    //         case 2:
+                    //             return AccountController.settingsMessage(res, 'Twoje hasło powinno zawierać dużą i małą litere');
+                    //     }
+                    //     let newPass = AccountController.hashPassword(password, user.salt);
+                    //
+                    //     user.password = newPass;
+                    //
+                    //     user.save({ populate: false }, function(err) {
+                    //         if (err){
+                    //             return json(err);
+                    //         }
+                    //         return AccountController.settingsMessage(res, 'Hasło zostało zmienione.');
+                    //     });
+                    // }
+                    // else{
+                    //     return AccountController.settingsMessage(res, 'Stare hasło jest nieprawidłowe');
+                    // }
 
-                        if ( password !== repassword ) {
-                            return AccountController.settingsMessage(res, 'Hasła nie są identyczne');
+                    LabGroups.findOneByName(lab).populate('owner').exec(function ( err, lab ) {
+                        if (err){
+                            return res.json(err);
                         }
-                        if ( password.length < 8 ) {
-                            return AccountController.settingsMessage(res, 'Hasło jest za krótkie. Powinno zawierać 8 znaków.');
+
+                        if ( user.password === AccountController.hashPassword(confpass, user.salt) ) {
+
+                            user.labGroups = lab;
+
+                            user.save({ populate: false }, function ( err ) {
+                                if ( err ) {
+                                    return res.json(err);
+                                }
+                                LabGroups.find().populate('owner').exec(function(err, labs){
+                                    if (err){
+                                        return json(err);
+                                    }
+
+                                    return res.view('account/settings', {user: user, labs:labs, message:'Zauktalizowano grupę laboratoryjną.' });
+                                });
+                            });
                         }
 
-                        switch (Users.validatePassword(password)){
-                            case 1:
-                                return AccountController.settingsMessage(res, 'Hasło jest za krótkie. Powinno zawierać 8 znaków.');
-                            case 2:
-                                return AccountController.settingsMessage(res, 'Twoje hasło powinno zawierać dużą i małą litere');
-                        }
-                        let newPass = AccountController.hashPassword(password, user.salt);
-
-                        user.password = newPass;
-
-                        user.save({ populate: false }, function(err) {
-                            if (err){
-                                return json(err);
-                            }
-                            return AccountController.settingsMessage(res, 'Hasło zostało zmienione.');
-                        });
-                    }
-                    else{
-                        return AccountController.settingsMessage(res, 'Stare hasło jest nieprawidłowe');
-                    }
-
-                    if(user.password === AccountController.hashPassword(confpass, user.salt)){
-
-                        user.labGroups = lab;
-
-                        user.save({populate: false}, function ( err ) {
-                            if (err){
-                                return json(err);
-                            }
-                            return AccountController.settingsMessage(res, 'Grupa laboratoryjne');
-                        });
-                    }
+                    });
 
                 });
         }

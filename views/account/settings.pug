@@ -26,8 +26,9 @@ block content
 
     div(style='width:49%; float:left; ')
         h1 Zmiana lab
-        form
-            select(name='labs')
+        form(method='post' action='/settings')
+            select(name='lab')
+                - console.log(labs)
                 each l in labs
                     option(value=l.name)= l.name + l.owner.fullName()
             br
