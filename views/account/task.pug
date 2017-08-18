@@ -31,9 +31,11 @@ block content
         h1 User add: #{com.user.fullName()}
         h1 comment: #{com.comment}
         p createdAt: #{com.createdAt}
+
         if !com.viewed
             h1#elo nieprzeczytane
-
+        else
+            h1#elo przeczytane
 
     script.
         function viewed(topic, task, taskReplie) {

@@ -43,13 +43,14 @@ const AccountController = module.exports = {
      */
 
     registerError: function ( res, error ) {
-        DeanGroups.find({}).exec(function ( err, dean ) {
-            LabGroups.find({}).populate('owner').exec(function ( err, labs ) {
-                return res.view('account/register', { title: 'Rejestracja', dea: dean, labs: labs, error: error });
-            });
+        LabGroups.find({}).populate('owner').exec(function ( err, labs ) {
+            return res.view('account/register', { title: 'Rejestracja', labs: labs, error: error });
         });
     },
 
+    settingsMessage: function ( res, message ) {
+        return res.view('account/settings', {title: 'Settings', message: message});
+    },
 
     // Controller Actions
 
@@ -143,12 +144,14 @@ const AccountController = module.exports = {
                 if ( password.length < 8 ) {
                     return AccountController.registerError(res, 'Hasło jest za krótkie. Powinno zawierać 8 znaków.');
                 }
-                let hasUpperCase = /[A-Z]/.test(password);
-                let hasLowerCase = /[a-z]/.test(password);
-                let hasNumbers = /\d/.test(password);
-                let hasNonalphas = /\W/.test(password);
-                if ( hasUpperCase + hasLowerCase + hasNumbers + hasNonalphas < 3 ) {
-                    return AccountController.registerError(res, 'Twoje hasło powinno zawierać dużą i małą litere');
+
+                switch(Users.validatePassword(password)){
+                    case 1:
+                        return AccountController.registerError(res, 'Hasło jest za krótkie. Powinno zawierać 8 znaków.');
+                        break;
+                    case 2:
+                        return AccountController.registerError(res, 'Twoje hasło powinno zawierać dużą i małą litere');
+                        break;
                 }
 
                 //TODO: sprawdzic Dean & Lab
@@ -340,10 +343,10 @@ const AccountController = module.exports = {
                         }
                     });
 //TODO: Sprawdzanie ajaxowe komentarzy
-                    TaskReplyComments.create({ reply:taskReplie, user:req.localUser.id,  comment:comment, viewed:false }).exec(function ( err, comment ) {
-
-
-                    });
+//                     TaskReplyComments.create({ reply:taskReplie, user:req.localUser.id,  comment:comment, viewed:false }).exec(function ( err, comment ) {
+//
+//
+//                     });
 
                 });
                 // Dodawanie komentarzy
@@ -369,10 +372,58 @@ const AccountController = module.exports = {
                     });
 
                 });
-
+                break;
             case 'POST':
-                let password = req.param('password'), repassword = req.param('repassword'), lab = req.param('lab');
+                let oldPassword = req.param('oldPass'), password = req.param('password'), repassword = req.param('repassword'),
+                    lab = req.param('lab'), confpass = req.param('passlabconf');
 
+                Users.findOneById(req.localUser.id).exec(function ( err, user ) {
+                    if (err){
+                        return json(err);
+                    }
+                    if(user.password === AccountController.hashPassword(oldPassword, user.salt) ){
+
+                        if ( password !== repassword ) {
+                            return AccountController.settingsMessage(res, 'Hasła nie są identyczne');
+                        }
+                        if ( password.length < 8 ) {
+                            return AccountController.settingsMessage(res, 'Hasło jest za krótkie. Powinno zawierać 8 znaków.');
+                        }
+
+                        switch (Users.validatePassword(password)){
+                            case 1:
+                                return AccountController.settingsMessage(res, 'Hasło jest za krótkie. Powinno zawierać 8 znaków.');
+                            case 2:
+                                return AccountController.settingsMessage(res, 'Twoje hasło powinno zawierać dużą i małą litere');
+                        }
+                        let newPass = AccountController.hashPassword(password, user.salt);
+
+                        user.password = newPass;
+
+                        user.save({ populate: false }, function(err) {
+                            if (err){
+                                return json(err);
+                            }
+                            return AccountController.settingsMessage(res, 'Hasło zostało zmienione.');
+                        });
+                    }
+                    else{
+                        return AccountController.settingsMessage(res, 'Stare hasło jest nieprawidłowe');
+                    }
+
+                    if(user.password === AccountController.hashPassword(confpass, user.salt)){
+
+                        user.labGroups = lab;
+
+                        user.save({populate: false}, function ( err ) {
+                            if (err){
+                                return json(err);
+                            }
+                            return AccountController.settingsMessage(res, 'Grupa laboratoryjne');
+                        });
+                    }
+
+                });
         }
     }
 };
