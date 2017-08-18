@@ -7,26 +7,25 @@
 
 const LabGroups = module.exports = {
 
-    attributes: {
+  attributes: {
 
-        name: { type: 'string' },
+    name: {type: 'string'},
 
-        subject: { model: 'subjects' },
+    subject: {model: 'subjects'},
 
-        message: { type: 'string' },
+    message: {type: 'string'},
 
-        owner: { model: 'users' },
+    owner: {model: 'users'},
 
-        customDeadlines: {
-            collection: 'labgrouptopicdeadline',
-            via: 'group'
-        },
+    customDeadlines: {
+      collection: 'labgrouptopicdeadline',
+      via: 'group'
+    },
 
-        students: {
-            collection: 'users',
-            via: 'labgroup',
-            through: 'studentslabgroups'
-        }
+    students: {
+      collection: 'users',
+      via: 'labgroup',
+      through: 'studentslabgroups'
     }
-};
-
+  }
+}

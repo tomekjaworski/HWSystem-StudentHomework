@@ -25,8 +25,8 @@ block content
         -var top = topic.id
         -var tas = task.id
         -var tasRep = taskReply.id
-        button(onclick='viewed('+top+','+tas+','+tasRep+')')
-            |elo
+        button(onclick='viewed(' + top + ',' + tas + ',' + tasRep + ')')
+            | elo
         each com in taskComments
             h1 User add: #{com.user.fullName()}
             h1 comment: #{com.comment}
@@ -37,18 +37,18 @@ block content
                 h1#elo przeczytane
 
     script.
-        var currenttopic = #{topic.id}
-        function viewed(topic, task, taskReply) {
-            var response = $.ajax({
-                url: '/topic/' + topic + '/task/' + task,
-                method: "POST",
-                data: {
-                    'taskReply': taskReply
-                }
-            });
+      var currenttopic = #{topic.id}
+      function viewed (topic, task, taskReply) {
+        var response = $.ajax({
+          url: '/topic/' + topic + '/task/' + task,
+          method: "POST",
+          data: {
+            'taskReply': taskReply
+          }
+        });
 
-            response.done(function ( msg ) {
-                console.log(msg);
+        response.done(function (msg) {
+          console.log(msg);
 
-            });
-        }
+        });
+      }

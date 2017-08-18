@@ -7,36 +7,35 @@
 
 const TaskReplyFiles = module.exports = {
 
-    attributes: {
+  attributes: {
 
-        reply: { model: 'taskreplies' },
+    reply: {model: 'taskreplies'},
 
-        fileName: { type: 'string' },
+    fileName: {type: 'string'},
 
-        fileSize: { type: 'integer' },
+    fileSize: {type: 'integer'},
 
-        fileExt: { type: 'string' },
+    fileExt: {type: 'string'},
 
-        fileMimeType: { type: 'string' },
+    fileMimeType: {type: 'string'},
 
-        file: {
-            collection: 'taskreplyfilecontent',
-            via: 'file'
-        },
+    file: {
+      collection: 'taskreplyfilecontent',
+      via: 'file'
+    },
 
-        visible: {
-            type: 'boolean',
-            defaultsTo: true
-        },
+    visible: {
+      type: 'boolean',
+      defaultsTo: true
+    },
 
-        firstFileId: {
-            type: 'integer'
-        },
+    firstFileId: {
+      type: 'integer'
+    },
 
-        lastFileId: {
-            type: 'integer',
-            defaultsTo: null
-        }
+    lastFileId: {
+      type: 'integer',
+      defaultsTo: null
     }
-};
-
+  }
+}

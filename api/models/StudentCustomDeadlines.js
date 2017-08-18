@@ -7,13 +7,12 @@
 
 const StudentCustomDeadlines = module.exports = {
 
-    attributes: {
+  attributes: {
 
-        student: { model: 'users' },
+    student: {model: 'users'},
 
-        task: { model: 'tasks' },
+    task: {model: 'tasks'},
 
-        deadline: { type: 'datetime' }
-    }
-};
-
+    deadline: {type: 'datetime'}
+  }
+}

@@ -7,14 +7,13 @@
 
 const TaskDescription = module.exports = {
 
-    attributes: {
+  attributes: {
 
-        task: {
-            model: 'tasks',
-            unique: true
-        },
+    task: {
+      model: 'tasks',
+      unique: true
+    },
 
-        description: { type: 'longtext' }
-    }
-};
-
+    description: {type: 'longtext'}
+  }
+}

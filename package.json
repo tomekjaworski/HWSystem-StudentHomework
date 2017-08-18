@@ -40,5 +40,24 @@
   "license": "",
   "devDependencies": {
     "grunt-contrib-sass": "^1.0.0"
+  },
+  "standard": {
+    "globals": [
+      "$",
+      "_",
+      "LabGroups",
+      "Users",
+      "sails",
+      "Roles",
+      "Topics",
+      "Tasks",
+      "TaskComments",
+      "StudentsLabGroups",
+      "StudentsLabGroups",
+      "TaskReplies",
+      "TaskDescription",
+      "Subjects",
+      "TaskReplyFiles"
+    ]
   }
 }

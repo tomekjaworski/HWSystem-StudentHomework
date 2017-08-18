@@ -7,16 +7,15 @@
 
 const StudentsLabGroups = module.exports = {
 
-    attributes: {
+  attributes: {
 
-        student: { model: 'users' },
+    student: {model: 'users'},
 
-        active: {
-            type: 'boolean',
-            defaultsTo: false
-        },
+    active: {
+      type: 'boolean',
+      defaultsTo: false
+    },
 
-        labgroup: { model: 'labgroups' }
-    }
-};
-
+    labgroup: {model: 'labgroups'}
+  }
+}

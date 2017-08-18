@@ -42,7 +42,7 @@ mixin topicentry(id, title, percent, values)
 .list-group#topics-accordion(role='tablist', aria-multiselectable='true')
     //-code=JSON.stringify(data)
     each t in data.topics
-        +topicentry(t.topicId, t.topicNumber + '. ' + t.topicTitle, t.repliesAccepted/t.taskCount*100, [t.taskCount, t.repliesCount, t.repliesTeacherAccepted, t.repliesTeacherRejected+t.repliesBlocked, t.repliesCommented, t.repliesMachineAccepted, t.repliesMachineRejected, t.repliesAccepted])
+        +topicentry(t.topicId, t.topicNumber + '. ' + t.topicTitle, t.repliesAccepted / t.taskCount * 100, [t.taskCount, t.repliesCount, t.repliesTeacherAccepted, t.repliesTeacherRejected + t.repliesBlocked, t.repliesCommented, t.repliesMachineAccepted, t.repliesMachineRejected, t.repliesAccepted])
 
 
 

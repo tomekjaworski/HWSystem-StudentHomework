@@ -7,22 +7,21 @@
 
 const TaskComments = module.exports = {
 
-    attributes: {
+  attributes: {
 
-        task: {
-            model: 'tasks'
-        },
+    task: {
+      model: 'tasks'
+    },
 
-        taskStudent: { model: 'users' },
+    taskStudent: {model: 'users'},
 
-        user: { model: 'users' },
+    user: {model: 'users'},
 
-        comment: { type: 'text' },
+    comment: {type: 'text'},
 
-        viewed: {
-            type: 'boolean',
-            defaultsTo: false
-        }
+    viewed: {
+      type: 'boolean',
+      defaultsTo: false
     }
-};
-
+  }
+}

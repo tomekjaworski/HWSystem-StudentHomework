@@ -7,34 +7,32 @@
 
 const TaskReplies = module.exports = {
 
-    attributes: {
+  attributes: {
 
-        student: { model: 'users' },
+    student: {model: 'users'},
 
-        task: { model: 'tasks' },
+    task: {model: 'tasks'},
 
-        files: {
-            collection: 'taskreplyfiles',
-            via: 'reply'
-        },
+    files: {
+      collection: 'taskreplyfiles',
+      via: 'reply'
+    },
 
-        teacherStatus: {
-            type: 'integer',
-            enum: [ 0, 1, 2 ],
-            defaultsTo: 0
-        },
+    teacherStatus: {
+      type: 'integer',
+      enum: [0, 1, 2],
+      defaultsTo: 0
+    },
 
-        machineStatus: {
-            type: 'integer',
-            enum: [ 0, 1, 2, 3 ],
-            defaultsTo: 0
-        },
+    machineStatus: {
+      type: 'integer',
+      enum: [0, 1, 2, 3],
+      defaultsTo: 0
+    },
 
-
-        blocked: {
-            type: 'boolean',
-            defaultsTo: false
-        }
+    blocked: {
+      type: 'boolean',
+      defaultsTo: false
     }
-};
-
+  }
+}

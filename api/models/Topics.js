@@ -7,28 +7,27 @@
 
 const Topics = module.exports = {
 
-    attributes: {
+  attributes: {
 
-        number: { type: 'string' },
+    number: {type: 'string'},
 
-        title: { type: 'string' },
+    title: {type: 'string'},
 
-        visible: {
-            type: 'boolean',
-            defaultsTo: false
-        },
+    visible: {
+      type: 'boolean',
+      defaultsTo: false
+    },
 
-        deadline: { type: 'datetime' },
+    deadline: {type: 'datetime'},
 
-        tasks: {
-            collection: 'tasks',
-            via: 'topic'
-        },
+    tasks: {
+      collection: 'tasks',
+      via: 'topic'
+    },
 
-        customGroupDeadline: {
-            collection: 'labgrouptopicdeadline',
-            via: 'topic'
-        }
+    customGroupDeadline: {
+      collection: 'labgrouptopicdeadline',
+      via: 'topic'
     }
-};
-
+  }
+}

@@ -7,14 +7,15 @@
 
 module.exports = {
 
-
-    /**
-     * `TestController.index()`
-     */
-    index: function ( req, res ) {
-        Users.findOneById(3).exec((err,user)=>{
-            return res.json(user.hasRole('student'));
-        });
-    }
-};
-
+  /**
+   * `TestController.index()`
+   */
+  index: function (req, res) {
+    Users.findOneById(3).exec((err, user) => {
+      if (err) {
+        res.serverError(err)
+      }
+      return res.json(user.hasRole('student'))
+    })
+  }
+}

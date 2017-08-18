@@ -7,16 +7,15 @@
 
 const Subjects = module.exports = {
 
-    attributes: {
+  attributes: {
 
-        name: { type: 'string' },
+    name: {type: 'string'},
 
-        desc: { type: 'string' },
+    desc: {type: 'string'},
 
-        labGroups: {
-            collection: 'labgroups',
-            via: 'subject'
-        }
+    labGroups: {
+      collection: 'labgroups',
+      via: 'subject'
     }
-};
-
+  }
+}

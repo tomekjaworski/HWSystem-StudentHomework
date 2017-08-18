@@ -22,40 +22,39 @@
 
 module.exports.routes = {
 
-    /***************************************************************************
-     *                                                                          *
-     * Make the view located at `views/homepage.ejs` (or `views/homepage.jade`, *
-     * etc. depending on your default view engine) your home page.              *
-     *                                                                          *
-     * (Alternatively, remove this and add an `index.html` file in your         *
-     * `assets` directory)                                                      *
-     *                                                                          *
-     ***************************************************************************/
+  /***************************************************************************
+   *                                                                          *
+   * Make the view located at `views/homepage.ejs` (or `views/homepage.jade`, *
+   * etc. depending on your default view engine) your home page.              *
+   *                                                                          *
+   * (Alternatively, remove this and add an `index.html` file in your         *
+   * `assets` directory)                                                      *
+   *                                                                          *
+   ***************************************************************************/
 
-    '/': {
-        view: 'homepage'
-    },
+  '/': {
+    view: 'homepage'
+  },
 
-    //Account
+  //Account
 
-    '/login': 'AccountController.login',
-    'GET /logout': 'AccountController.logout',
+  '/login': 'AccountController.login',
+  'GET /logout': 'AccountController.logout',
 
-    '/register': 'AccountController.register',
+  '/register': 'AccountController.register',
 
-    '/settings': 'AccountController.userSettings',
+  '/settings': 'AccountController.userSettings',
 
-    'GET /account' : 'AccountController.index',
+  'GET /account': 'AccountController.index',
 
-    'GET /topic/:topicid/tasks' : 'AccountController.index',
-    'GET /ajax/topic/:id/tasks' : 'AccountController.tasks',
-    'GET /topic/:topicid/task/:taskid': 'AccountController.task',
-    'POST /topic/:topicid/task/:taskid': 'AccountController.task',
+  'GET /topic/:topicid/tasks': 'AccountController.index',
+  'GET /ajax/topic/:id/tasks': 'AccountController.tasks',
+  'GET /topic/:topicid/task/:taskid': 'AccountController.task',
+  'POST /topic/:topicid/task/:taskid': 'AccountController.task',
 
+  //Teachers
 
-    //Teachers
+  '/teacher': 'TeacherController.index',
+  '/teacher/labgroups': 'TeacherController.listLabGroups',
 
-    '/teacher' : 'TeacherController.index',
-    '/teacher/labgroups' : 'TeacherController.listLabGroups',
-
-};
+}

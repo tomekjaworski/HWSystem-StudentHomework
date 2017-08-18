@@ -7,19 +7,16 @@
 
 module.exports = {
 
+  /**
+   * `TeacherController.index()`
+   */
+  index: function (req, res) {
+    return res.view('teacher/index', {title: 'Dashboard :: Teacher Panel', menuItem: 'index'})
+  },
 
-    /**
-     * `TeacherController.index()`
-     */
-    index: function ( req, res ) {
-        return res.view('teacher/index', { title: 'Dashboard :: Teacher Panel', menuItem: 'index' });
-    },
+  // LabGroups
 
-
-    // LabGroups
-
-    listLabGroups: function ( req, res ) {
-        return res.view('teacher/labgroups/list', { title: 'LabGroups :: Teacher Panel', menuItem: 'labgroups' });
-    }
-};
-
+  listLabGroups: function (req, res) {
+    return res.view('teacher/labgroups/list', {title: 'LabGroups :: Teacher Panel', menuItem: 'labgroups'})
+  }
+}
