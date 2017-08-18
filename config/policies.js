@@ -51,7 +51,8 @@ module.exports.policies = {
     TestController: {
         '*': 'isLoggedIn',
         'index': true,
-        'login': true
+        'login': true,
+        'logout': true
     },
 
     AccountController: {

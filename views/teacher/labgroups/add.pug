@@ -1,0 +1,16 @@
+extends ../../includes/layout
+
+block content
+
+    .row
+        .col-md-12.col-lg-4#topics-column
+            include ../menu
+        .hidden-md-down.col-lg-8#tasks-column
+            //-include tasks
+            div.d-flex.justify-content-center
+                .col-8
+                    h2.text-center
+                        | ::
+                        a(href='/teacher/labgroup/list')  [Listowanie]
+                        |  :: [Dodawanie] ::
+                    h2.text-center dodawanie grup

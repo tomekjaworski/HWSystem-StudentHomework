@@ -5,7 +5,7 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
-module.exports = {
+const TeacherController = module.exports = {
 
 
     /**
@@ -19,7 +19,18 @@ module.exports = {
     // LabGroups
 
     listLabGroups: function ( req, res ) {
-        return res.view('teacher/labgroups/list', { title: 'LabGroups :: Teacher Panel', menuItem: 'labgroups' });
+        LabGroups.find({owner:req.localUser.id, select:['id','name']}).exec((err,groups)=>{
+            if(err) return res.serverError(err);
+            return res.view('teacher/labgroups/list', { title: 'LabGroups :: Teacher Panel', menuItem: 'labgroups', data: groups });
+        });
+    },
+
+    viewLabGroup: function ( req, res ) {
+        return res.view('teacher/labgroups/view', { title: 'LabGroups :: Teacher Panel', menuItem: 'labgroups'});
+    },
+
+    addLabGroup: function ( req, res ) {
+        return res.view('teacher/labgroups/add', { title: 'LabGroups :: Teacher Panel', menuItem: 'labgroups'});
     }
 };
 
