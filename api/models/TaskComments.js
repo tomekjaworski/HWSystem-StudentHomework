@@ -1,17 +1,19 @@
 /**
- * TaskReplayComments.js
+ * TaskComments.js
  *
  * @description :: TODO: You might write a short summary of how this model works and what it represents here.
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
  */
 
-const TaskReplyComments = module.exports = {
+const TaskComments = module.exports = {
 
     attributes: {
 
-        reply: {
-            model: 'taskreplies'
+        task: {
+            model: 'tasks'
         },
+
+        taskStudent: { model: 'users' },
 
         user: { model: 'users' },
 

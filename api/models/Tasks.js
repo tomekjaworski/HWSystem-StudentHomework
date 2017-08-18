@@ -33,6 +33,11 @@ const Tasks = module.exports = {
         customDeadline: {
             collection: 'studentcustomdeadlines',
             via: 'student'
+        },
+
+        comments: {
+            collection: 'taskcomments',
+            via: 'task'
         }
     }
 };

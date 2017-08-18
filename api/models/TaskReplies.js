@@ -34,11 +34,6 @@ const TaskReplies = module.exports = {
         blocked: {
             type: 'boolean',
             defaultsTo: false
-        },
-
-        comments: {
-            collection: 'taskreplycomments',
-            via: 'reply'
         }
     }
 };

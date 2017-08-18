@@ -54,7 +54,8 @@ const AccountController = module.exports = {
     // Controller Actions
 
     /**
-     * `AccountController.login()`
+     * @description :: Login to system
+     * @route       :: /login
      */
     login: function ( req, res ) {
         if ( req.session.authed ) {
@@ -104,7 +105,8 @@ const AccountController = module.exports = {
 
 
     /**
-     * `AccountController.logout()`
+     * @description :: Logout from system
+     * @route       :: /logout
      */
     logout: function ( req, res ) {
         if ( req.session.authed ) {
@@ -115,7 +117,8 @@ const AccountController = module.exports = {
 
 
     /**
-     * `AccountController.register()`
+     * @description :: Register to system
+     * @route       :: /register
      */
     register: function ( req, res ) {
 
@@ -191,6 +194,11 @@ const AccountController = module.exports = {
         }
     },
 
+    /***
+     * @description :: Main student view, exposes topics to student or tasks in topic
+     * @route       :: /
+     * @route       :: /topic/:topicid/tasks
+     */
     index: function ( req, res ) {
         if ( req.localUser.hasRole('student') ) {
             StudentsLabGroups.findOne({ student: req.localUser.id/*TODO: , active: true*/ }).populate('labgroup')
@@ -200,18 +208,20 @@ const AccountController = module.exports = {
                     }
 
                     Topics.query('SELECT topics.id topicId, topics.number topicNumber, topics.title topicTitle, topics.deadline topicDeadline, \n' +
-                        '    COUNT(tasks.id) taskCount, COUNT(replies.id) repliesCount, sum(case when replies.teacherStatus = 1 then 1 else 0 end) repliesTeacherAccepted,\n' +
+                        '    COUNT(tasks.id) taskCount, \n' +
+                        '    COUNT(replies.id) repliesCount, \n' +
+                        '    sum(case when replies.teacherStatus = 1 then 1 else 0 end) repliesTeacherAccepted,\n' +
                         '    sum(case when replies.teacherStatus = 2 then 1 else 0 end) repliesTeacherRejected,\n' +
                         '    sum(case when replies.blocked = 1 then 1 else 0 end) repliesBlocked,\n' +
-                        '    COUNT(DISTINCT comments.reply) repliesCommented,\n' +
+                        '    COUNT(DISTINCT comments.task) repliesCommented,\n' +
                         '    sum(case when replies.machineStatus = 2 then 1 else 0 end) repliesMachineAccepted,\n' +
                         '    sum(case when replies.machineStatus = 3 then 1 else 0 end) repliesMachineRejected,\n' +
-                        '    sum(case when replies.machineStatus = 2 and replies.teacherStatus = 1 then 1 else 0 end) repliesAccepted\n' +
+                        '    sum(case when (replies.machineStatus = 2 and replies.teacherStatus = 1) then 1 else 0 end) repliesAccepted\n' +
                         '    FROM topics\n' +
                         'LEFT JOIN tasks ON tasks.topic = topics.id\n' +
-                        'LEFT JOIN taskreplies AS replies ON replies.task = tasks.id\n' +
-                        'LEFT JOIN taskreplycomments AS comments ON replies.id = comments.reply\n' +
-                        'GROUP BY topics.id', ( err, data ) => {
+                        'LEFT JOIN taskreplies AS replies ON replies.task = tasks.id AND replies.student = ? \n' +
+                        'LEFT JOIN ( SELECT task, taskStudent FROM taskcomments GROUP BY task, taskStudent ) comments ON comments.task = tasks.id AND comments.taskStudent = ?\n' +
+                        'GROUP BY topics.id', [req.localUser.id, req.localUser.id], ( err, data ) => {
                         if ( err ) {
                             return res.serverError(err);
                         }
@@ -229,6 +239,10 @@ const AccountController = module.exports = {
         }
     },
 
+    /***
+     * @description :: Ajax api for getting list of task in selected topic
+     * @route       :: /ajax/topic/:id/tasks
+     */
     tasks: function ( req, res ) {
         if ( req.localUser.hasRole('student') ) {
             StudentsLabGroups.findOne({ student: req.localUser.id/*TODO: , active: true*/ })
@@ -246,20 +260,18 @@ const AccountController = module.exports = {
                         }
                         Tasks.query('SELECT tasks.id, tasks.number, tasks.title,\n' +
                             '(case when reply.id IS NOT NULL then 1 else 0 end) hasReply,\n' +
-                            '(case when comments.reply IS NOT NULL then 1 else 0 end) hasComments,\n' +
+                            '(case when comments.task IS NOT NULL then 1 else 0 end) hasComments,\n' +
                             '(case when reply.id IS NOT NULL then reply.teacherStatus else 0 end) teacherStatus,\n' +
                             '(case when reply.id IS NOT NULL then reply.machineStatus else 0 end) machineStatus,\n' +
                             '(case when scd.task IS NOT NULL then scd.deadline else\n' +
-                            '\t(case when groupdeadline.deadline IS NOT NULL then groupdeadline.deadline else topics.deadline end)\n' +
-                            ' end) deadline\n' +
+                            ' (case when groupdeadline.deadline IS NOT NULL then groupdeadline.deadline else topics.deadline end) end) deadline\n' +
                             'FROM tasks\n' +
-                            'LEFT JOIN taskreplies reply ON reply.task = tasks.id AND reply.student = ?\n' +
-                            'LEFT JOIN taskreplycomments comments ON comments.reply = reply.id AND comments.viewed = false\n' +
+                            'LEFT JOIN taskreplies reply ON reply.task = tasks.id AND reply.student = @user\n' +
+                            'LEFT JOIN taskcomments comments ON comments.task = tasks.id AND comments.viewed = false\n' +
                             'LEFT JOIN topics ON topics.id = tasks.topic\n' +
-                            '\n' +
-                            'LEFT JOIN studentcustomdeadlines scd ON scd.task = tasks.id AND scd.student = ?\n' +
-                            'LEFT JOIN labgrouptopicdeadline groupdeadline ON groupdeadline.group = ?\n' +
-                            'WHERE tasks.topic = ?\n' +
+                            'LEFT JOIN studentcustomdeadlines scd ON scd.task = tasks.id AND scd.student = @user\n' +
+                            'LEFT JOIN labgrouptopicdeadline groupdeadline ON groupdeadline.group = 1\n' +
+                            'WHERE tasks.topic = 1\n' +
                             'GROUP BY tasks.id, reply.id, tasks.topic, scd.deadline, groupdeadline.deadline',
                             [ req.localUser.id, req.localUser.id, lab.labgroup, topicId ], ( err, data ) => {
                                 if ( err ) {
@@ -301,22 +313,18 @@ const AccountController = module.exports = {
 
                         task.description = task.description[ 0 ].description;
 
-                        TaskReplies.findOne({ student: req.localUser.id, task: task.id })
-                            .exec(function ( err, taskReplie ) {
-                                if ( err ) {
-                                    return res.badRequest(err);
-                                }
-                                if ( !taskReplie ) {
-                                    return res.view('account/task',
-                                        { topic: topic, task: task, taskReplie: taskReplie, taskComments: null });
-                                }
-                                TaskReplyComments.find({ reply: taskReplie.id, user: req.localUser.id })
-                                    .populate('user').exec(function ( err, taskComments ) {
+
+                        TaskComments.find({ task: task.id, taskStudent: req.localUser.id })
+                            .populate('user').exec(function ( err, taskComments ) {
+                            if ( err ) {
+                                return res.serverError(err);
+                            }
+
+                            TaskReplies.findOne({ student: req.localUser.id, task: task.id })
+                                .exec(function ( err, taskReplie ) {
                                     if ( err ) {
                                         return res.badRequest(err);
                                     }
-
-
                                     return res.view('account/task', {
                                         topic: topic,
                                         task: task,
@@ -326,7 +334,9 @@ const AccountController = module.exports = {
 
                                 });
 
-                            });
+                        });
+
+
 
                     });
 
@@ -335,21 +345,21 @@ const AccountController = module.exports = {
 
             case 'POST':
 
-                let taskReplie= req.param('taskReplie'), comment = req.param('comment');
+                let task = req.param('task'), comment = req.param('comment');
 
                 // Ajax
-                TaskReplies.count({id: taskReplie, student: req.localUser.id}, (err, count)=>{
+                Tasks.count({id: task}, (err, count)=>{
                     if(err) return res.serverError(err);
                     if(count==0){
-                        return res.forbidden();
+                        return res.notFound();
                     }
-                    TaskReplyComments.update({ reply: taskReplie, user:req.localUser.id, viewed:false },{viewed:true}).exec(function (err ) {
+                    TaskComments.update({ task: task, taskStudent: req.localUser.id, viewed:false },{viewed:true}).exec(function (err ) {
                         if (err){
                             return console.log(err);
                         }
                     });
 //TODO: Sprawdzanie ajaxowe komentarzy
-                    TaskReplyComments.create({ reply:taskReplie, user:req.localUser.id,  comment:comment, viewed:false }).exec(function ( err, comment ) {
+                    TaskComments.create({ task:task, taskStudent: req.localUser.id, comment:comment, viewed:false }).exec(function ( err, comment ) {
 
 
                     });

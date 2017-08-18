@@ -239,7 +239,7 @@ module.exports.bootstrap = function ( cb ) {
                                                 student: users[ 3 ],
                                                 task: tasks[ 5 ],
                                                 teacherStatus: 1,
-                                                machineStatus: 1
+                                                machineStatus: 2
                                             }
                                         ]).exec(function ( err, tr ) {
                                             if ( err ) {
@@ -325,28 +325,32 @@ module.exports.bootstrap = function ( cb ) {
                                                     throw err;
                                                 }
 
-                                                TaskReplyComments.create([
+                                                TaskComments.create([
                                                     {
-                                                        reply: tr[ 0 ],
+                                                        taskStudent: users [ 2 ],
+                                                        task: tasks[ 0 ],
                                                         user: users[ 1 ],
                                                         comment: 'Test message from Teacher',
                                                         viewed: false
                                                     },
                                                     {
-                                                        reply: tr[ 1 ],
+                                                        taskStudent: users [ 3 ],
+                                                        task: tasks[ 3 ],
                                                         user: users[ 1 ],
                                                         comment: 'Test message from Teacher',
                                                         viewed: false
                                                     },
                                                     {
-                                                        reply: tr[ 0 ],
+                                                        taskStudent: users [ 2 ],
+                                                        task: tasks[ 0 ],
                                                         user: users[ 2 ],
                                                         comment: 'Test message from Student',
                                                         viewed: false
                                                     },
                                                     {
-                                                        reply: tr[ 1 ],
-                                                        user: users[ 2 ],
+                                                        taskStudent: users [ 3 ],
+                                                        task: tasks[ 3 ],
+                                                        user: users[ 3 ],
                                                         comment: 'Test message from Student',
                                                         viewed: false
                                                     }
