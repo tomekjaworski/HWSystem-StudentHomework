@@ -4,6 +4,7 @@ var formregister = $('#nav-form-register');
 var emailfield = $('#nav-form-email');
 var passfield = $('#nav-form-pass');
 var navform = $('#nav-form');
+var currenttopiclink = $('#bc-current-topic-link');
 
 formbutton.on('click', function () {
 
@@ -67,9 +68,14 @@ function loadTaskView( topicid ) {
 
     var topicscolumn = $('#topics-column');
     var taskscolumn = $('#tasks-column');
+    var bctopics = $('#bc-topics');
+    var bccurrenttopic = $('#bc-current-topic');
 
     topicscolumn.addClass('hidden-md-down');
     taskscolumn.removeClass('hidden-md-down');
+    bctopics.removeClass('active');
+    bctopics.find('a').attr('href','/account');
+    bccurrenttopic.show();
 
     var request = $.ajax({
         url: "/ajax/topic/" + topicid + "/tasks",
@@ -108,5 +114,9 @@ function loadTaskView( topicid ) {
 
 if(typeof taskView !== "undefined"){
     loadTaskView(taskView);
+}
+
+if (typeof currenttopic !== "undefined") {
+    currenttopiclink.attr('href', '/topic/' + currenttopic + '/tasks')
 }
 })();

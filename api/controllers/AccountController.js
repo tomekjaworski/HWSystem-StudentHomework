@@ -347,6 +347,7 @@ const AccountController = module.exports = {
                         if (err){
                             return console.log(err);
                         }
+                        return res.ok();
                     });
 //TODO: Sprawdzanie ajaxowe komentarzy
 //                     TaskReplyComments.create({ reply:taskReply, user:req.localUser.id,  comment:comment, viewed:false }).exec(function ( err, comment ) {

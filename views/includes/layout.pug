@@ -9,9 +9,18 @@ html
             title= brand
         include styles
     body
+        noscript
+            .container
+                .alert.alert-danger(role='alert')
+                    h4.alert-heading Uwaga!
+                    p.mb-0
+                        | Ta strona internetowa wymaga włączonej obsługi skryptów JavaScript do poprawnego działania!
+
+
         include nav
 
         .container
+
             include breadcrumbs
 
             block content
