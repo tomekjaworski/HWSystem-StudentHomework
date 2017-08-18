@@ -66,6 +66,20 @@ const Users = module.exports = {
                 return hasrole;
             }
         }
+    },
+
+    validatePassword: function ( password ) {
+        if ( password.length < 8 ) {
+            return 1;
+        }
+        let hasUpperCase = /[A-Z]/.test(password);
+        let hasLowerCase = /[a-z]/.test(password);
+        let hasNumbers = /\d/.test(password);
+        let hasNonalphas = /\W/.test(password);
+        if ( hasUpperCase + hasLowerCase + hasNumbers + hasNonalphas < 3 ) {
+            return 2;
+        }
+        return 0;
     }
 };
 

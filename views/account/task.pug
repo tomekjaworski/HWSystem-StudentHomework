@@ -33,7 +33,8 @@ block content
             p createdAt: #{com.createdAt}
             if !com.viewed
                 h1#elo nieprzeczytane
-
+            else
+                h1#elo przeczytane
 
     script.
         var currenttopic = #{topic.id}
