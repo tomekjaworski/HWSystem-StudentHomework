@@ -118,16 +118,14 @@ const AccountController = module.exports = {
 
         switch ( req.method ) {
             case 'GET':
-                DeanGroups.find({}).exec(function ( err, dean ) {
-                    LabGroups.find({}).populate('owner').exec(function ( err, labs ) {
-                        return res.view('account/register', { title: 'Rejestracja', dea: dean, labs: labs });
-                    });
+                LabGroups.find({}).populate('owner').exec(function ( err, labs ) {
+                    return res.view('account/register', { title: 'Rejestracja', labs: labs });
                 });
                 break;
             case 'POST':
                 let name = req.param('name'), album = req.param('album'), surname = req.param('surname'),
                     email = req.param('email'), password = req.param('password'), repassword = req.param('repassword');
-                let deangroups = req.param('groupd'), labgroups = req.param('groupl');
+                let labgroups = req.param('groupl');
                 let st = crypto.randomBytes(20).toString('hex');
                 if ( !name && !surname && !email && !password ) {
                     return AccountController.registerError(res, 'Proszę uzupełnić wszystkie pola.');
@@ -135,6 +133,9 @@ const AccountController = module.exports = {
                 let regexEmail = /^\w+@(p\.lodz\.pl)|\w+@(edu\.p\.lodz\.pl)$/;
                 if ( !regexEmail.test(email) ) {
                     return AccountController.registerError(res, 'Rejestracja dostępna tylko z uczelnienych maili');
+                }
+                if ( album.length != 6 ) {
+                    return AccountController.registerError(res, 'Numer albumu jest nieprawidłowy.');
                 }
                 if ( password !== repassword ) {
                     return AccountController.registerError(res, 'Hasła nie są identyczne');
@@ -155,34 +156,31 @@ const AccountController = module.exports = {
                     if ( err ) {
                         return jsonx(err);
                     }
-                    DeanGroups.findOneByName(deangroups).exec(function ( err, dean ) {
+
+                    LabGroups.findOneByName(labgroups).exec(function ( err, lab ) {
                         if ( err ) {
                             res.jsonx(err);
                         }
-                        LabGroups.findOneByName(labgroups).exec(function ( err, lab ) {
+                        if ( !lab ) {
+                            return AccountController.registerError(res, 'Nieprawidłowa grupa laboratoryjna.');
+                        }
+                        Users.create({
+                            name: name,
+                            surname: surname,
+                            album: album,
+                            email: email,
+                            password: AccountController.hashPassword(password, st),
+                            salt: st,
+                            activated: true,
+                            roles: role,
+                            labGroups: [ lab ]
+                        }).exec(function ( err ) {
                             if ( err ) {
-                                res.jsonx(err);
+                                return res.serverError(err);
                             }
-                            Users.create({
-                                name: name,
-                                surname: surname,
-                                album: album,
-                                email: email,
-                                password: AccountController.hashPassword(password, st),
-                                salt: st,
-                                activated: true,
-                                roles: role,
-                                deanGroups: [ dean ],
-                                labGroups: [ lab ]
-                            }).exec(function ( err ) {
-                                if ( err ) {
-                                    return res.serverError(err);
-                                }
 
-                                return res.redirect(sails.getUrlFor('AccountController.login'));
-                            });
+                            return res.redirect(sails.getUrlFor('AccountController.login'));
                         });
-
                     });
 
                 });
@@ -216,7 +214,7 @@ const AccountController = module.exports = {
                         }
                         let ret = { message: lab.labgroup.message, topics: data };
                         let taskView = req.param('topicid');
-                        if(taskView){
+                        if ( taskView ) {
                             ret.taskView = taskView;
                         }
                         console.log(ret);
@@ -265,6 +263,116 @@ const AccountController = module.exports = {
         }
         else {
             return res.badRequest();
+        }
+    },
+    task: function ( req, res ) {
+        switch ( req.method ) {
+            case 'GET':
+
+                let topicparam = req.param('topicid'), taskparam = req.param('taskid');
+
+
+                Topics.findOneById(topicparam).exec(function ( err, topic ) {
+                    if ( err ) {
+                        return res.badRequest(err);
+                    }
+
+                    if ( !topic ) {
+                        return res.notFound();
+                    }
+
+                    Tasks.findOneById(taskparam).populate('description').exec(function ( err, task ) {
+                        if ( err ) {
+                            return res.badRequest(err);
+                        }
+
+                        if ( !task ) {
+                            return res.notFound();
+                        }
+
+                        task.description = task.description[ 0 ].description;
+
+                        TaskReplies.findOne({ student: req.localUser.id, task: task.id })
+                            .exec(function ( err, taskReplie ) {
+                                if ( err ) {
+                                    return res.badRequest(err);
+                                }
+                                if ( !taskReplie ) {
+                                    return res.view('account/task',
+                                        { topic: topic, task: task, taskReplie: taskReplie, taskComments: null });
+                                }
+                                TaskReplyComments.find({ reply: taskReplie.id, user: req.localUser.id })
+                                    .populate('user').exec(function ( err, taskComments ) {
+                                    if ( err ) {
+                                        return res.badRequest(err);
+                                    }
+
+
+                                    return res.view('account/task', {
+                                        topic: topic,
+                                        task: task,
+                                        taskReplie: taskReplie,
+                                        taskComments: taskComments
+                                    });
+
+                                });
+
+                            });
+
+                    });
+
+                });
+                break;
+
+            case 'POST':
+
+                let taskReplie= req.param('taskReplie'), comment = req.param('comment');
+
+                // Ajax
+                TaskReplies.count({id: taskReplie, student: req.localUser.id}, (err, count)=>{
+                    if(err) return res.serverError(err);
+                    if(count==0){
+                        return res.forbidden();
+                    }
+                    TaskReplyComments.update({ reply: taskReplie, user:req.localUser.id, viewed:false },{viewed:true}).exec(function (err ) {
+                        if (err){
+                            return console.log(err);
+                        }
+                    });
+//TODO: Sprawdzanie ajaxowe komentarzy
+                    TaskReplyComments.create({ reply:taskReplie, user:req.localUser.id,  comment:comment, viewed:false }).exec(function ( err, comment ) {
+
+
+                    });
+
+                });
+                // Dodawanie komentarzy
+
+
+        }
+    },
+
+    userSettings: function ( req, res ) {
+        switch (req.method){
+            case 'GET':
+
+                Users.findOneById(req.localUser.id).exec(function(err, user){
+                    if (err){
+                        return json(err);
+                    }
+                    LabGroups.find().populate('owner').exec(function(err, labs){
+                       if (err){
+                           return json(err);
+                       }
+
+                       return res.view('account/settings', {user: user, labs:labs});
+                    });
+
+                });
+
+            case 'POST':
+                let password = req.param('password'), repassword = req.param('repassword'), lab = req.param('lab');
+
         }
     }
 };
