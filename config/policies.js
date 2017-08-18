@@ -43,6 +43,7 @@ module.exports.policies = {
   // (this overrides `false` above)
   // nurture: 'isRabbitMother',
 
+  },
   // Apply the `isNiceToAnimals` AND `hasRabbitFood` policies
   // before letting any users feed our rabbits
   // feed : ['isNiceToAnimals', 'hasRabbitFood']
@@ -50,7 +51,8 @@ module.exports.policies = {
   TestController: {
     '*': 'isLoggedIn',
     'index': true,
-    'login': true
+        'login': true,
+        'logout': true
   },
 
   AccountController: {

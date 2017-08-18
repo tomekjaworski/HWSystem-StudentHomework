@@ -54,7 +54,9 @@ module.exports.routes = {
 
   // Teachers
 
-  '/teacher': 'TeacherController.index',
-  '/teacher/labgroups': 'TeacherController.listLabGroups'
-
+    '/teacher' : 'TeacherController.index',
+    '/teacher/labgroup' : 'TeacherController.listLabGroups',
+    '/teacher/labgroup/list' : 'TeacherController.listLabGroups',
+    '/teacher/labgroup/view/:id' : 'TeacherController.viewLabGroup',
+    '/teacher/labgroup/add' : 'TeacherController.addLabGroup',
 }
