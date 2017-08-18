@@ -36,7 +36,7 @@ module.exports.routes = {
     view: 'homepage'
   },
 
-  //Account
+  // Account
 
   '/login': 'AccountController.login',
   'GET /logout': 'AccountController.logout',
@@ -52,9 +52,9 @@ module.exports.routes = {
   'GET /topic/:topicid/task/:taskid': 'AccountController.task',
   'POST /topic/:topicid/task/:taskid': 'AccountController.task',
 
-  //Teachers
+  // Teachers
 
   '/teacher': 'TeacherController.index',
-  '/teacher/labgroups': 'TeacherController.listLabGroups',
+  '/teacher/labgroups': 'TeacherController.listLabGroups'
 
 }

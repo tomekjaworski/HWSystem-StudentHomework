@@ -68,14 +68,12 @@ module.exports.http = {
           req.options.locals.localUser = req.localUser = user
           next()
         })
-      }
-      else {
+      } else {
         next()
       }
     },
 
     xframe: require('lusca').xframe('SAMEORIGIN')
-
 
     /***************************************************************************
      *                                                                          *

@@ -23,7 +23,6 @@ module.exports.session = {
    ***************************************************************************/
   secret: 'd3c12025acc75e8df01527f5bbb4e7c9'
 
-
   /***************************************************************************
    *                                                                          *
    * Set the session cookie expire time The maxAge is set by milliseconds,    *
@@ -95,5 +94,4 @@ module.exports.session = {
   //     ssl: true
   //   }
   // }
-
 }

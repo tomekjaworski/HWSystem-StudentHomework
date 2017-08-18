@@ -11,7 +11,6 @@
  *
  */
 module.exports = function (grunt) {
-
   grunt.config.set('coffee', {
     dev: {
       options: {

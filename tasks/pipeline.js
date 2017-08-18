@@ -11,7 +11,6 @@
  *   https://github.com/balderdashy/sails-docs/blob/master/anatomy/myApp/tasks/pipeline.js.md
  */
 
-
 // CSS files to inject in order
 //
 // (if you're using LESS with the built-in default config, you'll want
@@ -49,6 +48,7 @@ var templateFilesToInject = [
 ]
 
 // Default path for public folder (see documentation for more information)
+// eslint-disable-next-line no-unused-vars
 var tmpPath = '.tmp/public/'
 
 // Prefix relative paths to source files so they point to the proper locations
@@ -75,5 +75,3 @@ module.exports.templateFilesToInject = templateFilesToInject.map(function (tplPa
   }
   return require('path').join('assets/', tplPath)
 })
-
-

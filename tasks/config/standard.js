@@ -14,11 +14,26 @@
  *
  */
 module.exports = function (grunt) {
-
   grunt.config.set('standard', {
     dev: {
       options: {
-        fix: false
+        fix: false,
+        globals: [
+          '_',
+          'LabGroups',
+          'Users',
+          'sails',
+          'Roles',
+          'Topics',
+          'Tasks',
+          'TaskComments',
+          'StudentsLabGroups',
+          'StudentsLabGroups',
+          'TaskReplies',
+          'TaskDescription',
+          'Subjects',
+          'TaskReplyFiles'
+        ]
       },
       app: {
         src: [

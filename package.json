@@ -48,7 +48,6 @@
   },
   "standard": {
     "globals": [
-      "$",
       "_",
       "LabGroups",
       "Users",

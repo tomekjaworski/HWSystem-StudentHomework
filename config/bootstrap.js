@@ -10,7 +10,6 @@
  */
 
 module.exports.bootstrap = function (cb) {
-
   // It's very important to trigger this callback method when you are finished
   // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
   Users.count().exec(function countCB (error, found) {
@@ -327,28 +326,28 @@ module.exports.bootstrap = function (cb) {
 
                         TaskComments.create([
                           {
-                            taskStudent: users [2],
+                            taskStudent: users[2],
                             task: tasks[0],
                             user: users[1],
                             comment: 'Test message from Teacher',
                             viewed: false
                           },
                           {
-                            taskStudent: users [3],
+                            taskStudent: users[3],
                             task: tasks[3],
                             user: users[1],
                             comment: 'Test message from Teacher',
                             viewed: false
                           },
                           {
-                            taskStudent: users [2],
+                            taskStudent: users[2],
                             task: tasks[0],
                             user: users[2],
                             comment: 'Test message from Student',
                             viewed: false
                           },
                           {
-                            taskStudent: users [3],
+                            taskStudent: users[3],
                             task: tasks[3],
                             user: users[3],
                             comment: 'Test message from Student',
@@ -370,8 +369,7 @@ module.exports.bootstrap = function (cb) {
           })
         })
       })
-    }
-    else {
+    } else {
       cb()
     }
   })
