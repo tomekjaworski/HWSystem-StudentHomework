@@ -53,10 +53,10 @@ module.exports.routes = {
   'POST /topic/:topicid/task/:taskid': 'AccountController.task',
 
   // Teachers
+  '/teacher': 'TeacherController.index',
+  '/teacher/labgroup': 'TeacherController.listLabGroups',
+  '/teacher/labgroup/list': 'TeacherController.listLabGroups',
+  '/teacher/labgroup/view/:id': 'TeacherController.viewLabGroup',
+  '/teacher/labgroup/add': 'TeacherController.addLabGroup'
 
-    '/teacher' : 'TeacherController.index',
-    '/teacher/labgroup' : 'TeacherController.listLabGroups',
-    '/teacher/labgroup/list' : 'TeacherController.listLabGroups',
-    '/teacher/labgroup/view/:id' : 'TeacherController.viewLabGroup',
-    '/teacher/labgroup/add' : 'TeacherController.addLabGroup',
 }
