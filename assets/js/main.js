@@ -78,11 +78,11 @@ function loadTaskView( topicid ) {
     });
 
     request.done(function (msg) {
-        taskscolumn.html('<table class="table table-striped table-hover responsive"><thead><tr><th>Numer</th><th>Tytuł Zadania</th><th>A</th><th>B</th><th>C</th><th>D</th><th>Termin</th></tr></thead><tbody id="tasks-tbody"></tbody></table>');
+        taskscolumn.html('<table class="table table-striped table-hover table-responsive table-tasklist"><thead><tr><th>Numer</th><th>Tytuł Zadania</th><th>A</th><th>B</th><th>C</th><th>D</th><th>Termin</th></tr></thead><tbody id="tasks-tbody"></tbody></table>');
+        
         for (var i = 0; i <= msg.length - 1; i++) {
             $('#tasks-tbody').append('<tr><th scope="row">'+msg[i].number+'</th><td>'+ msg[i].title +'</td><td>'+ msg[i].hasReply +'</td><td>'+ msg[i].hasComments +'</td><td>'+ msg[i].teacherStatus +'</td><td>'+ msg[i].machineStatus +'</td><td>'+ msg[i].deadline +'</td></tr>');
         }
-
         // $( "#log" ).html( msg );
     });
 
@@ -108,3 +108,4 @@ function loadTaskView( topicid ) {
 if(typeof taskView !== "undefined"){
     loadTaskView(taskView);
 }
+
