@@ -328,7 +328,7 @@ const AccountController = module.exports = {
                                     return res.view('account/task', {
                                         topic: topic,
                                         task: task,
-                                        taskReplie: taskReplie,
+                                        taskReply: taskReply,
                                         taskComments: taskComments
                                     });
 
@@ -360,9 +360,6 @@ const AccountController = module.exports = {
                     });
 //TODO: Sprawdzanie ajaxowe komentarzy
                     TaskComments.create({ task:task, taskStudent: req.localUser.id, comment:comment, viewed:false }).exec(function ( err, comment ) {
-
-
-                    });
 
                 });
                 // Dodawanie komentarzy
