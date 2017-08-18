@@ -64,7 +64,7 @@ const AccountController = module.exports = {
         }
         switch ( req.method ) {
             case 'GET':
-                return res.view('account/login', { title: 'Logowanie', redirect: req.param('redirect') });
+                return res.view('account/login', { title: 'Logowanie', redirect: req.param('redirect'), loginpage: true});
                 break;
             case 'POST':
                 let email = req.param('email'), password = req.param('password'), red = req.param('redirect');
@@ -126,7 +126,7 @@ const AccountController = module.exports = {
         switch ( req.method ) {
             case 'GET':
                 LabGroups.find({}).populate('owner').exec(function ( err, labs ) {
-                    return res.view('account/register', { title: 'Rejestracja', labs: labs });
+                    return res.view('account/register', { title: 'Rejestracja', labs: labs, registerpage: true});
                 });
                 break;
             case 'POST':

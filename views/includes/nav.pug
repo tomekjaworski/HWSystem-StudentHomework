@@ -7,11 +7,11 @@
         if localUser
             #containerNavbar.collapse.navbar-collapse
                 ul.navbar-nav.mr-auto
-                    li.nav-item
+                    li.nav-item(class=(homepage) ? 'active' : '')
                         a.nav-link(href='/') Home
-                    li.nav-item.active
-                        a.nav-link(href='/account') Tasks
-                    li.nav-item
+                    li.nav-item(class=(data && data.topics) ? 'active' : '')
+                        a.nav-link(href='/account') Topics
+                    //li.nav-item
                         a.nav-link.disabled(href='#') Disabled
                     //-li.nav-item.dropdown
                         a#dropdown04.nav-link.dropdown-toggle(href='http://example.com', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false') Dropdown
