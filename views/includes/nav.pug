@@ -19,9 +19,12 @@
                             a.dropdown-item(href='#') Action
                             a.dropdown-item(href='#') Another action
                             a.dropdown-item(href='#') Something else here
-                ul.navbar-nav.navbar-right
+                ul.navbar-nav.navbar-right#nav-loggedin
                     li.nav-item
                         a.nav-link Witaj #{localUser.fullName()}
+                    li.nav-item
+                        a.btn.btn-primary(href='/settings')
+                            i.fa.fa-cog(aria-hidden='true')
                     li.nav-item
                         a.btn.btn-danger(href='/logout') Wyloguj
         else

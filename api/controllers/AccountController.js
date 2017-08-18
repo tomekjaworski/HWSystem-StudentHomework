@@ -302,15 +302,15 @@ const AccountController = module.exports = {
                         task.description = task.description[ 0 ].description;
 
                         TaskReplies.findOne({ student: req.localUser.id, task: task.id })
-                            .exec(function ( err, taskReplie ) {
+                            .exec(function ( err, taskReply ) {
                                 if ( err ) {
                                     return res.badRequest(err);
                                 }
-                                if ( !taskReplie ) {
+                                if ( !taskReply ) {
                                     return res.view('account/task',
-                                        { topic: topic, task: task, taskReplie: taskReplie, taskComments: null });
+                                        { topic: topic, task: task, taskReply: taskReply, taskComments: null });
                                 }
-                                TaskReplyComments.find({ reply: taskReplie.id, user: req.localUser.id })
+                                TaskReplyComments.find({ reply: taskReply.id, user: req.localUser.id })
                                     .populate('user').exec(function ( err, taskComments ) {
                                     if ( err ) {
                                         return res.badRequest(err);
@@ -320,7 +320,7 @@ const AccountController = module.exports = {
                                     return res.view('account/task', {
                                         topic: topic,
                                         task: task,
-                                        taskReplie: taskReplie,
+                                        taskReply: taskReply,
                                         taskComments: taskComments
                                     });
 
@@ -335,24 +335,24 @@ const AccountController = module.exports = {
 
             case 'POST':
 
-                let taskReplie= req.param('taskReplie'), comment = req.param('comment');
+                let taskReply= req.param('taskReply'), comment = req.param('comment');
 
                 // Ajax
-                TaskReplies.count({id: taskReplie, student: req.localUser.id}, (err, count)=>{
+                TaskReplies.count({id: taskReply, student: req.localUser.id}, (err, count)=>{
                     if(err) return res.serverError(err);
-                    if(count==0){
+                    if( count === 0 ){
                         return res.forbidden();
                     }
-                    TaskReplyComments.update({ reply: taskReplie, user:req.localUser.id, viewed:false },{viewed:true}).exec(function (err ) {
+                    TaskReplyComments.update({ reply: taskReply, user:req.localUser.id, viewed:false },{viewed:true}).exec(function (err ) {
                         if (err){
                             return console.log(err);
                         }
                     });
 //TODO: Sprawdzanie ajaxowe komentarzy
-                    TaskReplyComments.create({ reply:taskReplie, user:req.localUser.id,  comment:comment, viewed:false }).exec(function ( err, comment ) {
-
-
-                    });
+//                     TaskReplyComments.create({ reply:taskReply, user:req.localUser.id,  comment:comment, viewed:false }).exec(function ( err, comment ) {
+//
+//
+//                     });
 
                 });
                 // Dodawanie komentarzy

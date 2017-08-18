@@ -1,6 +1,13 @@
 ol.breadcrumb
     li.breadcrumb-item
-        a(href='#') Home
-    li.breadcrumb-item
-        a(href='#') Library
-    li.breadcrumb-item.active Data
+        a(href='/')
+            i.fa.fa-home
+    if data && data.topics
+        li.breadcrumb-item.active Topics
+    else if task
+        li.breadcrumb-item
+            a(href='/account') Topics
+        li.breadcrumb-item.active Task
+    else if user
+        li.breadcrumb-item.active User Settings
+    //li.breadcrumb-item.active Data
