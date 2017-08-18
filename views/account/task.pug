@@ -35,18 +35,19 @@ block content
                 h1#elo nieprzeczytane
 
 
-        script.
-            function viewed(topic, task, taskReply) {
-                var response = $.ajax({
-                    url: '/topic/' + topic + '/task/' + task,
-                    method: "POST",
-                    data: {
-                        'taskReply': taskReply
-                    }
-                });
+    script.
+        var currenttopic = #{topic.id}
+        function viewed(topic, task, taskReply) {
+            var response = $.ajax({
+                url: '/topic/' + topic + '/task/' + task,
+                method: "POST",
+                data: {
+                    'taskReply': taskReply
+                }
+            });
 
-                response.done(function ( msg ) {
-                    console.log(msg);
+            response.done(function ( msg ) {
+                console.log(msg);
 
-                });
-            }
+            });
+        }
