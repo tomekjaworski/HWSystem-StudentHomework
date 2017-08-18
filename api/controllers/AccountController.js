@@ -86,7 +86,7 @@ const AccountController = module.exports = {
                             return res.redirect(red);
                         }
                         else {
-                            if(user.hasRole('teacher')){
+                            if ( user.hasRole('teacher') ) {
                                 return res.redirect(sails.getUrlFor('TeacherController.index'));
                             }
                             return res.redirect(sails.getUrlFor('AccountController.index'));
@@ -221,7 +221,7 @@ const AccountController = module.exports = {
                         'LEFT JOIN tasks ON tasks.topic = topics.id\n' +
                         'LEFT JOIN taskreplies AS replies ON replies.task = tasks.id AND replies.student = ? \n' +
                         'LEFT JOIN ( SELECT task, taskStudent FROM taskcomments GROUP BY task, taskStudent ) comments ON comments.task = tasks.id AND comments.taskStudent = ?\n' +
-                        'GROUP BY topics.id', [req.localUser.id, req.localUser.id], ( err, data ) => {
+                        'GROUP BY topics.id', [ req.localUser.id, req.localUser.id ], ( err, data ) => {
                         if ( err ) {
                             return res.serverError(err);
                         }
@@ -251,11 +251,11 @@ const AccountController = module.exports = {
                         return res.serverError(err);
                     }
                     let topicId = req.param('id');
-                    Topics.count({'id':topicId}, (err,count)=>{
+                    Topics.count({ 'id': topicId }, ( err, count ) => {
                         if ( err ) {
                             return res.serverError(err);
                         }
-                        if(count!=1){
+                        if ( count != 1 ) {
                             return res.notFound();
                         }
                         Tasks.query('SELECT tasks.id, tasks.number, tasks.title,\n' +
@@ -321,7 +321,7 @@ const AccountController = module.exports = {
                             }
 
                             TaskReplies.findOne({ student: req.localUser.id, task: task.id })
-                                .exec(function ( err, taskReplie ) {
+                                .exec(function ( err, taskReply ) {
                                     if ( err ) {
                                         return res.badRequest(err);
                                     }
@@ -337,7 +337,6 @@ const AccountController = module.exports = {
                         });
 
 
-
                     });
 
                 });
@@ -348,40 +347,45 @@ const AccountController = module.exports = {
                 let task = req.param('task'), comment = req.param('comment');
 
                 // Ajax
-                Tasks.count({id: task}, (err, count)=>{
-                    if(err) return res.serverError(err);
-                    if(count==0){
+                Tasks.count({ id: task }, ( err, count ) => {
+                    if ( err ) {
+                        return res.serverError(err);
+                    }
+                    if ( count == 0 ) {
                         return res.notFound();
                     }
-                    TaskComments.update({ task: task, taskStudent: req.localUser.id, viewed:false },{viewed:true}).exec(function (err ) {
-                        if (err){
-                            return console.log(err);
-                        }
-                    });
+                    TaskComments.update({ task: task, taskStudent: req.localUser.id, viewed: false }, { viewed: true })
+                        .exec(function ( err ) {
+                            if ( err ) {
+                                return console.log(err);
+                            }
+                        });
 //TODO: Sprawdzanie ajaxowe komentarzy
-                    TaskComments.create({ task:task, taskStudent: req.localUser.id, comment:comment, viewed:false }).exec(function ( err, comment ) {
+                    TaskComments.create({ task: task, taskStudent: req.localUser.id, comment: comment, viewed: false })
+                        .exec(function ( err, comment ) {
+
+                        });
+                    // Dodawanie komentarzy
+
 
                 });
-                // Dodawanie komentarzy
-
-
         }
     },
 
     userSettings: function ( req, res ) {
-        switch (req.method){
+        switch ( req.method ) {
             case 'GET':
 
-                Users.findOneById(req.localUser.id).exec(function(err, user){
-                    if (err){
+                Users.findOneById(req.localUser.id).exec(function ( err, user ) {
+                    if ( err ) {
                         return json(err);
                     }
-                    LabGroups.find().populate('owner').exec(function(err, labs){
-                       if (err){
-                           return json(err);
-                       }
+                    LabGroups.find().populate('owner').exec(function ( err, labs ) {
+                        if ( err ) {
+                            return json(err);
+                        }
 
-                       return res.view('account/settings', {user: user, labs:labs});
+                        return res.view('account/settings', { user: user, labs: labs });
                     });
 
                 });
