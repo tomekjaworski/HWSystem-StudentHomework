@@ -20,6 +20,7 @@ block content
             br
             p Nowe hasło
             input(type='password' name='repassword')
+            input(type='hidden' name='action' value='newPassword')
             br
             br
             button(type='submit') zmień
@@ -35,6 +36,7 @@ block content
             br
             p Podaj hasło aby dokonac zmiany
             input(type='password' name='passlabconf')
+            input(type='hidden' name='action' value="newLab")
             br
             br
             button(type='submit') zmień

@@ -1,3 +1,4 @@
+/* eslint-disable spaced-comment,padded-blocks */
 /**
  * AccountController
  *
@@ -388,6 +389,7 @@ const AccountController = module.exports = {
         })
         break
       case 'POST':
+        let action = req.param('action')
         let oldPassword = req.param('oldPass')
         let password = req.param('password')
         let rePassword = req.param('repassword')
@@ -398,79 +400,59 @@ const AccountController = module.exports = {
           if (err) {
             return res.json(err)
           }
-          if (user.password === AccountController.hashPassword(oldPassword, user.salt)) {
-            if (password !== rePassword) {
-              return AccountController.settingsMessage(res, 'Hasła nie są identyczne')
-            }
-            if (password.length < 8) {
-              return AccountController.settingsMessage(res, 'Hasło jest za krótkie. Powinno zawierać 8 znaków.')
-            }
 
-            switch (Users.validatePassword(password)) {
-              case 1:
-                return AccountController.settingsMessage(res, 'Hasło jest za krótkie. Powinno zawierać 8 znaków.')
-              case 2:
-                return AccountController.settingsMessage(res, 'Twoje hasło powinno zawierać dużą i małą litere')
-            }
-            user.password = AccountController.hashPassword(password, user.salt)
-
-            user.save({populate: false}, function (err) {
-              if (err) {
-                return res.json(err)
-              }
-              return AccountController.settingsMessage(res, 'Hasło zostało zmienione.')
-            })
-          } else {
-            return AccountController.settingsMessage(res, 'Stare hasło jest nieprawidłowe')
-          }
-
-          LabGroups.findOneByName(lab).populate('owner').exec(function (err, lab) {
-            if (err) {
-              return res.json(err)
-            }
+          // ZMIANA HASŁA
+          if (action === 'newPassword') {
             LabGroups.find().populate('owner').exec(function (err, labs) {
               if (err) {
                 return res.json(err)
               }
-              Users.findOneById(req.localUser.id).exec(function (err, user) {
+              if (user.password === AccountController.hashPassword(oldPassword, user.salt)) {
+                if (password !== rePassword) {
+                  return AccountController.settingsMessage(res, 'Hasła nie są identyczne', labs)
+                }
+                if (password.length < 8) {
+                  return AccountController.settingsMessage(res, 'Hasło jest za krótkie. Powinno zawierać 8 znaków.', labs)
+                }
+
+                switch (Users.validatePassword(password)) {
+                  case 1:
+                    return AccountController.settingsMessage(res, 'Hasło jest za krótkie. Powinno zawierać 8 znaków.', labs)
+                  case 2:
+                    return AccountController.settingsMessage(res, 'Twoje hasło powinno zawierać dużą i małą litere', labs)
+                }
+                user.password = AccountController.hashPassword(password, user.salt)
+
+                user.save({populate: false}, function (err) {
+                  if (err) {
+                    return res.json(err)
+                  }
+                  return AccountController.settingsMessage(res, 'Hasło zostało zmienione.', labs)
+                })
+              } else {
+                return AccountController.settingsMessage(res, 'Stare hasło jest nieprawidłowe', labs)
+              }
+            })
+            //Dodac lab
+
+          } else if (action === 'newLab') {
+          // ZMIANA LAB GRUPY
+
+            LabGroups.findOneByName(lab).populate('owner').exec(function (err, lab) {
+              if (err) {
+                return res.json(err)
+              }
+              LabGroups.find().populate('owner').exec(function (err, labs) {
                 if (err) {
                   return res.json(err)
                 }
-                if (user.password === AccountController.hashPassword(oldPassword, user.salt)) {
-                  if (password !== rePassword) {
-                    return AccountController.settingsMessage(res, 'Hasła nie są identyczne', labs)
-                  }
-                  if (password.length < 8) {
-                    return AccountController.settingsMessage(res, 'Hasło jest za krótkie. Powinno zawierać 8 znaków.', labs)
-                  }
-
-                  switch (Users.validatePassword(password)) {
-                    case 1:
-                      return AccountController.settingsMessage(res, 'Hasło jest za krótkie. Powinno zawierać 8 znaków.', labs)
-                    case 2:
-                      return AccountController.settingsMessage(res, 'Twoje hasło powinno zawierać dużą i małą litere', labs)
-                  }
-                  let newPass = AccountController.hashPassword(password, user.salt)
-
-                  user.password = newPass
-
-                  user.save({populate: false}, function (err) {
-                    if (err) {
-                      return res.json(err)
-                    }
-                    return AccountController.settingsMessage(res, 'Hasło zostało zmienione.', labs)
-                  })
-                } else {
-                  return AccountController.settingsMessage(res, 'Stare hasło jest nieprawidłowe')
-                }
-
-                if (lab === undefined) {
-                  lab = user.labGroups
-                }
-
-                LabGroups.findOneByName(lab).populate('owner').exec(function (err, lab) {
+                Users.findOneById(req.localUser.id).exec(function (err, user) {
                   if (err) {
                     return res.json(err)
+                  }
+
+                  if (lab === undefined) {
+                    lab = user.labGroups
                   }
 
                   if (user.password === AccountController.hashPassword(confpass, user.salt)) {
@@ -478,16 +460,18 @@ const AccountController = module.exports = {
 
                     user.save({populate: false}, function (err) {
                       if (err) {
-                        return res.json(err)
+                        return res.badRequest(err)
                       }
-                      // DODAĆ ACTION ŻEBY SPRFAWDZIĆ KTÓRY FORM
+                        // DODAĆ ACTION ŻEBY SPRFAWDZIĆ KTÓRY FORM
                       return AccountController.settingsMessage(res, 'Zmieniono grupę laboratoryjną.', labs)
                     })
+                  } else {
+                    return AccountController.settingsMessage(res, 'Hasło jest niepoprawne', labs)
                   }
                 })
               })
             })
-          })
+          }
         })
     }
   }
