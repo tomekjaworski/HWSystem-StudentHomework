@@ -42,9 +42,9 @@ module.exports.connections = {
    ***************************************************************************/
   majeskjuel: {
     adapter: 'sails-mysql',
-    host: '127.0.0.1',
+    host: '172.17.0.3',
     user: 'root', // optional
-    password: '', // optional
+    password: 'qwerty', // optional
     database: 'homework' // optional
   }
 

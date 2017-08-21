@@ -48,7 +48,7 @@ const AccountController = module.exports = {
   },
 
   settingsMessage (res, message, labs) {
-    return res.view('account/settings', {title: 'Settings', message: message, labs: labs});
+    return res.view('account/settings', {title: 'Settings', message: message, labs: labs})
   },
 
   // Controller Actions
@@ -223,16 +223,17 @@ const AccountController = module.exports = {
           'LEFT JOIN taskreplies AS replies ON replies.task = tasks.id AND replies.student = ? \n' +
           'LEFT JOIN ( SELECT task, taskStudent FROM taskcomments GROUP BY task, taskStudent ) comments ON comments.task = tasks.id AND comments.taskStudent = ?\n' +
           'GROUP BY topics.id', [req.localUser.id, req.localUser.id], (err, data) => {
-          if (err) {
-            return res.serverError(err)
+            if (err) {
+              return res.serverError(err)
+            }
+            let ret = {message: lab.labgroup.message, topics: data}
+            let taskView = parseInt(req.param('topicid'))
+            if (!isNaN(taskView)) {
+              ret.taskView = taskView
+            }
+            return res.view('account/index', {data: ret})
           }
-          let ret = {message: lab.labgroup.message, topics: data}
-          let taskView = parseInt(req.param('topicid'))
-          if (!isNaN(taskView)) {
-            ret.taskView = taskView
-          }
-          return res.view('account/index', {data: ret})
-        })
+        )
       })
     } else {
       return res.redirect(sails.getUrlFor('TeacherController.index'))
@@ -316,23 +317,23 @@ const AccountController = module.exports = {
 
             TaskComments.find({task: task.id, taskStudent: req.localUser.id})
               .populate('user').exec(function (err, taskComments) {
-              if (err) {
-                return res.serverError(err)
-              }
+                if (err) {
+                  return res.serverError(err)
+                }
 
-              TaskReplies.findOne({student: req.localUser.id, task: task.id})
-                .exec(function (err, taskReply) {
-                  if (err) {
-                    return res.badRequest(err)
-                  }
-                  return res.view('account/task', {
-                    topic: topic,
-                    task: task,
-                    taskReply: taskReply,
-                    taskComments: taskComments
+                TaskReplies.findOne({student: req.localUser.id, task: task.id})
+                  .exec(function (err, taskReply) {
+                    if (err) {
+                      return res.badRequest(err)
+                    }
+                    return res.view('account/task', {
+                      topic: topic,
+                      task: task,
+                      taskReply: taskReply,
+                      taskComments: taskComments
+                    })
                   })
-                })
-            })
+              })
           })
         })
         break
@@ -427,41 +428,40 @@ const AccountController = module.exports = {
             if (err) {
               return res.json(err)
             }
-
             LabGroups.find().populate('owner').exec(function (err, labs) {
-
+              if (err) {
+                return res.json(err)
+              }
               Users.findOneById(req.localUser.id).exec(function (err, user) {
                 if (err) {
-                  return json(err);
+                  return res.json(err)
                 }
                 if (user.password === AccountController.hashPassword(oldPassword, user.salt)) {
-
-                  if (password !== repassword) {
-                    return AccountController.settingsMessage(res, 'Hasła nie są identyczne', labs);
+                  if (password !== rePassword) {
+                    return AccountController.settingsMessage(res, 'Hasła nie są identyczne', labs)
                   }
                   if (password.length < 8) {
-                    return AccountController.settingsMessage(res, 'Hasło jest za krótkie. Powinno zawierać 8 znaków.', labs);
+                    return AccountController.settingsMessage(res, 'Hasło jest za krótkie. Powinno zawierać 8 znaków.', labs)
                   }
 
                   switch (Users.validatePassword(password)) {
                     case 1:
-                      return AccountController.settingsMessage(res, 'Hasło jest za krótkie. Powinno zawierać 8 znaków.', labs);
+                      return AccountController.settingsMessage(res, 'Hasło jest za krótkie. Powinno zawierać 8 znaków.', labs)
                     case 2:
-                      return AccountController.settingsMessage(res, 'Twoje hasło powinno zawierać dużą i małą litere', labs);
+                      return AccountController.settingsMessage(res, 'Twoje hasło powinno zawierać dużą i małą litere', labs)
                   }
-                  let newPass = AccountController.hashPassword(password, user.salt);
+                  let newPass = AccountController.hashPassword(password, user.salt)
 
-                  user.password = newPass;
+                  user.password = newPass
 
                   user.save({populate: false}, function (err) {
                     if (err) {
-                      return json(err);
+                      return res.json(err)
                     }
-                    return AccountController.settingsMessage(res, 'Hasło zostało zmienione.', labs);
-                  });
-                }
-                else {
-                  return AccountController.settingsMessage(res, 'Stare hasło jest nieprawidłowe');
+                    return AccountController.settingsMessage(res, 'Hasło zostało zmienione.', labs)
+                  })
+                } else {
+                  return AccountController.settingsMessage(res, 'Stare hasło jest nieprawidłowe')
                 }
 
                 if (lab === undefined) {
@@ -470,23 +470,21 @@ const AccountController = module.exports = {
 
                 LabGroups.findOneByName(lab).populate('owner').exec(function (err, lab) {
                   if (err) {
-                    return res.json(err);
+                    return res.json(err)
                   }
 
                   if (user.password === AccountController.hashPassword(confpass, user.salt)) {
-
-                    user.labGroups = lab;
+                    user.labGroups = lab
 
                     user.save({populate: false}, function (err) {
                       if (err) {
-                        return res.json(err);
+                        return res.json(err)
                       }
                       // DODAĆ ACTION ŻEBY SPRFAWDZIĆ KTÓRY FORM
-                      return AccountController.settingsMessage(res, 'Zmieniono grupę laboratoryjną.', labs);
-                    });
+                      return AccountController.settingsMessage(res, 'Zmieniono grupę laboratoryjną.', labs)
+                    })
                   }
                 })
-
               })
             })
           })
