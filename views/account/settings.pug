@@ -1,42 +1,47 @@
 extends ../includes/layout
 
 block content
-    div(style='width:100%; text-align:center;')
-        h1 Edycja konta
+    .card
+        h3.card-header Edycja konta
+        .card-block
+            //-var message = "123"
+            if message
+                //.row
+                .alert.alert-info(role='alert')
+                    strong Wiadomość:&nbsp;
+                    | #{message}
+            .row
+                .col-sm-6
+                    h1 Zmiana hasła
+                    form(method='post' action='/settings')
+                        .form-group
+                            label(for='inputOldPass') Stare hasło
+                            input#inputOldPass.form-control(type='password', name='oldPass')
 
-    if message
-        h1= message
+                        .form-group
+                            label(for='inputPassword') Nowe hasło
+                            input#inputPassword.form-control(type='password', name='password')
 
-    div(style='width:49%; float:left;')
-        h1 Zmiana hasła
-        form(method='post' action='/settings')
-            p Stare hasło
-            input(type='password' name='oldPass')
-            br
-            br
-            p Nowe Hasło
-            input(type='password' name='password')
-            br
-            br
-            p Nowe hasło
-            input(type='password' name='repassword')
-            input(type='hidden' name='action' value='newPassword')
-            br
-            br
-            button(type='submit') zmień
+                        .form-group
+                            label(for='inputRePassword') Powtórz nowe hasło
+                            input#inputRePassword.form-control(type='password', name='repassword')
 
-    div(style='width:49%; float:left; ')
-        h1 Zmiana lab
-        form(method='post' action='/settings')
-            select(name='lab')
-                - console.log(labs)
-                each l in labs
-                    option(value=l.name)= l.name + l.owner.fullName()
-            br
-            br
-            p Podaj hasło aby dokonac zmiany
-            input(type='password' name='passlabconf')
-            input(type='hidden' name='action' value="newLab")
-            br
-            br
-            button(type='submit') zmień
+                        input(type='hidden' name='action' value='newPassword')
+
+                        button.btn.btn-primary(type='submit') Zmień hasło
+                .col-sm-6
+                    h1 Zmiana labu
+                    form(method='post' action='/settings')
+                        .form-group
+                            label(for='inputLabSelect') Wybierz lab
+                            select#inputLabSelect.custom-select.form-control(name='lab')
+                                - console.log(labs)
+                                each l in labs
+                                    option(value=l.name)= l.name + l.owner.fullName()
+                        .form-group
+                            label(for='inputLabSelectPass') Podaj hasło aby dokonać zmiany
+                            input#inputLabSelectPass.form-control(type='password', name='passlabconf')
+
+                        input(type='hidden' name='action' value="newLab")
+
+                        button.btn.btn-primary(type='submit') Zmień lab
