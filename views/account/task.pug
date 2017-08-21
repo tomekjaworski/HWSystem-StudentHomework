@@ -1,54 +1,76 @@
 extends ../includes/layout
 
 block content
-    //h1 Topic: #{topic.id}
-    h1 Topic number: #{topic.number}
-    h1 Topic title: #{topic.title}
-    br
+    .card
+        .card-header
+            ul.nav.nav-tabs.nav-fill.task-tab
+                li.nav-item
+                    a.nav-link.active(data-toggle='tab', href='#task', aria-expanded='true') Zadanie
+                li.nav-item
+                    a.nav-link(data-toggle='tab', href='#files', aria-expanded='false') Pliki
+                li.nav-item
+                    a.nav-link(data-toggle='tab', href='#comments', aria-expanded='false') Komentarze
+                        span.badge.badge-pill.badge-primary 2
 
-    h1 Task number: #{task.number}
-    h1 Task name: #{task.title}
-    h1 Task description: #{task.description}
+        .card-block
+            #myTabContent.tab-content
+                #task.tab-pane.fade.in.active.show(aria-expanded='true')
+                    //-h1 Topic: #{topic.id}
+                    h3 Temat: #{topic.number}. #{topic.title}
+                    h5 Opis tematu: #{task.description}
+                    h5 Treść zadania:
+                    .card
+                        - var taskcontent = '<h1 id="hello">hello</h1>\n<p><strong>test</strong></p>\n<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> test <span class="op">=</span> <span class="st">&quot;123&quot;</span><span class="op">;</span></code></pre></div>\n<p>$$<br />\n\\Gamma(z) = \\int_0^\\infty t^{z-1}e^{-t}dt\\,.<br />\n$$</p>\n<p>👋 😂</p>'
+                        #task-content.card-block!= taskcontent
 
 
-    if !taskReply
-        h1 nie ma
+                #files.tab-pane.fade(aria-expanded='false')
+                    if !taskReply
+                        h1 nie ma
+                    else
+                        h1 Task reply student: #{taskReply.student}
+                        h1 Task reply task: #{taskReply.task}
+                        h1 Task reply teacherStatus: #{taskReply.teacherStatus}
+                        h1 Task reply machineStatus: #{taskReply.machineStatus}
+                #comments.tab-pane.fade(aria-expanded='false')
+                    //h1 Task comments: #{taskComments[0].reply}
+                    -var top = topic.id
+                    -var tas = task.id
+                    -var tasRep = taskReply.id
+                    button(onclick='viewed(' + top + ',' + tas + ',' + tasRep + ')')
+                        | elo
+                    each com in taskComments
+                        h1 User add: #{com.user.fullName()}
+                        h1 comment: #{com.comment}
+                        p createdAt: #{com.createdAt}
+                        if !com.viewed
+                            h1#elo nieprzeczytane
+                        else
+                            h1#elo przeczytane
 
-    else
-        h1 Task reply student: #{taskReply.student}
-        h1 Task reply task: #{taskReply.task}
-        h1 Task reply teacherStatus: #{taskReply.teacherStatus}
-        h1 Task reply machineStatus: #{taskReply.machineStatus}
 
+        script.
+          var currenttopic = #{topic.id}
+          function viewed (topic, task, taskReply) {
+            var response = $.ajax({
+              url: '/topic/' + topic + '/task/' + task,
+              method: "POST",
+              data: {
+                'taskReply': taskReply
+              }
+            });
 
-        //h1 Task comments: #{taskComments[0].reply}
-        -var top = topic.id
-        -var tas = task.id
-        -var tasRep = taskReply.id
-        button(onclick='viewed(' + top + ',' + tas + ',' + tasRep + ')')
-            | elo
-        each com in taskComments
-            h1 User add: #{com.user.fullName()}
-            h1 comment: #{com.comment}
-            p createdAt: #{com.createdAt}
-            if !com.viewed
-                h1#elo nieprzeczytane
-            else
-                h1#elo przeczytane
+            response.done(function (msg) {
+              console.log(msg);
 
-    script.
-      var currenttopic = #{topic.id}
-      function viewed (topic, task, taskReply) {
-        var response = $.ajax({
-          url: '/topic/' + topic + '/task/' + task,
-          method: "POST",
-          data: {
-            'taskReply': taskReply
+            });
           }
-        });
 
-        response.done(function (msg) {
-          console.log(msg);
+//-block content
 
-        });
-      }
+    h1
+
+
+
+
+
