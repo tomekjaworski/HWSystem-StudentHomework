@@ -22,41 +22,41 @@
 
 module.exports.routes = {
 
-    /***************************************************************************
-     *                                                                          *
-     * Make the view located at `views/homepage.ejs` (or `views/homepage.jade`, *
-     * etc. depending on your default view engine) your home page.              *
-     *                                                                          *
-     * (Alternatively, remove this and add an `index.html` file in your         *
-     * `assets` directory)                                                      *
-     *                                                                          *
-     ***************************************************************************/
+  /***************************************************************************
+   *                                                                          *
+   * Make the view located at `views/homepage.ejs` (or `views/homepage.jade`, *
+   * etc. depending on your default view engine) your home page.              *
+   *                                                                          *
+   * (Alternatively, remove this and add an `index.html` file in your         *
+   * `assets` directory)                                                      *
+   *                                                                          *
+   ***************************************************************************/
 
-    '/': {
-        view: 'homepage'
-    },
+  '/': {
+    view: 'homepage'
+  },
 
-    '/login': 'AccountController.login',
-    'GET /logout': 'AccountController.logout',
+  // Account
 
-    '/register': 'AccountController.register',
+  '/login': 'AccountController.login',
+  'GET /logout': 'AccountController.logout',
 
-    '/settings': 'AccountController.userSettings',
+  '/register': 'AccountController.register',
 
-    'GET /topic/:topicid/tasks' : 'AccountController.index',
-    'GET /ajax/topic/:id/tasks' : 'AccountController.tasks',
-    'GET /topic/:topicid/task/:taskid': 'AccountController.task',
-    'POST /topic/:topicid/task/:taskid': 'AccountController.task',
+  '/settings': 'AccountController.userSettings',
 
+  'GET /account': 'AccountController.index',
 
-    /***************************************************************************
-     *                                                                          *
-     * Custom routes here...                                                    *
-     *                                                                          *
-     * If a request to a URL doesn't match any of the custom routes above, it   *
-     * is matched against Sails route blueprints. See `config/blueprints.js`    *
-     * for configuration options and examples.                                  *
-     *                                                                          *
-     ***************************************************************************/
+  'GET /topic/:topicid/tasks': 'AccountController.index',
+  'GET /ajax/topic/:id/tasks': 'AccountController.tasks',
+  'GET /topic/:topicid/task/:taskid': 'AccountController.task',
+  'POST /topic/:topicid/task/:taskid': 'AccountController.task',
 
-};
+  // Teachers
+  '/teacher': 'TeacherController.index',
+  '/teacher/labgroup': 'TeacherController.listLabGroups',
+  '/teacher/labgroup/list': 'TeacherController.listLabGroups',
+  '/teacher/labgroup/view/:id': 'TeacherController.viewLabGroup',
+  '/teacher/labgroup/add': 'TeacherController.addLabGroup'
+
+}

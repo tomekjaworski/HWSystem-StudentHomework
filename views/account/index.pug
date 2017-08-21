@@ -21,7 +21,7 @@ block content
             //-include tasks
             div.d-flex.justify-content-center
                 .col-8
-                    if data.taskView
+                    if !isNaN(parseInt(data.taskView))
                         script var taskView = #{data.taskView}
                     else
                         h2.text-center wybierz temat z bocznego menu aby przejsc do poszczególnych zadań

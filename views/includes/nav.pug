@@ -7,11 +7,11 @@
         if localUser
             #containerNavbar.collapse.navbar-collapse
                 ul.navbar-nav.mr-auto
-                    li.nav-item
+                    li.nav-item(class=(homepage) ? 'active' : '')
                         a.nav-link(href='/') Home
-                    li.nav-item.active
-                        a.nav-link(href='/account') Tasks
-                    li.nav-item
+                    li.nav-item(class=(data && data.topics) ? 'active' : '')
+                        a.nav-link(href='/account') Topics
+                    //li.nav-item
                         a.nav-link.disabled(href='#') Disabled
                     //-li.nav-item.dropdown
                         a#dropdown04.nav-link.dropdown-toggle(href='http://example.com', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false') Dropdown
@@ -19,9 +19,12 @@
                             a.dropdown-item(href='#') Action
                             a.dropdown-item(href='#') Another action
                             a.dropdown-item(href='#') Something else here
-                ul.navbar-nav.navbar-right
+                ul.navbar-nav.navbar-right#nav-loggedin
                     li.nav-item
                         a.nav-link Witaj #{localUser.fullName()}
+                    li.nav-item.pr-2.pb-2.pb-lg-0
+                        a.btn.btn-primary(href='/settings')
+                            i.fa.fa-cog(aria-hidden='true')
                     li.nav-item
                         a.btn.btn-danger(href='/logout') Wyloguj
         else

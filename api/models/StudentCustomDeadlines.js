@@ -5,15 +5,16 @@
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
  */
 
+/* eslint-disable no-unused-vars */
+// noinspection JSUnusedLocalSymbols
 const StudentCustomDeadlines = module.exports = {
 
-    attributes: {
+  attributes: {
 
-        student: { model: 'users' },
+    student: {model: 'users'},
 
-        task: { model: 'tasks' },
+    task: {model: 'tasks'},
 
-        deadline: { type: 'datetime' }
-    }
-};
-
+    deadline: {type: 'datetime'}
+  }
+}

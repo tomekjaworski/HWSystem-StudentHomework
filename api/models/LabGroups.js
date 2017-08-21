@@ -5,28 +5,29 @@
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
  */
 
+/* eslint-disable no-unused-vars */
+// noinspection JSUnusedLocalSymbols
 const LabGroups = module.exports = {
 
-    attributes: {
+  attributes: {
 
-        name: { type: 'string' },
+    name: {type: 'string'},
 
-        subject: { model: 'subjects' },
+    subject: {model: 'subjects'},
 
-        message: { type: 'string' },
+    message: {type: 'string'},
 
-        owner: { model: 'users' },
+    owner: {model: 'users'},
 
-        customDeadlines: {
-            collection: 'labgrouptopicdeadline',
-            via: 'group'
-        },
+    customDeadlines: {
+      collection: 'labgrouptopicdeadline',
+      via: 'group'
+    },
 
-        students: {
-            collection: 'users',
-            via: 'labgroup',
-            through: 'studentslabgroups'
-        }
+    students: {
+      collection: 'users',
+      via: 'labgroup',
+      through: 'studentslabgroups'
     }
-};
-
+  }
+}

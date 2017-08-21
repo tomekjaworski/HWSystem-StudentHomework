@@ -5,16 +5,17 @@
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
  */
 
+/* eslint-disable no-unused-vars */
+// noinspection JSUnusedLocalSymbols
 const TaskDescription = module.exports = {
 
-    attributes: {
+  attributes: {
 
-        task: {
-            model: 'tasks',
-            unique: true
-        },
+    task: {
+      model: 'tasks',
+      unique: true
+    },
 
-        description: { type: 'longtext' }
-    }
-};
-
+    description: {type: 'longtext'}
+  }
+}

@@ -13,24 +13,23 @@
 
 module.exports.views = {
 
-    /****************************************************************************
-     *                                                                           *
-     * View engine (aka template language) to use for your app's *server-side*   *
-     * views                                                                     *
-     *                                                                           *
-     * Sails+Express supports all view engines which implement TJ Holowaychuk's  *
-     * `consolidate.js`, including, but not limited to:                          *
-     *                                                                           *
-     * ejs, jade, handlebars, mustache underscore, hogan, haml, haml-coffee,     *
-     * dust atpl, eco, ect, jazz, jqtpl, JUST, liquor, QEJS, swig, templayed,    *
-     * toffee, walrus, & whiskers                                                *
-     *                                                                           *
-     * For more options, check out the docs:                                     *
-     * https://github.com/balderdashy/sails-wiki/blob/0.9/config.views.md#engine *
-     *                                                                           *
-     ****************************************************************************/
+  /****************************************************************************
+   *                                                                           *
+   * View engine (aka template language) to use for your app's *server-side*   *
+   * views                                                                     *
+   *                                                                           *
+   * Sails+Express supports all view engines which implement TJ Holowaychuk's  *
+   * `consolidate.js`, including, but not limited to:                          *
+   *                                                                           *
+   * ejs, jade, handlebars, mustache underscore, hogan, haml, haml-coffee,     *
+   * dust atpl, eco, ect, jazz, jqtpl, JUST, liquor, QEJS, swig, templayed,    *
+   * toffee, walrus, & whiskers                                                *
+   *                                                                           *
+   * For more options, check out the docs:                                     *
+   * https://github.com/balderdashy/sails-wiki/blob/0.9/config.views.md#engine *
+   *                                                                           *
+   ****************************************************************************/
 
-    engine: 'pug'
+  engine: 'pug'
 
-
-};
+}

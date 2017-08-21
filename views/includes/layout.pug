@@ -1,6 +1,8 @@
 doctype html
 html
     head
+        block pugincludes
+
         meta(charset='utf-8')
         meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
         if title
@@ -9,9 +11,20 @@ html
             title= brand
         include styles
     body
+        noscript
+            .container
+                .alert.alert-danger(role='alert')
+                    h4.alert-heading Uwaga!
+                    p.mb-0
+                        | Ta strona internetowa wymaga włączonej obsługi skryptów JavaScript do poprawnego działania!
+
+
         include nav
 
         .container
+
+            include breadcrumbs
+
             block content
 
         include scripts

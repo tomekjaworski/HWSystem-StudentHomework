@@ -5,16 +5,17 @@
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
  */
 
+/* eslint-disable no-unused-vars */
+// noinspection JSUnusedLocalSymbols
 const Roles = module.exports = {
 
-    attributes: {
+  attributes: {
 
-        name: { type: 'string' },
+    name: {type: 'string'},
 
-        users: {
-            collection: 'users',
-            via: 'roles'
-        }
+    users: {
+      collection: 'users',
+      via: 'roles'
     }
-};
-
+  }
+}

@@ -5,6 +5,7 @@
   "description": "a Sails application",
   "keywords": [],
   "dependencies": {
+    "deasync": "^0.1.10",
     "ejs": "^2.5.7",
     "grunt": "^1.0.1",
     "grunt-contrib-clean": "^1.1.0",
@@ -19,7 +20,7 @@
     "grunt-sails-linker": "^0.10.1",
     "grunt-sync": "^0.5.2",
     "include-all": "^1.0.8",
-    "lusca": "^1.5.0",
+    "lusca": "^1.5.1",
     "pug": "^2.0.0-rc.3",
     "rc": "^1.2.1",
     "sails": "^0.12.13",
@@ -28,7 +29,8 @@
   },
   "scripts": {
     "debug": "node debug app.js",
-    "start": "node app.js"
+    "start": "node app.js",
+    "test": "node node_modules/standard/bin/cmd.js"
   },
   "main": "app.js",
   "repository": {
@@ -38,6 +40,34 @@
   "author": "david",
   "license": "",
   "devDependencies": {
-    "grunt-contrib-sass": "^1.0.0"
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.0",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-node": "^5.1.1",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "grunt-babel": "^7.0.0",
+    "grunt-contrib-sass": "^1.0.0",
+    "grunt-standard": "^3.1.0",
+    "standard": "^10.0.3"
+  },
+  "standard": {
+    "globals": [
+      "_",
+      "LabGroups",
+      "Users",
+      "sails",
+      "Roles",
+      "Topics",
+      "Tasks",
+      "TaskComments",
+      "StudentsLabGroups",
+      "StudentsLabGroups",
+      "TaskReplies",
+      "TaskDescription",
+      "Subjects",
+      "TaskReplyFiles"
+    ]
   }
 }

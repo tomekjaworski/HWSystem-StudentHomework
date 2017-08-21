@@ -5,41 +5,36 @@
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
  */
 
+/* eslint-disable no-unused-vars */
+// noinspection JSUnusedLocalSymbols
 const TaskReplies = module.exports = {
 
-    attributes: {
+  attributes: {
 
-        student: { model: 'users' },
+    student: {model: 'users'},
 
-        task: { model: 'tasks' },
+    task: {model: 'tasks'},
 
-        files: {
-            collection: 'taskreplyfiles',
-            via: 'reply'
-        },
+    files: {
+      collection: 'taskreplyfiles',
+      via: 'reply'
+    },
 
-        teacherStatus: {
-            type: 'integer',
-            enum: [ 0, 1, 2 ],
-            defaultsTo: 0
-        },
+    teacherStatus: {
+      type: 'integer',
+      enum: [0, 1, 2],
+      defaultsTo: 0
+    },
 
-        machineStatus: {
-            type: 'integer',
-            enum: [ 0, 1, 2, 3 ],
-            defaultsTo: 0
-        },
+    machineStatus: {
+      type: 'integer',
+      enum: [0, 1, 2, 3],
+      defaultsTo: 0
+    },
 
-
-        blocked: {
-            type: 'boolean',
-            defaultsTo: false
-        },
-
-        comments: {
-            collection: 'taskreplycomments',
-            via: 'reply'
-        }
+    blocked: {
+      type: 'boolean',
+      defaultsTo: false
     }
-};
-
+  }
+}

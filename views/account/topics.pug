@@ -12,7 +12,9 @@ mixin topicentry(id, title, percent, values)
                 //-(href='/account/topics/'+ id + '/tasks')
                 .d-flex.w-100.justify-content-between.mb-2
                     h5.mb-2.mr-2.topic-title=title
-                    button.btn.btn-secondary.align-self-start.button-topicview(id='button-topicview-' + id, data-topicid=id) ->
+                    button.btn.btn-secondary.align-self-start.button-topicview(id='button-topicview-' + id, data-topicid=id)
+                        i.fa.fa-arrow-right(aria-hidden='true')
+
 
 
                 small.text-muted
@@ -40,7 +42,7 @@ mixin topicentry(id, title, percent, values)
 .list-group#topics-accordion(role='tablist', aria-multiselectable='true')
     //-code=JSON.stringify(data)
     each t in data.topics
-        +topicentry(t.topicId, t.topicNumber + '. ' + t.topicTitle, t.repliesAccepted/t.taskCount*100, [t.taskCount, t.repliesCount, t.repliesTeacherAccepted, t.repliesTeacherRejected+t.repliesBlocked, t.repliesCommented, t.repliesMachineAccepted, t.repliesMachineRejected, t.repliesAccepted])
+        +topicentry(t.topicId, t.topicNumber + '. ' + t.topicTitle, t.repliesAccepted / t.taskCount * 100, [t.taskCount, t.repliesCount, t.repliesTeacherAccepted, t.repliesTeacherRejected + t.repliesBlocked, t.repliesCommented, t.repliesMachineAccepted, t.repliesMachineRejected, t.repliesAccepted])
 
 
 

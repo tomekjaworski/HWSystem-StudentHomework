@@ -5,13 +5,14 @@
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
  */
 
+/* eslint-disable no-unused-vars */
+// noinspection JSUnusedLocalSymbols
 const TaskReplyFileContent = module.exports = {
 
   attributes: {
 
-    file : { model: 'taskreplyfiles' },
+    file: {model: 'taskreplyfiles'},
 
-    content : { type: 'longtext' }
+    content: {type: 'longtext'}
   }
-};
-
+}

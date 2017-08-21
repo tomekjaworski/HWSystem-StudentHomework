@@ -11,44 +11,44 @@ block content
     h1 Task description: #{task.description}
 
 
-    if !taskReplie
+    if !taskReply
         h1 nie ma
 
     else
-        h1 Task replie student: #{taskReplie.student}
-        h1 Task replie task: #{taskReplie.task}
-        h1 Task replie teacherStatus: #{taskReplie.teacherStatus}
-        h1 Task replie machineStatus: #{taskReplie.machineStatus}
+        h1 Task reply student: #{taskReply.student}
+        h1 Task reply task: #{taskReply.task}
+        h1 Task reply teacherStatus: #{taskReply.teacherStatus}
+        h1 Task reply machineStatus: #{taskReply.machineStatus}
 
 
-    //h1 Task comments: #{taskComments[0].reply}
-    -var top = topic.id
-    -var tas = task.id
-    -var tasRep = taskReplie.id
-    button(onclick='viewed('+top+','+tas+','+tasRep+')')
-        |elo
-    each com in taskComments
-        h1 User add: #{com.user.fullName()}
-        h1 comment: #{com.comment}
-        p createdAt: #{com.createdAt}
-
-        if !com.viewed
-            h1#elo nieprzeczytane
-        else
-            h1#elo przeczytane
+        //h1 Task comments: #{taskComments[0].reply}
+        -var top = topic.id
+        -var tas = task.id
+        -var tasRep = taskReply.id
+        button(onclick='viewed(' + top + ',' + tas + ',' + tasRep + ')')
+            | elo
+        each com in taskComments
+            h1 User add: #{com.user.fullName()}
+            h1 comment: #{com.comment}
+            p createdAt: #{com.createdAt}
+            if !com.viewed
+                h1#elo nieprzeczytane
+            else
+                h1#elo przeczytane
 
     script.
-        function viewed(topic, task, taskReplie) {
-            var response = $.ajax({
-                url: '/topic/' + topic + '/task/' + task,
-                method: "POST",
-                data: {
-                    'taskReplie': taskReplie
-                }
-            });
+      var currenttopic = #{topic.id}
+      function viewed (topic, task, taskReply) {
+        var response = $.ajax({
+          url: '/topic/' + topic + '/task/' + task,
+          method: "POST",
+          data: {
+            'taskReply': taskReply
+          }
+        });
 
-            response.done(function ( msg ) {
-                console.log(msg);
+        response.done(function (msg) {
+          console.log(msg);
 
-            });
-        }
+        });
+      }

@@ -18,3 +18,12 @@
   color: #55595c;
   background-color: #f7f7f9;
 }
+
+.table-tasklist > thead > tr > th:nth-child(2) {
+  min-width: 150px;
+  width: 100%;
+}
+
+.table-tasklist > thead > tr > th:nth-child(7) {
+  min-width: 300px;
+}

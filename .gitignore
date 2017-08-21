@@ -82,6 +82,6 @@ typings/
 out
 gen
 .tmp/*
-.sass-cache/
+.sass-cache/*
 
 config/connections\.js

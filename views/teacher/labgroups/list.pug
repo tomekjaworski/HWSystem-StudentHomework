@@ -1,0 +1,29 @@
+extends ../../includes/layout
+
+block content
+
+    .row
+        .col-md-12.col-lg-4#topics-column
+            include ../menu
+        .hidden-md-down.col-lg-8#tasks-column
+            //-include tasks
+            div.d-flex.justify-content-center
+                .col-8
+                    h2.text-center
+                        | :: [Listowanie] ::
+                        a(href='/teacher/labgroup/add')  [Dodawanie]
+                        |  ::
+                    h2.text-center listowanie grup
+                    h2.text-center tryb listowania
+                    table.table.table-striped.table-hover.responsive
+                        thead
+                            tr
+                                th ID
+                                th Name
+                        tbody
+                            each group in data
+                                tr(onclick='document.location="/teacher/labgroup/view/'+group.id+'"')
+                                    th(scope='row')=group.id
+                                    td=group.name
+
+                    h5.text-center nazwa grupy :: liczba studentow :: liczba nowych odpowiedzi
