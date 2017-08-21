@@ -47,8 +47,8 @@ const AccountController = module.exports = {
     })
   },
 
-  settingsMessage (res, message) {
-    return res.view('account/settings', {title: 'Settings', message: message})
+  settingsMessage (res, message, labs) {
+    return res.view('account/settings', {title: 'Settings', message: message, labs: labs});
   },
 
   // Controller Actions
@@ -209,30 +209,30 @@ const AccountController = module.exports = {
         }
 
         Topics.query('SELECT topics.id topicId, topics.number topicNumber, topics.title topicTitle, topics.deadline topicDeadline, \n' +
-            '    COUNT(tasks.id) taskCount, \n' +
-            '    COUNT(replies.id) repliesCount, \n' +
-            '    sum(case when replies.teacherStatus = 1 then 1 else 0 end) repliesTeacherAccepted,\n' +
-            '    sum(case when replies.teacherStatus = 2 then 1 else 0 end) repliesTeacherRejected,\n' +
-            '    sum(case when replies.blocked = 1 then 1 else 0 end) repliesBlocked,\n' +
-            '    COUNT(DISTINCT comments.task) repliesCommented,\n' +
-            '    sum(case when replies.machineStatus = 2 then 1 else 0 end) repliesMachineAccepted,\n' +
-            '    sum(case when replies.machineStatus = 3 then 1 else 0 end) repliesMachineRejected,\n' +
-            '    sum(case when (replies.machineStatus = 2 and replies.teacherStatus = 1) then 1 else 0 end) repliesAccepted\n' +
-            '    FROM topics\n' +
-            'LEFT JOIN tasks ON tasks.topic = topics.id\n' +
-            'LEFT JOIN taskreplies AS replies ON replies.task = tasks.id AND replies.student = ? \n' +
-            'LEFT JOIN ( SELECT task, taskStudent FROM taskcomments GROUP BY task, taskStudent ) comments ON comments.task = tasks.id AND comments.taskStudent = ?\n' +
-            'GROUP BY topics.id', [req.localUser.id, req.localUser.id], (err, data) => {
-              if (err) {
-                return res.serverError(err)
-              }
-              let ret = {message: lab.labgroup.message, topics: data}
-              let taskView = parseInt(req.param('topicid'))
-              if (!isNaN(taskView)) {
-                ret.taskView = taskView
-              }
-              return res.view('account/index', {data: ret})
-            })
+          '    COUNT(tasks.id) taskCount, \n' +
+          '    COUNT(replies.id) repliesCount, \n' +
+          '    sum(case when replies.teacherStatus = 1 then 1 else 0 end) repliesTeacherAccepted,\n' +
+          '    sum(case when replies.teacherStatus = 2 then 1 else 0 end) repliesTeacherRejected,\n' +
+          '    sum(case when replies.blocked = 1 then 1 else 0 end) repliesBlocked,\n' +
+          '    COUNT(DISTINCT comments.task) repliesCommented,\n' +
+          '    sum(case when replies.machineStatus = 2 then 1 else 0 end) repliesMachineAccepted,\n' +
+          '    sum(case when replies.machineStatus = 3 then 1 else 0 end) repliesMachineRejected,\n' +
+          '    sum(case when (replies.machineStatus = 2 and replies.teacherStatus = 1) then 1 else 0 end) repliesAccepted\n' +
+          '    FROM topics\n' +
+          'LEFT JOIN tasks ON tasks.topic = topics.id\n' +
+          'LEFT JOIN taskreplies AS replies ON replies.task = tasks.id AND replies.student = ? \n' +
+          'LEFT JOIN ( SELECT task, taskStudent FROM taskcomments GROUP BY task, taskStudent ) comments ON comments.task = tasks.id AND comments.taskStudent = ?\n' +
+          'GROUP BY topics.id', [req.localUser.id, req.localUser.id], (err, data) => {
+          if (err) {
+            return res.serverError(err)
+          }
+          let ret = {message: lab.labgroup.message, topics: data}
+          let taskView = parseInt(req.param('topicid'))
+          if (!isNaN(taskView)) {
+            ret.taskView = taskView
+          }
+          return res.view('account/index', {data: ret})
+        })
       })
     } else {
       return res.redirect(sails.getUrlFor('TeacherController.index'))
@@ -316,11 +316,11 @@ const AccountController = module.exports = {
 
             TaskComments.find({task: task.id, taskStudent: req.localUser.id})
               .populate('user').exec(function (err, taskComments) {
-                if (err) {
-                  return res.serverError(err)
-                }
+              if (err) {
+                return res.serverError(err)
+              }
 
-                TaskReplies.findOne({student: req.localUser.id, task: task.id})
+              TaskReplies.findOne({student: req.localUser.id, task: task.id})
                 .exec(function (err, taskReply) {
                   if (err) {
                     return res.badRequest(err)
@@ -332,7 +332,7 @@ const AccountController = module.exports = {
                     taskComments: taskComments
                   })
                 })
-              })
+            })
           })
         })
         break
@@ -428,26 +428,67 @@ const AccountController = module.exports = {
               return res.json(err)
             }
 
-            if (user.password === AccountController.hashPassword(confpass, user.salt)) {
-              user.labGroups = lab
+            LabGroups.find().populate('owner').exec(function (err, labs) {
 
-              user.save({populate: false}, function (err) {
+              Users.findOneById(req.localUser.id).exec(function (err, user) {
                 if (err) {
-                  return res.json(err)
+                  return json(err);
                 }
-                LabGroups.find().populate('owner').exec(function (err, labs) {
-                  if (err) {
-                    return res.json(err)
+                if (user.password === AccountController.hashPassword(oldPassword, user.salt)) {
+
+                  if (password !== repassword) {
+                    return AccountController.settingsMessage(res, 'Hasła nie są identyczne', labs);
+                  }
+                  if (password.length < 8) {
+                    return AccountController.settingsMessage(res, 'Hasło jest za krótkie. Powinno zawierać 8 znaków.', labs);
                   }
 
-                  return res.view('account/settings', {
-                    user: user,
-                    labs: labs,
-                    message: 'Zauktalizowano grupę laboratoryjną.'
-                  })
+                  switch (Users.validatePassword(password)) {
+                    case 1:
+                      return AccountController.settingsMessage(res, 'Hasło jest za krótkie. Powinno zawierać 8 znaków.', labs);
+                    case 2:
+                      return AccountController.settingsMessage(res, 'Twoje hasło powinno zawierać dużą i małą litere', labs);
+                  }
+                  let newPass = AccountController.hashPassword(password, user.salt);
+
+                  user.password = newPass;
+
+                  user.save({populate: false}, function (err) {
+                    if (err) {
+                      return json(err);
+                    }
+                    return AccountController.settingsMessage(res, 'Hasło zostało zmienione.', labs);
+                  });
+                }
+                else {
+                  return AccountController.settingsMessage(res, 'Stare hasło jest nieprawidłowe');
+                }
+
+                if (lab === undefined) {
+                  lab = user.labGroups
+                }
+
+                LabGroups.findOneByName(lab).populate('owner').exec(function (err, lab) {
+                  if (err) {
+                    return res.json(err);
+                  }
+
+                  if (user.password === AccountController.hashPassword(confpass, user.salt)) {
+
+                    user.labGroups = lab;
+
+                    user.save({populate: false}, function (err) {
+                      if (err) {
+                        return res.json(err);
+                      }
+                      // DODAĆ ACTION ŻEBY SPRFAWDZIĆ KTÓRY FORM
+                      return AccountController.settingsMessage(res, 'Zmieniono grupę laboratoryjną.', labs);
+                    });
+                  }
                 })
+
               })
-            }
+            })
           })
         })
     }
