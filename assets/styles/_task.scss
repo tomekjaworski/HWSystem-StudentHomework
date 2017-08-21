@@ -4,8 +4,19 @@
   margin-left: -20px;
   margin-right: -20px;
   margin-bottom: -13px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  border-bottom: none;
+
   .nav-item:first-child {
     margin-left: 20px;
+  }
+  .nav-item:last-child {
+    margin-right: 20px;
+  }
+  .nav-item {
+    word-break: keep-all;
+    white-space: nowrap;
   }
   .nav-item > .nav-link > .badge {
     padding-bottom: 4px;
