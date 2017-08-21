@@ -35,7 +35,7 @@ block content
                         .form-group
                             label(for='inputLabSelect') Wybierz lab
                             select#inputLabSelect.custom-select.form-control(name='lab')
-                                - console.log(labs)
+                                //- console.log(labs)
                                 each l in labs
                                     option(value=l.name)= l.name + l.owner.fullName()
                         .form-group
