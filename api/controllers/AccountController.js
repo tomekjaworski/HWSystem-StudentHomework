@@ -340,8 +340,8 @@ const AccountController = module.exports = {
 
       case 'POST':
 
-        let task = req.param('task')
-        let comment = req.param('comment')
+        let task = req.param('taskReply')
+        // let comment = req.param('comment')
 
         // Ajax
         Tasks.count({id: task}, (err, count) => {
@@ -358,13 +358,13 @@ const AccountController = module.exports = {
               }
             })
           // TODO: Sprawdzanie ajaxowe komentarzy
-          TaskComments.create({task: task, taskStudent: req.localUser.id, comment: comment, viewed: false})
-            .exec(function (err, comment) {
-              if (err) {
-                return console.log(err)
-              }
-              console.log(comment)
-            })
+          // TaskComments.create({task: task, taskStudent: req.localUser.id, comment: comment, viewed: false})
+          //   .exec(function (err, comment) {
+          //     if (err) {
+          //       return console.log(err)
+          //     }
+          //     console.log(comment)
+          //   })
           // TODO: Dodawanie komentarzy
         })
     }
