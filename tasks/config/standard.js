@@ -17,7 +17,7 @@ module.exports = function (grunt) {
   grunt.config.set('standard', {
     dev: {
       options: {
-        fix: false,
+        fix: true,
         globals: [
           '_',
           'LabGroups',

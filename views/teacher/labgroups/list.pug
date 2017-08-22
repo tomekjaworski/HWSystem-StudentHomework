@@ -13,17 +13,23 @@ block content
                         | :: [Listowanie] ::
                         a(href='/teacher/labgroup/add')  [Dodawanie]
                         |  ::
-                    h2.text-center listowanie grup
-                    h2.text-center tryb listowania
+                    if show
+                        a(href='/teacher/labgroup/list') Pokaż tylko moje grupy
+                    else
+                        a(href='/teacher/labgroup/list?show=all') Pokaż wszystkie grupy
                     table.table.table-striped.table-hover.responsive
                         thead
                             tr
                                 th ID
                                 th Name
+                                th Students
+                                th Teacher
                         tbody
                             each group in data
                                 tr(onclick='document.location="/teacher/labgroup/view/'+group.id+'"')
                                     th(scope='row')=group.id
                                     td=group.name
+                                    td=group.students.length
+                                    td=group.owner.fullName()
 
                     h5.text-center nazwa grupy :: liczba studentow :: liczba nowych odpowiedzi

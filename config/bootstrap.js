@@ -47,7 +47,7 @@ module.exports.bootstrap = function (cb) {
               password: 'a150f0e3b050a2d9907288d84eee05312eaa384eba3d5775688b4cba26e0af38',
               salt: 'aaaa',
               activated: true,
-              roles: [roles[0]]
+              roles: [roles[0], roles[1]]
             }, {
               name: 'Test2',
               surname: 'Tester2',

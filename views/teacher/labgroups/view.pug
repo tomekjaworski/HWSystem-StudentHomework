@@ -9,9 +9,22 @@ block content
             //-include tasks
             div.d-flex.justify-content-center
                 .col-8
-                    h2.text-center :: [Listowanie] :: [Dodawanie] ::
-                    h2.text-center listowanie grup
-                    h2.text-center tryb listowania
+                    h2.text-center widok grupy
 
+                    form(method='post')
+                        label(for='message') Wiadomość:
+                        input#message(name='message', value=data.message)
+                        input(type='submit')
+
+                    table.table.table-striped.table-hover.responsive
+                        thead
+                            tr
+                                th ID
+                                th Student
+                        tbody
+                            each student in data.students
+                                tr
+                                    th(scope='row')=student.id
+                                    td=student.fullName()
 
                     h5.text-center nazwa grupy :: liczba studentow :: liczba nowych odpowiedzi
