@@ -327,12 +327,19 @@ const AccountController = module.exports = {
                     if (err) {
                       return res.badRequest(err)
                     }
-                    return res.view('account/task', {
-                      topic: topic,
-                      task: task,
-                      taskReply: taskReply,
-                      taskComments: taskComments
-                    })
+                    TaskReplyFiles.find({reply: taskReply.id})
+                      .exec(function (err, taskReplyFiles) {
+                        if (err) {
+                          return res.badRequest(err)
+                        }
+                        return res.view('account/task', {
+                          topic: topic,
+                          task: task,
+                          taskReply: taskReply,
+                          taskReplyFiles: taskReplyFiles,
+                          taskComments: taskComments
+                        })
+                      })
                   })
               })
           })

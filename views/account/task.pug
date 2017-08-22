@@ -1,5 +1,16 @@
 extends ../includes/layout
-
+mixin fileIcon(file)
+    div.col-6.col-md-4.col-lg-2.mb-4
+        p
+            if file.fileExt === 'cpp' || file.fileExt === 'h' || file.fileExt === 'c'
+                i.fa.fa-file-code-o.fa-3x
+            else if file.fileExt === 'bmp' || file.fileExt === 'png' || file.fileExt === 'jpg'
+                i.fa.fa-file-image-o.fa-3x
+            else if file.fileExt === 'txt'
+                i.fa.fa-file-text-o.fa-3x
+            else
+                i.fa.fa-file-o.fa-3x
+        code=file.fileName + '.' + file.fileExt
 block content
     .card
         .card-header
@@ -28,10 +39,27 @@ block content
                     if !taskReply
                         h1 nie ma
                     else
-                        h1 Task reply student: #{taskReply.student}
-                        h1 Task reply task: #{taskReply.task}
-                        h1 Task reply teacherStatus: #{taskReply.teacherStatus}
-                        h1 Task reply machineStatus: #{taskReply.machineStatus}
+                        //-
+                            h1 Task reply student: #{taskReply.student}
+                            h1 Task reply task: #{taskReply.task}
+                            h1 Task reply teacherStatus: #{taskReply.teacherStatus}
+                            h1 Task reply machineStatus: #{taskReply.machineStatus}
+                        .card.text-center
+                            .card-header
+                                | A: #{taskReply.student} B: #{taskReply.task}
+                                | C: #{taskReply.teacherStatus} D: #{taskReply.machineStatus}
+                            .card-block
+                                .row
+                                    each file in taskReplyFiles
+                                        +fileIcon(file)
+                                        +fileIcon(file)
+                                        +fileIcon(file)
+                                        +fileIcon(file)
+
+
+                            .card-footer.text-muted
+                                | lorem ipsum
+
                 #comments.tab-pane.fade(aria-expanded='false')
                     //h1 Task comments: #{taskComments[0].reply}
                     -var top = topic.id
