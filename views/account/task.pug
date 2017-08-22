@@ -65,8 +65,9 @@ block content
                     -var top = topic.id
                     -var tas = task.id
                     -var tasRep = taskReply.id
-                    button(onclick='viewed(' + top + ',' + tas + ',' + tasRep + ')')
+                    button(onclick='markAsRead(' + top + ',' + tas + ',' + tasRep + ')')
                         | elo
+                    div#allComments
                     each com in taskComments
                         h1 User add: #{com.user.fullName()}
                         h1 comment: #{com.comment}
@@ -76,15 +77,18 @@ block content
                         else
                             h1#elo przeczytane
 
+                    textarea#theComment(name='comment')
+                    button(onclick='sendComment(' + top + ',' + tas + ',' + tasRep + ')') send
+
 
         script.
-          var currenttopic = #{topic.id}
-          function viewed (topic, task, taskReply) {
+          function markAsRead (topic, task, taskReply) {
             var response = $.ajax({
               url: '/topic/' + topic + '/task/' + task,
               method: "POST",
               data: {
-                'taskReply': taskReply
+                'taskReply': taskReply,
+                'action': 'markAsRead'
               }
             });
 
@@ -93,6 +97,24 @@ block content
 
             });
           }
+          function sendComment (topic, task, taskReply) {
+            var response = $.ajax({
+              url: '/topic/' + topic + '/task/' + task,
+              method: "POST",
+              data: {
+                'taskReply': taskReply,
+                'action': 'sendComment',
+                'comment': $('#theComment').val()
+              }
+            });
+
+            response.done(function () {
+              var comment = $('#theComment').val()
+              console.log(comment)
+              $('#allComments').prepend(comment)
+            })
+          }
+
 
 //-block content
 

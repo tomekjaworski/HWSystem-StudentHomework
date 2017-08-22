@@ -1,4 +1,3 @@
-/* eslint-disable spaced-comment,padded-blocks */
 /**
  * AccountController
  *
@@ -349,7 +348,8 @@ const AccountController = module.exports = {
       case 'POST':
 
         let task = req.param('taskReply')
-        // let comment = req.param('comment')
+        let action = req.param('action')
+        let comment = req.param('comment')
 
         // Ajax
         Tasks.count({id: task}, (err, count) => {
@@ -359,21 +359,23 @@ const AccountController = module.exports = {
           if (count === 0) {
             return res.notFound()
           }
-          TaskComments.update({task: task, taskStudent: req.localUser.id, viewed: false}, {viewed: true})
-            .exec(function (err) {
-              if (err) {
-                return console.log(err)
-              }
-            })
-          // TODO: Sprawdzanie ajaxowe komentarzy
-          // TaskComments.create({task: task, taskStudent: req.localUser.id, comment: comment, viewed: false})
-          //   .exec(function (err, comment) {
-          //     if (err) {
-          //       return console.log(err)
-          //     }
-          //     console.log(comment)
-          //   })
-          // TODO: Dodawanie komentarzy
+          if (action === 'markAsRead') {
+            TaskComments.update({task: task, taskStudent: req.localUser.id, viewed: false}, {viewed: true})
+              .exec(function (err) {
+                if (err) {
+                  return res.serverError(err)
+                }
+                return res.ok()
+              })
+          } else if (action === 'sendComment') {
+            TaskComments.create({task: task, taskStudent: req.localUser.id, user: req.localUser.id, comment: comment, viewed: false})
+              .exec(function (err) {
+                if (err) {
+                  return res.serverError(err)
+                }
+                return res.ok()
+              })
+          }
         })
     }
   },
@@ -440,8 +442,7 @@ const AccountController = module.exports = {
                 return AccountController.settingsMessage(res, 'Stare hasło jest nieprawidłowe', labs)
               }
             })
-            //Dodac lab
-
+            // Dodac lab
           } else if (action === 'newLab') {
           // ZMIANA LAB GRUPY
 
