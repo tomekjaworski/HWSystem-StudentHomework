@@ -19,31 +19,42 @@ const TeacherController = module.exports = {
 
   listLabGroups: function (req, res) {
     let show = req.param('show')
-    let cond = {select: ['id', 'name', 'students', 'owner']}
+    let cond = 'SELECT `labgroups`.`id`, `labgroups`.`active`, `labgroups`.`name`, COUNT(`sa`.`id`) `studentsCount`, COUNT(`sna`.`id`) `studentsNotCount`, `users`.`name`, `users`.`surname` FROM `labgroups` \n' +
+      'LEFT JOIN `studentslabgroups` `sa` ON `sa`.`labgroup` = `labgroups`.`id` AND `sa`.`active`=1\n' +
+      'LEFT JOIN `studentslabgroups` `sna` ON `sna`.`labgroup` = `labgroups`.`id` AND `sna`.`active`=0\n' +
+      'LEFT JOIN `users` ON `users`.`id` = `labgroups`.`owner`'
+    let params = {}
     if (show !== 'all') {
-      cond.owner = req.localUser.id
+      cond += ' WHERE `labgroups`.`owner`=?'
+      params = req.localUser.id
     }
-    LabGroups.find(cond).populate('students').populate('owner')
-      .exec((err, groups) => {
-        if (err) {
-          return res.serverError(err)
-        }
-        return res.view('teacher/labgroups/list',
+    cond += ' GROUP BY `labgroups`.`id`'
+    LabGroups.query(cond, params, (err, groups) => {
+      if (err) {
+        return res.serverError(err)
+      }
+      return res.view('teacher/labgroups/list',
           {title: 'LabGroups :: Teacher Panel', menuItem: 'labgroups', data: groups, show: show})
-      })
+    })
   },
 
   viewLabGroup: function (req, res) {
     let id = req.param('id')
-    let a = () => LabGroups.findOneById(id).populate('students').exec((err, lab) => {
+    let a = (attr, msg) => LabGroups.findOneById(id).exec((err, lab) => {
       if (err) {
         return res.serverError(err)
       }
       if (!lab) {
         return res.notFound()
       }
-      return res.view('teacher/labgroups/view',
-        {title: 'LabGroups :: Teacher Panel', menuItem: 'labgroups', data: lab})
+      StudentsLabGroups.find({labgroup: id, active: true}).populate('student').exec((err, students) => {
+        if (err) {
+          return res.serverError(err)
+        }
+        lab.students = students
+        return res.view('teacher/labgroups/view',
+          {title: 'LabGroups :: Teacher Panel', menuItem: 'labgroups', data: lab, message: {message: msg, attribute: attr}})
+      })
     })
 
     if (req.method === 'POST') {
@@ -51,17 +62,135 @@ const TeacherController = module.exports = {
       if (!!message && message !== '') {
         LabGroups.update({id: id}, {message: message}).exec((err, lab) => {
           if (err) return res.serverError(err)
-          a()
+          if (!lab || lab.length !== 1) {
+            return res.notFound()
+          }
+          a('info', 'Pomyślnie ustawiono wiadomość')
         })
       } else {
         a()
       }
+    } else {
+      let deactive = req.param('deactive')
+      if (deactive) {
+        StudentsLabGroups.update({student: deactive, labgroup: id, active: true}, {active: false}).exec((err, slg) => {
+          if (err) return res.serverError(err)
+          if (!slg || slg.length !== 1) return a('danger', 'Błędny uzytkownik')
+          a('info', 'Pomyślnie deaktywowano użytkownika w grupie')
+        })
+      } else {
+        a()
+      }
+    }
+  },
+
+  viewNewStudentsLabGroup: function (req, res) {
+    let id = req.param('id')
+    let a = (attr, msg) => LabGroups.findOneById(id).exec((err, lab) => {
+      if (err) {
+        return res.serverError(err)
+      }
+      if (!lab) {
+        return res.notFound()
+      }
+      StudentsLabGroups.find({labgroup: id, active: false}).populate('student').exec((err, students) => {
+        if (err) {
+          return res.serverError(err)
+        }
+        lab.students = students
+        return res.view('teacher/labgroups/viewNewStudents',
+          {title: 'LabGroups :: Teacher Panel', menuItem: 'labgroups', data: lab, message: {message: msg, attribute: attr}})
+      })
+    })
+    let active = req.param('active')
+    if (active) {
+      StudentsLabGroups.update({student: active, labgroup: id, active: false}, {active: true}).exec((err, slg) => {
+        if (err) return res.serverError(err)
+        if (!slg || slg.length !== 1) return a('danger', 'Błędny uzytkownik')
+        a('info', 'Pomyślnie aktywowano użytkownika w grupie')
+      })
     } else {
       a()
     }
   },
 
   addLabGroup: function (req, res) {
-    return res.view('teacher/labgroups/add', {title: 'LabGroups :: Teacher Panel', menuItem: 'labgroups'})
+    let a = (msg) => Roles.findOneByName('teacher').populate('users').exec((err, role) => {
+      if (err) {
+        return res.serverError(err)
+      }
+      if (!role) {
+        return res.serverError('Nie znaleziono roli prowadzącego, zgłoś się do administratora')
+      }
+      return res.view('teacher/labgroups/add',
+        {title: 'LabGroups :: Teacher Panel', menuItem: 'labgroups', users: role.users, message: msg})
+    })
+    if (req.method === 'POST') {
+      let title = req.param('title')
+      let desc = req.param('desc')
+      let active = req.param('active')
+      let owner = req.param('owner')
+      if (!_.isString(title) || !_.isString(desc) || !_.isString(owner) ||
+          !title || !desc || !owner) {
+        return a('Uzupełnij wszystkie pola')
+      }
+      LabGroups.create({
+        name: title,
+        description: desc,
+        subject: 1,
+        active: !!active,
+        owner: owner
+      }).exec((err, lab) => {
+        if (err) return res.serverError(err)
+        if (!lab) return res.serverError('Nie udało sie uwtorzyć grupy')
+        return res.redirect('/teacher/labgroup/view/' + lab.id)
+      })
+    } else {
+      a()
+    }
+  },
+
+  editLabGroup: function (req, res) {
+    let id = req.param('id')
+    let a = (attr, msg) => Roles.findOneByName('teacher').populate('users').exec((err, role) => {
+      if (err) {
+        return res.serverError(err)
+      }
+      if (!role) {
+        return res.serverError('Nie znaleziono roli prowadzącego, zgłoś się do administratora')
+      }
+      LabGroups.findOneById(id).exec((err, lab) => {
+        if (err) {
+          return res.serverError(err)
+        }
+        if (!lab) {
+          return res.notFound()
+        }
+        return res.view('teacher/labgroups/edit',
+          {title: 'LabGroups :: Teacher Panel', menuItem: 'labgroups', data: lab, users: role.users, message: {message: msg, attribute: attr}})
+      })
+    })
+    if (req.method === 'POST') {
+      let title = req.param('title')
+      let desc = req.param('desc')
+      let active = req.param('active')
+      let owner = req.param('owner')
+      if (!_.isString(title) || !_.isString(desc) || !_.isString(owner) ||
+          !title || !desc || !owner) {
+        return a('danger', 'Uzupełnij wszystkie pola')
+      }
+      LabGroups.update({id: id}, {
+        name: title,
+        description: desc,
+        active: !!active,
+        owner: owner
+      }).exec((err, lab) => {
+        if (err) return res.serverError(err)
+        if (!lab || lab.length !== 1) return res.notFound()
+        return a('info', 'Pomyślnie edytowano grupę')
+      })
+    } else {
+      a()
+    }
   }
 }

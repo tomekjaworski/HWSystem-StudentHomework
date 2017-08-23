@@ -68,7 +68,8 @@ const AccountController = module.exports = {
         let email = req.param('email')
         let password = req.param('password')
         let red = req.param('redirect')
-        if (!_.isString(email) || !_.isString(password)) {
+        if (!_.isString(email) || !_.isString(password) ||
+          !email || !password) {
           return AccountController.loginError(res, 'Źle wporwadzone dane')
         }
         Users.findOneByEmail(email).populate('roles').exec(function (err, user) {

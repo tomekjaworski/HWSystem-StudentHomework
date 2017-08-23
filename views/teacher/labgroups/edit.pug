@@ -1,10 +1,10 @@
 extends ../../includes/layout
 
 block content
-    if (message !== undefined && message && (message.length > 0 ))
-        .alert.alert-danger(role='alert')
+    if (message !== undefined && message &&  message.message && (message.message.length > 0 ))
+        .alert(class='alert-'+message.attribute,role='alert')
             strong Wiadomość:
-            |  #{message}
+            |  #{message.message}
 
     .row
         .col-md-12.col-lg-4#topics-column
@@ -13,27 +13,27 @@ block content
             //-include tasks
             div.d-flex.justify-content-center
                 .col-8
-                    h2.text-center
-                        | ::
-                        a(href='/teacher/labgroup/list')  [Listowanie]
-                        |  :: [Dodawanie] ::
-                    h2.text-center dodawanie grup
+                    h2.text-center= data.name
+                    h2.text-center edytowanie grup
 
                     form(method='post')
                         div
                             label(for='title') Tytuł:
-                            input#title(name='title')
+                            input#title(name='title', value=data.name)
                         div
                             label(for='description') Opis:
-                            input#description(name='desc')
+                            input#description(name='desc', value=data.description)
                         div
                             label(for='active') Aktywna:
-                            input#active(type='checkbox', name='active')
+                            if data.active
+                                input#active(type='checkbox', name='active', checked)
+                            else
+                                input#active(type='checkbox', name='active')
                         div
                             label(for='owner') Prowadzący:
                             select#owner(name='owner')
                                 for user in users
-                                    if user.id === localUser.id
+                                    if user.id === data.owner
                                         option(value=user.id, selected)= user.fullName()
                                     else
                                         option(value=user.id)= user.fullName()

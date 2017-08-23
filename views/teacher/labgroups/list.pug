@@ -8,7 +8,7 @@ block content
         .hidden-md-down.col-lg-8#tasks-column
             //-include tasks
             div.d-flex.justify-content-center
-                .col-8
+                .col-12
                     h2.text-center
                         | :: [Listowanie] ::
                         a(href='/teacher/labgroup/add')  [Dodawanie]
@@ -22,14 +22,18 @@ block content
                             tr
                                 th ID
                                 th Name
+                                th Active
                                 th Students
+                                th Students Awaiting
                                 th Teacher
                         tbody
                             each group in data
                                 tr(onclick='document.location="/teacher/labgroup/view/'+group.id+'"')
                                     th(scope='row')=group.id
                                     td=group.name
-                                    td=group.students.length
-                                    td=group.owner.fullName()
+                                    td=group.active
+                                    td=group.studentsCount
+                                    td=group.studentsNotCount
+                                    td=group.name + ' ' + group.surname
 
                     h5.text-center nazwa grupy :: liczba studentow :: liczba nowych odpowiedzi

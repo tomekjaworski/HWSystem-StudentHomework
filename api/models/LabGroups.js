@@ -11,11 +11,17 @@ const LabGroups = module.exports = {
 
   attributes: {
 
-    name: {type: 'string'},
+    name: {type: 'string',
+      unique: true},
+
+    description: {type: 'string'},
 
     subject: {model: 'subjects'},
 
     message: {type: 'string'},
+
+    active: {type: 'boolean',
+      defaultsTo: true},
 
     owner: {model: 'users'},
 

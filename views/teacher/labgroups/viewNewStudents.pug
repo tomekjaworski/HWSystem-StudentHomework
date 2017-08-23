@@ -1,11 +1,11 @@
 extends ../../includes/layout
 
 block content
+
     if (message !== undefined && message && message.message && (message.message.length > 0 ))
         .alert(class='alert-' + message.attribute,role='alert')
             strong Wiadomość:
             |  #{message.message}
-
 
     .row
         .col-md-12.col-lg-4#topics-column
@@ -16,14 +16,7 @@ block content
                 .col-12
                     h2.text-center widok grupy
 
-                    form(method='post')
-                        label(for='message') Wiadomość:
-                        input#message(name='message', value=data.message)
-                        input(type='submit')
-
-                    a(href='/teacher/labgroup/view/'+data.id+'/new') Pokaż oczekujących studentów
-                    br
-                    a(href='/teacher/labgroup/view/'+data.id+'/edit') Edytuj grupę
+                    a(href='/teacher/labgroup/view/'+data.id) Pokaż aktywnych studentów
 
                     table.table.table-striped.table-hover.responsive
                         thead
@@ -39,6 +32,6 @@ block content
                                     td=student.student.fullName()
                                     td=student.student.album
                                     td
-                                        a(href='?deactive='+student.student.id) Deaktywuj
+                                        a(href='?active='+student.student.id) Aktywuj
 
                     h5.text-center nazwa grupy :: liczba studentow :: liczba nowych odpowiedzi
