@@ -23,3 +23,21 @@
     margin-left: 5px;
   }
 }
+
+.task-comment-textarea {
+  border-top-left-radius: 17.25px;
+  border-bottom-left-radius: 17.25px;
+  padding-left: 1.125em;
+  max-height: 360px;
+}
+.task-comment-markread {
+  -webkit-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+  text-align: center;
+}
+.task-comment-markread:hover {
+    color: #fff;
+    background-color: #1863e6;
+    border-color: #175fdd;
+}
