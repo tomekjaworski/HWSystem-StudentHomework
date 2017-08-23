@@ -6,6 +6,7 @@
  */
 
 const crypto = require('crypto')
+const pdc = require('pdc')
 
 const AccountController = module.exports = {
 
@@ -332,12 +333,19 @@ const AccountController = module.exports = {
                         if (err) {
                           return res.badRequest(err)
                         }
-                        return res.view('account/task', {
-                          topic: topic,
-                          task: task,
-                          taskReply: taskReply,
-                          taskReplyFiles: taskReplyFiles,
-                          taskComments: taskComments
+                        pdc(task.description[0], 'markdown_github', 'html5', function (err, result) {
+                          if (err) {
+                            return res.serverError(err)
+                          }
+                          task.description = result
+
+                          return res.view('account/task', {
+                            topic: topic,
+                            task: task,
+                            taskReply: taskReply,
+                            taskReplyFiles: taskReplyFiles,
+                            taskComments: taskComments
+                          })
                         })
                       })
                   })

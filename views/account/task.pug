@@ -11,6 +11,19 @@ mixin fileIcon(file)
             else
                 i.fa.fa-file-o.fa-3x
         code=file.fileName + '.' + file.fileExt
+
+mixin commentBlock(com, hidden)
+    .list-group-item.list-group-item-action.flex-column.align-items-start(style=(hidden ? 'display: none;': ''))
+        .d-flex.w-100.justify-content-between
+            h5.mb-1
+                strong.task-c-author=(com.user ? com.user.fullName() : '')
+                span &nbsp;napisał(a):
+            small.text-muted.task-c-timestamp= com.createdAt
+        p.mb-1.task-c-comment= com.comment
+        if !com.viewed
+            small.text-muted.task-c-read nieprzeczytane
+        else
+            small.text-muted.task-c-read przeczytane
 block content
     .card
         .card-header
@@ -21,19 +34,17 @@ block content
                     a.nav-link(data-toggle='tab', href='#files', aria-expanded='false') Pliki
                 li.nav-item
                     a.nav-link(data-toggle='tab', href='#comments', aria-expanded='false') Komentarze
-                        span.badge.badge-pill.badge-primary 2
+                        if taskComments && taskComments.length > 0
+                            span.badge.badge-pill.badge-primary= taskComments.length
 
         .card-block
             #myTabContent.tab-content
                 #task.tab-pane.fade.in.active.show(aria-expanded='true')
                     //-h1 Topic: #{topic.id}
                     h3 Temat: #{topic.number}. #{topic.title}
-                    h5 Opis tematu: #{task.description}
-                    h5 Treść zadania:
+                    h5 Opis tematu:
                     .card
-                        - var taskcontent = '<h1 id="hello">hello</h1>\n<p><strong>test</strong></p>\n<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> test <span class="op">=</span> <span class="st">&quot;123&quot;</span><span class="op">;</span></code></pre></div>\n<p>$$<br />\n\\Gamma(z) = \\int_0^\\infty t^{z-1}e^{-t}dt\\,.<br />\n$$</p>\n<p>👋 😂</p>'
-                        #task-content.card-block!= taskcontent
-
+                        #task-content.card-block!= task.description
 
                 #files.tab-pane.fade(aria-expanded='false')
                     if !taskReply
@@ -58,69 +69,45 @@ block content
 
 
                             .card-footer.text-muted
-                                | lorem ipsum
+                                a.btn.btn-secondary(href='#') Prześlij nowe rozwiązania
 
                 #comments.tab-pane.fade(aria-expanded='false')
                     //h1 Task comments: #{taskComments[0].reply}
-                    -var top = topic.id
-                    -var tas = task.id
-                    -var tasRep = taskReply.id
-                    button(onclick='markAsRead(' + top + ',' + tas + ',' + tasRep + ')')
-                        | elo
-                    div#allComments
-                    each com in taskComments
-                        h1 User add: #{com.user.fullName()}
-                        h1 comment: #{com.comment}
-                        p createdAt: #{com.createdAt}
-                        if !com.viewed
-                            h1#elo nieprzeczytane
-                        else
-                            h1#elo przeczytane
+                    #commentAjaxTemplate
+                        +commentBlock({}, true)
 
-                    textarea#theComment(name='comment')
-                    button(onclick='sendComment(' + top + ',' + tas + ',' + tasRep + ')') send
+                    .list-group.mb-3#commentArea
+                        - var allviewed = true
+                        each com in taskComments
+                            +commentBlock(com)
+                            if !com.viewed
+                                - allviewed = false
+                        if !allviewed
+                            a.list-group-item.list-group-item-action.active.task-comment-markread.justify-content-center#commentMarkAsRead(href='#') Oznacz wszystko jako przeczytane
+                    .input-group
+                        textarea.form-control.task-comment-textarea#commentTextArea(type='text', placeholder='Komentarz', name='comment', rows='1')
+                        span.input-group-btn
+                            button.btn.btn-primary#commentSendButton(type='button') Wyślij
 
-
-        script.
-          function markAsRead (topic, task, taskReply) {
-            var response = $.ajax({
-              url: '/topic/' + topic + '/task/' + task,
-              method: "POST",
-              data: {
-                'taskReply': taskReply,
-                'action': 'markAsRead'
-              }
-            });
-
-            response.done(function (msg) {
-              console.log(msg);
-
-            });
-          }
-          function sendComment (topic, task, taskReply) {
-            var response = $.ajax({
-              url: '/topic/' + topic + '/task/' + task,
-              method: "POST",
-              data: {
-                'taskReply': taskReply,
-                'action': 'sendComment',
-                'comment': $('#theComment').val()
-              }
-            });
-
-            response.done(function () {
-              var comment = $('#theComment').val()
-              console.log(comment)
-              $('#allComments').prepend(comment)
-            })
-          }
+                    //-.form-group.mb-0
+                        textarea#exampleTextarea.form-control(rows='1', placeholder='Komentarz')
 
 
-//-block content
+                    //-.card
+                        button(onclick='markAsRead(' + top + ',' + tas + ',' + tasRep + ')')
+                            | elo
+                        div#allComments
 
-    h1
+                            h1 User add:
+                            h1 comment:
+                            p createdAt:
 
 
-
-
-
+                        textarea#theComment(name='comment')
+                        button(onclick='sendComment(' + top + ',' + tas + ',' + tasRep + ')') send
+                    script
+                      | var tData = {
+                      |     'top': #{topic.id},
+                      |     'tas': #{task.id},
+                      |     'tasRep': #{taskReply.id}
+                      | }

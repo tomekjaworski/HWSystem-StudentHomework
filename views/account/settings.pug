@@ -25,7 +25,6 @@ block content
                         .form-group
                             label(for='inputRePassword') Powtórz nowe hasło
                             input#inputRePassword.form-control(type='password', name='repassword')
-
                         input(type='hidden' name='action' value='newPassword')
 
                         button.btn.btn-primary.mb-4.mb-md-0(type='submit') Zmień hasło
@@ -34,10 +33,10 @@ block content
                     form(method='post' action='/settings')
                         .form-group
                             label(for='inputLabSelect') Wybierz lab
-                            select#inputLabSelect.custom-select.form-control(name='lab')
+                            select#inputLabSelect.selectpicker(name='lab', data-live-search="true")
                                 //- console.log(labs)
                                 each l in labs
-                                    option(value=l.name)= l.name + l.owner.fullName()
+                                    option(value=l.name, data-subtext=l.owner.fullName())= l.name
                         .form-group
                             label(for='inputLabSelectPass') Podaj hasło aby dokonać zmiany
                             input#inputLabSelectPass.form-control(type='password', name='passlabconf')
