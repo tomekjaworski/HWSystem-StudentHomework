@@ -42,11 +42,9 @@ block content
                 #task.tab-pane.fade.in.active.show(aria-expanded='true')
                     //-h1 Topic: #{topic.id}
                     h3 Temat: #{topic.number}. #{topic.title}
-                    h5 Opis tematu: #{task.description}
-                    h5 Treść zadania:
+                    h5 Opis tematu:
                     .card
-                        - var taskcontent = '<h1 id="hello">hello</h1>\n<p><strong>test</strong></p>\n<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> test <span class="op">=</span> <span class="st">&quot;123&quot;</span><span class="op">;</span></code></pre></div>\n<p>$$<br />\n\\Gamma(z) = \\int_0^\\infty t^{z-1}e^{-t}dt\\,.<br />\n$$</p>\n<p>👋 😂</p>'
-                        #task-content.card-block!= taskcontent
+                        #task-content.card-block!= task.description
 
                 #files.tab-pane.fade(aria-expanded='false')
                     if !taskReply
