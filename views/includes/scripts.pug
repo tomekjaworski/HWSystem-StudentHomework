@@ -3,6 +3,19 @@ script(src='https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js
 script(src='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js', integrity='sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn', crossorigin='anonymous')
 script(src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML', integrity='sha384-Ra6zh6uYMmH5ydwCqqMoykyf1T/+ZcnOQfFPhDrp2kI4OIxadnhsvvA2vv9A7xYv', crossorigin='anonymous')
 
+script(type='text/x-mathjax-config').
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\\(","\\)"] ],
+        processEscapes: true
+      },
+      menuSettings: {
+          zoom: "Click",
+          mpContext: true,
+          mpMouse: true
+      }
+    });
+
 if sails.config.environment === "production"
     script(src='/min/production.min.js')
 else

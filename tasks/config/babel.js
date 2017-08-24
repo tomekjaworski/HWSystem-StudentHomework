@@ -21,7 +21,8 @@ module.exports = function (grunt) {
       },
       dist: {
         files: {
-          '.tmp/public/js/main.js': 'assets/js/main.js'
+          '.tmp/public/js/main.js': 'assets/js/main.js',
+          '.tmp/public/js/task.js': 'assets/js/task.js'
         }
       }
     }

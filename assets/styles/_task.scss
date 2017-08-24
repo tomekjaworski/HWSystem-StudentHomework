@@ -41,3 +41,31 @@
     background-color: #1863e6;
     border-color: #175fdd;
 }
+
+#task-content {
+  table {
+    font-size: 14px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 1rem;
+    border-collapse: collapse;
+    background-color: transparent;
+    th, td {
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      vertical-align: top;
+      padding: 0.75rem;
+    }
+    thead {
+      th {
+        border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+        vertical-align: bottom;
+      }
+    }
+    tbody {
+      tr:nth-of-type(odd) {
+        background-color: rgba(0, 0, 0, 0.05);
+      }
+    }
+  }
+}
