@@ -54,11 +54,18 @@ module.exports.routes = {
 
   // Teachers
   '/teacher': 'TeacherController.index',
+
+  // Teachers // Labgroups
   '/teacher/labgroup': 'TeacherController.listLabGroups',
   '/teacher/labgroup/list': 'TeacherController.listLabGroups',
   '/teacher/labgroup/view/:id': 'TeacherController.viewLabGroup',
   '/teacher/labgroup/view/:id/new': 'TeacherController.viewNewStudentsLabGroup',
   '/teacher/labgroup/view/:id/edit': 'TeacherController.editLabGroup',
-  '/teacher/labgroup/add': 'TeacherController.addLabGroup'
+  '/teacher/labgroup/add': 'TeacherController.addLabGroup',
+
+  // Teachers // Labgroups
+  '/teacher/replies': 'TeacherController.selectTaskReplies',
+  '/teacher/replies/view/:taskid': 'TeacherController.viewTaskReplies',
+  '/ajax/teacher/replies/view/:taskId/lab/:labid': 'TeacherController.viewTaskOfLab'
 
 }

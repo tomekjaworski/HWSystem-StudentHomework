@@ -192,5 +192,34 @@ const TeacherController = module.exports = {
     } else {
       a()
     }
+  },
+
+  // Topic & Tasks
+
+  // Task Replies
+
+  selectTaskReplies: function (req, res) {
+    Topics.find().populate('tasks').exec((err, topics) => {
+      if (err) return res.serverError(err)
+      return res.view('teacher/replies/index', {title: 'Task Replies :: Teacher Panel', menuItem: 'replies', data: topics})
+    })
+  },
+
+  viewTaskReplies: function (req, res) {
+    let id = req.param('taskid')
+    Tasks.findOneById(id).populate('topic').exec((err, task) => {
+      if (err) return res.serverError(err)
+      if (!task) return res.notFound()
+      LabGroups.find({select: ['name', 'id', 'owner']}).populate('owner').exec((err, labs) => {
+        if (err) return res.serverError(err)
+        if (!labs) return res.serverError('Nie zdefiniowano żadnych grup laboratoryjnych')
+        task.labs = labs
+        return res.view('teacher/replies/view', {title: 'Task Replies :: Teacher Panel', menuItem: 'replies', data: task})
+      })
+    })
+  },
+
+  viewTaskOfLab: function (req, res) {
+    return res.send('aaa')
   }
 }
