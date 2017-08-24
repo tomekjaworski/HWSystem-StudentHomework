@@ -45,7 +45,9 @@ module.exports.connections = {
     host: '172.17.0.3',
     user: 'root', // optional
     password: 'qwerty', // optional
-    database: 'homework' // optional
+    database: 'homework', // optional
+    charset: 'utf8mb4',
+    collation: 'utf8mb4_unicode_520_ci'
   }
 
   /***************************************************************************

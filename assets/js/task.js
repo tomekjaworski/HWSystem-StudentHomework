@@ -17,10 +17,10 @@ function markAsRead (topic, task, taskReply) {
 function renderComment (author, comment, date, read) {
   let template = $('#commentAjaxTemplate').find('.list-group-item').clone()
   template.attr('id', 'commentFadeIn')
-  template.find('.task-c-author').html(author)
-  template.find('.task-c-timestamp').html(date)
-  template.find('.task-c-comment').html(comment)
-  template.find('.task-c-read').html(read)
+  template.find('.task-c-author').text(author)
+  template.find('.task-c-timestamp').text(date)
+  template.find('.task-c-comment').text(comment)
+  template.find('.task-c-read').text(read)
 
   $('#commentArea').append(template)
 
