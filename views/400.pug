@@ -1,0 +1,19 @@
+extends includes/layout
+
+block content
+    .page
+        .ocean
+            img.fishy(src='http://sailsjs.com/images/image_devInTub.png')
+        .main
+            h1
+                | Bad Request
+            if (typeof data !== 'undefined')
+                h2= data
+            else
+                h2 Złe zapytanie
+            p.help
+                a(href='http://en.wikipedia.org/wiki/HTTP_400') Why
+                |  might this be happening?
+        .logo
+            a(href='http://sailsjs.org')
+                img(src='http://sailsjs.org/images/logo.png')
