@@ -413,7 +413,7 @@ const AccountController = module.exports = {
           return res.json(err)
         }
 
-        TaskComments.find({task: taskw.id, taskStudent: req.localUser.id, id: {'>': lastComment}})
+        TaskComments.find({task: taskw.id, taskStudent: req.localUser.id, id: {'>': lastComment}}).populate('user')
           .exec(function (err, task) {
             if (err) {
               return res.json(err)
