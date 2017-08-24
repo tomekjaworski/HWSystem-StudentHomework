@@ -366,7 +366,7 @@ const AccountController = module.exports = {
 
         case 'POST':
 
-          let task = req.param('taskReply')
+          let task = req.param('taskid')
           let action = req.param('action')
           let comment = req.param('comment')
 

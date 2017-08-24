@@ -1,11 +1,11 @@
 /* global $, tData */
 (function () {
-  function markAsRead (topic, task, taskReply) {
+  function markAsRead (topic, task) {
     let response = $.ajax({
       url: '/topic/' + topic + '/task/' + task,
       method: 'POST',
       data: {
-        'taskReply': taskReply,
+        'task': task,
         'action': 'markAsRead'
       }
     })
@@ -30,12 +30,11 @@
     commentFadeIn.attr('id', '')
   }
 
-  function sendComment (topic, task, taskReply) {
+  function sendComment (topic, task) {
     let response = $.ajax({
       url: '/topic/' + topic + '/task/' + task,
       method: 'POST',
       data: {
-        'taskReply': taskReply,
         'action': 'sendComment',
         'comment': $('#commentTextArea').val()
       }
@@ -51,11 +50,11 @@
   }
 
   $('#commentSendButton').on('click', function () {
-    sendComment(tData.top, tData.tas, tData.tasRep)
-    markAsRead(tData.top, tData.tas, tData.tasRep)
+    sendComment(tData.top, tData.tas)
+    markAsRead(tData.top, tData.tas)
   })
 
   $('#commentMarkAsRead').on('click', function () {
-    markAsRead(tData.top, tData.tas, tData.tasRep)
+    markAsRead(tData.top, tData.tas)
   })
 })()
