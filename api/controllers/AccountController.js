@@ -140,15 +140,27 @@ const AccountController = module.exports = {
         if (!name && !surname && !email && !password) {
           return AccountController.registerError(res, 'Proszę uzupełnić wszystkie pola.')
         }
+        if (name.length > 255) {
+          return AccountController.registerError(res, 'Imię jest za długie')
+        }
+        if (surname.length > 255) {
+          return AccountController.registerError(res, 'Nazwisko jest za długie')
+        }
         let regexEmail = /^\w+@(p\.lodz\.pl)|\w+@(edu\.p\.lodz\.pl)$/
         if (!regexEmail.test(email)) {
           return AccountController.registerError(res, 'Rejestracja dostępna tylko z uczelnienych maili')
+        }
+        if (email.length > 255) {
+          return AccountController.registerError(res, 'E-mail jest za długie')
         }
         if (album.length !== 6) {
           return AccountController.registerError(res, 'Numer albumu jest nieprawidłowy.')
         }
         if (password !== rePassword) {
           return AccountController.registerError(res, 'Hasła nie są identyczne')
+        }
+        if (password.length > 255) {
+          return AccountController.registerError(res, 'Hasło jest za długie')
         }
         if (password.length < 8) {
           return AccountController.registerError(res, 'Hasło jest za krótkie. Powinno zawierać 8 znaków.')
