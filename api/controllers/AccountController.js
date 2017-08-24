@@ -389,6 +389,35 @@ const AccountController = module.exports = {
     }
   },
 
+  ajaxCommentsCheck: function (req, res) {
+    const taskId = req.param('task')
+    const lastComment = req.param('lastComment')
+
+    if (req.method === 'GET') {
+      Tasks.findOneById(taskId).exec(function (err, taskw) {
+        if (err) {
+          return res.json(err)
+        }
+
+        TaskComments.find({task: taskw.id, taskStudent: req.localUser.id, id: {'>': lastComment}})
+          .exec(function (err, task) {
+            if (err) {
+              return res.json(err)
+            }
+
+            return res.jsonx(task)
+            // return res.json({
+            //   id: resTask.id,
+            //   taskStudent: resTask.taskStudent,
+            //   user: resTask.user,
+            //   comment: resTask.comment,
+            //   viewed: resTask.viewed
+            // })
+          })
+      })
+    }
+  },
+
   userSettings: function (req, res) {
     switch (req.method) {
       case 'GET':

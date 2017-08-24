@@ -51,6 +51,7 @@ module.exports.routes = {
   'GET /ajax/topic/:id/tasks': 'AccountController.tasks',
   'GET /topic/:topicid/task/:taskid': 'AccountController.task',
   'POST /topic/:topicid/task/:taskid': 'AccountController.task',
+  'GET /ajax/checkComments/:task/:lastComment': 'AccountController.ajaxCommentsCheck',
 
   // Teachers
   '/teacher': 'TeacherController.index',

@@ -111,3 +111,9 @@ block content
                       |     'tas': #{task.id},
                       |     'tasRep': #{taskReply.id}
                       | }
+                      |
+
+    script.
+        var task = #{task.id}
+        var lastComment = 'test'
+
