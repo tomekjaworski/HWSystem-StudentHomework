@@ -291,42 +291,52 @@ const AccountController = module.exports = {
     }
   },
   task: function (req, res) {
-    switch (req.method) {
-      case 'GET':
+    if (req.localUser.hasRole('student')) {
+      switch (req.method) {
+        case 'GET':
 
-        let topicparam = req.param('topicid')
-        let taskparam = req.param('taskid')
+          let topicparam = req.param('topicid')
+          let taskparam = req.param('taskid')
 
-        Topics.findOneById(topicparam).exec(function (err, topic) {
-          if (err) {
-            return res.badRequest(err)
-          }
-
-          if (!topic) {
-            return res.notFound()
-          }
-
-          Tasks.findOneById(taskparam).populate('description').exec(function (err, task) {
+          Topics.findOneById(topicparam).exec(function (err, topic) {
             if (err) {
               return res.badRequest(err)
             }
 
-            if (!task) {
+            if (!topic) {
               return res.notFound()
             }
 
-            task.description = task.description[0].description
+            Tasks.findOneById(taskparam).populate('description').exec(function (err, task) {
+              if (err) {
+                return res.badRequest(err)
+              }
 
-            TaskComments.find({task: task.id, taskStudent: req.localUser.id})
-              .populate('user').exec(function (err, taskComments) {
-                if (err) {
-                  return res.serverError(err)
-                }
+              if (!task) {
+                return res.notFound()
+              }
 
-                TaskReplies.findOne({student: req.localUser.id, task: task.id})
+              task.description = task.description[0].description
+
+              TaskComments.find({task: task.id, taskStudent: req.localUser.id})
+                .populate('user').exec(function (err, taskComments) {
+                  if (err) {
+                    return res.serverError(err)
+                  }
+
+                  TaskReplies.findOne({student: req.localUser.id, task: task.id})
                   .exec(function (err, taskReply) {
                     if (err) {
                       return res.badRequest(err)
+                    }
+                    if (!taskReply) {
+                      return res.view('account/task', {
+                        topic: topic,
+                        task: task,
+                        taskReply: taskReply,
+                        taskReplyFiles: null,
+                        taskComments: taskComments
+                      })
                     }
                     TaskReplyFiles.find({reply: taskReply.id})
                       .exec(function (err, taskReplyFiles) {
@@ -349,43 +359,47 @@ const AccountController = module.exports = {
                         })
                       })
                   })
-              })
+                })
+            })
           })
-        })
-        break
+          break
 
-      case 'POST':
+        case 'POST':
 
-        let task = req.param('taskReply')
-        let action = req.param('action')
-        let comment = req.param('comment')
+          let task = req.param('taskReply')
+          let action = req.param('action')
+          let comment = req.param('comment')
 
-        // Ajax
-        Tasks.count({id: task}, (err, count) => {
-          if (err) {
-            return res.serverError(err)
-          }
-          if (count === 0) {
-            return res.notFound()
-          }
-          if (action === 'markAsRead') {
-            TaskComments.update({task: task, taskStudent: req.localUser.id, viewed: false}, {viewed: true})
-              .exec(function (err) {
-                if (err) {
-                  return res.serverError(err)
-                }
-                return res.ok()
-              })
-          } else if (action === 'sendComment') {
-            TaskComments.create({task: task, taskStudent: req.localUser.id, user: req.localUser.id, comment: comment, viewed: false})
-              .exec(function (err) {
-                if (err) {
-                  return res.serverError(err)
-                }
-                return res.ok()
-              })
-          }
-        })
+          // Ajax
+          Tasks.count({id: task}, (err, count) => {
+            if (err) {
+              return res.serverError(err)
+            }
+            if (count === 0) {
+              return res.notFound()
+            }
+            if (action === 'markAsRead') {
+              TaskComments.update({task: task, taskStudent: req.localUser.id, viewed: false}, {viewed: true})
+                .exec(function (err) {
+                  if (err) {
+                    return res.serverError(err)
+                  }
+                  return res.ok()
+                })
+            } else if (action === 'sendComment') {
+              TaskComments.create(
+                {task: task, taskStudent: req.localUser.id, user: req.localUser.id, comment: comment, viewed: false})
+                .exec(function (err) {
+                  if (err) {
+                    return res.serverError(err)
+                  }
+                  return res.ok()
+                })
+            }
+          })
+      }
+    } else {
+      return res.badRequest()
     }
   },
 
