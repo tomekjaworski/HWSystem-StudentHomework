@@ -49,8 +49,8 @@ module.exports.routes = {
 
   'GET /topic/:topicid/tasks': 'AccountController.index',
   'GET /ajax/topic/:id/tasks': 'AccountController.tasks',
-  'GET /topic/:topicid/task/:taskid': 'AccountController.task',
-  'POST /topic/:topicid/task/:taskid': 'AccountController.task',
+  'GET /topic/:topicid/task/:taskid': {action: 'account/task', skipAssets: true},
+  'POST /topic/:topicid/task/:taskid': {action: 'account/task', skipAssets: true},
 
   // Teachers
   '/teacher': 'TeacherController.index',
@@ -58,14 +58,14 @@ module.exports.routes = {
   // Teachers // Labgroups
   '/teacher/labgroup': 'TeacherController.listLabGroups',
   '/teacher/labgroup/list': 'TeacherController.listLabGroups',
-  '/teacher/labgroup/view/:id': 'TeacherController.viewLabGroup',
+  '/teacher/labgroup/view/:id': {action: 'teacher/viewLabGroup', skipAssets: true},
   '/teacher/labgroup/view/:id/new': 'TeacherController.viewNewStudentsLabGroup',
-  '/teacher/labgroup/view/:id/edit': 'TeacherController.editLabGroup',
+  '/teacher/labgroup/edit/:id': {action: 'teacher/editLabGroup', skipAssets: true},
   '/teacher/labgroup/add': 'TeacherController.addLabGroup',
 
   // Teachers // Labgroups
   '/teacher/replies': 'TeacherController.selectTaskReplies',
-  '/teacher/replies/view/:taskid': 'TeacherController.viewTaskReplies',
-  '/ajax/teacher/replies/view/:taskId/lab/:labid': 'TeacherController.viewTaskOfLab'
+  '/teacher/replies/view/:taskid': {action: 'teacher/viewTaskReplies', skipAssets: true},
+  '/ajax/teacher/replies/view/:taskId/lab/:labid': {action: 'teacher/viewTaskOfLab', skipAssets: true}
 
 }

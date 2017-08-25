@@ -15,7 +15,7 @@ const TaskReplyFiles = module.exports = {
 
     fileName: {type: 'string'},
 
-    fileSize: {type: 'integer'},
+    fileSize: {type: 'number'},
 
     fileExt: {type: 'string'},
 
@@ -32,12 +32,12 @@ const TaskReplyFiles = module.exports = {
     },
 
     firstFileId: {
-      type: 'integer'
+      type: 'number'
     },
 
     lastFileId: {
-      type: 'integer',
-      defaultsTo: null
+      type: 'number',
+      allowNull: true
     }
   }
 }

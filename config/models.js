@@ -14,10 +14,10 @@ module.exports.models = {
   /***************************************************************************
    *                                                                          *
    * Your app's default connection. i.e. the name of one of your app's        *
-   * connections (see `config/connections.js`)                                *
+   * connections (see `config/datastores.js`)                                *
    *                                                                          *
    ***************************************************************************/
-  connection: 'majeskjuel',
+  // datastore: 'default',
 
   /***************************************************************************
    *                                                                          *
@@ -27,6 +27,12 @@ module.exports.models = {
    * See http://sailsjs.org/#!/documentation/concepts/ORM/model-settings.html  *
    *                                                                          *
    ***************************************************************************/
-  migrate: 'alter'
+  migrate: 'alter',
+
+  attributes: {
+    createdAt: {type: 'number', autoCreatedAt: true,},
+    updatedAt: {type: 'number', autoUpdatedAt: true,},
+    id: {type: 'number', autoIncrement: true,},
+  }
 
 }

@@ -31,21 +31,16 @@ module.exports.http = {
      ***************************************************************************/
 
     order: [
-      'startRequestTimer',
+      'www',
       'cookieParser',
       'session',
       'bodyParser',
-      'handleBodyParserError',
       'xframe',
       'compress',
-      'methodOverride',
       'localsInject',
       'userInject',
       'router',
-      'www',
-      'favicon',
-      '404',
-      '500'
+      'favicon'
     ],
 
     localsInject: function (req, res, next) {
@@ -57,8 +52,8 @@ module.exports.http = {
 
     userInject: function (req, res, next) {
       req.options.locals.localUser = req.localUser = null
-      if (req.session.authed) {
-        Users.findOneById(req.session.authed).populate('roles').exec((err, user) => {
+      if (req.session && req.session.authed) {
+        Users.findOne({id: req.session.authed}).populate('roles').exec((err, user) => {
           if (err) {
             return res.jsonx(err)
           }

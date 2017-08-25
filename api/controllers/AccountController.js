@@ -73,7 +73,7 @@ const AccountController = module.exports = {
           !email || !password) {
           return AccountController.loginError(res, 'Źle wporwadzone dane')
         }
-        Users.findOneByEmail(email).populate('roles').exec(function (err, user) {
+        Users.findOne({email:email}).populate('roles').exec(function (err, user) {
           if (err) {
             return res.jsonx(err)
           }
@@ -162,12 +162,12 @@ const AccountController = module.exports = {
         }
 
         // TODO: sprawdzic Dean & Lab
-        Roles.findOneByName('student').exec(function (err, role) {
+        Roles.findOne({name:'student'}).exec(function (err, role) {
           if (err) {
             return res.jsonx(err)
           }
 
-          LabGroups.findOneByName(labGroups).exec(function (err, lab) {
+          LabGroups.findOne({name:labGroups}).exec(function (err, lab) {
             if (err) {
               res.jsonx(err)
             }
@@ -209,8 +209,11 @@ const AccountController = module.exports = {
         if (err) {
           return res.serverError(err)
         }
+        if(!lab){
+          return res.forbidden('Nie jesteś przydzielony do żadnej grupy')
+        }
 
-        Topics.query('SELECT topics.id topicId, topics.number topicNumber, topics.title topicTitle, topics.deadline topicDeadline, \n' +
+        sails.sendNativeQuery('SELECT topics.id topicId, topics.number topicNumber, topics.title topicTitle, topics.deadline topicDeadline, \n' +
           '    COUNT(tasks.id) taskCount, \n' +
           '    COUNT(replies.id) repliesCount, \n' +
           '    sum(case when replies.teacherStatus = 1 then 1 else 0 end) repliesTeacherAccepted,\n' +
@@ -222,13 +225,13 @@ const AccountController = module.exports = {
           '    sum(case when (replies.machineStatus = 2 and replies.teacherStatus = 1) then 1 else 0 end) repliesAccepted\n' +
           '    FROM topics\n' +
           'LEFT JOIN tasks ON tasks.topic = topics.id\n' +
-          'LEFT JOIN taskreplies AS replies ON replies.task = tasks.id AND replies.student = ? \n' +
-          'LEFT JOIN ( SELECT task, taskStudent FROM taskcomments GROUP BY task, taskStudent ) comments ON comments.task = tasks.id AND comments.taskStudent = ?\n' +
-          'GROUP BY topics.id', [req.localUser.id, req.localUser.id], (err, data) => {
+          'LEFT JOIN taskreplies AS replies ON replies.task = tasks.id AND replies.student = $1 \n' +
+          'LEFT JOIN ( SELECT task, taskStudent FROM taskcomments GROUP BY task, taskStudent ) comments ON comments.task = tasks.id AND comments.taskStudent = $1\n' +
+          'GROUP BY topics.id', [req.localUser.id]).exec((err, data) => {
             if (err) {
               return res.serverError(err)
             }
-            let ret = {message: lab.labgroup.message, topics: data}
+            let ret = {message: lab.labgroup.message, topics: data.rows}
             let taskView = parseInt(req.param('topicid'))
             if (!isNaN(taskView)) {
               ret.taskView = taskView
@@ -262,7 +265,7 @@ const AccountController = module.exports = {
           if (count !== 1) {
             return res.notFound()
           }
-          Tasks.query('SELECT tasks.id, tasks.number, tasks.title,\n' +
+          sails.sendNativeQuery('SELECT tasks.id, tasks.number, tasks.title,\n' +
             '(case when reply.id IS NOT NULL then 1 else 0 end) hasReply,\n' +
             '(case when comments.task IS NOT NULL then 1 else 0 end) hasComments,\n' +
             '(case when reply.id IS NOT NULL then reply.teacherStatus else 0 end) teacherStatus,\n' +
@@ -270,18 +273,18 @@ const AccountController = module.exports = {
             '(case when scd.task IS NOT NULL then scd.deadline else\n' +
             ' (case when groupdeadline.deadline IS NOT NULL then groupdeadline.deadline else topics.deadline end) end) deadline\n' +
             'FROM tasks\n' +
-            'LEFT JOIN taskreplies reply ON reply.task = tasks.id AND reply.student = @user\n' +
+            'LEFT JOIN taskreplies reply ON reply.task = tasks.id AND reply.student = $1 \n' +
             'LEFT JOIN taskcomments comments ON comments.task = tasks.id AND comments.viewed = false\n' +
             'LEFT JOIN topics ON topics.id = tasks.topic\n' +
-            'LEFT JOIN studentcustomdeadlines scd ON scd.task = tasks.id AND scd.student = @user\n' +
-            'LEFT JOIN labgrouptopicdeadline groupdeadline ON groupdeadline.group = 1\n' +
-            'WHERE tasks.topic = 1\n' +
+            'LEFT JOIN studentcustomdeadlines scd ON scd.task = tasks.id AND scd.student = $1 \n' +
+            'LEFT JOIN labgrouptopicdeadline groupdeadline ON groupdeadline.group = $2 \n' +
+            'WHERE tasks.topic = $3 \n' +
             'GROUP BY tasks.id, reply.id, tasks.topic, scd.deadline, groupdeadline.deadline',
-            [req.localUser.id, req.localUser.id, lab.labgroup, topicId], (err, data) => {
+            [req.localUser.id, lab.labgroup, topicId]).exec((err, data) => {
               if (err) {
                 return res.serverError(err)
               }
-              return res.json(data)
+              return res.json(data.rows)
             }
           )
         })
@@ -298,7 +301,7 @@ const AccountController = module.exports = {
           let topicparam = req.param('topicid')
           let taskparam = req.param('taskid')
 
-          Topics.findOneById(topicparam).exec(function (err, topic) {
+          Topics.findOne({id:topicparam}).exec(function (err, topic) {
             if (err) {
               return res.badRequest(err)
             }
@@ -307,7 +310,7 @@ const AccountController = module.exports = {
               return res.notFound()
             }
 
-            Tasks.findOneById(taskparam).populate('description').exec(function (err, task) {
+            Tasks.findOne({id:taskparam}).populate('description').exec(function (err, task) {
               if (err) {
                 return res.badRequest(err)
               }
@@ -407,7 +410,7 @@ const AccountController = module.exports = {
     switch (req.method) {
       case 'GET':
 
-        Users.findOneById(req.localUser.id).exec(function (err, user) {
+        Users.findOne({id:req.localUser.id}).exec(function (err, user) {
           if (err) {
             return res.json(err)
           }
@@ -428,7 +431,7 @@ const AccountController = module.exports = {
         let lab = req.param('lab')
         let confpass = req.param('passlabconf')
 
-        Users.findOneById(req.localUser.id).exec(function (err, user) {
+        Users.findOne({id:req.localUser.id}).exec(function (err, user) {
           if (err) {
             return res.json(err)
           }
@@ -469,7 +472,7 @@ const AccountController = module.exports = {
           } else if (action === 'newLab') {
           // ZMIANA LAB GRUPY
 
-            LabGroups.findOneByName(lab).populate('owner').exec(function (err, lab) {
+            LabGroups.findOne({name:lab}).populate('owner').exec(function (err, lab) {
               if (err) {
                 return res.json(err)
               }
@@ -477,7 +480,7 @@ const AccountController = module.exports = {
                 if (err) {
                   return res.json(err)
                 }
-                Users.findOneById(req.localUser.id).exec(function (err, user) {
+                Users.findOne({id:req.localUser.id}).exec(function (err, user) {
                   if (err) {
                     return res.json(err)
                   }
