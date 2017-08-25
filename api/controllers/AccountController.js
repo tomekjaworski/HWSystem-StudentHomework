@@ -396,7 +396,7 @@ const AccountController = module.exports = {
                   if (err) {
                     return res.serverError(err)
                   }
-                  return res.ok()
+                  return res.jsonx({ 'err': false })
                 })
             } else if (action === 'sendComment') {
               TaskComments.create(
@@ -405,7 +405,7 @@ const AccountController = module.exports = {
                   if (err) {
                     return res.serverError(err)
                   }
-                  return res.ok()
+                  return res.jsonx({ 'err': false })
                 })
             }
           })

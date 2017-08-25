@@ -88,8 +88,7 @@ block content
                             if !com.viewed
                                 - allviewed = false
                             - i++
-                        if !allviewed
-                            a.list-group-item.list-group-item-action.active.task-comment-markread.justify-content-center#commentMarkAsRead(href='#') Oznacz wszystko jako przeczytane
+                        button.list-group-item.list-group-item-action.active.task-comment-markread.justify-content-center#commentMarkAsRead(style=(allviewed ? 'display: none;' : '')) Oznacz wszystko jako przeczytane
                     .input-group
                         textarea.form-control.task-comment-textarea#commentTextArea(type='text', placeholder='Komentarz', name='comment', rows='1')
                         span.input-group-btn

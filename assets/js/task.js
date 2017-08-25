@@ -1,6 +1,7 @@
 /* global $, tData, task, lastComment */
 (function () {
   let newLastComment = null
+  let markAsReadButton = $('#commentMarkAsRead')
 
   function markAsRead (topic, task) {
     let response = $.ajax({
@@ -13,7 +14,7 @@
     })
 
     response.done(function (msg) {
-      // console.log(msg)
+      markAsReadButton.hide()
     })
   }
 
@@ -25,7 +26,16 @@
     template.find('.task-c-comment').text(comment)
     template.find('.task-c-read').text(read)
 
-    $('#commentArea').append(template)
+    $(template).insertBefore(markAsReadButton)
+
+    if (read === false) {
+      markAsReadButton.fadeIn()
+    }
+    // if (markAsReadButton.style('display') === 'none') {
+    //
+    // } else {
+    //   $('#commentArea').append(template)
+    // }
 
     const commentFadeIn = $('#commentFadeIn')
     commentFadeIn.fadeIn()
@@ -76,11 +86,11 @@
   // $(window).load(checkComments())
   $('#commentSendButton').on('click', function () {
     sendComment(tData.top, tData.tas)
-    setTimeout(checkComments(), 1000)
-    setTimeout(markAsRead(tData.top, tData.tas), 1000)
+    setTimeout(markAsRead, 200, tData.top, tData.tas)
+    setTimeout(checkComments, 600)
   })
 
-  $('#commentMarkAsRead').on('click', function () {
+  $(markAsReadButton).on('click', function () {
     markAsRead(tData.top, tData.tas)
   })
   if (typeof (lastComment) !== 'undefined') {
@@ -88,6 +98,6 @@
 
     setInterval(function () {
       checkComments()
-    }, 100000)
+    }, 10000)
   }
 })()
