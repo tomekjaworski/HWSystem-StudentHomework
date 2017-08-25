@@ -21,14 +21,16 @@ const TaskReplies = module.exports = {
     },
 
     teacherStatus: {
-      type: 'integer',
-      enum: [0, 1, 2],
+      type: 'number',
+      min: 0,
+      max: 2,
       defaultsTo: 0
     },
 
     machineStatus: {
-      type: 'integer',
-      enum: [0, 1, 2, 3],
+      type: 'number',
+      min: 0,
+      max: 3,
       defaultsTo: 0
     },
 

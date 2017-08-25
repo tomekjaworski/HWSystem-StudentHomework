@@ -21,4 +21,52 @@ module.exports = {
   //   connection: 'someMongodbServer'
   // }
 
+  datastores: {
+
+    /***************************************************************************
+     *                                                                          *
+     * Configure your default production database.                              *
+     *                                                                          *
+     * 1. Choose an adapter:                                                    *
+     *    https://sailsjs.com/plugins/databases                                 *
+     *                                                                          *
+     * 2. Install it as a dependency of your Sails app.                         *
+     *    (For example:  npm install sails-mysql --save)                        *
+     *                                                                          *
+     * 3. Then pass it in, along with a connection URL.                         *
+     *    (See https://sailsjs.com/config/datastores for help.)                 *
+     *                                                                          *
+     ***************************************************************************/
+    default: {
+      adapter: 'sails-mysql',
+      url: 'mysql://user:password@host:port/database'
+    }
+    // --------------------------------------------------------------------------
+    //  /\   To avoid checking it in to version control, you might opt to set
+    //  ||   sensitive credentials like `url` using an environment variable.
+    //
+    //  For example:
+    //  ```
+    //  sails_datastores__default__url=mysql://admin:myc00lpAssw2D@db.example.com:3306/my_prod_db
+    //  ```
+    // --------------------------------------------------------------------------
+
+  },
+
+  models: {
+
+    /***************************************************************************
+     *                                                                          *
+     * To help avoid accidents, Sails automatically sets the automigration      *
+     * strategy to "safe" when your app lifts in production mode.               *
+     * (This is just here as a reminder.)                                       *
+     *                                                                          *
+     * More info:                                                               *
+     * https://sailsjs.com/docs/concepts/models-and-orm/model-settings#?migrate *
+     *                                                                          *
+     ***************************************************************************/
+    datastore: 'default'
+
+  }
+
 }

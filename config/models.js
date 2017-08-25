@@ -17,7 +17,7 @@ module.exports.models = {
    * connections (see `config/datastores.js`)                                *
    *                                                                          *
    ***************************************************************************/
-  datastore: 'chuj',
+  // datastore: 'default',
 
   /***************************************************************************
    *                                                                          *
@@ -27,6 +27,12 @@ module.exports.models = {
    * See http://sailsjs.org/#!/documentation/concepts/ORM/model-settings.html  *
    *                                                                          *
    ***************************************************************************/
-  migrate: 'alter'
+  migrate: 'alter',
+
+  attributes: {
+    createdAt: {type: 'number', autoCreatedAt: true,},
+    updatedAt: {type: 'number', autoUpdatedAt: true,},
+    id: {type: 'number', autoIncrement: true,},
+  }
 
 }
