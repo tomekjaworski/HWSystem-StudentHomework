@@ -210,7 +210,7 @@ const AccountController = module.exports = {
           return res.serverError(err)
         }
 
-        Topics.query('SELECT topics.id topicId, topics.number topicNumber, topics.title topicTitle, topics.deadline topicDeadline, \n' +
+        sails.sendNativeQuery('SELECT topics.id topicId, topics.number topicNumber, topics.title topicTitle, topics.deadline topicDeadline, \n' +
           '    COUNT(tasks.id) taskCount, \n' +
           '    COUNT(replies.id) repliesCount, \n' +
           '    sum(case when replies.teacherStatus = 1 then 1 else 0 end) repliesTeacherAccepted,\n' +
@@ -224,7 +224,7 @@ const AccountController = module.exports = {
           'LEFT JOIN tasks ON tasks.topic = topics.id\n' +
           'LEFT JOIN taskreplies AS replies ON replies.task = tasks.id AND replies.student = ? \n' +
           'LEFT JOIN ( SELECT task, taskStudent FROM taskcomments GROUP BY task, taskStudent ) comments ON comments.task = tasks.id AND comments.taskStudent = ?\n' +
-          'GROUP BY topics.id', [req.localUser.id, req.localUser.id], (err, data) => {
+          'GROUP BY topics.id', [req.localUser.id, req.localUser.id]).exec((err, data) => {
             if (err) {
               return res.serverError(err)
             }

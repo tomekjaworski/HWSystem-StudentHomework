@@ -1,6 +1,6 @@
 /**
  * Connections
- * (sails.config.connections)
+ * (sails.config.datastores)
  *
  * `Connections` are like "saved settings" for your adapters.  What's the difference between
  * a connection and an adapter, you might ask?  An adapter (e.g. `sails-mysql`) is generic--
@@ -19,33 +19,14 @@
  * http://sailsjs.org/#!/documentation/reference/sails.config/sails.config.connections.html
  */
 
-module.exports.connections = {
-
-  /***************************************************************************
-   *                                                                          *
-   * Local disk storage for DEVELOPMENT ONLY                                  *
-   *                                                                          *
-   * Installed by default.                                                    *
-   *                                                                          *
-   ***************************************************************************/
-  // localDiskDb: {
-  //   adapter: 'sails-disk'
-  // },
-
-  /***************************************************************************
-   *                                                                          *
-   * MySQL is the world's most popular relational database.                   *
-   * http://en.wikipedia.org/wiki/MySQL                                       *
-   *                                                                          *
-   * Run: npm install sails-mysql                                             *
-   *                                                                          *
-   ***************************************************************************/
-  majeskjuel: {
-    adapter: 'sails-mysql',
-    host: '172.17.0.3',
+module.exports.datastores = {
+  default: {
+    adapter: require('sails-mysql'),
+    url: 'mysql://root@172.20.20.20/test',
+    host: '172.20.20.20',
     user: 'root', // optional
-    password: 'qwerty', // optional
-    database: 'homework' // optional
+    password: '', // optional
+    database: 'test' // optional
   }
 
   /***************************************************************************
