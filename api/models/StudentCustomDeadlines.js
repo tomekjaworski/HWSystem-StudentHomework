@@ -15,6 +15,6 @@ const StudentCustomDeadlines = module.exports = {
 
     task: {model: 'tasks'},
 
-    deadline: {type: 'datetime'}
+    deadline: {type: 'number'}
   }
 }

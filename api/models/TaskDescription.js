@@ -16,6 +16,7 @@ const TaskDescription = module.exports = {
       unique: true
     },
 
-    description: {type: 'longtext'}
+    description: {type: 'string',
+    columnType: 'longtext'}
   }
 }

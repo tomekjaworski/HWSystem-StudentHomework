@@ -20,7 +20,7 @@ const Topics = module.exports = {
       defaultsTo: false
     },
 
-    deadline: {type: 'datetime'},
+    deadline: {type: 'number'},
 
     tasks: {
       collection: 'tasks',

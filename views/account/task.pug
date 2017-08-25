@@ -41,7 +41,7 @@ block content
             #myTabContent.tab-content
                 #task.tab-pane.fade.in.active.show(aria-expanded='true')
                     //-h1 Topic: #{topic.id}
-                    h3 Temat: #{topic.number}. #{topic.title}
+                    h3 Temat: #{topic.number}. #{task.number}. #{task.title}
                     h5 Opis tematu:
                     .card
                         #task-content.card-block!= task.description

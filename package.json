@@ -5,6 +5,7 @@
   "description": "a Sails application",
   "keywords": [],
   "dependencies": {
+    "consolidate": "^0.14.5",
     "deasync": "^0.1.10",
     "ejs": "^2.5.7",
     "grunt": "^1.0.1",
@@ -20,13 +21,14 @@
     "grunt-sails-linker": "^0.10.1",
     "grunt-sync": "^0.5.2",
     "include-all": "^1.0.8",
+    "lodash": "^4.17.4",
     "lusca": "^1.5.1",
     "pdc": "^0.2.3",
     "pug": "^2.0.0-rc.3",
     "rc": "^1.2.1",
-    "sails": "^0.12.13",
-    "sails-disk": "^0.10.10",
-    "sails-mysql": "^0.11.5",
+    "sails": "^1.0.0-37",
+    "sails-hook-orm": "^2.0.0-21",
+    "sails-mysql": "^1.0.0-15",
     "snazzy": "^7.0.0"
   },
   "scripts": {

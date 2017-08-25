@@ -15,6 +15,6 @@ const LabGroupTopicDeadline = module.exports = {
 
     topic: {model: 'topics'},
 
-    deadline: {type: 'datetime'}
+    deadline: {type: 'number'}
   }
 }
