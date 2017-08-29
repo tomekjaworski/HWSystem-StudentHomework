@@ -67,6 +67,6 @@ module.exports.routes = {
   // Teachers // Labgroups
   '/teacher/replies': 'TeacherController.selectTaskReplies',
   '/teacher/replies/view/:taskid': {action: 'teacher/viewTaskReplies', skipAssets: true},
-  '/ajax/teacher/replies/view/:taskId/lab/:labid': {action: 'teacher/viewTaskOfLab', skipAssets: true}
+  '/ajax/teacher/replies/view/:taskId/lab/:labId': {action: 'teacher/viewTaskOfLab', skipAssets: true}
 
 }

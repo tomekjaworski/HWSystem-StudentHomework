@@ -29,7 +29,8 @@ block content
                         function getLabTasks(e){
                           var selected = $('#selectLab').val();
                           $('#labs').html('');
-                          $.get("/ajax/teacher/replies/view/"+#{data.id}+"/lab/"+selected[0].id, function (data){
-                            $('#labs').append(data);
+                          for(var s in selected)
+                          $.get("/ajax/teacher/replies/view/"+#{data.id}+"/lab/"+selected[s], function (data){
+                            $('#labs').prepend(data);
                           });
                         }

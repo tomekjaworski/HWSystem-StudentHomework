@@ -433,8 +433,9 @@ const AccountController = module.exports = {
             if (err) {
               return res.json(err)
             }
+            let com = task.map(c => { return {id: c.id, createdAt: c.createdAt, comment: c.comment, viewed: c.viewed, user: {id: c.user.id, name: c.user.name, surname: c.user.surname}} })
 
-            return res.json(task)
+            return res.json(com)
             // return res.json({
             //   id: resTask.id,
             //   taskStudent: resTask.taskStudent,

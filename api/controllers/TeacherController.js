@@ -34,7 +34,7 @@ const TeacherController = module.exports = {
         return res.serverError(err)
       }
       return res.view('teacher/labgroups/list',
-          {title: 'LabGroups :: Teacher Panel', menuItem: 'labgroups', data: groups.rows, show: show})
+        {title: 'LabGroups :: Teacher Panel', menuItem: 'labgroups', data: groups.rows, show: show})
     })
   },
 
@@ -53,7 +53,12 @@ const TeacherController = module.exports = {
         }
         lab.students = students
         return res.view('teacher/labgroups/view',
-          {title: 'LabGroups :: Teacher Panel', menuItem: 'labgroups', data: lab, message: {message: msg, attribute: attr}})
+          {
+            title: 'LabGroups :: Teacher Panel',
+            menuItem: 'labgroups',
+            data: lab,
+            message: {message: msg, attribute: attr}
+          })
       })
     })
 
@@ -61,7 +66,9 @@ const TeacherController = module.exports = {
       let message = req.param('message')
       if (!!message && message !== '') {
         LabGroups.update({id: id}, {message: message}).exec((err) => {
-          if (err) return res.serverError(err)
+          if (err) {
+            return res.serverError(err)
+          }
           a('info', 'Pomyślnie ustawiono wiadomość')
         })
       } else {
@@ -70,11 +77,16 @@ const TeacherController = module.exports = {
     } else {
       let deactive = req.param('deactive')
       if (deactive) {
-        StudentsLabGroups.update({student: deactive, labgroup: id, active: true}, {active: false}).meta({fetch: true}).exec((err, slg) => {
-          if (err) return res.serverError(err)
-          if (!slg || slg.length !== 1) return a('danger', 'Błędny uzytkownik')
-          a('info', 'Pomyślnie deaktywowano użytkownika w grupie')
-        })
+        StudentsLabGroups.update({student: deactive, labgroup: id, active: true}, {active: false}).meta({fetch: true})
+          .exec((err, slg) => {
+            if (err) {
+              return res.serverError(err)
+            }
+            if (!slg || slg.length !== 1) {
+              return a('danger', 'Błędny uzytkownik')
+            }
+            a('info', 'Pomyślnie deaktywowano użytkownika w grupie')
+          })
       } else {
         a()
       }
@@ -96,16 +108,26 @@ const TeacherController = module.exports = {
         }
         lab.students = students
         return res.view('teacher/labgroups/viewNewStudents',
-          {title: 'LabGroups :: Teacher Panel', menuItem: 'labgroups', data: lab, message: {message: msg, attribute: attr}})
+          {
+            title: 'LabGroups :: Teacher Panel',
+            menuItem: 'labgroups',
+            data: lab,
+            message: {message: msg, attribute: attr}
+          })
       })
     })
     let active = req.param('active')
     if (active) {
-      StudentsLabGroups.update({student: active, labgroup: id, active: false}, {active: true}).meta({fetch: true}).exec((err, slg) => {
-        if (err) return res.serverError(err)
-        if (!slg || slg.length !== 1) return a('danger', 'Błędny uzytkownik')
-        a('info', 'Pomyślnie aktywowano użytkownika w grupie')
-      })
+      StudentsLabGroups.update({student: active, labgroup: id, active: false}, {active: true}).meta({fetch: true})
+        .exec((err, slg) => {
+          if (err) {
+            return res.serverError(err)
+          }
+          if (!slg || slg.length !== 1) {
+            return a('danger', 'Błędny uzytkownik')
+          }
+          a('info', 'Pomyślnie aktywowano użytkownika w grupie')
+        })
     } else {
       a()
     }
@@ -128,7 +150,7 @@ const TeacherController = module.exports = {
       let active = req.param('active')
       let owner = req.param('owner')
       if (!_.isString(title) || !_.isString(desc) || !_.isString(owner) ||
-          !title || !desc || !owner) {
+        !title || !desc || !owner) {
         return a('Uzupełnij wszystkie pola')
       }
       LabGroups.create({
@@ -138,8 +160,12 @@ const TeacherController = module.exports = {
         active: !!active,
         owner: owner
       }).meta({fetch: true}).exec((err, lab) => {
-        if (err) return res.serverError(err)
-        if (!lab) return res.serverError('Nie udało sie uwtorzyć grupy')
+        if (err) {
+          return res.serverError(err)
+        }
+        if (!lab) {
+          return res.serverError('Nie udało sie uwtorzyć grupy')
+        }
         return res.redirect('/teacher/labgroup/view/' + lab.id)
       })
     } else {
@@ -164,7 +190,13 @@ const TeacherController = module.exports = {
           return res.notFound()
         }
         return res.view('teacher/labgroups/edit',
-          {title: 'LabGroups :: Teacher Panel', menuItem: 'labgroups', data: lab, users: role.users, message: {message: msg, attribute: attr}})
+          {
+            title: 'LabGroups :: Teacher Panel',
+            menuItem: 'labgroups',
+            data: lab,
+            users: role.users,
+            message: {message: msg, attribute: attr}
+          })
       })
     })
     if (req.method === 'POST') {
@@ -173,7 +205,7 @@ const TeacherController = module.exports = {
       let active = req.param('active')
       let owner = req.param('owner')
       if (!_.isString(title) || !_.isString(desc) || !_.isString(owner) ||
-          !title || !desc || !owner) {
+        !title || !desc || !owner) {
         return a('danger', 'Uzupełnij wszystkie pola')
       }
       LabGroups.update({id: id}, {
@@ -182,7 +214,9 @@ const TeacherController = module.exports = {
         active: !!active,
         owner: owner
       }).exec((err, lab) => {
-        if (err) return res.serverError(err)
+        if (err) {
+          return res.serverError(err)
+        }
         return a('info', 'Pomyślnie edytowano grupę')
       })
     } else {
@@ -196,26 +230,121 @@ const TeacherController = module.exports = {
 
   selectTaskReplies: function (req, res) {
     Topics.find().populate('tasks').exec((err, topics) => {
-      if (err) return res.serverError(err)
-      return res.view('teacher/replies/index', {title: 'Task Replies :: Teacher Panel', menuItem: 'replies', data: topics})
+      if (err) {
+        return res.serverError(err)
+      }
+      return res.view('teacher/replies/index',
+        {title: 'Task Replies :: Teacher Panel', menuItem: 'replies', data: topics})
     })
   },
 
   viewTaskReplies: function (req, res) {
     let id = req.param('taskid')
     Tasks.findOne(id).populate('topic').exec((err, task) => {
-      if (err) return res.serverError(err)
-      if (!task) return res.notFound()
+      if (err) {
+        return res.serverError(err)
+      }
+      if (!task) {
+        return res.notFound()
+      }
       LabGroups.find({select: ['name', 'id', 'owner']}).populate('owner').exec((err, labs) => {
-        if (err) return res.serverError(err)
-        if (!labs) return res.serverError('Nie zdefiniowano żadnych grup laboratoryjnych')
+        if (err) {
+          return res.serverError(err)
+        }
+        if (!labs) {
+          return res.serverError('Nie zdefiniowano żadnych grup laboratoryjnych')
+        }
         task.labs = labs
-        return res.view('teacher/replies/view', {title: 'Task Replies :: Teacher Panel', menuItem: 'replies', data: task})
+        return res.view('teacher/replies/view',
+          {title: 'Task Replies :: Teacher Panel', menuItem: 'replies', data: task})
       })
     })
   },
 
   viewTaskOfLab: function (req, res) {
-    return res.send('aaa')
+    let taskId = req.param('taskId')
+    let labId = _.toInteger(req.param('labId'))
+    Tasks.findOne(taskId).exec((err, task) => {
+      if (err) {
+        return res.serverError(err)
+      }
+      if (!task) {
+        return res.notFound()
+      }
+      LabGroups.findOne(labId).exec((err, labgrp) => {
+        if (err) {
+          return res.serverError(err)
+        }
+        if (!labgrp) {
+          return res.notFound()
+        }
+        StudentsLabGroups.find({labgroup: labId, active: true}).populate('student').exec((err, lab) => {
+          if (err) {
+            return res.serverError(err)
+          }
+          if (!lab || !lab.length || lab.length === 0) {
+            return res.view('teacher/replies/labTasksPartial',
+              {
+                lab: labgrp,
+                data: null
+              })
+          }
+          let students = lab.map(e => e.student)
+          let studentsId = lab.map(e => e.student.id)
+          TaskComments.find({task: taskId, taskStudent: studentsId}).populate('user').exec((err, comments) => {
+            if (err) {
+              return res.serverError(err)
+            }
+            if (comments && comments.length && comments.length > 0) {
+              for (let s of students) {
+                s.comments = comments.filter(c => c.taskStudent === s.id)
+              }
+            }
+            TaskReplies.find({task: taskId, student: studentsId}).populate('files').exec((err, replies) => {
+              if (err) {
+                return res.serverError(err)
+              }
+
+              if (!replies || !replies.length || replies.length === 0) {
+                return res.view('teacher/replies/labTasksPartial',
+                  {
+                    lab: labgrp,
+                    data: students
+                  })
+              } else {
+                TaskReplyFiles.find({reply: replies.map(e => e.id)}).exec((err, files) => {
+                  if (err) {
+                    return res.serverError(err)
+                  }
+                  TaskReplyFileContent.find({file: files.map(e => e.id)}).exec((err, trfc) => {
+                    if (err) {
+                      return res.serverError(err)
+                    }
+                    for (let s of students) {
+                      s.reply = replies.find(r => r.student === s.id)
+                      if (s.reply) {
+                        s.reply.files = files.filter(f => {
+                          if (f.reply === s.reply.id) {
+                            let ctn = trfc.find(c => c.file === f.id)
+                            if (ctn) { f.content = ctn.content }
+                            return true
+                          }
+                          return false
+                        })
+                      }
+                    }
+                    return res.view('teacher/replies/labTasksPartial',
+                      {
+                        lab: labgrp,
+                        data: students
+                      })
+                  })
+                })
+              }
+            })
+          })
+        })
+      })
+    })
   }
 }

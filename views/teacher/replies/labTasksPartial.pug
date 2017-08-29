@@ -1,0 +1,44 @@
+div.d-flex
+    .col-12
+        h4=lab.name
+        hr
+        .col-12.well(style='overflow-x:scroll;white-space: nowrap;height:600px;')
+            if !data
+                h5 Brak aktywnych studentów w grupie
+            else
+                each student in data
+                    .col-6(style='display: inline-block;float: none;border:1px solid black;')
+                        div
+                            h5=student.name + ' ' + student.surname
+                        if !student.reply
+                            div
+                                h6 Odpowiedź:
+                                p Brak
+                        else
+                            div
+                                h6 Odpowiedź:
+                                div Ocena nauczyciela: #{student.reply.teacherStatus}
+                                div Testy Maszynowe: #{student.reply.machineStatus}
+                                div Zablokowany: #{student.reply.blocked}
+                            div
+                                h6 Pliki
+                                each file in student.reply.files
+                                    div(style='border:1px solid black; margin-bottom:10px')
+                                        div='Nazwa: '+file.fileName + '.' + file.fileExt
+                                        div='Rozmiar: ' + file.fileSize + ' kb'
+                                        div='MimeType: ' + file.fileMimeType
+                                        div
+                                            h7 Tresc:
+                                            div(style='border:1px solid black;margin:1px;padding:1px;')=file.content
+                        div
+                            h6 Komentarze:
+                            if student.comments
+                                each comment in student.comments
+                                    div(style='border:1px solid black;margin:1px;padding:1px;')
+                                        div='Autor: ' + comment.user.name + ' ' + comment.user.surname
+                                        div='Data: ' + comment.createdAt
+                                        div='Przeczytane: ' + comment.viewed
+                                        div Treść:
+                                            div(style='border:1px solid black;margin:1px;padding:1px;')=comment.comment
+                            else
+                                div Brak

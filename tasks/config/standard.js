@@ -32,7 +32,8 @@ module.exports = function (grunt) {
           'TaskReplies',
           'TaskDescription',
           'Subjects',
-          'TaskReplyFiles'
+          'TaskReplyFiles',
+          'TaskReplyFileContent'
         ]
       },
       app: {
