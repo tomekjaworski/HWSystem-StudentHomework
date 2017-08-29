@@ -14,6 +14,6 @@ const TaskReplyFileContent = module.exports = {
     file: {model: 'taskreplyfiles'},
 
     content: {type: 'string',
-    columnType: 'longtext'}
+      columnType: 'longtext'}
   }
 }

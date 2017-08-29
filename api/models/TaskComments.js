@@ -20,7 +20,7 @@ const TaskComments = module.exports = {
     user: {model: 'users'},
 
     comment: {type: 'string',
-    columnType: 'text'},
+      columnType: 'text'},
 
     viewed: {
       type: 'boolean',
