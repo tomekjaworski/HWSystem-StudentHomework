@@ -70,10 +70,13 @@
     const taskscolumn = $('#tasks-column')
     const bctopics = $('#bc-topics')
     const bccurrenttopic = $('#bc-current-topic')
+    const topicentryactive = $('.topic-entry-active')
 
     topicscolumn.addClass('hidden-md-down')
     taskscolumn.removeClass('hidden-md-down')
     bctopics.removeClass('active')
+    topicentryactive.removeClass('topic-entry-active')
+    $('#topic-a-' + topicid).addClass('topic-entry-active')
     bctopics.find('a').attr('href', '/account')
     bccurrenttopic.show()
 

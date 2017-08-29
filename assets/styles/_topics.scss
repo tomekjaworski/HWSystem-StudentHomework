@@ -27,3 +27,14 @@
 .table-tasklist > thead > tr > th:nth-child(7) {
   min-width: 300px;
 }
+
+.topic-entry-active,
+.topic-entry-active:hover {
+  z-index: 2;
+  color: #fff;
+  background-color: #4582EC;
+  border-color: #4582EC;
+  .list-group-item {
+    color: #373a3c;
+  }
+}

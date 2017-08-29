@@ -10,7 +10,7 @@ ol.breadcrumb
         li.breadcrumb-item
             a(href='/account') Topics
         li.breadcrumb-item
-            a#bc-current-topic-link(href='/') Topic
+            a#bc-current-topic-link(href='/topic/'+ task.topic +'/tasks') Topic
         li.breadcrumb-item.active Task
     else if user
         li.breadcrumb-item.active User Settings
