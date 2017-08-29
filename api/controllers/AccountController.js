@@ -73,7 +73,7 @@ const AccountController = module.exports = {
           !email || !password) {
           return AccountController.loginError(res, 'Źle wporwadzone dane')
         }
-        Users.findOne({email:email}).populate('roles').exec(function (err, user) {
+        Users.findOne({email: email}).populate('roles').exec(function (err, user) {
           if (err) {
             return res.jsonx(err)
           }
@@ -174,12 +174,12 @@ const AccountController = module.exports = {
         }
 
         // TODO: sprawdzic Dean & Lab
-        Roles.findOne({name:'student'}).exec(function (err, role) {
+        Roles.findOne({name: 'student'}).exec(function (err, role) {
           if (err) {
             return res.jsonx(err)
           }
 
-          LabGroups.findOne({name:labGroups}).exec(function (err, lab) {
+          LabGroups.findOne({name: labGroups}).exec(function (err, lab) {
             if (err) {
               res.jsonx(err)
             }
@@ -221,7 +221,7 @@ const AccountController = module.exports = {
         if (err) {
           return res.serverError(err)
         }
-        if(!lab){
+        if (!lab) {
           return res.forbidden('Nie jesteś przydzielony do żadnej grupy')
         }
 
@@ -313,7 +313,7 @@ const AccountController = module.exports = {
           let topicparam = req.param('topicid')
           let taskparam = req.param('taskid')
 
-          Topics.findOne({id:topicparam}).exec(function (err, topic) {
+          Topics.findOne({id: topicparam}).exec(function (err, topic) {
             if (err) {
               return res.badRequest(err)
             }
@@ -322,7 +322,7 @@ const AccountController = module.exports = {
               return res.notFound()
             }
 
-            Tasks.findOne({id:taskparam}).populate('description').exec(function (err, task) {
+            Tasks.findOne({id: taskparam}).populate('description').exec(function (err, task) {
               if (err) {
                 return res.badRequest(err)
               }
@@ -451,7 +451,7 @@ const AccountController = module.exports = {
     switch (req.method) {
       case 'GET':
 
-        Users.findOne({id:req.localUser.id}).exec(function (err, user) {
+        Users.findOne({id: req.localUser.id}).exec(function (err, user) {
           if (err) {
             return res.json(err)
           }
@@ -472,7 +472,7 @@ const AccountController = module.exports = {
         let lab = req.param('lab')
         let confpass = req.param('passlabconf')
 
-        Users.findOne({id:req.localUser.id}).exec(function (err, user) {
+        Users.findOne({id: req.localUser.id}).exec(function (err, user) {
           if (err) {
             return res.json(err)
           }
@@ -513,7 +513,7 @@ const AccountController = module.exports = {
           } else if (action === 'newLab') {
           // ZMIANA LAB GRUPY
 
-            LabGroups.findOne({name:lab}).populate('owner').exec(function (err, lab) {
+            LabGroups.findOne({name: lab}).populate('owner').exec(function (err, lab) {
               if (err) {
                 return res.json(err)
               }
@@ -521,7 +521,7 @@ const AccountController = module.exports = {
                 if (err) {
                   return res.json(err)
                 }
-                Users.findOne({id:req.localUser.id}).exec(function (err, user) {
+                Users.findOne({id: req.localUser.id}).exec(function (err, user) {
                   if (err) {
                     return res.json(err)
                   }

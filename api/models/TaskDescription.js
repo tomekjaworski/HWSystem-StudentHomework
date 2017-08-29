@@ -17,6 +17,6 @@ const TaskDescription = module.exports = {
     },
 
     description: {type: 'string',
-    columnType: 'longtext'}
+      columnType: 'longtext'}
   }
 }

@@ -37,10 +37,10 @@ module.exports = {
      *    (See https://sailsjs.com/config/datastores for help.)                 *
      *                                                                          *
      ***************************************************************************/
-    default: {
-      adapter: 'sails-mysql',
-      url: 'mysql://user:password@host:port/database'
-    }
+    // default: {
+    //   adapter: 'sails-mysql',
+    //   url: 'mysql://user:password@host:port/database'
+    // }
     // --------------------------------------------------------------------------
     //  /\   To avoid checking it in to version control, you might opt to set
     //  ||   sensitive credentials like `url` using an environment variable.

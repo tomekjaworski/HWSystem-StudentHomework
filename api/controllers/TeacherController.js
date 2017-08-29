@@ -40,7 +40,7 @@ const TeacherController = module.exports = {
 
   viewLabGroup: function (req, res) {
     let id = req.param('id')
-    let a = (attr, msg) => LabGroups.findOne({id:id}).exec((err, lab) => {
+    let a = (attr, msg) => LabGroups.findOne({id: id}).exec((err, lab) => {
       if (err) {
         return res.serverError(err)
       }
@@ -70,7 +70,7 @@ const TeacherController = module.exports = {
     } else {
       let deactive = req.param('deactive')
       if (deactive) {
-        StudentsLabGroups.update({student: deactive, labgroup: id, active: true}, {active: false}).meta({fetch:true}).exec((err, slg) => {
+        StudentsLabGroups.update({student: deactive, labgroup: id, active: true}, {active: false}).meta({fetch: true}).exec((err, slg) => {
           if (err) return res.serverError(err)
           if (!slg || slg.length !== 1) return a('danger', 'Błędny uzytkownik')
           a('info', 'Pomyślnie deaktywowano użytkownika w grupie')
@@ -83,7 +83,7 @@ const TeacherController = module.exports = {
 
   viewNewStudentsLabGroup: function (req, res) {
     let id = req.param('id')
-    let a = (attr, msg) => LabGroups.findOne({id:id}).exec((err, lab) => {
+    let a = (attr, msg) => LabGroups.findOne({id: id}).exec((err, lab) => {
       if (err) {
         return res.serverError(err)
       }
@@ -101,7 +101,7 @@ const TeacherController = module.exports = {
     })
     let active = req.param('active')
     if (active) {
-      StudentsLabGroups.update({student: active, labgroup: id, active: false}, {active: true}).meta({fetch:true}).exec((err, slg) => {
+      StudentsLabGroups.update({student: active, labgroup: id, active: false}, {active: true}).meta({fetch: true}).exec((err, slg) => {
         if (err) return res.serverError(err)
         if (!slg || slg.length !== 1) return a('danger', 'Błędny uzytkownik')
         a('info', 'Pomyślnie aktywowano użytkownika w grupie')
@@ -112,7 +112,7 @@ const TeacherController = module.exports = {
   },
 
   addLabGroup: function (req, res) {
-    let a = (msg) => Roles.findOne({name:'teacher'}).populate('users').exec((err, role) => {
+    let a = (msg) => Roles.findOne({name: 'teacher'}).populate('users').exec((err, role) => {
       if (err) {
         return res.serverError(err)
       }
@@ -137,7 +137,7 @@ const TeacherController = module.exports = {
         subject: 1,
         active: !!active,
         owner: owner
-      }).meta({fetch:true}).exec((err, lab) => {
+      }).meta({fetch: true}).exec((err, lab) => {
         if (err) return res.serverError(err)
         if (!lab) return res.serverError('Nie udało sie uwtorzyć grupy')
         return res.redirect('/teacher/labgroup/view/' + lab.id)
@@ -149,14 +149,14 @@ const TeacherController = module.exports = {
 
   editLabGroup: function (req, res) {
     let id = req.param('id')
-    let a = (attr, msg) => Roles.findOne({name:'teacher'}).populate('users').exec((err, role) => {
+    let a = (attr, msg) => Roles.findOne({name: 'teacher'}).populate('users').exec((err, role) => {
       if (err) {
         return res.serverError(err)
       }
       if (!role) {
         return res.serverError('Nie znaleziono roli prowadzącego, zgłoś się do administratora')
       }
-      LabGroups.findOne({id:id}).exec((err, lab) => {
+      LabGroups.findOne({id: id}).exec((err, lab) => {
         if (err) {
           return res.serverError(err)
         }

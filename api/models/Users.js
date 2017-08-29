@@ -46,7 +46,7 @@ const Users = module.exports = {
       collection: 'labgroups',
       via: 'student',
       through: 'studentslabgroups'
-    },
+    }
 
     // fullName: function () {
     //   return this.name + ' ' + this.surname
@@ -79,26 +79,25 @@ const Users = module.exports = {
     },
 
     hasRole: function (name) {
-    if (this.roles.length !== 0) {
-      return !!this.roles.filter((role) => role.name === name)[0]
-    }
-    else {
-      let hasrole = false
-      let done = false
-      Roles.findOne({name:name}).populate('users', {id: this.id}).exec((err, role) => {
-        if (err) {
-          throw err
-        }
-        if (!role) {
+      if (this.roles.length !== 0) {
+        return !!this.roles.filter((role) => role.name === name)[0]
+      } else {
+        let hasrole = false
+        let done = false
+        Roles.findOne({name: name}).populate('users', {id: this.id}).exec((err, role) => {
+          if (err) {
+            throw err
+          }
+          if (!role) {
+            done = true
+          }
+          hasrole = role.users.length === 1
           done = true
-        }
-        hasrole = role.users.length === 1
-        done = true
-      })
-      require('deasync').loopWhile(() => { return !done })
-      return hasrole
+        })
+        require('deasync').loopWhile(() => { return !done })
+        return hasrole
+      }
     }
-  }
   },
 
   validatePassword: function (password) {
