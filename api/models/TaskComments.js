@@ -19,10 +19,17 @@ const TaskComments = module.exports = {
 
     user: {model: 'users'},
 
-    comment: {type: 'string',
-      columnType: 'text'},
+    comment: {
+      type: 'string',
+      columnType: 'text'
+    },
 
     viewed: {
+      type: 'boolean',
+      defaultsTo: false
+    },
+
+    teacherViewed: {
       type: 'boolean',
       defaultsTo: false
     }
