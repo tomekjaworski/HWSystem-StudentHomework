@@ -1,13 +1,41 @@
 /* global $, tData, task, lastComment */
+
 /* exported loadFileContent */
 
-function loadFileContent (reply,id) {
-  $.getJSON('/ajax/loadFileContent/'+ reply + '/' + id)
-    .fail(function (data) {
+function removeFile (reply, id) {
+  $.ajax({
+    url: '/ajax/removeFile',
+    method: 'POST',
+    data: {
+      reply: reply,
+      id: id
+    }
+  }).done(function () {
+    window.location.reload()
+  })
+  .fail(function (jqXHR, textStatus, errorThrown) {
+    alert('Nie udało się skasować pliku:  ' + textStatus + ' - ' + errorThrown)
+  })
+}
+
+function removeFileConfirm (reply, id, name) {
+  $('#confirmModalTitle').text('Kasowanie pliku')
+  $('#confirmModalBody').text('Czy na pewno chcesz skasować plik ' + name + '?')
+  $('#confirmModalButtons').html(`<button type="button" class="btn btn-danger" onclick="removeFile(` + reply + `,` + id + `)">Skasuj</button>`)
+  $('#confirmModal').modal()
+}
+
+function loadFileContent (reply, id) {
+  $.getJSON('/ajax/loadFileContent/' + reply + '/' + id)
+    .done(function (data) {
       $('#fileContentModalTitle').text(data.title)
       $('#fileContentModalBody').html(data.body)
+      $('#fileContentModalRemove').attr('onclick', 'removeFileConfirm(' + reply + ', ' + id + ', "' + data.title + '")')
       $('#fileContentModal').modal()
-  })
+    })
+    .fail(function (jqXHR, textStatus, errorThrown) {
+      alert('Nie udało się wczytać danych: ' + textStatus + ' - ' + errorThrown)
+    })
 }
 
 (function () {
@@ -68,6 +96,7 @@ function loadFileContent (reply,id) {
       commentTextArea.val('')
     })
   }
+
   function checkComments (sent) {
     if (newLastComment === null) {
       newLastComment = lastComment
@@ -94,6 +123,7 @@ function loadFileContent (reply,id) {
       }
     })
   }
+
   // $(window).load(checkComments())
   $('#commentSendButton').on('click', function () {
     sendComment(tData.top, tData.tas)

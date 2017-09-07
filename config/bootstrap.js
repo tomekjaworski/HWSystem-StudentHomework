@@ -170,198 +170,265 @@ module.exports.bootstrap = function (cb) {
                             topic: topics[1].id
                           }
                         ]).meta({fetch: true})
-                        .exec(function (err, tasks) {
-                          if (err) {
-                            throw err
-                          }
-
-                          TaskDescription.createEach([
-                            {
-                              task: tasks[0].id,
-                              description: 'Opis zadania'
-                            },
-                            {
-                              task: tasks[1].id,
-                              description: 'Opis zadania'
-                            },
-                            {
-                              task: tasks[2].id,
-                              description: 'Opis zadania'
-                            },
-                            {
-                              task: tasks[3].id,
-                              description: 'Opis zadania'
-                            },
-                            {
-                              task: tasks[4].id,
-                              description: 'Opis zadania'
-                            },
-                            {
-                              task: tasks[5].id,
-                              description: 'Opis zadania'
-                            }
-                          ]).exec(function (err, td) {
+                          .exec(function (err, tasks) {
                             if (err) {
                               throw err
                             }
 
-                            TaskReplies.createEach([
+                            TaskDescription.createEach([
                               {
-                                student: users[2].id,
                                 task: tasks[0].id,
-                                teacherStatus: 1,
-                                machineStatus: 2
-                              }, {
-                                student: users[2].id,
+                                description: 'Opis zadania'
+                              },
+                              {
                                 task: tasks[1].id,
-                                teacherStatus: 0,
-                                machineStatus: 2
-                              }, {
-                                student: users[2].id,
+                                description: 'Opis zadania'
+                              },
+                              {
                                 task: tasks[2].id,
-                                teacherStatus: 2,
-                                machineStatus: 0
-                              }, {
-                                student: users[3].id,
+                                description: 'Opis zadania'
+                              },
+                              {
                                 task: tasks[3].id,
-                                teacherStatus: 0,
-                                machineStatus: 0
-                              }, {
-                                student: users[3].id,
+                                description: 'Opis zadania'
+                              },
+                              {
                                 task: tasks[4].id,
-                                teacherStatus: 0,
-                                machineStatus: 3
-                              }, {
-                                student: users[3].id,
+                                description: 'Opis zadania'
+                              },
+                              {
                                 task: tasks[5].id,
-                                teacherStatus: 1,
-                                machineStatus: 2
+                                description: 'Opis zadania'
                               }
-                            ]).meta({fetch: true})
-                            .exec(function (err, tr) {
+                            ]).exec(function (err, td) {
                               if (err) {
                                 throw err
                               }
 
-                              TaskReplyFiles.createEach([
+                              TaskReplies.createEach([
                                 {
-                                  reply: tr[0].id,
-                                  fileName: 'main',
-                                  fileSize: 200,
-                                  fileExt: 'cpp',
-                                  fileMimeType: 'text/plain'
+                                  student: users[2].id,
+                                  task: tasks[0].id,
+                                  teacherStatus: 1,
+                                  machineStatus: 2
                                 }, {
-                                  reply: tr[0].id,
-                                  fileName: 'main',
-                                  fileSize: 200,
-                                  fileExt: 'h',
-                                  fileMimeType: 'text/plain'
+                                  student: users[2].id,
+                                  task: tasks[1].id,
+                                  teacherStatus: 0,
+                                  machineStatus: 2
                                 }, {
-                                  reply: tr[1].id,
-                                  fileName: 'main',
-                                  fileSize: 200,
-                                  fileExt: 'c',
-                                  fileMimeType: 'text/plain'
+                                  student: users[2].id,
+                                  task: tasks[2].id,
+                                  teacherStatus: 2,
+                                  machineStatus: 0
                                 }, {
-                                  reply: tr[1].id,
-                                  fileName: 'main',
-                                  fileSize: 200,
-                                  fileExt: 'cpp',
-                                  fileMimeType: 'text/plain'
+                                  student: users[3].id,
+                                  task: tasks[3].id,
+                                  teacherStatus: 0,
+                                  machineStatus: 0
                                 }, {
-                                  reply: tr[2].id,
-                                  fileName: 'main',
-                                  fileSize: 200,
-                                  fileExt: 'cpp',
-                                  fileMimeType: 'text/plain'
+                                  student: users[3].id,
+                                  task: tasks[4].id,
+                                  teacherStatus: 0,
+                                  machineStatus: 3
                                 }, {
-                                  reply: tr[2].id,
-                                  fileName: 'main',
-                                  fileSize: 200,
-                                  fileExt: 'cpp',
-                                  fileMimeType: 'text/plain'
-                                }, {
-                                  reply: tr[3].id,
-                                  fileName: 'main',
-                                  fileSize: 200,
-                                  fileExt: 'cpp',
-                                  fileMimeType: 'text/plain'
-                                }, {
-                                  reply: tr[3].id,
-                                  fileName: 'main',
-                                  fileSize: 200,
-                                  fileExt: 'cpp',
-                                  fileMimeType: 'text/plain'
-                                }, {
-                                  reply: tr[4].id,
-                                  fileName: 'main',
-                                  fileSize: 200,
-                                  fileExt: 'cpp',
-                                  fileMimeType: 'text/plain'
-                                }, {
-                                  reply: tr[4].id,
-                                  fileName: 'main',
-                                  fileSize: 200,
-                                  fileExt: 'cpp',
-                                  fileMimeType: 'text/plain'
-                                }, {
-                                  reply: tr[5].id,
-                                  fileName: 'main',
-                                  fileSize: 200,
-                                  fileExt: 'cpp',
-                                  fileMimeType: 'text/plain'
-                                }, {
-                                  reply: tr[5].id,
-                                  fileName: 'main',
-                                  fileSize: 200,
-                                  fileExt: 'cpp',
-                                  fileMimeType: 'text/plain'
+                                  student: users[3].id,
+                                  task: tasks[5].id,
+                                  teacherStatus: 1,
+                                  machineStatus: 2
                                 }
-                              ]).exec(function (err, trf) {
-                                if (err) {
-                                  throw err
-                                }
-
-                                TaskComments.createEach([
-                                  {
-                                    taskStudent: users[2].id,
-                                    task: tasks[0].id,
-                                    user: users[1].id,
-                                    comment: 'Test message from Teacher',
-                                    viewed: false
-                                  },
-                                  {
-                                    taskStudent: users[3].id,
-                                    task: tasks[3].id,
-                                    user: users[1].id,
-                                    comment: 'Test message from Teacher',
-                                    viewed: false
-                                  },
-                                  {
-                                    taskStudent: users[2].id,
-                                    task: tasks[0].id,
-                                    user: users[2].id,
-                                    comment: 'Test message from Student',
-                                    viewed: false
-                                  },
-                                  {
-                                    taskStudent: users[3].id,
-                                    task: tasks[3].id,
-                                    user: users[3].id,
-                                    comment: 'Test message from Student',
-                                    viewed: false
-                                  }
-                                ]).exec(function (err, trc) {
+                              ]).meta({fetch: true})
+                                .exec(function (err, tr) {
                                   if (err) {
                                     throw err
                                   }
 
-                                  return cb()
+                                  TaskReplyFiles.createEach([
+                                    {
+                                      reply: tr[0].id,
+                                      fileName: 'main',
+                                      fileSize: 200,
+                                      fileExt: 'cpp',
+                                      fileMimeType: 'text/plain',
+                                      file: 1
+                                    }, {
+                                      reply: tr[0].id,
+                                      fileName: 'main',
+                                      fileSize: 200,
+                                      fileExt: 'h',
+                                      fileMimeType: 'text/plain',
+                                      file: 2
+                                    }, {
+                                      reply: tr[1].id,
+                                      fileName: 'main',
+                                      fileSize: 200,
+                                      fileExt: 'c',
+                                      fileMimeType: 'text/plain',
+                                      file: 3
+                                    }, {
+                                      reply: tr[1].id,
+                                      fileName: 'main',
+                                      fileSize: 200,
+                                      fileExt: 'cpp',
+                                      fileMimeType: 'text/plain',
+                                      file: 4
+                                    }, {
+                                      reply: tr[2].id,
+                                      fileName: 'main',
+                                      fileSize: 200,
+                                      fileExt: 'cpp',
+                                      fileMimeType: 'text/plain',
+                                      file: 5
+                                    }, {
+                                      reply: tr[2].id,
+                                      fileName: 'main',
+                                      fileSize: 200,
+                                      fileExt: 'cpp',
+                                      fileMimeType: 'text/plain',
+                                      file: 6
+                                    }, {
+                                      reply: tr[3].id,
+                                      fileName: 'main',
+                                      fileSize: 200,
+                                      fileExt: 'cpp',
+                                      fileMimeType: 'text/plain',
+                                      file: 7
+                                    }, {
+                                      reply: tr[3].id,
+                                      fileName: 'main',
+                                      fileSize: 200,
+                                      fileExt: 'cpp',
+                                      fileMimeType: 'text/plain',
+                                      file: 8
+                                    }, {
+                                      reply: tr[4].id,
+                                      fileName: 'main',
+                                      fileSize: 200,
+                                      fileExt: 'cpp',
+                                      fileMimeType: 'text/plain',
+                                      file: 9
+                                    }, {
+                                      reply: tr[4].id,
+                                      fileName: 'main',
+                                      fileSize: 200,
+                                      fileExt: 'cpp',
+                                      fileMimeType: 'text/plain',
+                                      file: 10
+                                    }, {
+                                      reply: tr[5].id,
+                                      fileName: 'main',
+                                      fileSize: 200,
+                                      fileExt: 'cpp',
+                                      fileMimeType: 'text/plain',
+                                      file: 11
+                                    }, {
+                                      reply: tr[5].id,
+                                      fileName: 'main',
+                                      fileSize: 200,
+                                      fileExt: 'cpp',
+                                      fileMimeType: 'text/plain',
+                                      file: 12
+                                    }
+                                  ]).meta({fetch: true})
+                                    .exec(function (err, trf) {
+                                      if (err) {
+                                        throw err
+                                      }
+                                      TaskReplyFileContent.createEach([
+                                        {
+                                          file: trf[0].id,
+                                          content: 'int main(){\n\treturn 0;\n}'
+                                        },
+                                        {
+                                          file: trf[1].id,
+                                          content: 'int main();'
+                                        },
+                                        {
+                                          file: trf[2].id,
+                                          content: 'int main(){\n\treturn 666;\n}'
+                                        },
+                                        {
+                                          file: trf[3].id,
+                                          content: 'int main(){\n\treturn 1;\n}'
+                                        },
+                                        {
+                                          file: trf[4].id,
+                                          content: 'int main(){\n\treturn 2;\n}'
+                                        },
+                                        {
+                                          file: trf[5].id,
+                                          content: 'int main(){\n\treturn 3;\n}'
+                                        },
+                                        {
+                                          file: trf[6].id,
+                                          content: 'int main(){\n\treturn 4;\n}'
+                                        },
+                                        {
+                                          file: trf[7].id,
+                                          content: 'int main(){\n\treturn 5;\n}'
+                                        },
+                                        {
+                                          file: trf[8].id,
+                                          content: 'int main(){\n\treturn 6;\n}'
+                                        },
+                                        {
+                                          file: trf[9].id,
+                                          content: 'int main(){\n\treturn 7;\n}'
+                                        },
+                                        {
+                                          file: trf[10].id,
+                                          content: 'int main(){\n\treturn 8;\n}'
+                                        },
+                                        {
+                                          file: trf[11].id,
+                                          content: 'int main(){\n\treturn 9;\n}'
+                                        }
+                                      ]).exec(function (err, trfc) {
+                                        if (err) {
+                                          throw err
+                                        }
+
+                                        TaskComments.createEach([
+                                          {
+                                            taskStudent: users[2].id,
+                                            task: tasks[0].id,
+                                            user: users[1].id,
+                                            comment: 'Test message from Teacher',
+                                            viewed: false
+                                          },
+                                          {
+                                            taskStudent: users[3].id,
+                                            task: tasks[3].id,
+                                            user: users[1].id,
+                                            comment: 'Test message from Teacher',
+                                            viewed: false
+                                          },
+                                          {
+                                            taskStudent: users[2].id,
+                                            task: tasks[0].id,
+                                            user: users[2].id,
+                                            comment: 'Test message from Student',
+                                            viewed: false
+                                          },
+                                          {
+                                            taskStudent: users[3].id,
+                                            task: tasks[3].id,
+                                            user: users[3].id,
+                                            comment: 'Test message from Student',
+                                            viewed: false
+                                          }
+                                        ]).exec(function (err, trc) {
+                                          if (err) {
+                                            throw err
+                                          }
+
+                                          return cb()
+                                        })
+                                      })
+                                    })
                                 })
-                              })
                             })
                           })
-                        })
                       })
                   })
                 })

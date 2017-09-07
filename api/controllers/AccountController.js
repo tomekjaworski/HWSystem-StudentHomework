@@ -237,7 +237,7 @@ const AccountController = module.exports = {
           '    sum(case when (replies.machineStatus = 2 and replies.teacherStatus = 1) then 1 else 0 end) repliesAccepted\n' +
           '    FROM topics\n' +
           'LEFT JOIN tasks ON tasks.topic = topics.id\n' +
-          'LEFT JOIN taskreplies AS replies ON replies.task = tasks.id AND replies.student = $1 \n' +
+          'LEFT JOIN taskreplies AS replies ON replies.task = tasks.id AND replies.student = $1 AND replies.sent = 1 \n' +
           'LEFT JOIN ( SELECT task, taskStudent FROM taskcomments GROUP BY task, taskStudent ) comments ON comments.task = tasks.id AND comments.taskStudent = $1\n' +
           'GROUP BY topics.id', [req.localUser.id]).exec((err, data) => {
             if (err) {
@@ -353,7 +353,7 @@ const AccountController = module.exports = {
                         taskComments: taskComments
                       })
                     }
-                    TaskReplyFiles.find({reply: taskReply.id})
+                    TaskReplyFiles.find({reply: taskReply.id, visible: true})
                       .exec(function (err, taskReplyFiles) {
                         if (err) {
                           return res.badRequest(err)
@@ -421,15 +421,74 @@ const AccountController = module.exports = {
   ajaxGetFileContent: function (req, res) {
     const id = req.param('id');
     const reply = req.param('reply');
-    TaskReplyFiles.findOne({id: id, reply: reply})
+    TaskReplyFiles.findOne({id: id, reply: reply, visible: true})
       .populate('reply')
       .populate('file')
       .exec((err, file)=>{
         if(err) {
           return res.serverError(err)
         }
+        if(!file){
+          return res.notFound()
+        }
+        if(file.reply.student!==req.localUser.id){
+          return res.forbidden()
+        }
+        let content = 'ni mo'
+        if(file.file){
+          if(file.fileMimeType==='text/plain') {
+            let type = ''
+            if(['h','c'].includes(file.fileExt)){
+              type='c'
+            }
+            else if(['hpp','cpp'].includes(file.fileExt)){
+              type='c++'
+            }
+            else{
+              return res.json({title: file.fileName + '.' + file.fileExt, body: file.file.content})
+            }
+            content = '```' + type + '\n' + file.file.content + '\n```'
+            pdc(content, 'markdown_github', 'html5', function (err, result) {
+              if (err) {
+                return res.serverError(err)
+              }
+              return res.json({title: file.fileName + '.' + file.fileExt, body: result})
+            })
+          }
+          else{
+            return res.json({title: file.fileName + '.' + file.fileExt, body: content})
+          }
+        }
+        else {
+          return res.json({title: file.fileName + '.' + file.fileExt, body: content})
+        }
     })
-  }
+  },
+
+  ajaxRemoveFile: function (req, res) {
+    const id = req.param('id');
+    const reply = req.param('reply');
+    TaskReplyFiles.findOne({id: id, reply: reply, visible: true})
+      .populate('reply')
+      .exec((err, file)=> {
+        if (err) {
+          return res.serverError(err)
+        }
+        if (!file) {
+          return res.notFound()
+        }
+        if (file.reply.student !== req.localUser.id) {
+          return res.forbidden()
+        }
+        file.visible=false
+        TaskReplyFiles.update({id: id, reply: reply, visible: true}).set({visible:false}).exec((err)=>{
+          if (err) {
+            return res.serverError(err)
+          }
+          return res.json({error:false})
+        });
+      })
+  },
 
   ajaxCommentsCheck: function (req, res) {
     const taskId = req.param('task')

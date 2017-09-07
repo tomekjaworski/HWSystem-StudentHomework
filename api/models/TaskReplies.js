@@ -15,6 +15,11 @@ const TaskReplies = module.exports = {
 
     task: {model: 'tasks'},
 
+    sent: {
+      type: 'boolean',
+      defaultsTo: false,
+    },
+
     files: {
       collection: 'taskreplyfiles',
       via: 'reply'

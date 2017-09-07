@@ -22,8 +22,7 @@ const TaskReplyFiles = module.exports = {
     fileMimeType: {type: 'string'},
 
     file: {
-      collection: 'taskreplyfilecontent',
-      via: 'file'
+      model: 'taskreplyfilecontent'
     },
 
     visible: {

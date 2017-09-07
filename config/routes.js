@@ -52,6 +52,8 @@ module.exports.routes = {
   'GET /topic/:topicid/task/:taskid': {action: 'account/task', skipAssets: true},
   'POST /topic/:topicid/task/:taskid': {action: 'account/task', skipAssets: true},
   'GET /ajax/checkComments/:task/:lastComment': {action: 'account/ajaxCommentsCheck', skipAssets: true},
+  'GET /ajax/loadFileContent/:reply/:id': {action: 'account/ajaxGetFileContent', skipAssets: true},
+  'POST /ajax/removeFile': {action: 'account/ajaxRemoveFile', skipAssets: true},
 
   // Teachers
   '/teacher': 'TeacherController.index',
@@ -64,9 +66,9 @@ module.exports.routes = {
   '/teacher/labgroup/edit/:id': {action: 'teacher/editLabGroup', skipAssets: true},
   '/teacher/labgroup/add': 'TeacherController.addLabGroup',
 
-  // Teachers // Labgroups
+  // Teachers // Replies
   '/teacher/replies': 'TeacherController.selectTaskReplies',
   '/teacher/replies/view/:taskid': {action: 'teacher/viewTaskReplies', skipAssets: true},
-  '/ajax/teacher/replies/view/:taskId/lab/:labId': {action: 'teacher/viewTaskOfLab', skipAssets: true}
+  '/ajax/teacher/replies/view/:taskId/lab/:labId': {action: 'teacher/viewTaskOfLab', skipAssets: true},
 
 }
