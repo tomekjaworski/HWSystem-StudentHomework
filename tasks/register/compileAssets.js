@@ -16,7 +16,7 @@ module.exports = function (grunt) {
     'clean:dev',
     'jst:dev',
     'sass:dev',
-    'standard',
+    // 'standard',
     'copy:dev',
     'babel',
     'coffee:dev'

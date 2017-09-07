@@ -418,6 +418,19 @@ const AccountController = module.exports = {
     }
   },
 
+  ajaxGetFileContent: function (req, res) {
+    const id = req.param('id');
+    const reply = req.param('reply');
+    TaskReplyFiles.findOne({id: id, reply: reply})
+      .populate('reply')
+      .populate('file')
+      .exec((err, file)=>{
+        if(err) {
+          return res.serverError(err)
+        }
+    })
+  }
+
   ajaxCommentsCheck: function (req, res) {
     const taskId = req.param('task')
     const lastComment = req.param('lastComment')

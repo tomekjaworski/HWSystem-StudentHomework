@@ -23,8 +23,8 @@ module.exports.datastores = {
   default: {
     adapter: require('sails-mysql'),
     host: '172.20.20.20',
-    user: 'homework', // optional
-    password: 'uP6CStHmy76YhMZS', // optional
+    user: 'root', // optional
+    password: '', // optional
     database: 'homework' // optional
   }
 }

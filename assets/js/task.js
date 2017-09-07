@@ -1,4 +1,15 @@
 /* global $, tData, task, lastComment */
+/* exported loadFileContent */
+
+function loadFileContent (reply,id) {
+  $.getJSON('/ajax/loadFileContent/'+ reply + '/' + id)
+    .fail(function (data) {
+      $('#fileContentModalTitle').text(data.title)
+      $('#fileContentModalBody').html(data.body)
+      $('#fileContentModal').modal()
+  })
+}
+
 (function () {
   let newLastComment = null
   let markAsReadButton = $('#commentMarkAsRead')

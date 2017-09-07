@@ -1,6 +1,6 @@
 extends ../includes/layout
 mixin fileIcon(file)
-    div.col-6.col-md-4.col-lg-2.mb-4
+    div.col-6.col-md-4.col-lg-2.mb-4(onclick='loadFileContent('+file.reply+','+file.id+')')
         p
             if file.fileExt === 'cpp' || file.fileExt === 'h' || file.fileExt === 'c'
                 i.fa.fa-file-code-o.fa-3x
@@ -25,6 +25,19 @@ mixin commentBlock(com, hidden)
         else
             small.text-muted.task-c-read true
 block content
+    #fileContentModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='fileContentModalTitle', aria-hidden='true')
+        .modal-dialog(role='document')
+            .modal-content
+                .modal-header
+                    h5#fileContentModalTitle.modal-title Plik
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') ×
+                #fileContentModalBody.modal-body
+                    | Tyrytytyty
+                .modal-footer
+                    button.btn.btn-secondary(type='button', data-dismiss='modal') Close
+
+
     .card
         .card-header
             ul.nav.nav-tabs.nav-fill.task-tab
@@ -62,9 +75,6 @@ block content
                             .card-block
                                 .row
                                     each file in taskReplyFiles
-                                        +fileIcon(file)
-                                        +fileIcon(file)
-                                        +fileIcon(file)
                                         +fileIcon(file)
 
 
@@ -120,4 +130,3 @@ block content
     script.
         var task = #{task.id},
           lastComment = #{lastid}
-
