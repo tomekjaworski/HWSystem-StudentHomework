@@ -54,6 +54,7 @@ module.exports.routes = {
   'GET /ajax/checkComments/:task/:lastComment': {action: 'account/ajaxCommentsCheck', skipAssets: true},
   'GET /ajax/loadFileContent/:reply/:id': {action: 'account/ajaxGetFileContent', skipAssets: true},
   'POST /ajax/removeFile': {action: 'account/ajaxRemoveFile', skipAssets: true},
+  'POST /uploadTaskFiles/:topicid/:taskid': {action: 'account/uploadTaskFiles', skipAssets: true},
 
   // Teachers
   '/teacher': 'TeacherController.index',

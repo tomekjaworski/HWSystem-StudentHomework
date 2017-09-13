@@ -26,6 +26,7 @@ function removeFileConfirm (reply, id, name) {
 }
 
 function loadFileContent (reply, id) {
+  // TODO: Seba dodaj jakiegoś ładnego spinnera ładowania
   $.getJSON('/ajax/loadFileContent/' + reply + '/' + id)
     .done(function (data) {
       $('#fileContentModalTitle').text(data.title)

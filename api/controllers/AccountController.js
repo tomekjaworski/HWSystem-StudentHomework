@@ -520,6 +520,56 @@ const AccountController = module.exports = {
     }
   },
 
+  uploadTaskFiles: function (req, res){
+    let topicid = req.param('topicid')
+    let taskid = req.param('taskid')
+    req.file('files').upload({adapter:function DiskStore(options) {
+        options = options || {};
+
+        var log = options.log || function _noOpLog() {};
+        var adapter = {};
+        adapter.rm = function(fd, cb) {
+            return cb();
+        };
+
+        adapter.ls = function(dirpath, cb) {
+            return cb()
+        };
+
+        adapter.read = function(fd, cb) {
+            return cb();
+        };
+
+        adapter.receive = function(opts) {
+            return function buildDiskReceiverStream(opts, adapter) {
+                var WritableStream = require('stream').Writable;
+                options = options || {};
+                var log = options.log || function noOpLog(){};
+
+
+                var receiver__ = WritableStream({ objectMode: true });
+                // Track the progress of all file uploads that pass through this receiver
+                // through one or more attached Upstream(s).
+                receiver__._files = [];
+
+                // Keep track of the number total bytes written so that maxBytes can
+                // be enforced.
+                var totalBytesWritten = 0;
+                receiver__._write = function onFile(__newFile, encoding, done) {
+                  console.log('b');
+                };
+
+                return receiver__;
+            }
+        };
+
+        return adapter;
+    }}, function (err, uploadedFiles) {
+        console.log('a');
+    });
+    return res.redirect('/topic/'+topicid+'/task/'+taskid)
+  },
+
   userSettings: function (req, res) {
     switch (req.method) {
       case 'GET':
