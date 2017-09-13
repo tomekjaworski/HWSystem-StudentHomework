@@ -114,22 +114,26 @@ module.exports.bootstrap = function (cb) {
                         number: '1a',
                         title: 'Testowy temat 1',
                         visible: true,
-                        deadline: 0
+                        subject: sub.id,
+                        deadline: 1527804000000
                       }, {
                         number: '1b',
                         title: 'Testowy temat 2',
                         visible: true,
-                        deadline: 0
+                        subject: sub.id,
+                        deadline: 1527804000000
                       }, {
                         number: '2a',
                         title: 'Testowy temat 2',
                         visible: true,
-                        deadline: 0
+                        subject: sub.id,
+                        deadline: 1527804000000
                       }, {
                         number: '2b',
                         title: 'Testowy temat 2',
                         visible: true,
-                        deadline: 0
+                        subject: sub.id,
+                        deadline: 1527804000000
                       }
                     ]).meta({fetch: true})
                       .exec(function (err, topics) {

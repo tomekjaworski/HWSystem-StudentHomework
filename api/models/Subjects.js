@@ -18,6 +18,11 @@ const Subjects = module.exports = {
     labGroups: {
       collection: 'labgroups',
       via: 'subject'
+    },
+
+    topics: {
+      collection: 'topics',
+      via: 'subject'
     }
   }
 }

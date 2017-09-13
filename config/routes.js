@@ -32,9 +32,7 @@ module.exports.routes = {
    *                                                                          *
    ***************************************************************************/
 
-  '/': {
-    view: 'homepage'
-  },
+  '/': 'AccountController.index',
 
   // Account
 
@@ -45,19 +43,21 @@ module.exports.routes = {
 
   '/settings': 'AccountController.userSettings',
 
-  'GET /account': 'AccountController.index',
+  'GET /account': 'AccountController.userSettings',
 
-  'GET /topic/:topicid/tasks': 'AccountController.index',
-  'GET /ajax/topic/:id/tasks': 'AccountController.tasks',
-  'GET /topic/:topicid/task/:taskid': {action: 'account/task', skipAssets: true},
-  'POST /topic/:topicid/task/:taskid': {action: 'account/task', skipAssets: true},
-  'GET /ajax/checkComments/:task/:lastComment': {action: 'account/ajaxCommentsCheck', skipAssets: true},
-  'GET /ajax/loadFileContent/:reply/:id': {action: 'account/ajaxGetFileContent', skipAssets: true},
-  'POST /ajax/removeFile': {action: 'account/ajaxRemoveFile', skipAssets: true},
-  'POST /uploadTaskFiles/:topicid/:taskid': {action: 'account/uploadTaskFiles', skipAssets: true},
+  'GET /topics': 'StudentController.index',
+
+  'GET /topic/:topicid/tasks': 'StudentController.index',
+  'GET /ajax/topic/:id/tasks': 'StudentController.tasks',
+  'GET /topic/:topicid/task/:taskid': {action: 'student/task', skipAssets: true},
+  'POST /topic/:topicid/task/:taskid': {action: 'student/task', skipAssets: true},
+  'GET /ajax/checkComments/:task/:lastComment': {action: 'student/ajaxCommentsCheck', skipAssets: true},
+  'GET /ajax/reply/:replyid/loadFileContent/:id': {action: 'student/ajaxGetFileContent', skipAssets: true},
+  'POST /ajax/removeFile': {action: 'student/ajaxRemoveFile', skipAssets: true},
+  'POST /topic/:topicid/task/:taskid/uploadFile': {action: 'student/uploadTaskFiles', skipAssets: true},
 
   // Teachers
-  '/teacher': 'TeacherController.index',
+  'GET /teacher': 'TeacherController.index',
 
   // Teachers // Labgroups
   '/teacher/labgroup': 'TeacherController.listLabGroups',
@@ -70,6 +70,6 @@ module.exports.routes = {
   // Teachers // Replies
   '/teacher/replies': 'TeacherController.selectTaskReplies',
   '/teacher/replies/view/:taskid': {action: 'teacher/viewTaskReplies', skipAssets: true},
-  '/ajax/teacher/replies/view/:taskId/lab/:labId': {action: 'teacher/viewTaskOfLab', skipAssets: true},
+  '/ajax/teacher/replies/view/:taskId/lab/:labId': {action: 'teacher/viewTaskOfLab', skipAssets: true}
 
 }

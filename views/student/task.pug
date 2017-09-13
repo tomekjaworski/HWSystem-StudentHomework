@@ -72,6 +72,7 @@ block content
                 #task.tab-pane.fade.in.active.show(aria-expanded='true')
                     //-h1 Topic: #{topic.id}
                     h3 Temat: #{topic.number}. #{task.number}. #{task.title}
+                    h5 Termin dostarczenia: #{deadline}
                     h5 Opis tematu:
                     .card
                         #task-content.card-block!= task.description
@@ -96,15 +97,18 @@ block content
 
                             if !taskReply.sent
                                 .card-footer.text-muted
-                                    form(action='/uploadTaskFiles/'+topic.id+'/'+task.id, enctype='multipart/form-data', method='post')
-                                        input(type='file', name='files', accept='.c,.cpp,.h,.hpp,.inc,.txt,.bmp,.png', multiple)
-                                        input.btn.btn-secondary(type='submit', value='Dodaj pliki')
-                                        small.form-text.text-muted
-                                            // TODO: Seba dodaj walidacje wielkości każdego pliku przez javascripta
-                                            | Dopuszczalne rozszerzenia: c, cpp, h, hpp, inc, txt, bmp, png. Wielkość pliku nie może przekraczać 100 KB.
-                                    if taskReplyFiles && taskReplyFiles.length > 0
-                                        | &nbsp;
-                                        a.btn.btn-secondary(href='#') Wyślij rozwiązanie
+                                    if deadlineCanSend
+                                        form(action='/topic/'+topic.id+'/task/'+task.id+'/uploadFile/', enctype='multipart/form-data', method='post')
+                                            input(type='file', name='files', accept='.c,.cpp,.h,.hpp,.inc,.txt,.bmp,.png', multiple)
+                                            input.btn.btn-secondary(type='submit', value='Dodaj pliki')
+                                            small.form-text.text-muted
+                                                // TODO: Seba dodaj walidacje wielkości każdego pliku przez javascripta
+                                                | Dopuszczalne rozszerzenia: c, cpp, h, hpp, inc, txt, bmp, png. Wielkość pliku nie może przekraczać 100 KB.
+                                        if taskReplyFiles && taskReplyFiles.length > 0
+                                            | &nbsp;
+                                            a.btn.btn-secondary(href='#') Wyślij rozwiązanie
+                                    else
+                                        small.form-text.text-muted Upłynął termin przesyłania odpowiedzi
 
                 #comments.tab-pane.fade(aria-expanded='false')
                     //h1 Task comments: #{taskComments[0].reply}

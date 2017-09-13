@@ -6,6 +6,7 @@
   "keywords": [],
   "dependencies": {
     "consolidate": "^0.14.5",
+    "dateformat": "^2.0.0",
     "deasync": "^0.1.10",
     "ejs": "^2.5.7",
     "grunt": "^1.0.1",

@@ -300,66 +300,66 @@ LEFT JOIN topics topic ON task.topic = topic.id
 LEFT JOIN labgrouptopicdeadline lbtd ON lbtd.group = slb.labgroup AND lbtd.topic = task.topic
 LEFT JOIN studentcustomdeadlines scdl ON scdl.student = slb.student AND scdl.task = task.id
 WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) => {
-  if (err) {
-    return res.serverError(err)
-  }
-  let deadlines = result.rows
-  for (let s of students) {
-    s.deadline = deadlines.find(d => d.student === s.id).deadline
-  }
-  TaskComments.find({task: taskId, taskStudent: studentsId}).populate('user').exec((err, comments) => {
-    if (err) {
-      return res.serverError(err)
-    }
-    if (comments && comments.length && comments.length > 0) {
-      for (let s of students) {
-        s.comments = comments.filter(c => c.taskStudent === s.id)
-      }
-    }
-    TaskReplies.find({task: taskId, student: studentsId}).populate('files').exec((err, replies) => {
-      if (err) {
-        return res.serverError(err)
-      }
-
-      if (!replies || !replies.length || replies.length === 0) {
-        return res.view('teacher/replies/labTasksPartial',
-          {
-            lab: labgrp,
-            data: students
-          })
-      } else {
-        TaskReplyFiles.find({reply: replies.map(e => e.id)}).exec((err, files) => {
-          if (err) {
-            return res.serverError(err)
-          }
-          TaskReplyFileContent.find({file: files.map(e => e.id)}).exec((err, trfc) => {
             if (err) {
               return res.serverError(err)
             }
+            let deadlines = result.rows
             for (let s of students) {
-              s.reply = replies.find(r => r.student === s.id)
-              if (s.reply) {
-                s.reply.files = files.filter(f => {
-                  if (f.reply === s.reply.id) {
-                    let ctn = trfc.find(c => c.file === f.id)
-                    if (ctn) { f.content = ctn.content }
-                    return true
-                  }
-                  return false
-                })
-              }
+              s.deadline = deadlines.find(d => d.student === s.id).deadline
             }
-            return res.view('teacher/replies/labTasksPartial',
-              {
-                lab: labgrp,
-                data: students
+            TaskComments.find({task: taskId, taskStudent: studentsId}).populate('user').exec((err, comments) => {
+              if (err) {
+                return res.serverError(err)
+              }
+              if (comments && comments.length && comments.length > 0) {
+                for (let s of students) {
+                  s.comments = comments.filter(c => c.taskStudent === s.id)
+                }
+              }
+              TaskReplies.find({task: taskId, student: studentsId}).populate('files').exec((err, replies) => {
+                if (err) {
+                  return res.serverError(err)
+                }
+
+                if (!replies || !replies.length || replies.length === 0) {
+                  return res.view('teacher/replies/labTasksPartial',
+                    {
+                      lab: labgrp,
+                      data: students
+                    })
+                } else {
+                  TaskReplyFiles.find({reply: replies.map(e => e.id)}).exec((err, files) => {
+                    if (err) {
+                      return res.serverError(err)
+                    }
+                    TaskReplyFileContent.find({file: files.map(e => e.id)}).exec((err, trfc) => {
+                      if (err) {
+                        return res.serverError(err)
+                      }
+                      for (let s of students) {
+                        s.reply = replies.find(r => r.student === s.id)
+                        if (s.reply) {
+                          s.reply.files = files.filter(f => {
+                            if (f.reply === s.reply.id) {
+                              let ctn = trfc.find(c => c.file === f.id)
+                              if (ctn) { f.content = ctn.content }
+                              return true
+                            }
+                            return false
+                          })
+                        }
+                      }
+                      return res.view('teacher/replies/labTasksPartial',
+                        {
+                          lab: labgrp,
+                          data: students
+                        })
+                    })
+                  })
+                }
               })
+            })
           })
-        })
-      }
-    })
-  })
-})
         })
       })
     })

@@ -6,7 +6,6 @@
  */
 
 const crypto = require('crypto')
-const pdc = require('pdc')
 
 const AccountController = module.exports = {
 
@@ -55,6 +54,23 @@ const AccountController = module.exports = {
   // Controller Actions
 
   /**
+   * @description :: Redirect user based on if authed and if user or teacher
+   * @route       :: /login
+   */
+  index: function (req, res) {
+    if(!req.localUser){
+      return res.view('homepage');
+    }
+    if(req.localUser.hasRole('student')){
+      return res.redirect(sails.getUrlFor('StudentController.index'))
+    }
+    if(req.localUser.hasRole('teacher')){
+      return res.redirect(sails.getUrlFor('TeacherController.index'))
+    }
+    return res.serverError();
+  },
+
+  /**
    * @description :: Login to system
    * @route       :: /login
    */
@@ -91,7 +107,7 @@ const AccountController = module.exports = {
               if (user.hasRole('teacher')) {
                 return res.redirect(sails.getUrlFor('TeacherController.index'))
               }
-              return res.redirect(sails.getUrlFor('AccountController.index'))
+              return res.redirect(sails.getUrlFor('StudentController.index'))
             }
           } else {
             return AccountController.loginError(res, 'Błędna kombinacja użytkownika i hasła')
@@ -206,368 +222,6 @@ const AccountController = module.exports = {
           })
         })
     }
-  },
-
-  /***
-   * @description :: Main student view, exposes topics to student or tasks in topic
-   * @route       :: /
-   * @route       :: /topic/:topicid/tasks
-   */
-  index: function (req, res) {
-    if (req.localUser.hasRole('student')) {
-      StudentsLabGroups.findOne({
-        student: req.localUser.id /* TODO: , active: true */
-      }).populate('labgroup').exec(function (err, lab) {
-        if (err) {
-          return res.serverError(err)
-        }
-        if (!lab) {
-          return res.forbidden('Nie jesteś przydzielony do żadnej grupy')
-        }
-
-        sails.sendNativeQuery('SELECT topics.id topicId, topics.number topicNumber, topics.title topicTitle, topics.deadline topicDeadline, \n' +
-          '    COUNT(tasks.id) taskCount, \n' +
-          '    COUNT(replies.id) repliesCount, \n' +
-          '    sum(case when replies.teacherStatus = 1 then 1 else 0 end) repliesTeacherAccepted,\n' +
-          '    sum(case when replies.teacherStatus = 2 then 1 else 0 end) repliesTeacherRejected,\n' +
-          '    sum(case when replies.blocked = 1 then 1 else 0 end) repliesBlocked,\n' +
-          '    COUNT(DISTINCT comments.task) repliesCommented,\n' +
-          '    sum(case when replies.machineStatus = 2 then 1 else 0 end) repliesMachineAccepted,\n' +
-          '    sum(case when replies.machineStatus = 3 then 1 else 0 end) repliesMachineRejected,\n' +
-          '    sum(case when (replies.machineStatus = 2 and replies.teacherStatus = 1) then 1 else 0 end) repliesAccepted\n' +
-          '    FROM topics\n' +
-          'LEFT JOIN tasks ON tasks.topic = topics.id\n' +
-          'LEFT JOIN taskreplies AS replies ON replies.task = tasks.id AND replies.student = $1 AND replies.sent = 1 \n' +
-          'LEFT JOIN ( SELECT task, taskStudent FROM taskcomments GROUP BY task, taskStudent ) comments ON comments.task = tasks.id AND comments.taskStudent = $1\n' +
-          'GROUP BY topics.id', [req.localUser.id]).exec((err, data) => {
-            if (err) {
-              return res.serverError(err)
-            }
-            let ret = {message: lab.labgroup.message, topics: data.rows}
-            let taskView = parseInt(req.param('topicid'))
-            if (!isNaN(taskView)) {
-              ret.taskView = taskView
-            }
-            return res.view('account/index', {data: ret})
-          }
-        )
-      })
-    } else {
-      return res.redirect(sails.getUrlFor('TeacherController.index'))
-    }
-  },
-
-  /***
-   * @description :: Ajax api for getting list of task in selected topic
-   * @route       :: /ajax/topic/:id/tasks
-   */
-  tasks: function (req, res) {
-    if (req.localUser.hasRole('student')) {
-      StudentsLabGroups.findOne({
-        student: req.localUser.id /* TODO: , active: true */
-      }).exec(function (err, lab) {
-        if (err) {
-          return res.serverError(err)
-        }
-        let topicId = req.param('id')
-        Topics.count({'id': topicId}, (err, count) => {
-          if (err) {
-            return res.serverError(err)
-          }
-          if (count !== 1) {
-            return res.notFound()
-          }
-          sails.sendNativeQuery('SELECT tasks.id, tasks.number, tasks.title,\n' +
-            '(case when reply.id IS NOT NULL then 1 else 0 end) hasReply,\n' +
-            '(case when comments.task IS NOT NULL then 1 else 0 end) hasComments,\n' +
-            '(case when reply.id IS NOT NULL then reply.teacherStatus else 0 end) teacherStatus,\n' +
-            '(case when reply.id IS NOT NULL then reply.machineStatus else 0 end) machineStatus,\n' +
-            '(case when scd.task IS NOT NULL then scd.deadline else\n' +
-            ' (case when groupdeadline.deadline IS NOT NULL then groupdeadline.deadline else topics.deadline end) end) deadline\n' +
-            'FROM tasks\n' +
-            'LEFT JOIN taskreplies reply ON reply.task = tasks.id AND reply.student = $1 \n' +
-            'LEFT JOIN taskcomments comments ON comments.task = tasks.id AND comments.viewed = false\n' +
-            'LEFT JOIN topics ON topics.id = tasks.topic\n' +
-            'LEFT JOIN studentcustomdeadlines scd ON scd.task = tasks.id AND scd.student = $1 \n' +
-            'LEFT JOIN labgrouptopicdeadline groupdeadline ON groupdeadline.group = $2 \n' +
-            'WHERE tasks.topic = $3 \n' +
-            'GROUP BY tasks.id, reply.id, tasks.topic, scd.deadline, groupdeadline.deadline',
-            [req.localUser.id, lab.labgroup, topicId]).exec((err, data) => {
-              if (err) {
-                return res.serverError(err)
-              }
-              return res.json(data.rows)
-            }
-          )
-        })
-      })
-    } else {
-      return res.badRequest()
-    }
-  },
-  task: function (req, res) {
-    if (req.localUser.hasRole('student')) {
-      switch (req.method) {
-        case 'GET':
-
-          let topicparam = req.param('topicid')
-          let taskparam = req.param('taskid')
-
-          Topics.findOne({id: topicparam}).exec(function (err, topic) {
-            if (err) {
-              return res.badRequest(err)
-            }
-
-            if (!topic) {
-              return res.notFound()
-            }
-
-            Tasks.findOne({id: taskparam}).populate('description').exec(function (err, task) {
-              if (err) {
-                return res.badRequest(err)
-              }
-
-              if (!task) {
-                return res.notFound()
-              }
-
-              task.description = task.description[0].description
-
-              TaskComments.find({task: task.id, taskStudent: req.localUser.id})
-                .populate('user').exec(function (err, taskComments) {
-                  if (err) {
-                    return res.serverError(err)
-                  }
-
-                  TaskReplies.findOne({student: req.localUser.id, task: task.id})
-                  .exec(function (err, taskReply) {
-                    if (err) {
-                      return res.badRequest(err)
-                    }
-                    if (!taskReply) {
-                      return res.view('account/task', {
-                        topic: topic,
-                        task: task,
-                        taskReply: taskReply,
-                        taskReplyFiles: null,
-                        taskComments: taskComments
-                      })
-                    }
-                    TaskReplyFiles.find({reply: taskReply.id, visible: true})
-                      .exec(function (err, taskReplyFiles) {
-                        if (err) {
-                          return res.badRequest(err)
-                        }
-                        pdc(task.description, 'markdown_github', 'html5', function (err, result) {
-                          if (err) {
-                            return res.serverError(err)
-                          }
-                          task.description = result
-
-                          return res.view('account/task', {
-                            topic: topic,
-                            task: task,
-                            taskReply: taskReply,
-                            taskReplyFiles: taskReplyFiles,
-                            taskComments: taskComments
-                          })
-                        })
-                      })
-                  })
-                })
-            })
-          })
-          break
-
-        case 'POST':
-
-          let task = req.param('taskid')
-          let action = req.param('action')
-          let comment = req.param('comment')
-
-          // Ajax
-          Tasks.count({id: task}, (err, count) => {
-            if (err) {
-              return res.serverError(err)
-            }
-            if (count === 0) {
-              return res.notFound()
-            }
-            if (action === 'markAsRead') {
-              TaskComments.update({task: task, taskStudent: req.localUser.id, viewed: false}, {viewed: true})
-                .exec(function (err) {
-                  if (err) {
-                    return res.serverError(err)
-                  }
-                  return res.json({ 'err': false })
-                })
-            } else if (action === 'sendComment') {
-              TaskComments.create(
-                {task: task, taskStudent: req.localUser.id, user: req.localUser.id, comment: comment, viewed: false})
-                .exec(function (err) {
-                  if (err) {
-                    return res.serverError(err)
-                  }
-                  return res.json({ 'err': false })
-                })
-            }
-          })
-      }
-    } else {
-      return res.badRequest()
-    }
-  },
-
-  ajaxGetFileContent: function (req, res) {
-    const id = req.param('id');
-    const reply = req.param('reply');
-    TaskReplyFiles.findOne({id: id, reply: reply, visible: true})
-      .populate('reply')
-      .populate('file')
-      .exec((err, file)=>{
-        if(err) {
-          return res.serverError(err)
-        }
-        if(!file){
-          return res.notFound()
-        }
-        if(file.reply.student!==req.localUser.id){
-          return res.forbidden()
-        }
-        let content = 'ni mo'
-        if(file.file){
-          if(file.fileMimeType==='text/plain') {
-            let type = ''
-            if(['h','c'].includes(file.fileExt)){
-              type='c'
-            }
-            else if(['hpp','cpp'].includes(file.fileExt)){
-              type='c++'
-            }
-            else{
-              return res.json({title: file.fileName + '.' + file.fileExt, body: file.file.content})
-            }
-            content = '```' + type + '\n' + file.file.content + '\n```'
-            pdc(content, 'markdown_github', 'html5', function (err, result) {
-              if (err) {
-                return res.serverError(err)
-              }
-              return res.json({title: file.fileName + '.' + file.fileExt, body: result})
-            })
-          }
-          else{
-            return res.json({title: file.fileName + '.' + file.fileExt, body: content})
-          }
-        }
-        else {
-          return res.json({title: file.fileName + '.' + file.fileExt, body: content})
-        }
-    })
-  },
-
-  ajaxRemoveFile: function (req, res) {
-    const id = req.param('id');
-    const reply = req.param('reply');
-    TaskReplyFiles.findOne({id: id, reply: reply, visible: true})
-      .populate('reply')
-      .exec((err, file)=> {
-        if (err) {
-          return res.serverError(err)
-        }
-        if (!file) {
-          return res.notFound()
-        }
-        if (file.reply.student !== req.localUser.id) {
-          return res.forbidden()
-        }
-        file.visible=false
-        TaskReplyFiles.update({id: id, reply: reply, visible: true}).set({visible:false}).exec((err)=>{
-          if (err) {
-            return res.serverError(err)
-          }
-          return res.json({error:false})
-        });
-      })
-  },
-
-  ajaxCommentsCheck: function (req, res) {
-    const taskId = req.param('task')
-    const lastComment = req.param('lastComment')
-
-    if (req.method === 'GET') {
-      Tasks.findOne(taskId).exec(function (err, taskw) {
-        if (err) {
-          return res.json(err)
-        }
-
-        TaskComments.find({task: taskw.id, taskStudent: req.localUser.id, id: {'>': lastComment}}).populate('user')
-          .exec(function (err, task) {
-            if (err) {
-              return res.json(err)
-            }
-            let com = task.map(c => { return {id: c.id, createdAt: c.createdAt, comment: c.comment, viewed: c.viewed, user: {id: c.user.id, name: c.user.name, surname: c.user.surname}} })
-
-            return res.json(com)
-            // return res.json({
-            //   id: resTask.id,
-            //   taskStudent: resTask.taskStudent,
-            //   user: resTask.user,
-            //   comment: resTask.comment,
-            //   viewed: resTask.viewed
-            // })
-          })
-      })
-    }
-  },
-
-  uploadTaskFiles: function (req, res){
-    let topicid = req.param('topicid')
-    let taskid = req.param('taskid')
-    req.file('files').upload({adapter:function DiskStore(options) {
-        options = options || {};
-
-        var log = options.log || function _noOpLog() {};
-        var adapter = {};
-        adapter.rm = function(fd, cb) {
-            return cb();
-        };
-
-        adapter.ls = function(dirpath, cb) {
-            return cb()
-        };
-
-        adapter.read = function(fd, cb) {
-            return cb();
-        };
-
-        adapter.receive = function(opts) {
-            return function buildDiskReceiverStream(opts, adapter) {
-                var WritableStream = require('stream').Writable;
-                options = options || {};
-                var log = options.log || function noOpLog(){};
-
-
-                var receiver__ = WritableStream({ objectMode: true });
-                // Track the progress of all file uploads that pass through this receiver
-                // through one or more attached Upstream(s).
-                receiver__._files = [];
-
-                // Keep track of the number total bytes written so that maxBytes can
-                // be enforced.
-                var totalBytesWritten = 0;
-                receiver__._write = function onFile(__newFile, encoding, done) {
-                  console.log('b');
-                };
-
-                return receiver__;
-            }
-        };
-
-        return adapter;
-    }}, function (err, uploadedFiles) {
-        console.log('a');
-    });
-    return res.redirect('/topic/'+topicid+'/task/'+taskid)
   },
 
   userSettings: function (req, res) {

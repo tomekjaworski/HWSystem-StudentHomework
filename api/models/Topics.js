@@ -15,6 +15,8 @@ const Topics = module.exports = {
 
     title: {type: 'string'},
 
+    subject: {model: 'subjects'},
+
     visible: {
       type: 'boolean',
       defaultsTo: false

@@ -62,5 +62,10 @@ module.exports.policies = {
 
   TeacherController: {
     '*': ['isLoggedIn', 'hasRoleTeacher']
+  },
+
+  StudentController: {
+    '*': ['isLoggedIn', 'hasRoleStudent'],
+    'uploadTaskFiles': true
   }
 }
