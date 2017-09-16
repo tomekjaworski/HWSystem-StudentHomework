@@ -5,7 +5,10 @@
   "description": "a Sails application",
   "keywords": [],
   "dependencies": {
+    "base64-js": "^1.2.1",
+    "concat-stream": "^1.6.0",
     "consolidate": "^0.14.5",
+    "convert-string": "^0.1.0",
     "dateformat": "^2.0.0",
     "deasync": "^0.1.10",
     "ejs": "^2.5.7",

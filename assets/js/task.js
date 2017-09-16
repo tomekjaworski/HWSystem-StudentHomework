@@ -30,7 +30,13 @@ function loadFileContent (reply, id) {
   $.getJSON('/ajax/reply/' + reply + '/loadFileContent/' + id)
     .done(function (data) {
       $('#fileContentModalTitle').text(data.title)
-      $('#fileContentModalBody').html(data.body)
+      if (data.mimeType === 'text/plain') {
+        $('#fileContentModalBody').html(data.body)
+      } else if (data.mimeType.includes('image')) {
+        $('#fileContentModalBody').html('<img src="data:image/' + data.ext + ';base64,' + data.body + '"/>')
+      } else {
+        $('#fileContentModalBody').text('Nieobsługiwane rozszerzenie')
+      }
       $('#fileContentModalRemove').attr('onclick', 'removeFileConfirm(' + reply + ', ' + id + ', "' + data.title + '")')
       $('#fileContentModal').modal()
     })

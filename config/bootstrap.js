@@ -8,6 +8,8 @@
  * For more information on bootstrapping your app, check out:
  * http://sailsjs.org/#!/documentation/reference/sails.config/sails.config.bootstrap.html
  */
+const base64 = require('base64-js')
+const cs = require('convert-string')
 
 module.exports.bootstrap = function (cb) {
   // It's very important to trigger this callback method when you are finished
@@ -341,51 +343,51 @@ module.exports.bootstrap = function (cb) {
                                       TaskReplyFileContent.createEach([
                                         {
                                           file: trf[0].id,
-                                          content: 'int main(){\n\treturn 0;\n}'
+                                          content: base64.fromByteArray(cs.UTF8.stringToBytes('int main(){\n\treturn 0;\n}'))
                                         },
                                         {
                                           file: trf[1].id,
-                                          content: 'int main();'
+                                          content: base64.fromByteArray(cs.UTF8.stringToBytes('int main();'))
                                         },
                                         {
                                           file: trf[2].id,
-                                          content: 'int main(){\n\treturn 666;\n}'
+                                          content: base64.fromByteArray(cs.UTF8.stringToBytes('int main(){\n\treturn 666;\n}'))
                                         },
                                         {
                                           file: trf[3].id,
-                                          content: 'int main(){\n\treturn 1;\n}'
+                                          content: base64.fromByteArray(cs.UTF8.stringToBytes('int main(){\n\treturn 1;\n}'))
                                         },
                                         {
                                           file: trf[4].id,
-                                          content: 'int main(){\n\treturn 2;\n}'
+                                          content: base64.fromByteArray(cs.UTF8.stringToBytes('int main(){\n\treturn 2;\n}'))
                                         },
                                         {
                                           file: trf[5].id,
-                                          content: 'int main(){\n\treturn 3;\n}'
+                                          content: base64.fromByteArray(cs.UTF8.stringToBytes('int main(){\n\treturn 3;\n}'))
                                         },
                                         {
                                           file: trf[6].id,
-                                          content: 'int main(){\n\treturn 4;\n}'
+                                          content: base64.fromByteArray(cs.UTF8.stringToBytes('int main(){\n\treturn 4;\n}'))
                                         },
                                         {
                                           file: trf[7].id,
-                                          content: 'int main(){\n\treturn 5;\n}'
+                                          content: base64.fromByteArray(cs.UTF8.stringToBytes('int main(){\n\treturn 5;\n}'))
                                         },
                                         {
                                           file: trf[8].id,
-                                          content: 'int main(){\n\treturn 6;\n}'
+                                          content: base64.fromByteArray(cs.UTF8.stringToBytes('int main(){\n\treturn 6;\n}'))
                                         },
                                         {
                                           file: trf[9].id,
-                                          content: 'int main(){\n\treturn 7;\n}'
+                                          content: base64.fromByteArray(cs.UTF8.stringToBytes('int main(){\n\treturn 7;\n}'))
                                         },
                                         {
                                           file: trf[10].id,
-                                          content: 'int main(){\n\treturn 8;\n}'
+                                          content: base64.fromByteArray(cs.UTF8.stringToBytes('int main(){\n\treturn 8;\n}'))
                                         },
                                         {
                                           file: trf[11].id,
-                                          content: 'int main(){\n\treturn 9;\n}'
+                                          content: base64.fromByteArray(cs.UTF8.stringToBytes('int main(){\n\treturn 9;\n}'))
                                         }
                                       ]).exec(function (err, trfc) {
                                         if (err) {

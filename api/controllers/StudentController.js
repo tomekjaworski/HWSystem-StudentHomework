@@ -255,53 +255,53 @@ WHERE slb.active=1 AND slb.student = $2`,
     if (!_.isInteger(id) || !_.isInteger(replyId)) {
       return res.badRequest()
     }
-    TaskReplyFiles.findOne({id: id, reply: replyId, visible: true})
-      .populate('reply')
-      .populate('file')
-      .exec((err, file) => {
-        if (err) {
-          return res.serverError(err)
-        }
-        if (!file) {
+    MySqlFile().read(id, (err, file) => {
+      if (err) {
+        if (err.code === 400) {
           return res.notFound()
         }
-        if (file.reply.student !== req.localUser.id) {
-          return res.forbidden()
-        }
-        let content = 'ni mo'
-        if (file.file) {
-          if (file.fileMimeType === 'text/plain') {
-            let type = ''
-            if (['h', 'c'].includes(file.fileExt)) {
-              type = 'c'
-            }
-            else if (['hpp', 'cpp'].includes(file.fileExt)) {
-              type = 'c++'
-            }
-            else {
-              return res.json({title: file.fileName + '.' + file.fileExt, body: file.file.content})
-            }
-            content = '```' + type + '\n' + file.file.content + '\n```'
-            pdc(content, 'markdown_github', 'html5', function (err, result) {
-              if (err) {
-                return res.serverError(err)
-              }
-              return res.json({title: file.fileName + '.' + file.fileExt, body: result})
-            })
+        return res.serverError(err)
+      }
+      if (file.reply.student !== req.localUser.id) {
+        return res.forbidden()
+      }
+      let content = 'ni mo'
+      if (file.file) {
+        if (file.fileMimeType === 'text/plain') {
+          let type = ''
+          if (['h', 'c'].includes(file.fileExt)) {
+            type = 'c'
+          }
+          else if (['hpp', 'cpp'].includes(file.fileExt)) {
+            type = 'c++'
           }
           else {
-            return res.json({title: file.fileName + '.' + file.fileExt, body: content})
+            return res.json({mimeType: file.fileMimeType, title: file.fileName + '.' + file.fileExt, body: file.file})
           }
+          content = '```' + type + '\n' + file.file + '\n```'
+          pdc(content, 'markdown_github', 'html5', function (err, result) {
+            if (err) {
+              return res.serverError(err)
+            }
+            return res.json({mimeType: file.fileMimeType, title: file.fileName + '.' + file.fileExt, body: result})
+          })
         }
         else {
-          return res.json({title: file.fileName + '.' + file.fileExt, body: content})
+          return res.json({mimeType: file.fileMimeType, title: file.fileName + '.' + file.fileExt, ext: file.fileExt, body: file.file})
         }
-      })
+      }
+      else {
+        return res.json({mimeType: file.fileMimeType, title: file.fileName + '.' + file.fileExt, body: content})
+      }
+    })
   },
 
   ajaxRemoveFile: function (req, res) {
-    const id = req.param('id')
-    const reply = req.param('reply')
+    const id = parseInt(req.param('id'), '10')
+    const reply = parseInt(req.param('reply'), '10')
+    if (!_.isInteger(id) || !_.isInteger(reply)) {
+      return res.badRequest()
+    }
     TaskReplyFiles.findOne({id: id, reply: reply, visible: true})
       .populate('reply')
       .exec((err, file) => {
@@ -325,8 +325,11 @@ WHERE slb.active=1 AND slb.student = $2`,
   },
 
   ajaxCommentsCheck: function (req, res) {
-    const taskId = req.param('task')
-    const lastComment = req.param('lastComment')
+    const taskId = parseInt(req.param('task'), '10')
+    const lastComment = parseInt(req.param('lastComment'), '10')
+    if (!_.isInteger(taskId) || !_.isInteger(lastComment)) {
+      return res.badRequest()
+    }
 
     if (req.method === 'GET') {
       Tasks.findOne(taskId).exec(function (err, taskw) {
@@ -367,11 +370,27 @@ WHERE slb.active=1 AND slb.student = $2`,
   },
 
   uploadTaskFiles: function (req, res) {
-    let topicid = req.param('topicid')
-    let taskid = req.param('taskid')
-    let files = req.file('files')
-    let buf = Buffer.from(files._files[0].stream._readableState)
-    console.log(buf)
+    const topicid = parseInt(req.param('topicid'), '10')
+    const taskid = parseInt(req.param('taskid'), '10')
+    if (!_.isInteger(topicid) || !_.isInteger(taskid)) {
+      return res.badRequest()
+    }
+
+    TaskReplies.findOrCreate({
+      student: req.localUser.id,
+      task: taskid
+    }, {
+      student: req.localUser.id,
+      task: taskid
+    })
+      .exec((err, reply) => {
+        req.file('files').upload({adapter: MySqlFile, replyId: reply.id}, (err, files) => {
+          if (err) {
+            return res.serverError(err)
+          }
+          return res.redirect('/topic/' + topicid + '/task/' + taskid)
+        });
+      })
   }
 }
 
