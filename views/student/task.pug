@@ -36,8 +36,8 @@ block content
                 #fileContentModalBody.modal-body
                     | Tyrytytyty
                 .modal-footer
-                    button.btn.btn-success(type='button') Zastąp
-                    button#fileContentModalDownload.btn.btn-warning(type='button') Pobierz
+                    button#fileContentModalReplace.btn.btn-success(type='button') Zastąp
+                    a#fileContentModalDownload.btn.btn-warning(type='button') Pobierz
                     button#fileContentModalRemove.btn.btn-danger(type='button') Skasuj
                     button.btn.btn-primary(type='button', data-dismiss='modal') Zamknij
 
@@ -107,7 +107,7 @@ block content
                                                 | Dopuszczalne rozszerzenia: c, cpp, h, hpp, inc, txt, bmp, png. Wielkość pliku nie może przekraczać 100 KB.
                                         if taskReplyFiles && taskReplyFiles.length > 0
                                             | &nbsp;
-                                            a.btn.btn-secondary(href='#') Wyślij rozwiązanie
+                                            button#sendReply.btn.btn-secondary(data-topic=topic.id, data-task=task.id) Wyślij rozwiązanie
                                     else
                                         small.form-text.text-muted Upłynął termin przesyłania odpowiedzi
 
@@ -159,4 +159,5 @@ block content
 
     script.
         var task = #{task.id},
-          lastComment = #{lastid}
+          lastComment = #{lastid},
+          replySent = #{taskReply.sent}

@@ -4,6 +4,8 @@
  * @description :: Server-side logic for managing Teachers
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
+const dateFormat = require('dateformat')
+const pdc = require('pdc')
 
 // eslint-disable-next-line no-unused-vars
 const TeacherController = module.exports = {
@@ -304,9 +306,9 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
               return res.serverError(err)
             }
             let deadlines = result.rows
-            for (let s of students) {
-              s.deadline = deadlines.find(d => d.student === s.id).deadline
-            }
+            students = _.forEach(students, (s) => {
+              s.deadline = dateFormat(deadlines.find(d => d.student === s.id).deadline, 'dd/mm/yyyy')
+            })
             TaskComments.find({task: taskId, taskStudent: studentsId}).populate('user').exec((err, comments) => {
               if (err) {
                 return res.serverError(err)
@@ -328,21 +330,45 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
                       data: students
                     })
                 } else {
-                  TaskReplyFiles.find({reply: replies.map(e => e.id)}).exec((err, files) => {
+                  MySqlFile().readManyByReply(replies.map(e => e.id), (err, files) => {
                     if (err) {
                       return res.serverError(err)
                     }
-                    TaskReplyFileContent.find({file: files.map(e => e.id)}).exec((err, trfc) => {
-                      if (err) {
-                        return res.serverError(err)
-                      }
+
+                    let promises = files.map(function(file) {
+                      return new Promise(function(resolve, reject) {
+                        if (file.fileMimeType.includes('text/')) {
+                          let type = ''
+                          if (['h', 'c'].includes(file.fileExt)) {
+                            type = 'c'
+                          }
+                          else if (['hpp', 'cpp'].includes(file.fileExt)) {
+                            type = 'c++'
+                          }
+                          else {
+                            return resolve(file)
+                          }
+                          content = '```' + type + '\n' + file.file + '\n```'
+                          pdc(content, 'markdown_github', 'html5', function (err, result) {
+                            if (err) {
+                              return reject(err)
+                            }
+                            file.file = result
+                            return resolve(file)
+                          })
+                        }
+                        else {
+                          return resolve(file)
+                        }
+                      });
+                    });
+
+                    Promise.all(promises).then((files)=>{
                       for (let s of students) {
                         s.reply = replies.find(r => r.student === s.id)
                         if (s.reply) {
-                          s.reply.files = files.filter(f => {
-                            if (f.reply === s.reply.id) {
-                              let ctn = trfc.find(c => c.file === f.id)
-                              if (ctn) { f.content = ctn.content }
+                          s.reply.files = files.filter(file => {
+                            if (file.reply === s.reply.id) {
                               return true
                             }
                             return false

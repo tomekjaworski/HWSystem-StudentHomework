@@ -2,27 +2,37 @@
  * Module dependencies
  */
 
-var Writable = require('stream').Writable;
-var _ = require('lodash');
-var concat = require('concat-stream');
-var base64 = require('base64-js')
+const Writable = require('stream').Writable
+const _ = require('lodash')
+const concat = require('concat-stream')
+const base64 = require('base64-js')
 const cs = require('convert-string')
-var path = require('path')
+const path = require('path')
 
 module.exports = function MySqlStore (globalOpts) {
-  globalOpts = globalOpts || {};
+  globalOpts = globalOpts || {}
 
   _.defaults(globalOpts, {
-  });
+    visible: true,
+    convert: true,
+    updateFileId: 0,
+    maxBytes: 102400,
+    extensions: ['c', 'cpp', 'h', 'hpp', 'inc', 'txt', 'bmp', 'png']
+  })
 
-
-  var adapter = {
-    ls: function (dirname, cb) {
-      return cb(null, [])
+  let adapter = {
+    ls: function (reply, cb) {
+      TaskReplyFiles.find({reply: reply, visible: globalOpts.visible})
+        .exec(function (err, taskReplyFiles) {
+          if (err) {
+            return cb(err)
+          }
+          return cb(null, taskReplyFiles)
+        })
     },
 
     read: function (fileId, cb) {
-      TaskReplyFiles.findOne({id: fileId, visible: true})
+      TaskReplyFiles.findOne({id: fileId, visible: globalOpts.visible})
         .populate('file')
         .populate('reply')
         .exec((err, file) => {
@@ -30,25 +40,51 @@ module.exports = function MySqlStore (globalOpts) {
             return cb(err)
           }
           if (!file) {
-            err = new Error('ENOENT');
-            err.name = 'Error (ENOENT)';
-            err.code = 'ENOENT';
-            err.status = 404;
-            return cb(err);
+            err = new Error('ENOENT')
+            err.name = 'Error (ENOENT)'
+            err.code = 'ENOENT'
+            err.status = 404
+            return cb(err)
           }
-          if (file.fileMimeType === 'text/plain') {
+          if (globalOpts.convert) {
+            if (file.fileMimeType.includes('text/')) {
+              file.file = Object.values(base64.toByteArray(file.file.content))
+              file.file = cs.UTF8.bytesToString(file.file)
+            }
+            else {
+              file.file = file.file.content
+            }
+          }
+          else {
             file.file = Object.values(base64.toByteArray(file.file.content))
-            file.file = cs.UTF8.bytesToString(file.file)
-          }
-          else{
-            file.file = file.file.content
           }
           return cb(null, file)
         })
     },
 
-    rm: function (fd, cb) {
-      return cb()
+    readManyByReply: function (replies, cb) {
+      TaskReplyFiles.find({reply: replies, visible: globalOpts.visible})
+        .populate('file')
+        .exec((err, files) => {
+          if (err) {
+            return cb(err)
+          }
+          files = _.forEach(files, (file) => {
+            if (globalOpts.convert) {
+              if (file.fileMimeType.includes('text/')) {
+                file.file = Object.values(base64.toByteArray(file.file.content))
+                file.file = cs.UTF8.bytesToString(file.file)
+              }
+              else {
+                file.file = file.file.content
+              }
+            }
+            else {
+              file.file = Object.values(base64.toByteArray(file.file.content))
+            }
+          })
+          return cb(null, files)
+        })
     },
 
     /**
@@ -56,49 +92,91 @@ module.exports = function MySqlStore (globalOpts) {
      * @return {Stream.Writable}
      */
     receive: function MySqlReceiver (options) {
-      options = options || {};
-      options = _.defaults(options, globalOpts);
+      options = options || {}
+      options = _.defaults(options, globalOpts)
 
-      var receiver__ = Writable({
+      let receiver__ = Writable({
         objectMode: true
-      });
-      receiver__._write = function onFile(__newFile, encoding, done) {
+      })
+      receiver__._write = function onFile (__newFile, encoding, done) {
 
+        if (__newFile.byteCount > options.maxBytes) {
+          let err = new Error()
+          err.code = 'E_EXCEEDS_UPLOAD_LIMIT'
+          err.name = 'Upload Error'
+          return done(err)
+        }
+        let fileFormat = path.parse(__newFile.filename)
 
-        receiver__.once('error', function (err, db) {
-          console.log('ERROR ON RECEIVER__ ::',err);
-          done(err);
-        });
+        if (!options.extensions.includes(fileFormat.ext.substring(1))) {
+          let err = new Error()
+          err.code = 'E_EXTENSION_NOT_ALLOWED'
+          err.name = 'Upload Error'
+          return done(err)
+        }
 
-        __newFile.pipe(concat((file)=>{
-          let fileFormat = path.parse(__newFile.filename)
-          TaskReplyFiles.create({
+        __newFile.pipe(concat((file) => {
+          TaskReplyFiles.findOrCreate({id: options.updateFileId}, {
             reply: options.replyId,
             fileName: fileFormat.name,
             fileSize: __newFile.byteCount,
             fileExt: fileFormat.ext.substring(1),
-            fileMimeType: __newFile.headers['content-type'],
-          }).meta({fetch: true})
-            .exec((err,createdFile)=>{
-              if(err) return done(err)
-              let file64 = base64.fromByteArray(file)
-              TaskReplyFileContent.create({
-                  file: createdFile.id,
-                  content: file64
-                }).meta({fetch: true})
-                .exec((err,createdFileContent)=>{
-                  if(err) return done(err)
-                  TaskReplyFiles.update(createdFile.id, {file:createdFileContent.id}).exec((err)=>{
-                    if(err) return done(err)
+            fileMimeType: __newFile.headers['content-type']
+          }).exec((err, createdFile, wasCreatedOrFound) => {
+            if (err) {
+              return done(err)
+            }
+            let file64 = base64.fromByteArray(file)
+            let lastFileId = null
+            if (!wasCreatedOrFound) {
+              lastFileId = createdFile.file
+              if (createdFile.fileExt !== fileFormat.ext.substring(1)) {
+                let err = new Error()
+                err.code = 'E_EXTENSION_NOT_ALLOWED'
+                err.name = 'Upload Error'
+                return done(err)
+              }
+            }
+            TaskReplyFileContent.create({
+              file: createdFile.id,
+              lastFileContentId: lastFileId,
+              content: file64
+            }).meta({fetch: true})
+              .exec((err, createdFileContent) => {
+                if (err) {
+                  return done(err)
+                }
+                let firstFileId = createdFileContent.id
+                if (!wasCreatedOrFound) {
+                  firstFileId = createdFile.firstFileId
+                }
+                TaskReplyFiles.update(createdFile.id, {
+                  file: createdFileContent.id,
+                  fileSize: __newFile.byteCount,
+                  firstFileId: firstFileId
+                }).exec((err) => {
+                  if (err) {
+                    return done(err)
+                  }
+                  if (!wasCreatedOrFound) {
+                    TaskReplyFileContent.update(lastFileId, {nextFileContentId: createdFileContent.id}).exec((err) => {
+                      if (err) {
+                        return done(err)
+                      }
+                      done()
+                    })
+                  }
+                  else {
                     done()
-                  })
+                  }
                 })
-            })
+              })
+          })
         }))
-      };
-      return receiver__;
+      }
+      return receiver__
     }
-  };
+  }
 
-  return adapter;
-};
+  return adapter
+}

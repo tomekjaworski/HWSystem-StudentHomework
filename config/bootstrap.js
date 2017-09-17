@@ -256,6 +256,7 @@ module.exports.bootstrap = function (cb) {
                                       fileSize: 200,
                                       fileExt: 'cpp',
                                       fileMimeType: 'text/plain',
+                                      firstFileId: 1,
                                       file: 1
                                     }, {
                                       reply: tr[0].id,
@@ -263,6 +264,7 @@ module.exports.bootstrap = function (cb) {
                                       fileSize: 200,
                                       fileExt: 'h',
                                       fileMimeType: 'text/plain',
+                                      firstFileId: 2,
                                       file: 2
                                     }, {
                                       reply: tr[1].id,
@@ -270,6 +272,7 @@ module.exports.bootstrap = function (cb) {
                                       fileSize: 200,
                                       fileExt: 'c',
                                       fileMimeType: 'text/plain',
+                                      firstFileId: 3,
                                       file: 3
                                     }, {
                                       reply: tr[1].id,
@@ -277,6 +280,7 @@ module.exports.bootstrap = function (cb) {
                                       fileSize: 200,
                                       fileExt: 'cpp',
                                       fileMimeType: 'text/plain',
+                                      firstFileId: 4,
                                       file: 4
                                     }, {
                                       reply: tr[2].id,
@@ -284,6 +288,7 @@ module.exports.bootstrap = function (cb) {
                                       fileSize: 200,
                                       fileExt: 'cpp',
                                       fileMimeType: 'text/plain',
+                                      firstFileId: 5,
                                       file: 5
                                     }, {
                                       reply: tr[2].id,
@@ -291,6 +296,7 @@ module.exports.bootstrap = function (cb) {
                                       fileSize: 200,
                                       fileExt: 'cpp',
                                       fileMimeType: 'text/plain',
+                                      firstFileId: 6,
                                       file: 6
                                     }, {
                                       reply: tr[3].id,
@@ -298,6 +304,7 @@ module.exports.bootstrap = function (cb) {
                                       fileSize: 200,
                                       fileExt: 'cpp',
                                       fileMimeType: 'text/plain',
+                                      firstFileId: 7,
                                       file: 7
                                     }, {
                                       reply: tr[3].id,
@@ -305,6 +312,7 @@ module.exports.bootstrap = function (cb) {
                                       fileSize: 200,
                                       fileExt: 'cpp',
                                       fileMimeType: 'text/plain',
+                                      firstFileId: 8,
                                       file: 8
                                     }, {
                                       reply: tr[4].id,
@@ -312,6 +320,7 @@ module.exports.bootstrap = function (cb) {
                                       fileSize: 200,
                                       fileExt: 'cpp',
                                       fileMimeType: 'text/plain',
+                                      firstFileId: 9,
                                       file: 9
                                     }, {
                                       reply: tr[4].id,
@@ -319,6 +328,7 @@ module.exports.bootstrap = function (cb) {
                                       fileSize: 200,
                                       fileExt: 'cpp',
                                       fileMimeType: 'text/plain',
+                                      firstFileId: 10,
                                       file: 10
                                     }, {
                                       reply: tr[5].id,
@@ -326,6 +336,7 @@ module.exports.bootstrap = function (cb) {
                                       fileSize: 200,
                                       fileExt: 'cpp',
                                       fileMimeType: 'text/plain',
+                                      firstFileId: 11,
                                       file: 11
                                     }, {
                                       reply: tr[5].id,
@@ -333,6 +344,7 @@ module.exports.bootstrap = function (cb) {
                                       fileSize: 200,
                                       fileExt: 'cpp',
                                       fileMimeType: 'text/plain',
+                                      firstFileId: 12,
                                       file: 12
                                     }
                                   ]).meta({fetch: true})

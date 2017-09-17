@@ -13,6 +13,16 @@ const TaskReplyFileContent = module.exports = {
 
     file: {model: 'taskreplyfiles'},
 
+    lastFileContentId: {
+      type: 'number',
+      allowNull: true
+    },
+
+    nextFileContentId: {
+      type: 'number',
+      allowNull: true
+    },
+
     content: {type: 'string',
       columnType: 'longtext'}
   }

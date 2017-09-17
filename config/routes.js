@@ -45,6 +45,8 @@ module.exports.routes = {
 
   'GET /account': 'AccountController.userSettings',
 
+  // Students
+
   'GET /topics': 'StudentController.index',
 
   'GET /topic/:topicid/tasks': 'StudentController.index',
@@ -55,6 +57,9 @@ module.exports.routes = {
   'GET /ajax/reply/:replyid/loadFileContent/:id': {action: 'student/ajaxGetFileContent', skipAssets: true},
   'POST /ajax/removeFile': {action: 'student/ajaxRemoveFile', skipAssets: true},
   'POST /topic/:topicid/task/:taskid/uploadFile': {action: 'student/uploadTaskFiles', skipAssets: true},
+  'GET /downloadFile/:fileid': {action: 'student/downloadTaskFile', skipAssets: true},
+  'POST /reply/:replyid/updateFile/:fileid': {action: 'student/updateFile', skipAssets: true},
+  'GET /topic/:topicid/task/:taskid/sendReply/': {action: 'student/sendReply', skipAssets: true},
 
   // Teachers
   'GET /teacher': 'TeacherController.index',

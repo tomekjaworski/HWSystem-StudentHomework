@@ -32,11 +32,6 @@ const TaskReplyFiles = module.exports = {
 
     firstFileId: {
       type: 'number'
-    },
-
-    lastFileId: {
-      type: 'number',
-      allowNull: true
     }
   }
 }

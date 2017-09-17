@@ -13,9 +13,9 @@ function removeFile (reply, id) {
   }).done(function () {
     window.location.reload()
   })
-  .fail(function (jqXHR, textStatus, errorThrown) {
-    alert('Nie udało się skasować pliku:  ' + textStatus + ' - ' + errorThrown)
-  })
+    .fail(function (jqXHR, textStatus, errorThrown) {
+      alert('Nie udało się skasować pliku:  ' + textStatus + ' - ' + errorThrown)
+    })
 }
 
 function removeFileConfirm (reply, id, name) {
@@ -25,19 +25,38 @@ function removeFileConfirm (reply, id, name) {
   $('#confirmModal').modal()
 }
 
+function replaceFile (reply, id, name, ext) {
+  $('#confirmModalTitle').text('Podmiana pliku ' + name)
+  $('#confirmModalBody').html(`<form action='/reply/` + reply + `/updateFile/` + id + `' enctype='multipart/form-data' method='post'>
+<input type='file' name='file' accept='.` + ext + `'>
+<input type="submit" value="Podmień plik" class="btn btn-primary"/>`)
+  $('#confirmModalButtons').html('')
+  $('#confirmModal').modal()
+}
+
 function loadFileContent (reply, id) {
   // TODO: Seba dodaj jakiegoś ładnego spinnera ładowania
   $.getJSON('/ajax/reply/' + reply + '/loadFileContent/' + id)
     .done(function (data) {
       $('#fileContentModalTitle').text(data.title)
-      if (data.mimeType === 'text/plain') {
+      if (data.mimeType.includes('text/')) {
         $('#fileContentModalBody').html(data.body)
-      } else if (data.mimeType.includes('image')) {
-        $('#fileContentModalBody').html('<img src="data:image/' + data.ext + ';base64,' + data.body + '"/>')
+      } else if (data.mimeType === 'image/png') {
+        $('#fileContentModalBody').html('<img class="img-fluid" src="data:image/png;base64,' + data.body + '"/>')
+      } else if (data.mimeType === 'image/bmp') {
+        $('#fileContentModalBody').html('<img class="img-fluid" src="data:image/bmp;base64,' + data.body + '"/>')
       } else {
         $('#fileContentModalBody').text('Nieobsługiwane rozszerzenie')
       }
-      $('#fileContentModalRemove').attr('onclick', 'removeFileConfirm(' + reply + ', ' + id + ', "' + data.title + '")')
+      if (!replySent) {
+        $('#fileContentModalRemove').attr('onclick', 'removeFileConfirm(' + reply + ', ' + id + ', "' + data.title + '")')
+        $('#fileContentModalReplace').attr('onclick', 'replaceFile(' + reply + ', ' + id + ', "' + data.title + '", "' + data.ext + '")')
+      }
+      else{
+        $('#fileContentModalRemove').hide()
+        $('#fileContentModalReplace').hide()
+      }
+      $('#fileContentModalDownload').attr('href', '/downloadFile/' + id)
       $('#fileContentModal').modal()
     })
     .fail(function (jqXHR, textStatus, errorThrown) {
@@ -136,6 +155,13 @@ function loadFileContent (reply, id) {
     sendComment(tData.top, tData.tas)
     setTimeout(markAsRead, 200, tData.top, tData.tas)
     setTimeout(checkComments, 600)
+  })
+  $('#sendReply').on('click', function () {
+    //
+    $('#confirmModalTitle').text('Wysłanie rozwiązania')
+    $('#confirmModalBody').html('Czy na pewno chcesz wysłać rozwiązanie? <br><b>Późniejsza edycja będzie niemożliwa!</b>')
+    $('#confirmModalButtons').html(`<a href='/topic/` + $(this).data('topic') + `/task/` + $(this).data('task') + `/sendReply/' class='btn btn-primary'>Wyślij rozwiązanie</a>`)
+    $('#confirmModal').modal()
   })
 
   $(markAsReadButton).on('click', function () {

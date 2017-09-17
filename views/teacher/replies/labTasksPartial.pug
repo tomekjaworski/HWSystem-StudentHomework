@@ -30,7 +30,15 @@ div.d-flex
                                         div='MimeType: ' + file.fileMimeType
                                         div
                                             h7 Tresc:
-                                            div(style='border:1px solid black;margin:1px;padding:1px;')=file.content
+                                            div
+                                                if file.fileMimeType.includes('text/')
+                                                    div(style='border:1px solid black;margin:1px;padding:1px;') !{file.file}
+                                                else if file.fileMimeType === 'image/png'
+                                                    img.img-fluid(src='data:image/pmg;base64,' + file.file)
+                                                else if file.fileMimeType === 'image/bmp'
+                                                    img.img-fluid(src='data:image/bmp;base64,' + file.file)
+                                                else
+                                                    p Nieobsługiwane rozszerzenie
                         div
                             h6 Komentarze:
                             if student.comments

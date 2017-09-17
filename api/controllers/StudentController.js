@@ -4,7 +4,7 @@
  * @description :: Server-side logic for managing Students
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
-var dateFormat = require('dateformat')
+const dateFormat = require('dateformat')
 const pdc = require('pdc')
 
 module.exports = {
@@ -94,6 +94,9 @@ module.exports = {
             if (err) {
               return res.serverError(err)
             }
+            data.rows = _.forEach(data.rows, (e)=>{
+              e.deadline = dateFormat(e.deadline, 'dd/mm/yyyy')
+            })
             return res.json(data.rows)
           }
         )
@@ -130,7 +133,13 @@ module.exports = {
               }
 
               task.description = task.description[0].description
-              sails.sendNativeQuery(`SELECT
+
+              pdc(task.description, 'markdown_github', 'html5', function (err, result) {
+                if (err) {
+                  return res.serverError(err)
+                }
+                task.description = result
+                sails.sendNativeQuery(`SELECT
 (case when scdl.task IS NOT NULL then scdl.deadline else
  (case when lbtd.deadline IS NOT NULL then lbtd.deadline else topic.deadline end) end) deadline
 FROM studentslabgroups slb
@@ -139,68 +148,62 @@ LEFT JOIN topics topic ON task.topic = topic.id
 LEFT JOIN labgrouptopicdeadline lbtd ON lbtd.group = slb.labgroup AND lbtd.topic = task.topic
 LEFT JOIN studentcustomdeadlines scdl ON scdl.student = slb.student AND scdl.task = task.id
 WHERE slb.active=1 AND slb.student = $2`,
-                [taskparam, req.localUser.id]).exec((err, result) => {
-                if (err) {
-                  return res.serverError(err)
-                }
-                if (result.rows.length === 0) {
-                  return res.forbidden('Nie zostałeś aktywowany')
-                }
-                let deadline = result.rows[0].deadline
-
-                let deadlineCanSend = deadline > Date.now()
-
-                TaskComments.find({task: task.id, taskStudent: req.localUser.id})
-                  .populate('user').exec(function (err, taskComments) {
+                  [taskparam, req.localUser.id]).exec((err, result) => {
                   if (err) {
                     return res.serverError(err)
                   }
-
-                  if (taskComments.length > 0) {
-                    taskComments = _.forEach(taskComments, (comment) => {
-                      comment.createdAt = dateFormat(comment.createdAt, 'HH:MM dd/mm/yyyy')
-                    })
+                  if (result.rows.length === 0) {
+                    return res.forbidden('Nie zostałeś aktywowany')
                   }
+                  let deadline = result.rows[0].deadline
 
-                  TaskReplies.findOne({student: req.localUser.id, task: task.id})
-                    .exec(function (err, taskReply) {
-                      if (err) {
-                        return res.badRequest(err)
-                      }
-                      if (!taskReply) {
-                        return res.view('student/task', {
-                          topic: topic,
-                          task: task,
-                          taskReply: taskReply,
-                          taskReplyFiles: null,
-                          deadline: dateFormat(deadline, 'dd/mm/yyyy'),
-                          deadlineCanSend: deadlineCanSend,
-                          taskComments: taskComments
-                        })
-                      }
-                      TaskReplyFiles.find({reply: taskReply.id, visible: true})
-                        .exec(function (err, taskReplyFiles) {
+                  let deadlineCanSend = deadline > Date.now()
+
+                  TaskComments.find({task: task.id, taskStudent: req.localUser.id})
+                    .populate('user').exec(function (err, taskComments) {
+                    if (err) {
+                      return res.serverError(err)
+                    }
+
+                    if (taskComments.length > 0) {
+                      taskComments = _.forEach(taskComments, (comment) => {
+                        comment.createdAt = dateFormat(comment.createdAt, 'HH:MM dd/mm/yyyy')
+                      })
+                    }
+
+                    TaskReplies.findOne({student: req.localUser.id, task: task.id})
+                      .exec(function (err, taskReply) {
+                        if (err) {
+                          return res.badRequest(err)
+                        }
+                        if (!taskReply) {
+                          return res.view('student/task', {
+                            topic: topic,
+                            task: task,
+                            taskReply: taskReply,
+                            taskReplyFiles: null,
+                            deadline: dateFormat(deadline, 'dd/mm/yyyy'),
+                            deadlineCanSend: deadlineCanSend,
+                            taskComments: taskComments
+                          })
+                        }
+                        MySqlFile().ls(taskReply.id, (err, taskReplyFiles) => {
                           if (err) {
                             return res.badRequest(err)
                           }
-                          pdc(task.description, 'markdown_github', 'html5', function (err, result) {
-                            if (err) {
-                              return res.serverError(err)
-                            }
-                            task.description = result
 
-                            return res.view('student/task', {
-                              topic: topic,
-                              task: task,
-                              taskReply: taskReply,
-                              taskReplyFiles: taskReplyFiles,
-                              deadline: dateFormat(deadline, 'dd/mm/yyyy'),
-                              deadlineCanSend: deadlineCanSend,
-                              taskComments: taskComments
-                            })
+                          return res.view('student/task', {
+                            topic: topic,
+                            task: task,
+                            taskReply: taskReply,
+                            taskReplyFiles: taskReplyFiles,
+                            deadline: dateFormat(deadline, 'dd/mm/yyyy'),
+                            deadlineCanSend: deadlineCanSend,
+                            taskComments: taskComments
                           })
                         })
-                    })
+                      })
+                  })
                 })
               })
             })
@@ -267,7 +270,7 @@ WHERE slb.active=1 AND slb.student = $2`,
       }
       let content = 'ni mo'
       if (file.file) {
-        if (file.fileMimeType === 'text/plain') {
+        if (file.fileMimeType.includes('text/')) {
           let type = ''
           if (['h', 'c'].includes(file.fileExt)) {
             type = 'c'
@@ -276,24 +279,122 @@ WHERE slb.active=1 AND slb.student = $2`,
             type = 'c++'
           }
           else {
-            return res.json({mimeType: file.fileMimeType, title: file.fileName + '.' + file.fileExt, body: file.file})
+            return res.json({mimeType: file.fileMimeType, title: file.fileName + '.' + file.fileExt, ext: file.fileExt, body: file.file})
           }
           content = '```' + type + '\n' + file.file + '\n```'
           pdc(content, 'markdown_github', 'html5', function (err, result) {
             if (err) {
               return res.serverError(err)
             }
-            return res.json({mimeType: file.fileMimeType, title: file.fileName + '.' + file.fileExt, body: result})
+            return res.json({mimeType: file.fileMimeType, title: file.fileName + '.' + file.fileExt, ext: file.fileExt, body: result})
           })
         }
         else {
-          return res.json({mimeType: file.fileMimeType, title: file.fileName + '.' + file.fileExt, ext: file.fileExt, body: file.file})
+          return res.json({
+            mimeType: file.fileMimeType,
+            title: file.fileName + '.' + file.fileExt,
+            ext: file.fileExt,
+            body: file.file
+          })
         }
       }
       else {
-        return res.json({mimeType: file.fileMimeType, title: file.fileName + '.' + file.fileExt, body: content})
+        return res.json({mimeType: file.fileMimeType, title: file.fileName + '.' + file.fileExt, ext: file.fileExt, body: content})
       }
     })
+  },
+
+  downloadTaskFile: function (req, res) {
+    const fileid = parseInt(req.param('fileid'), '10')
+    if (!_.isInteger(fileid)) {
+      return res.badRequest()
+    }
+    MySqlFile({convert: false}).read(fileid, (err, file) => {
+      if (err) {
+        if (err.code === 400) {
+          return res.notFound()
+        }
+        return res.serverError(err)
+      }
+      if (file.reply.student !== req.localUser.id) {
+        return res.forbidden()
+      }
+      if (file.file) {
+        res.set('Content-disposition', 'attachment; filename=\'' + file.fileName + '.' + file.fileExt + '\'')
+        return res.end(new Buffer(file.file, 'binary'))
+      }
+      else {
+        return res.serverError()
+      }
+    })
+  },
+
+  updateFile: function (req, res) {
+    const fileid = parseInt(req.param('fileid'), '10')
+    const replyid = parseInt(req.param('replyid'), '10')
+    if (!_.isInteger(fileid) || !_.isInteger(replyid)) {
+      return res.badRequest()
+    }
+    TaskReplies.findOne(replyid).populate('task')
+      .exec((err, reply) => {
+        if (err) {
+          return res.serverError(err)
+        }
+        if (!reply) {
+          return res.notFound()
+        }
+        if (reply.student !== req.localUser.id) {
+          return res.forbidden()
+        }
+        if(reply.sent===true){
+          return res.redirect('/topic/' + topicid + '/task/' + taskid + '?msg=cantUploadReplaySent')
+        }
+        req.file('file').upload({adapter: MySqlFile, replyId: reply.id, updateFileId: fileid}, (err, files) => {
+          if (err) {
+            if (err.code === 'E_EXCEEDS_UPLOAD_LIMIT') {
+              return res.redirect('/topic/' + topicid + '/task/' + taskid + '?msg=fileTooBig')
+            }
+            else if (err.code === 'E_EXTENSION_NOT_ALLOWED') {
+              return res.redirect('/topic/' + topicid + '/task/' + taskid + '?msg=extNotAllowed')
+            }
+            return res.serverError(err)
+          }
+          return res.redirect('/topic/' + reply.task.topic + '/task/' + reply.task.id + '?msg=fileUpdateSuccess')
+        })
+      })
+  },
+
+  uploadTaskFiles: function (req, res) {
+    const topicid = parseInt(req.param('topicid'), '10')
+    const taskid = parseInt(req.param('taskid'), '10')
+    if (!_.isInteger(topicid) || !_.isInteger(taskid)) {
+      return res.badRequest()
+    }
+
+    TaskReplies.findOrCreate({
+      student: req.localUser.id,
+      task: taskid
+    }, {
+      student: req.localUser.id,
+      task: taskid
+    })
+      .exec((err, reply) => {
+        if (reply.sent===true) {
+          return res.redirect('/topic/' + topicid + '/task/' + taskid + '?msg=cantUploadReplaySent')
+        }
+        req.file('files').upload({adapter: MySqlFile, replyId: reply.id}, (err, files) => {
+          if (err) {
+            if (err.code === 'E_EXCEEDS_UPLOAD_LIMIT') {
+              return res.redirect('/topic/' + topicid + '/task/' + taskid + '?msg=fileTooBig')
+            }
+            else if (err.code === 'E_EXTENSION_NOT_ALLOWED') {
+              return res.redirect('/topic/' + topicid + '/task/' + taskid + '?msg=extNotAllowed')
+            }
+            return res.serverError(err)
+          }
+          return res.redirect('/topic/' + topicid + '/task/' + taskid + '?msg=fileUploadSuccess')
+        })
+      })
   },
 
   ajaxRemoveFile: function (req, res) {
@@ -322,6 +423,46 @@ WHERE slb.active=1 AND slb.student = $2`,
           return res.json({error: false})
         })
       })
+  },
+
+  sendReply: function (req, res) {
+    const topicid = parseInt(req.param('topicid'), '10')
+    const taskid = parseInt(req.param('taskid'), '10')
+    if (!_.isInteger(topicid) || !_.isInteger(taskid)) {
+      return res.badRequest()
+    }
+    TaskReplies.findOne({
+      student: req.localUser.id,
+      task: taskid
+    }).exec((err, reply) => {
+      if (err) {
+        return res.serverError(err)
+      }
+      if(!reply){
+        return res.redirect('/topic/' + topicid + '/task/' + taskid + '?msg=noFilesInReply')
+      }
+      if (reply.sent===true) {
+        return res.redirect('/topic/' + topicid + '/task/' + taskid + '?msg=replyAlreadySent')
+      }
+      MySqlFile().ls(reply.id, (err, replyFiles) => {
+        if (err) {
+          return res.serverError(err)
+        }
+        if(replyFiles.length===0){
+          return res.redirect('/topic/' + topicid + '/task/' + taskid + '?msg=noFilesInReply')
+        }
+        let mainFile = _.find(replyFiles, function(e) { return (e.fileName==='main') && (e.fileExt==='c' || e.fileExt==='cpp') })
+        if(!mainFile){
+          return res.redirect('/topic/' + topicid + '/task/' + taskid + '?msg=noMainFile')
+        }
+        TaskReplies.update(reply,{sent:true}).exec((err)=>{
+          if (err) {
+            return res.serverError(err)
+          }
+          return res.redirect('/topic/' + topicid + '/task/' + taskid + '?msg=replySent')
+        })
+      })
+    })
   },
 
   ajaxCommentsCheck: function (req, res) {
@@ -367,30 +508,6 @@ WHERE slb.active=1 AND slb.student = $2`,
           })
       })
     }
-  },
-
-  uploadTaskFiles: function (req, res) {
-    const topicid = parseInt(req.param('topicid'), '10')
-    const taskid = parseInt(req.param('taskid'), '10')
-    if (!_.isInteger(topicid) || !_.isInteger(taskid)) {
-      return res.badRequest()
-    }
-
-    TaskReplies.findOrCreate({
-      student: req.localUser.id,
-      task: taskid
-    }, {
-      student: req.localUser.id,
-      task: taskid
-    })
-      .exec((err, reply) => {
-        req.file('files').upload({adapter: MySqlFile, replyId: reply.id}, (err, files) => {
-          if (err) {
-            return res.serverError(err)
-          }
-          return res.redirect('/topic/' + topicid + '/task/' + taskid)
-        });
-      })
   }
 }
 
