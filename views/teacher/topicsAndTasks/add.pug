@@ -25,13 +25,6 @@ block content
                     br
                     textarea#description(name='taskDescription')
                 div
-                    span Temat:
-                    br
-                    select(name='taskTopic')
-                        each topic in topics
-                            option(value=topic.id) #{topic.title}
-
-                div
                     label(for='active') Widoczne:
                     input#active(type='checkbox', name='taskVisible')
                 //div

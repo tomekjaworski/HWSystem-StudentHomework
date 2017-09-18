@@ -81,6 +81,7 @@ module.exports.routes = {
   '/teacher/topics-and-tasks': 'TeacherController.listTopicsAndTasks',
   '/teacher/topics-and-tasks/view/:id': {action: 'teacher/taskView', skipAssets: true},
   '/teacher/topics-and-tasks/topic/add': 'TeacherController.addTopic',
-  '/teacher/topics-and-tasks/task/add': 'TeacherController.addTask'
+  '/teacher/topics-and-tasks/topic/:topicId/task/add': 'TeacherController.addTask',
+  '/teacher/topics-and-tasks/task/edit/:id': 'TeacherController.editTask'
 
 }

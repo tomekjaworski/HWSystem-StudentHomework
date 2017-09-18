@@ -65,7 +65,6 @@ module.exports.policies = {
   },
 
   StudentController: {
-    '*': ['isLoggedIn', 'hasRoleStudent'],
-    'uploadTaskFiles': true
+    '*': ['isLoggedIn', 'hasRoleStudent']
   }
 }
