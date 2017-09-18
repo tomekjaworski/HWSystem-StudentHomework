@@ -389,5 +389,120 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
         })
       })
     })
+  },
+
+  listTopicsAndTasks: function (req, res) {
+    Topics.find().populate('tasks').exec(function (err, topics) {
+      if (err) {
+        return res.serverError(err)
+      }
+
+      return res.view('teacher/topicsAndTasks/list', {data: topics })
+    })
+  },
+
+  taskView: function (req, res) {
+    let id = req.param('id')
+    Tasks.findOne(id).populate('topic').exec(function (err, task) {
+      if (err) {
+        return res.serverError(err)
+      }
+      if (!task) {
+        return res.notFound()
+      }
+      return res.view('teacher/topicsAndTasks/taskView', {task: task})
+    })
+  },
+
+  addTopic: function (req, res) {
+    let a = (msg) => Roles.findOne({name: 'teacher'}).populate('users').exec((err, role) => {
+      if (err) {
+        return res.serverError(err)
+      }
+      if (!role) {
+        return res.serverError('Nie znaleziono roli prowadzącego, zgłoś się do administratora')
+      }
+
+      return res.view('teacher/topicsAndTasks/addTopic',
+        {title: 'Add Topic :: Teacher Panel', users: role.users, message: msg})
+    })
+    if (req.method === 'POST') {
+      let number = req.param('topicNumber')
+      let title = req.param('topicTitle')
+      let deadline = req.param('topicDeadline')
+      // if (!_.isString(title) || !_.isString(number) || !deadline) {
+      //   return a('Uzupełnij wszystkie pola')
+      // }
+      Topics.create({
+        number: number,
+        title: title,
+        visible: true,
+        deadline: deadline
+      }).exec(function (err, topic) {
+        if (err) {
+          return res.serverError(err)
+        }
+        if (!topic) {
+          return res.serverError('Nie udało się utworzyć tematu')
+        }
+        return res.redirect('/teacher/topics-and-tasks/')
+      })
+    } else {
+      a()
+    }
+  },
+
+  addTask: function (req, res) {
+    let a = (msg) => Roles.findOne({name: 'teacher'}).populate('users').exec((err, role) => {
+      if (err) {
+        return res.serverError(err)
+      }
+      if (!role) {
+        return res.serverError('Nie znaleziono roli prowadzącego, zgłoś się do administratora')
+      }
+      Topics.find().exec(function (err, topics) {
+        if (err) {
+          return res.serverError(err)
+        }
+        return res.view('teacher/topicsAndTasks/add',
+          {title: 'Add Tasks :: Teacher Panel', users: role.users, message: msg, topics: topics})
+      })
+    })
+    if (req.method === 'POST') {
+      let number = req.param('taskNumber')
+      let title = req.param('taskTitle')
+      let description = req.param('taskDescription')
+      let topic = req.param('taskTopic')
+      // let visible = req.param('taskVisible')
+      if (!_.isString(title) || !_.isString(number) || !_.isString(description) ||
+        !title || !topic) {
+        return a('Uzupełnij wszystkie pola')
+      }
+      Tasks.create({
+        number: number,
+        title: title,
+        visible: true,
+        topic: topic
+      }).meta({fetch: true}).exec((err, task) => {
+        if (err) {
+          return res.serverError(err)
+        }
+        if (!task) {
+          return res.serverError('Nie udało sie uwtorzyć zadania')
+        }
+        TaskDescription.create({
+          task: task.id,
+          description: description
+        }).exec(function (err) {
+          if (err) {
+            return res.serverError(err)
+          }
+          return res.redirect('/teacher/topics-and-tasks/view/' + task.id)
+        })
+      })
+    } else {
+      a()
+    }
   }
+
 }

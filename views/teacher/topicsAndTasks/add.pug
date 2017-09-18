@@ -1,0 +1,45 @@
+extends ../../includes/layout
+
+block content
+    if (message !== undefined && message && (message.length > 0 ))
+        .alert.alert-danger(role='alert')
+            strong Wiadomość:
+            |  #{message}
+    .row
+        .col-md-12.col-lg-4#topics-column
+            include ../menu
+
+        .col-md-12.col-lg-8
+            h1= title
+            form(method='post')
+                div
+                    label(for='number') Numer:
+                    br
+                    input#number(name='taskNumber')
+                div
+                    label(for='title') Tytuł:
+                    br
+                    input#title(name='taskTitle')
+                div
+                    label(for='description') Opis:
+                    br
+                    textarea#description(name='taskDescription')
+                div
+                    span Temat:
+                    br
+                    select(name='taskTopic')
+                        each topic in topics
+                            option(value=topic.id) #{topic.title}
+
+                div
+                    label(for='active') Widoczne:
+                    input#active(type='checkbox', name='taskVisible')
+                //div
+                //    label(for='owner') Prowadzący:
+                //    select#owner(name='owner')
+                //        for user in users
+                //            if user.id === localUser.id
+                //                option(value=user.id, selected)= user.fullName()
+                //            else
+                //                option(value=user.id)= user.fullName()
+                input(type='submit')

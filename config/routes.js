@@ -75,6 +75,12 @@ module.exports.routes = {
   // Teachers // Replies
   '/teacher/replies': 'TeacherController.selectTaskReplies',
   '/teacher/replies/view/:taskid': {action: 'teacher/viewTaskReplies', skipAssets: true},
-  '/ajax/teacher/replies/view/:taskId/lab/:labId': {action: 'teacher/viewTaskOfLab', skipAssets: true}
+  '/ajax/teacher/replies/view/:taskId/lab/:labId': {action: 'teacher/viewTaskOfLab', skipAssets: true},
+
+  // Teachers // Topics & Tasks
+  '/teacher/topics-and-tasks': 'TeacherController.listTopicsAndTasks',
+  '/teacher/topics-and-tasks/view/:id': {action: 'teacher/taskView', skipAssets: true},
+  '/teacher/topics-and-tasks/topic/add': 'TeacherController.addTopic',
+  '/teacher/topics-and-tasks/task/add': 'TeacherController.addTask'
 
 }
