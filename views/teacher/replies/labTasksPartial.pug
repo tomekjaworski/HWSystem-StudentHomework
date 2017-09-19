@@ -7,7 +7,7 @@ div.d-flex
                 h5 Brak aktywnych studentów w grupie
             else
                 each student in data
-                    .col-6(style='display: inline-block;float: none;border:1px solid black;')
+                    .col-6(style='display: inline-block;float: none;border:1px solid black;' + (student.reply.teacherStatus === 1 ? 'background-color:lightgreen;' : (student.reply.teacherStatus === 2 ? 'background-color:rgba(200,0,0,0.7);' : '')))
                         div
                             h5=student.name + ' ' + student.surname
                         div='Czas na odpowiedź: '+student.deadline
@@ -18,13 +18,20 @@ div.d-flex
                         else
                             div
                                 h6 Odpowiedź:
-                                div Ocena nauczyciela: #{student.reply.teacherStatus}
-                                div Testy Maszynowe: #{student.reply.machineStatus}
+                                div Ocena:
+                                    select(onchange='setTeacherStatus(' + student.reply.id + ', this)')
+                                        each option in [{'id':0, 'name':'Nieocenione'}, {'id':1, 'name': 'Zaliczone'}, {'id':2, 'name':'Niezaliczone'}]
+                                            if student.reply.teacherStatus === option.id
+                                                option(value=option.id, selected)=option.name
+                                            else
+                                                option(value=option.id)=option.name
+                                - var tests = {'0':'Nierozpoczęte', '1':'W kolejce', '2':'Zaliczone', '3':'Niezaliczone'}
+                                div Testy Maszynowe: #{tests[student.reply.machineStatus]}
                                 div Zablokowany: #{student.reply.blocked}
                             div
                                 h6 Pliki
                                 each file in student.reply.files
-                                    div(style='border:1px solid black; margin-bottom:10px')
+                                    div(style='border:1px solid black; margin-bottom:10px;background-color:white;')
                                         div='Nazwa: '+file.fileName + '.' + file.fileExt
                                         div='Rozmiar: ' + file.fileSize + ' kb'
                                         div='MimeType: ' + file.fileMimeType
@@ -48,6 +55,6 @@ div.d-flex
                                         div='Data: ' + comment.createdAt
                                         div='Przeczytane: ' + comment.viewed
                                         div Treść:
-                                            div(style='border:1px solid black;margin:1px;padding:1px;')=comment.comment
+                                            div(style='border:1px solid black;margin:1px;padding:1px;background-color:white;')=comment.comment
                             else
                                 div Brak

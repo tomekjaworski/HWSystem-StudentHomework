@@ -13,24 +13,46 @@ block content
                     h3.text-center=data.number + '. ' + data.title
 
                     div.text-center
-                        form(onsubmit='getLabTasks(); return false;')
+                        form(onsubmit='return false;')
                             label(for='selectLab') Wybierz grupy do sprawdzenia
                             br
                             select#selectLab(name='labs', multiple)
                                 each lab in data.labs
                                     option(value=lab.id)= lab.name + ' - ' + lab.owner.fullName()
                             br
-                            input(type='submit' onclick='')
+                            input(type='submit' onclick='getLabTasks();')
 
                     div#labs
 
 
                     script.
-                        function getLabTasks(e){
+                        function getLabTasks(){
                           var selected = $('#selectLab').val();
-                          $('#labs').html('');
-                          for(var s in selected)
-                          $.get("/ajax/teacher/replies/view/"+#{data.id}+"/lab/"+selected[s], function (data){
-                            $('#labs').prepend(data);
-                          });
+                          $('#labs').html('<h3 id="labSpinner">Ładowanie <i class=\'fa fa-spinner fa-spin\'></i></h3>');
+                          var gets = [];
+                          for(var s in selected) {
+                              gets.push($.get("/ajax/teacher/replies/view/" + #{data.id} + "/lab/" + selected[s], function (data) {
+                                  $('#labs').prepend(data);
+                              }));
+                          }
+                          $.when.apply($, gets).then(function(){
+                              $('#labSpinner').remove()
+                          })
+                            return false;
+                        }
+
+                        function setTeacherStatus(id, e){
+                            alert(e.value)
+                            $.ajax({
+                                url: '/ajax/teacher/replies/setTeacherStatus/'+id,
+                                method: 'POST',
+                                data: {
+                                    status: e.value
+                                }
+                            }).done(function () {
+                                alert('Pomyślnie zmieniono')
+                            })
+                            .fail(function (jqXHR, textStatus, errorThrown) {
+                                alert('Nie udało się zmienić oceny:  ' + textStatus + ' - ' + errorThrown)
+                            })
                         }

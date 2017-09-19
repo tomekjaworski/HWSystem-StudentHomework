@@ -264,8 +264,12 @@ const TeacherController = module.exports = {
   },
 
   viewTaskOfLab: function (req, res) {
-    let taskId = req.param('taskId')
-    let labId = _.toInteger(req.param('labId'))
+
+    let taskId = parseInt(req.param('taskId'), '10')
+    let labId = parseInt(req.param('labId'), '10')
+    if (!_.isInteger(taskId) || !_.isInteger(labId)) {
+        return res.notFound()
+    }
     Tasks.findOne(taskId).exec((err, task) => {
       if (err) {
         return res.serverError(err)
@@ -389,5 +393,24 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
         })
       })
     })
+  },
+
+  ajaxSetTeacherStatus: function (req, res) {
+      let replyId = parseInt(req.param('replyid'), '10')
+      let status = parseInt(req.param('status'), '10')
+      if (!_.isInteger(replyId) || !_.isInteger(status)) {
+          return res.notFound()
+      }
+      if(![0,1,2].includes(status)){
+          return res.badRequest()
+      }
+      let sent = true;
+      if(status === 0){
+          sent = false;
+      }
+      TaskReplies.update(replyId,{teacherStatus: status, sent: sent}).exec((err)=>{
+          if(err) return res.serverError(err)
+          return res.json({error: false})
+      })
   }
 }

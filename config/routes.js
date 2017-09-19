@@ -75,6 +75,7 @@ module.exports.routes = {
   // Teachers // Replies
   '/teacher/replies': 'TeacherController.selectTaskReplies',
   '/teacher/replies/view/:taskid': {action: 'teacher/viewTaskReplies', skipAssets: true},
-  '/ajax/teacher/replies/view/:taskId/lab/:labId': {action: 'teacher/viewTaskOfLab', skipAssets: true}
+  '/ajax/teacher/replies/view/:taskId/lab/:labId': {action: 'teacher/viewTaskOfLab', skipAssets: true},
+  '/ajax/teacher/replies/setTeacherStatus/:replyid': {action: 'teacher/ajaxSetTeacherStatus', skipAssets: true}
 
 }
