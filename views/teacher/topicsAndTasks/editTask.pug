@@ -22,8 +22,24 @@ block content
                     br
                     input#title(name='taskTitle', value=task.title)
 
-                //div
-                //    label(for='active') Widoczne:
-                //    input#active(type='checkbox', name='taskVisible')
+                if description
+                    div
+                        label(for="desc") Opis zadania:
+                        br
+                        textarea#desc(name="taskDescription") #{description.description}
+                else
+                    div
+                        label(for="desc") Opis zadania:
+                        br
+                        textarea#desc(name="taskDescription")
+                div
+                    label(for="select") Temat zadania:
+                    br
+                    select#select(name="taskTopic")
+                        each t in topics
+                            option(value=t.id)=t.number +' '+ t.title
+                div
+                    label(for='active') Widoczne:
+                    input#active(type='checkbox', name='taskVisible' value="ok" checked)
 
                 input(type='submit')

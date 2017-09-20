@@ -411,7 +411,12 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
       if (!task) {
         return res.notFound()
       }
-      return res.view('teacher/topicsAndTasks/taskView', {task: task})
+      TaskDescription.findOne({task: task.id}).exec(function (err, description) {
+        if(err){
+          return res.serverError(err)
+        }
+        return res.view('teacher/topicsAndTasks/taskView', {task: task, description:description})
+      })
     })
   },
 
@@ -474,15 +479,20 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
       let title = req.param('taskTitle')
       let description = req.param('taskDescription')
       let topic = req.param('topicId')
-      // let visible = req.param('taskVisible')
+      let vis = req.param('taskVisible')
       if (!_.isString(title) || !_.isString(number) || !_.isString(description) ||
         !title) {
         return a('Uzupełnij wszystkie pola')
       }
+      if(vis === 'ok'){
+        vis = true
+      }else {
+        vis = false
+      }
       Tasks.create({
         number: number,
         title: title,
-        visible: true,
+        visible: vis,
         topic: topic
       }).meta({fetch: true}).exec((err, task) => {
         if (err) {
@@ -515,14 +525,21 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
       if (!role) {
         return res.serverError('Nie znaleziono roli prowadzącego, zgłoś się do administratora')
       }
-      Tasks.findOne({id: id}).exec(function (err, task) {
+      Tasks.findOne({id: id}).populate('description').exec(function (err, task) {
         if (err) {
           return res.serverError(err)
         }
         if (!task) {
           return res.notFound()
         }
-        return res.view('teacher/topicsAndTasks/editTask', {task: task})
+        Topics.find().exec(function (err, topics) {
+          TaskDescription.findOne({task: task.id}).exec(function (err, description) {
+            if(err){
+              return res.serverError(err)
+            }
+            return res.view('teacher/topicsAndTasks/editTask', {task: task, topics:topics, description:description})
+          })
+        })
       })
     })
     if (req.method === 'POST') {
@@ -530,19 +547,23 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
       let number = req.param('taskNumber')
       let description = req.param('taskDescription')
       let topic = req.param('taskTopic')
+      let vis = req.param('taskVisible')
+      if(vis === 'ok'){
+        vis = true
+      }else {
+        vis = false
+      }
       Tasks.update({id: id},
         {
           number: number,
           title: title,
-          topic: topic
+          topic: topic,
+          visible:vis
         }).exec(function (err, task) {
           if (err) {
             return res.serverError(err)
           }
-          if (!task) {
-            return res.serverError('coś poszło nie tak. ops')
-          }
-          TaskDescription.update({task: task.id},
+          TaskDescription.update({task: task},
             {
               description: description
             }).exec(function (err, desc) {

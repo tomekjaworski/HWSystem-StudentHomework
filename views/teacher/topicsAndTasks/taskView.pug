@@ -8,3 +8,8 @@ block content
 
         .col-md-12.col-lg-8
             h1= task.title
+            h2= task.topic.number + task.topic.title
+            if description
+                p= description.description
+            else
+                p nie ma opisu zadania

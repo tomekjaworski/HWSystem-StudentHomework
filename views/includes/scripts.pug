@@ -2,7 +2,7 @@ script(src='https://code.jquery.com/jquery-3.2.1.min.js', integrity='sha384-xBuQ
 script(src='https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js', integrity='sha256-gL1ibrbVcRIHKlCO5OXOPC/lZz/gpdApgQAzskqqXp8=', crossorigin='anonymous')
 script(src='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js', integrity='sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn', crossorigin='anonymous')
 script(src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML', integrity='sha384-Ra6zh6uYMmH5ydwCqqMoykyf1T/+ZcnOQfFPhDrp2kI4OIxadnhsvvA2vv9A7xYv', crossorigin='anonymous')
-
+script(src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/8.4.0/markdown-it.min.js")
 script(type='text/x-mathjax-config').
     MathJax.Hub.Config({
       tex2jax: {
@@ -15,6 +15,10 @@ script(type='text/x-mathjax-config').
           mpMouse: true
       }
     });
+
+script.
+    var md = window.markdownit();
+    var result = md.render('#test');
 
 if sails.config.environment === "production"
     script(src='/min/production.min.js')

@@ -26,13 +26,7 @@ block content
                     textarea#description(name='taskDescription')
                 div
                     label(for='active') Widoczne:
-                    input#active(type='checkbox', name='taskVisible')
-                //div
-                //    label(for='owner') Prowadzący:
-                //    select#owner(name='owner')
-                //        for user in users
-                //            if user.id === localUser.id
-                //                option(value=user.id, selected)= user.fullName()
-                //            else
-                //                option(value=user.id)= user.fullName()
+                    input#active(type='checkbox', name='taskVisible' value="ok" checked)
+
                 input(type='submit')
+
