@@ -60,7 +60,7 @@ function loadFileContent (reply, id) {
       $('#fileContentModal').modal()
     })
     .fail(function (jqXHR, textStatus, errorThrown) {
-      alert('Nie udało się wczytać danych: ' + textStatus + ' - ' + errorThrown)
+      alert('Nie udało się wczytać danych: ' + textStatus + ' - ' + errorThrown + (jqXHR.responseJSON ? '\n'+jqXHR.responseJSON : ''))
     })
 }
 

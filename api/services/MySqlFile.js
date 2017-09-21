@@ -46,6 +46,12 @@ module.exports = function MySqlStore (globalOpts) {
             err.status = 404
             return cb(err)
           }
+          if(!file.file){
+              err = new Error()
+              err.name = 'File fontents not found'
+              err.code = 'E_FILE_CONTENTS_NOT_FOUND'
+              return cb(err)
+          }
           if (globalOpts.convert) {
             if (file.fileMimeType.includes('text/')) {
               file.file = Object.values(base64.toByteArray(file.file.content))

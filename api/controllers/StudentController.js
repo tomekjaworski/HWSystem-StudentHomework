@@ -263,6 +263,9 @@ WHERE slb.active=1 AND slb.student = $2`,
         if (err.code === 400) {
           return res.notFound()
         }
+        if (err.code === 'E_FILE_CONTENTS_NOT_FOUND') {
+          return res.serverError('Plik nie ma treści, najpewniej błąd podczas wysyłania, prosimy przesłać ponownie')
+        }
         return res.serverError(err)
       }
       if (file.reply.student !== req.localUser.id) {
