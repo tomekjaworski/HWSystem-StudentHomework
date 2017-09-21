@@ -398,7 +398,7 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
       topics = _.forEach(topics, (t) => {
         t.deadline = dateFormat(t.deadline, 'dd/mm/yyyy')
       })
-      return res.view('teacher/topicsAndTasks/list', {data: topics})
+      return res.view('teacher/topicsAndTasks/list', {data: topics, menuItem: 'topics'})
     })
   },
 
