@@ -6,39 +6,39 @@ block content
             strong Wiadomość:
             |  #{message.message}
 
-
     .row
         .col-md-12.col-lg-4#topics-column
             include ../menu
-        .hidden-md-down.col-lg-8#tasks-column
-            //-include tasks
-            div.d-flex.justify-content-center
-                .col-12
-                    h2.text-center widok grupy
+        .col-md-12.col-lg-8#tasks-column
+            .card
+                .card-header.text-center
+                    strong=data.name
+                .card-block
 
-                    form(method='post')
-                        label(for='message') Wiadomość:
-                        input#message(name='message', value=data.message)
-                        input(type='submit')
+                    form(method='post').form-inline.mb-0.mb-sm-2
+                        label.mr-sm-2(for='message') Wiadomość:
+                        input.form-control.mb-2.mr-sm-2.mb-sm-0#message(name='message', value=data.message)
+                        input.btn.btn-primary.mb-2.mr-sm-2.mb-sm-0(type='submit')
+                    div
+                        a.btn.btn-primary.mb-2.mr-sm-2.mb-sm-0(href='/teacher/labgroup/view/'+data.id+'/new') Pokaż oczekujących studentów
+                        a.btn.btn-primary.mb-2.mr-sm-2.mb-sm-0(href='/teacher/labgroup/edit/'+data.id+'/') Edytuj grupę
 
-                    a(href='/teacher/labgroup/view/'+data.id+'/new') Pokaż oczekujących studentów
-                    br
-                    a(href='/teacher/labgroup/edit/'+data.id+'/') Edytuj grupę
 
-                    table.table.table-striped.table-hover.responsive
-                        thead
+                table.table.table-striped.table-hover.responsive.table-grouplist
+                    thead
+                        tr
+                            th ID
+                            th Student
+                            th Album
+                            th Opcje
+                    tbody
+                        if data.students.length === 0
                             tr
-                                th ID
-                                th Student
-                                th Album
-                                th Opcje
-                        tbody
-                            each student in data.students
-                                tr
-                                    th(scope='row')=student.student.id
-                                    td=student.student.fullName()
-                                    td=student.student.album
-                                    td
-                                        a(href='?deactive='+student.student.id) Deaktywuj
-
-                    h5.text-center nazwa grupy :: liczba studentow :: liczba nowych odpowiedzi
+                                td.text-center(colspan='4') Brak studentów w grupie
+                        each student in data.students
+                            tr
+                                th(scope='row')=student.student.id
+                                td=student.student.fullName()
+                                td=student.student.album
+                                td
+                                    a.btn.btn-sm.btn-danger(href='?deactive='+student.student.id) Deaktywuj

@@ -9,12 +9,46 @@ block content
     .row
         .col-md-12.col-lg-4#topics-column
             include ../menu
-        .hidden-md-down.col-lg-8#tasks-column
-            //-include tasks
-            div.d-flex.justify-content-center
-                .col-8
-                    h2.text-center= data.name
-                    h2.text-center edytowanie grup
+        .col-md-12.col-lg-8#tasks-column
+            .card
+                .card-header.text-center
+                    strong #{data.name} - Edycja grupy
+                .card-block
+                    .container
+                        form(method='post')
+                            .form-group.row
+                                label.col-sm-3.col-form-label(for='inputTitle') Title
+                                .col-sm-9
+                                    input#inputTitle.form-control(type='text', name='title', value=data.name)
+                            .form-group.row
+                                label.col-sm-3.col-form-label(for='inputDescription') Description
+                                .col-sm-9
+                                    input#inputDescription.form-control(type='text', name='desc', value=data.description)
+                            .form-group.row
+                                label.col-sm-3 Status grupy
+                                .col-sm-9
+                                    .form-check
+                                        label.form-check-label
+                                        if data.active
+                                            input.form-check-input(type='checkbox', name='active', checked)
+                                            |  Aktywna
+                                        else
+                                            input.form-check-input(type='checkbox', name='active')
+                                            |  Aktywna
+
+                            .form-group.row
+                                label.col-sm-3.col-form-label(for='inputOwner') Owner
+                                .col-sm-9
+                                    select.form-control#inputOwner(name='owner')
+                                        for user in users
+                                            if user.id === data.owner
+                                                option(value=user.id, selected)= user.fullName()
+                                            else
+                                                option(value=user.id)= user.fullName()
+                            .form-group.row
+                                .col-sm-12
+                                    button.btn.btn-primary(type='submit') Dodaj
+                //.card-block
 
                     form(method='post')
                         div
@@ -22,7 +56,7 @@ block content
                             input#title(name='title', value=data.name)
                         div
                             label(for='description') Opis:
-                            input#description(name='desc', value=data.description)
+                            input#description(name='desc')
                         div
                             label(for='active') Aktywna:
                             if data.active

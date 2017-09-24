@@ -37,9 +37,9 @@
   text-align: center;
 }
 .task-comment-markread:hover {
-    color: #fff;
-    background-color: #1863e6;
-    border-color: #175fdd;
+  color: #fff;
+  background-color: #1863e6;
+  border-color: #175fdd;
 }
 
 #task-content {
@@ -70,12 +70,11 @@
   }
 }
 
-
 .custom-task-file {
   position: relative;
   display: inline-block;
   max-width: 100%;
-  margin-bottom: 0px;
+  margin-bottom: 0;
   cursor: pointer;
 }
 
@@ -83,13 +82,13 @@
   min-width: 14rem;
   max-width: 100%;
   opacity: 0;
-  margin: 0px;
+  margin: 0;
 }
 .custom-task-file-control {
   position: absolute;
-  top: 0px;
-  right: 0px;
-  left: 0px;
+  top: 0;
+  right: 0;
+  left: 0;
   z-index: 5;
   line-height: 1.25;
   color: rgb(85, 89, 92);
@@ -122,7 +121,7 @@
   border-style: solid;
   border-color: rgba(0, 0, 0, 0.1);
   border-image: initial;
-  border-radius: 0px 17.25px 17.25px 0px;
+  border-radius: 0 17.25px 17.25px 0;
 }
 
 .custom-task-file-control::before {

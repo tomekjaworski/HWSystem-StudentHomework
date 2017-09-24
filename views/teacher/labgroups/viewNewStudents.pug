@@ -10,28 +10,26 @@ block content
     .row
         .col-md-12.col-lg-4#topics-column
             include ../menu
-        .hidden-md-down.col-lg-8#tasks-column
-            //-include tasks
-            div.d-flex.justify-content-center
-                .col-12
-                    h2.text-center widok grupy
+        .col-md-12.col-lg-8#tasks-column
+            .card
+                .card-header.text-center
+                    strong=data.name
+                .card-block
 
-                    a(href='/teacher/labgroup/view/'+data.id) Pokaż aktywnych studentów
+                    a.btn.btn-primary(href='/teacher/labgroup/view/'+data.id) Pokaż aktywnych studentów
 
-                    table.table.table-striped.table-hover.responsive
-                        thead
+                table.table.table-striped.table-hover.responsive.table-grouplist
+                    thead
+                        tr
+                            th ID
+                            th Student
+                            th Album
+                            th Opcje
+                    tbody
+                        each student in data.students
                             tr
-                                th ID
-                                th Student
-                                th Album
-                                th Opcje
-                        tbody
-                            each student in data.students
-                                tr
-                                    th(scope='row')=student.student.id
-                                    td=student.student.fullName()
-                                    td=student.student.album
-                                    td
-                                        a(href='?active='+student.student.id) Aktywuj
-
-                    h5.text-center nazwa grupy :: liczba studentow :: liczba nowych odpowiedzi
+                                th(scope='row')=student.student.id
+                                td=student.student.fullName()
+                                td=student.student.album
+                                td
+                                    a.btn.btn-sm.btn-success(href='?active='+student.student.id) Aktywuj
