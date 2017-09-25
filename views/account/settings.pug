@@ -2,7 +2,7 @@ extends ../includes/layout
 
 block content
     .card
-        h3.card-header Edycja konta
+        h5.card-header Edycja konta
         .card-block
             //-var message = "123"
             if message
@@ -12,7 +12,7 @@ block content
                     | #{message}
             .row
                 .col-sm-6
-                    h1 Zmiana hasła
+                    h5 Zmiana hasła
                     form(method='post' action='/settings')
                         .form-group
                             label(for='inputOldPass') Stare hasło
@@ -29,7 +29,7 @@ block content
 
                         button.btn.btn-primary.mb-4.mb-md-0(type='submit') Zmień hasło
                 .col-sm-6
-                    h1 Zmiana labu
+                    h5 Zmiana labu
                     form(method='post' action='/settings')
                         .form-group
                             label(for='inputLabSelect') Wybierz lab

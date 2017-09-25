@@ -46,22 +46,20 @@ module.exports = function MySqlStore (globalOpts) {
             err.status = 404
             return cb(err)
           }
-          if(!file.file){
-              err = new Error()
-              err.name = 'File fontents not found'
-              err.code = 'E_FILE_CONTENTS_NOT_FOUND'
-              return cb(err)
+          if (!file.file) {
+            err = new Error()
+            err.name = 'File fontents not found'
+            err.code = 'E_FILE_CONTENTS_NOT_FOUND'
+            return cb(err)
           }
           if (globalOpts.convert) {
             if (file.fileMimeType.includes('text/')) {
               file.file = Object.values(base64.toByteArray(file.file.content))
               file.file = cs.UTF8.bytesToString(file.file)
-            }
-            else {
+            } else {
               file.file = file.file.content
             }
-          }
-          else {
+          } else {
             file.file = Object.values(base64.toByteArray(file.file.content))
           }
           return cb(null, file)
@@ -78,14 +76,13 @@ module.exports = function MySqlStore (globalOpts) {
           files = _.forEach(files, (file) => {
             if (globalOpts.convert) {
               if (file.fileMimeType.includes('text/')) {
+                // TODO: Zrobić coś z tym bo to wymaga Node 8
                 file.file = Object.values(base64.toByteArray(file.file.content))
                 file.file = cs.UTF8.bytesToString(file.file)
-              }
-              else {
+              } else {
                 file.file = file.file.content
               }
-            }
-            else {
+            } else {
               file.file = Object.values(base64.toByteArray(file.file.content))
             }
           })
@@ -105,7 +102,6 @@ module.exports = function MySqlStore (globalOpts) {
         objectMode: true
       })
       receiver__._write = function onFile (__newFile, encoding, done) {
-
         if (__newFile.byteCount > options.maxBytes) {
           let err = new Error()
           err.code = 'E_EXCEEDS_UPLOAD_LIMIT'
@@ -171,8 +167,7 @@ module.exports = function MySqlStore (globalOpts) {
                       }
                       done()
                     })
-                  }
-                  else {
+                  } else {
                     done()
                   }
                 })

@@ -26,6 +26,9 @@ block content
                             th Album
                             th Opcje
                     tbody
+                        if data.students.length === 0
+                            tr
+                                td.text-center(colspan='4') Brak studentów do aktywacji
                         each student in data.students
                             tr
                                 th(scope='row')=student.student.id
