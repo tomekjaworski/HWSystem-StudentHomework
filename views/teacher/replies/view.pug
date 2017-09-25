@@ -41,18 +41,48 @@ block content
                             return false;
                         }
 
-                        function setTeacherStatus(id, e){
-                            alert(e.value)
-                            $.ajax({
-                                url: '/ajax/teacher/replies/setTeacherStatus/'+id,
-                                method: 'POST',
-                                data: {
-                                    status: e.value
-                                }
-                            }).done(function () {
-                                alert('Pomyślnie zmieniono')
-                            })
+                        function saveDeadline(student, task, del){
+                          var deadline = $('#deadline-student-'+student+'-task-'+task)
+                          $.ajax({
+                            url: '/ajax/teacher/replies/setStudentDeadline/' + task,
+                            method: 'POST',
+                            data: {
+                              student: student,
+                              deadline: deadline.val(),
+                              remove: del
+                            }
+                          }).done(function () {
+                            if(del){
+                              alert('Skasowano własny termin')
+                            }
+                            else {
+                              alert('Ustawiono własny termin')
+                            }
+                          })
                             .fail(function (jqXHR, textStatus, errorThrown) {
-                                alert('Nie udało się zmienić oceny:  ' + textStatus + ' - ' + errorThrown)
+                              alert('Nie udało się zmienić terminu:  ' + textStatus + ' - ' + errorThrown)
+                            })
+                        }
+
+                        function setTeacherStatus(id, e){
+                          $.ajax({
+                            url: '/ajax/teacher/replies/setTeacherStatus/' + id,
+                            method: 'POST',
+                            data: {
+                              status: e.value
+                            }
+                          }).done(function () {
+                            var task = $('#reply-' + id);
+                            if (e.value === '0') {
+                              task.css('background-color', '')
+                            }
+                            else if (e.value === '1') {
+                              task.css('background-color', 'lightgreen')
+                            } else if (e.value === '2') {
+                              task.css('background-color', 'rgba(200,0,0,0.7)')
+                            }
+                          })
+                            .fail(function (jqXHR, textStatus, errorThrown) {
+                              alert('Nie udało się zmienić oceny:  ' + textStatus + ' - ' + errorThrown)
                             })
                         }

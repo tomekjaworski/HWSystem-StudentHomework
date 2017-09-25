@@ -268,7 +268,7 @@ const TeacherController = module.exports = {
     let taskId = parseInt(req.param('taskId'), '10')
     let labId = parseInt(req.param('labId'), '10')
     if (!_.isInteger(taskId) || !_.isInteger(labId)) {
-        return res.notFound()
+      return res.notFound()
     }
     Tasks.findOne(taskId).exec((err, task) => {
       if (err) {
@@ -292,6 +292,7 @@ const TeacherController = module.exports = {
             return res.view('teacher/replies/labTasksPartial',
               {
                 lab: labgrp,
+                task: task,
                 data: null
               })
           }
@@ -311,7 +312,7 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
             }
             let deadlines = result.rows
             students = _.forEach(students, (s) => {
-              s.deadline = dateFormat(deadlines.find(d => d.student === s.id).deadline, 'dd/mm/yyyy')
+              s.deadline = dateFormat(deadlines.find(d => d.student === s.id).deadline, 'yyyy-mm-dd')
             })
             TaskComments.find({task: taskId, taskStudent: studentsId}).populate('user').exec((err, comments) => {
               if (err) {
@@ -331,6 +332,7 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
                   return res.view('teacher/replies/labTasksPartial',
                     {
                       lab: labgrp,
+                      task: task,
                       data: students
                     })
                 } else {
@@ -339,8 +341,8 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
                       return res.serverError(err)
                     }
 
-                    let promises = files.map(function(file) {
-                      return new Promise(function(resolve, reject) {
+                    let promises = files.map(function (file) {
+                      return new Promise(function (resolve, reject) {
                         if (file.fileMimeType.includes('text/')) {
                           let type = ''
                           if (['h', 'c'].includes(file.fileExt)) {
@@ -364,10 +366,10 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
                         else {
                           return resolve(file)
                         }
-                      });
-                    });
+                      })
+                    })
 
-                    Promise.all(promises).then((files)=>{
+                    Promise.all(promises).then((files) => {
                       for (let s of students) {
                         s.reply = replies.find(r => r.student === s.id)
                         if (s.reply) {
@@ -382,6 +384,7 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
                       return res.view('teacher/replies/labTasksPartial',
                         {
                           lab: labgrp,
+                          task: task,
                           data: students
                         })
                     })
@@ -396,21 +399,61 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
   },
 
   ajaxSetTeacherStatus: function (req, res) {
-      let replyId = parseInt(req.param('replyid'), '10')
-      let status = parseInt(req.param('status'), '10')
-      if (!_.isInteger(replyId) || !_.isInteger(status)) {
-          return res.notFound()
+    let replyId = parseInt(req.param('replyid'), '10')
+    let status = parseInt(req.param('status'), '10')
+    if (!_.isInteger(replyId) || !_.isInteger(status)) {
+      return res.badRequest()
+    }
+    if (![0, 1, 2].includes(status)) {
+      return res.badRequest()
+    }
+    let sent = true
+    if (status === 0) {
+      sent = false
+    }
+    TaskReplies.update(replyId, {teacherStatus: status, sent: sent}).exec((err) => {
+      if (err) {
+        return res.serverError(err)
       }
-      if(![0,1,2].includes(status)){
-          return res.badRequest()
-      }
-      let sent = true;
-      if(status === 0){
-          sent = false;
-      }
-      TaskReplies.update(replyId,{teacherStatus: status, sent: sent}).exec((err)=>{
-          if(err) return res.serverError(err)
-          return res.json({error: false})
+      return res.json({error: false})
+    })
+  },
+
+  ajaxSetStudentTaskDeadline: function (req, res) {
+    let taskId = parseInt(req.param('taskid'), '10')
+    let studentId = parseInt(req.param('student'), '10')
+    let deadline = req.param('deadline')
+    if (!_.isInteger(taskId) || !_.isInteger(studentId) || _.isEmpty(deadline)) {
+      return res.badRequest()
+    }
+    if(req.param('remove')){
+      StudentCustomDeadlines.destroy({student: studentId, task: taskId}).exec((err)=>{
+        if (err) {
+          return res.serverError(err)
+        }
+        return res.json({error: false})
       })
+    }
+    else {
+      var date = Date.parse(deadline)
+      StudentCustomDeadlines.findOrCreate({student: studentId, task: taskId}, {
+        student: studentId,
+        task: taskId,
+        deadline: date
+      }).exec((err, scd, created) => {
+        if (err) {
+          return res.serverError(err)
+        }
+        if (created) {
+          return res.json({error: false})
+        }
+        StudentCustomDeadlines.update(scd, {deadline: date}).exec((err) => {
+          if (err) {
+            return res.serverError(err)
+          }
+          return res.json({error: false})
+        })
+      })
+    }
   }
 }
