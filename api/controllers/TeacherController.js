@@ -414,11 +414,22 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
     if (status === 0) {
       sent = false
     }
-    TaskReplies.update(replyId, {teacherStatus: status, sent: sent}).exec((err) => {
+    TaskReplies.update(replyId, {teacherStatus: status, sent: sent}).meta({fetch: true}).exec((err,reply) => {
       if (err) {
         return res.serverError(err)
       }
-      return res.json({error: false})
+      TaskComments.create({
+          taskStudent: reply.student,
+          task: reply.task,
+          user: null,
+          comment: 'Prowadzący '+req.localUser.fullName()+(status===1 ? ' zaliczył Twoje rozwiązanie' : (status === 2 ? ' nie zaliczył Twojego rozwiązania' : ' skasował ocenę')),
+          viewed: false
+      }).exec((err)=>{
+        if (err) {
+            return res.serverError(err)
+        }
+        return res.json({error: false})
+      })
     })
   },
 
