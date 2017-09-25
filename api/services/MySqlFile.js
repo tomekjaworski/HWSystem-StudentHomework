@@ -54,13 +54,13 @@ module.exports = function MySqlStore (globalOpts) {
           }
           if (globalOpts.convert) {
             if (file.fileMimeType.includes('text/')) {
-              file.file = Object.values(base64.toByteArray(file.file.content))
+              file.file = _.values(base64.toByteArray(file.file.content))
               file.file = cs.UTF8.bytesToString(file.file)
             } else {
               file.file = file.file.content
             }
           } else {
-            file.file = Object.values(base64.toByteArray(file.file.content))
+            file.file = _.values(base64.toByteArray(file.file.content))
           }
           return cb(null, file)
         })
@@ -74,16 +74,21 @@ module.exports = function MySqlStore (globalOpts) {
             return cb(err)
           }
           files = _.forEach(files, (file) => {
-            if (globalOpts.convert) {
+            if (!file.file) {
+              err = new Error()
+              err.name = 'File fontents not found'
+              err.code = 'E_FILE_CONTENTS_NOT_FOUND'
+              file.file = {err:err}
+            }
+            else if (globalOpts.convert) {
               if (file.fileMimeType.includes('text/')) {
-                // TODO: Zrobić coś z tym bo to wymaga Node 8
-                file.file = Object.values(base64.toByteArray(file.file.content))
+                file.file = _.values(base64.toByteArray(file.file.content))
                 file.file = cs.UTF8.bytesToString(file.file)
               } else {
                 file.file = file.file.content
               }
             } else {
-              file.file = Object.values(base64.toByteArray(file.file.content))
+              file.file = _.values(base64.toByteArray(file.file.content))
             }
           })
           return cb(null, files)

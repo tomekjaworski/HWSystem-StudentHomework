@@ -21,7 +21,7 @@ const TeacherController = module.exports = {
 
   listLabGroups: function (req, res) {
     let show = req.param('show')
-    let cond = 'SELECT `labgroups`.`id`, `labgroups`.`active`, `labgroups`.`name`, COUNT(`sa`.`id`) `studentsCount`, COUNT(`sna`.`id`) `studentsNotCount`, `users`.`name`, `users`.`surname` FROM `labgroups` \n' +
+    let cond = 'SELECT `labgroups`.`id`, `labgroups`.`active`, `labgroups`.`name`, COUNT(`sa`.`id`) `studentsCount`, COUNT(`sna`.`id`) `studentsNotCount`, `users`.`name` as ownerName, `users`.`surname` as ownerSurname FROM `labgroups` \n' +
       'LEFT JOIN `studentslabgroups` `sa` ON `sa`.`labgroup` = `labgroups`.`id` AND `sa`.`active`=1\n' +
       'LEFT JOIN `studentslabgroups` `sna` ON `sna`.`labgroup` = `labgroups`.`id` AND `sna`.`active`=0\n' +
       'LEFT JOIN `users` ON `users`.`id` = `labgroups`.`owner`'
@@ -352,6 +352,9 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
                             type = 'c++'
                           }
                           else {
+                            return resolve(file)
+                          }
+                          if(file.file.err){
                             return resolve(file)
                           }
                           content = '```' + type + '\n' + file.file + '\n```'

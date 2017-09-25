@@ -20,43 +20,43 @@ div.d-flex
                             br
                         if !student.reply
                             div
-                                h5=student.name + ' ' + student.surname
-                            div='Czas na odpowiedź: '+student.deadline
-                            if !student.reply
-                                div
-                                    h6 Odpowiedź:
-                                    p Brak
-                            else
-                                div
-                                    h6 Odpowiedź:
-                                    div Ocena:
-                                        select(onchange='setTeacherStatus(' + student.reply.id + ', this)')
-                                            each option in [{'id':0, 'name':'Nieocenione'}, {'id':1, 'name': 'Zaliczone'}, {'id':2, 'name':'Niezaliczone'}]
-                                                if student.reply.teacherStatus === option.id
-                                                    option(value=option.id, selected)=option.name
-                                                else
-                                                    option(value=option.id)=option.name
-                                    - var tests = {'0':'Nierozpoczęte', '1':'W kolejce', '2':'Zaliczone', '3':'Niezaliczone'}
-                                    div Testy Maszynowe: #{tests[student.reply.machineStatus]}
-                                    div Zablokowany: #{student.reply.blocked}
-                                div
-                                    h6 Pliki
-                                    each file in student.reply.files
-                                        div(style='border:1px solid black; margin-bottom:10px;background-color:white;')
-                                            div='Nazwa: '+file.fileName + '.' + file.fileExt
-                                            div='Rozmiar: ' + file.fileSize + ' kb'
-                                            div='MimeType: ' + file.fileMimeType
+                                h6 Odpowiedź:
+                                p Brak
+                        else
+                            div
+                                h6 Odpowiedź:
+                                div Ocena:
+                                    select(onchange='setTeacherStatus(' + student.reply.id + ', this)')
+                                        each option in [{'id':0, 'name':'Nieocenione'}, {'id':1, 'name': 'Zaliczone'}, {'id':2, 'name':'Niezaliczone'}]
+                                            if student.reply.teacherStatus === option.id
+                                                option(value=option.id, selected)=option.name
+                                            else
+                                                option(value=option.id)=option.name
+                                - var tests = {'0':'Nierozpoczęte', '1':'W kolejce', '2':'Zaliczone', '3':'Niezaliczone'}
+                                div Testy Maszynowe: #{tests[student.reply.machineStatus]}
+                                div Zablokowany: #{student.reply.blocked}
+                            div
+                                h6 Pliki
+                                each file in student.reply.files
+                                    div(style='border:1px solid black; margin-bottom:10px;background-color:white;')
+                                        div='Nazwa: '+file.fileName + '.' + file.fileExt
+                                        div='Rozmiar: ' + file.fileSize + ' kb'
+                                        div='MimeType: ' + file.fileMimeType
+                                        div
+                                            h7 Tresc:
                                             div
-                                                h7 Tresc:
-                                                div
-                                                    if file.fileMimeType.includes('text/')
-                                                        div(style='border:1px solid black;margin:1px;padding:1px;') !{file.file}
-                                                    else if file.fileMimeType === 'image/png'
-                                                        img.img-fluid(src='data:image/pmg;base64,' + file.file)
-                                                    else if file.fileMimeType === 'image/bmp'
-                                                        img.img-fluid(src='data:image/bmp;base64,' + file.file)
-                                                    else
-                                                        p Nieobsługiwane rozszerzenie
+                                                if file.file.err
+                                                    div(style='border:1px solid black;margin:1px;padding:1px;')
+                                                        b BŁĄD
+                                                        | Brak zawartości pliku, najpewniej został źle przesłany
+                                                else if file.fileMimeType.includes('text/')
+                                                    div(style='border:1px solid black;margin:1px;padding:1px;') !{file.file}
+                                                else if file.fileMimeType === 'image/png'
+                                                    img.img-fluid(src='data:image/pmg;base64,' + file.file)
+                                                else if file.fileMimeType === 'image/bmp'
+                                                    img.img-fluid(src='data:image/bmp;base64,' + file.file)
+                                                else
+                                                    p Nieobsługiwane rozszerzenie
                             div
                                 h6 Komentarze:
                                 if student.comments
