@@ -6,6 +6,7 @@
   "keywords": [],
   "dependencies": {
     "base64-js": "^1.2.1",
+    "bytes": "^3.0.0",
     "concat-stream": "^1.6.0",
     "consolidate": "^0.14.5",
     "convert-string": "^0.1.0",

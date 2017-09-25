@@ -4,9 +4,6 @@
 TODO: Tematy [Dodawanie/Listowanie/Edycja/Kasowanie(jeśli brak w nim zdań)]
 TODO: Zadania w temacie [Listowanie/Dodawanie/Edycja/Kasowanie(Tu uwaga na realcje z zadaniami wykonanymi przez studenta)]
 
-TODO: Labgrupy [Dodawanie/-Listowanie-/Edycja/Kasowanie(tu uwaga na studentów w grupie)]
-TODO: Panel dodawania studentów do labgrupy
-
 TODO: Widok studenta z panelu nauczyciela i jego edycja i kasowanie
 
 TODO: Widok wysłanych zadań przez studentów
@@ -14,3 +11,5 @@ TODO: Widok wysłanych zadań przez studentów
 ## INNE
 
 TODO: Wystawienie api do pobierania zadań w formacie dokuwiki
+
+TODO: Komunikacja z zewnętrznymi aplikacjami

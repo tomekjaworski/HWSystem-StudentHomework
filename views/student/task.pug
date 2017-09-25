@@ -16,8 +16,13 @@ mixin commentBlock(com, hidden)
     .list-group-item.list-group-item-action.flex-column.align-items-start(style=(hidden ? 'display: none;': ''))
         .d-flex.w-100.justify-content-between
             h5.mb-1
-                strong.task-c-author=(com.user ? com.user.fullName() : '')
-                span &nbsp;napisał(a):
+                if com.user
+                    strong.task-c-author=(com.user ? com.user.fullName() : '')
+                    if com.user.hasRole('teacher')
+                        span.badge.badge-primary Prowadzący
+                    span &nbsp;napisał(a):
+                else
+                    span.badge.badge-info Wiadomość systemowa
             small.text-muted.task-c-timestamp= com.createdAt
         p.mb-1.task-c-comment= com.comment
         if !com.viewed
@@ -25,6 +30,16 @@ mixin commentBlock(com, hidden)
         else
             small.text-muted.task-c-read true
 block content
+
+    // TODO: jakiś alert ze statusem wykrytym z paska adresu "?msg=kodWiadomosci"
+        TODO: "cantUploadReplaySent" - nie można wgrać pliku po zgłoszeniu odpowiedzi
+        TODO: "fileTooBig" - jeden z wgrywanych plików jest za duży
+        TODO: "extNotAllowed" - niedozwolone rozszerzenie
+        TODO: "fileUpdateSuccess" - przesyłanie plików zakończone powodzeniem
+        TODO: "noFilesInReply" - Nie można przesłać rozwiązania bez plików
+        TODO: "replyAlreadySent" - Rozwiązanie już zgłoszone
+        TODO: "noMainFile" - Brak głównego pliku main.c lub main.cpp
+        TODO: "replySent" - Rozwiązanie wysłane
 
     #fileContentModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='fileContentModalTitle', aria-hidden='true')
         .modal-dialog.modal-lg(role='document')
@@ -79,24 +94,17 @@ block content
                         #task-content.card-block!= task.description
 
                 #files.tab-pane.fade(aria-expanded='false')
-                    if !taskReply
-                        h1 nie ma
-                    else
-                        //-
-                            h1 Task reply student: #{taskReply.student}
-                            h1 Task reply task: #{taskReply.task}
-                            h1 Task reply teacherStatus: #{taskReply.teacherStatus}
-                            h1 Task reply machineStatus: #{taskReply.machineStatus}
                         .card.text-center
-                            .card-header
-                                | A: #{taskReply.student} B: #{taskReply.task}
-                                | C: #{taskReply.teacherStatus} D: #{taskReply.machineStatus}
-                            .card-block
-                                .row
-                                    each file in taskReplyFiles
-                                        +fileIcon(file)
+                            if taskReply
+                                .card-header
+                                    | A: #{taskReply.student} B: #{taskReply.task}
+                                    | C: #{taskReply.teacherStatus} D: #{taskReply.machineStatus}
+                                .card-block
+                                    .row
+                                        each file in taskReplyFiles
+                                            +fileIcon(file)
 
-                            if !taskReply.sent
+                            if (taskReply && !taskReply.sent) || !taskReply
                                 .card-footer.text-muted
                                     if deadlineCanSend
                                         form(action='/topic/' + topic.id + '/task/' + task.id + '/uploadFile/', enctype='multipart/form-data', method='post')
@@ -153,14 +161,13 @@ block content
 
                         textarea#theComment(name='comment')
                         button(onclick='sendComment(' + top + ',' + tas + ',' + tasRep + ')') send
-                    script
-                      | var tData = {
-                      |     'top': #{topic.id},
-                      |     'tas': #{task.id}
-                      | }
-                      |
+                    script.
+                      var tData = {
+                          'top': #{topic.id},
+                          'tas': #{task.id}
+                      }
 
     script.
         var task = #{task.id},
           lastComment = #{lastid},
-          replySent = #{taskReply.sent}
+          replySent = #{(taskReply? taskReply.sent : false)}

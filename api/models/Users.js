@@ -79,7 +79,7 @@ const Users = module.exports = {
     },
 
     hasRole: function (name) {
-      if (this.roles.length !== 0) {
+      if (this.roles && this.roles.length !== 0) {
         return !!this.roles.filter((role) => role.name === name)[0]
       } else {
         let hasrole = false

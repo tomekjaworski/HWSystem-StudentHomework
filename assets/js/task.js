@@ -51,8 +51,7 @@ function loadFileContent (reply, id) {
       if (!replySent) {
         $('#fileContentModalRemove').attr('onclick', 'removeFileConfirm(' + reply + ', ' + id + ', "' + data.title + '")')
         $('#fileContentModalReplace').attr('onclick', 'replaceFile(' + reply + ', ' + id + ', "' + data.title + '", "' + data.ext + '")')
-      }
-      else{
+      } else {
         $('#fileContentModalRemove').hide()
         $('#fileContentModalReplace').hide()
       }
@@ -60,7 +59,7 @@ function loadFileContent (reply, id) {
       $('#fileContentModal').modal()
     })
     .fail(function (jqXHR, textStatus, errorThrown) {
-      alert('Nie udało się wczytać danych: ' + textStatus + ' - ' + errorThrown + (jqXHR.responseJSON ? '\n'+jqXHR.responseJSON : ''))
+      alert('Nie udało się wczytać danych: ' + textStatus + ' - ' + errorThrown + (jqXHR.responseJSON ? '\n' + jqXHR.responseJSON : ''))
     })
 }
 

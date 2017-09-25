@@ -65,18 +65,19 @@ module.exports.routes = {
   'GET /teacher': 'TeacherController.index',
 
   // Teachers // Labgroups
-  '/teacher/labgroup': 'TeacherController.listLabGroups',
-  '/teacher/labgroup/list': 'TeacherController.listLabGroups',
-  '/teacher/labgroup/view/:id': {action: 'teacher/viewLabGroup', skipAssets: true},
-  '/teacher/labgroup/view/:id/new': 'TeacherController.viewNewStudentsLabGroup',
-  '/teacher/labgroup/edit/:id': {action: 'teacher/editLabGroup', skipAssets: true},
-  '/teacher/labgroup/add': 'TeacherController.addLabGroup',
+  '/teacher/labgroup': 'teacher/LabsController.listLabGroups',
+  '/teacher/labgroup/list': 'teacher/LabsController.listLabGroups',
+  '/teacher/labgroup/view/:id': {action: 'teacher/labs/viewLabGroup', skipAssets: true},
+  '/teacher/labgroup/view/:id/new': 'teacher/LabsController.viewNewStudentsLabGroup',
+  '/teacher/labgroup/edit/:id': {action: 'teacher/labs/editLabGroup', skipAssets: true},
+  '/teacher/labgroup/add': 'teacher/LabsController.addLabGroup',
 
   // Teachers // Replies
-  '/teacher/replies': 'TeacherController.selectTaskReplies',
-  '/teacher/replies/view/:taskid': {action: 'teacher/viewTaskReplies', skipAssets: true},
-  '/ajax/teacher/replies/view/:taskId/lab/:labId': {action: 'teacher/viewTaskOfLab', skipAssets: true},
-  '/ajax/teacher/replies/setTeacherStatus/:replyid': {action: 'teacher/ajaxSetTeacherStatus', skipAssets: true},
-  '/ajax/teacher/replies/setStudentDeadline/:taskid': {action: 'teacher/ajaxSetStudentTaskDeadline', skipAssets: true}
-
+  '/teacher/replies': 'teacher/RepliesController.selectTaskReplies',
+  '/teacher/replies/view/:taskid': {action: 'teacher/replies/viewTaskReplies', skipAssets: true},
+  '/ajax/teacher/replies/view/:taskId/lab/:labId': {action: 'teacher/replies/viewTaskOfLab', skipAssets: true},
+  '/ajax/teacher/replies/setTeacherStatus/:replyid': {action: 'teacher/replies/ajaxSetTeacherStatus', skipAssets: true},
+  '/ajax/teacher/replies/setStudentDeadline/:taskid': {action: 'teacher/replies/ajaxSetStudentTaskDeadline', skipAssets: true},
+  '/ajax/teacher/replies/sendComment/:taskid': {action: 'teacher/replies/ajaxAddComment', skipAssets: true},
+  '/ajax/teacher/replies/checkComments/:taskid': {action: 'teacher/replies/ajaxCheckComments', skipAssets: true}
 }

@@ -40,7 +40,7 @@ div.d-flex
                                 each file in student.reply.files
                                     div(style='border:1px solid black; margin-bottom:10px;background-color:white;')
                                         div='Nazwa: '+file.fileName + '.' + file.fileExt
-                                        div='Rozmiar: ' + file.fileSize + ' kb'
+                                        div='Rozmiar: ' + file.fileSize
                                         div='MimeType: ' + file.fileMimeType
                                         div
                                             h7 Tresc:
@@ -57,15 +57,24 @@ div.d-flex
                                                     img.img-fluid(src='data:image/bmp;base64,' + file.file)
                                                 else
                                                     p Nieobsługiwane rozszerzenie
-                            div
-                                h6 Komentarze:
+                        div
+                            h6 Komentarze:
+                            - let comment = _.last(student.comments)
+                            - comment = (comment? comment.id : 0)
+                            div(id='comments-student-'+student.id, data-last=comment, style='max-height:400px;overflow:auto')
                                 if student.comments
                                     each comment in student.comments
-                                        div(style='border:1px solid black;margin:1px;padding:1px;')
+                                        div(id='comments-student-'+student.id + '-comment-'+comment.id, style='border:1px solid black;margin:1px;padding:1px;')
                                             div='Autor: ' + comment.user.name + ' ' + comment.user.surname
                                             div='Data: ' + comment.createdAt
                                             div='Przeczytane: ' + comment.viewed
                                             div Treść:
                                                 div(style='border:1px solid black;margin:1px;padding:1px;background-color:white;')=comment.comment
-                                else
-                                    div Brak
+                            div(id='loading-student-' + student.id, style='display:none')
+                                | Ładowanie
+                                i.fa.fa-spinner.fa-spin
+                            .input-group
+                                textarea.form-control.task-comment-textarea#commentTextArea(type='text', placeholder='Komentarz', name='comment', rows='1')
+                                span.input-group-btn
+                                    button.btn.btn-primary(onclick='sendComment('+student.id+','+task.id+')', type='button') Wyślij
+                                    button.btn.btn-primary(onclick='checkComments('+student.id+','+task.id+')', type='button') Odśwież
