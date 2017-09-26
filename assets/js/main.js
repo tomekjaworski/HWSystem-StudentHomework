@@ -138,9 +138,12 @@
           msg[i].machineStatus = '<i class="fa fa-times-circle fa-lg fa-fw text-danger"></i>'
         }
 
-        $('#tasks-tbody').append('<tr><th><a href="/topic/' + topicid + '/task/' + msg[i].id + '">' + msg[i].number + '</a></th><td>' + msg[i].title + '</td><td>' + msg[i].hasReply + '</td><td>' + msg[i].hasComments + '</td><td>' + msg[i].teacherStatus + '</td><td>' + msg[i].machineStatus + '</td><td>' + msg[i].deadline + '</td></tr>')
+        $('#tasks-tbody').append('<tr class="taskentry" data-taskid="' + msg[i].id + '"><th><a href="/topic/' + topicid + '/task/' + msg[i].id + '">' + msg[i].number + '</a></th><td>' + msg[i].title + '</td><td>' + msg[i].hasReply + '</td><td>' + msg[i].hasComments + '</td><td>' + msg[i].teacherStatus + '</td><td>' + msg[i].machineStatus + '</td><td>' + msg[i].deadline + '</td></tr>')
       }
       $('[data-toggle="tooltip"]').tooltip()
+      $('.taskentry').on('click', function () {
+        window.location = '/topic/' + topicid + '/task/' + $(this).data('taskid')
+      })
     })
 
     request.fail(function (jqXHR, textStatus) {

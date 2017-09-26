@@ -28,6 +28,9 @@
   min-width: 300px;
 }
 
+.table-tasklist .taskentry {
+  cursor: pointer;
+}
 .topic-entry-active,
 .topic-entry-active:hover {
   z-index: 2;
