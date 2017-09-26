@@ -1,3 +1,10 @@
+/**
+ * LabsController
+ *
+ * @description :: Server-side logic for managing Labs
+ * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
+ */
+
 const LabsController = module.exports = {
   listLabGroups: function (req, res) {
     let show = req.param('show')

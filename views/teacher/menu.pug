@@ -2,6 +2,6 @@
     .list-group.w-100
         a.list-group-item.list-group-item-action(href=sails.getUrlFor('TeacherController.index'), class=(menuItem === 'index' ? 'active' : '')) Dashboard
         a.list-group-item.list-group-item-action(href=sails.getUrlFor('teacher/LabsController.listLabGroups'), class=(menuItem === 'labgroups' ? 'active' : '')) Lab Groups
-        a.list-group-item.list-group-item-action(href=sails.getUrlFor('TeacherController.listTopicsAndTasks'), class=(menuItem === 'topics' ? 'active' : '')) Topics & Tasks
+        a.list-group-item.list-group-item-action(href=sails.getUrlFor('teacher/TopicsAndTasksController.listTopicsAndTasks'), class=(menuItem === 'topics' ? 'active' : '')) Topics & Tasks
         a.list-group-item.list-group-item-action(href=sails.getUrlFor('teacher/RepliesController.selectTaskReplies'), class=(menuItem === 'replies' ? 'active' : '')) Task Replies
         a.list-group-item.list-group-item-action(href=sails.getUrlFor('TeacherController.index'), class=(menuItem === 'users' ? 'active' : '')) Users

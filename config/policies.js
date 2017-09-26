@@ -64,6 +64,18 @@ module.exports.policies = {
     '*': ['isLoggedIn', 'hasRoleTeacher']
   },
 
+  LabsController: {
+    '*': ['isLoggedIn', 'hasRoleTeacher']
+  },
+
+  RepliesController: {
+    '*': ['isLoggedIn', 'hasRoleTeacher']
+  },
+
+  TopicAndTasksController: {
+    '*': ['isLoggedIn', 'hasRoleTeacher']
+  },
+
   StudentController: {
     '*': ['isLoggedIn', 'hasRoleStudent']
   }

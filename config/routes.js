@@ -83,9 +83,9 @@ module.exports.routes = {
   '/ajax/teacher/replies/checkComments/:taskid': {action: 'teacher/replies/ajaxCheckComments', skipAssets: true},
 
   // Teachers // Topics & Tasks
-  '/teacher/topics-and-tasks': 'TeacherController.listTopicsAndTasks',
-  '/teacher/topics-and-tasks/view/:id': {action: 'teacher/taskView', skipAssets: true},
-  '/teacher/topics-and-tasks/topic/add': 'TeacherController.addTopic',
-  '/teacher/topics-and-tasks/topic/:topicId/task/add': 'TeacherController.addTask',
-  '/teacher/topics-and-tasks/task/edit/:id': 'TeacherController.editTask'
+  '/teacher/topics-and-tasks': {action: 'teacher/topicsandtasks/listTopicsAndTasks', skipAssets: true},
+  '/teacher/topics-and-tasks/view/:id': {action: 'teacher/topicsandtasks/taskView', skipAssets: true},
+  '/teacher/topics-and-tasks/topic/add': {action: 'teacher/topicsandtasks/addTopic', skipAssets: true},
+  '/teacher/topics-and-tasks/topic/:topicId/task/add': {action: 'teacher/topicsandtasks/addTask', skipAssets: true},
+  '/teacher/topics-and-tasks/task/edit/:id': {action: 'teacher/topicsandtasks/editTask', skipAssets: true}
 }
