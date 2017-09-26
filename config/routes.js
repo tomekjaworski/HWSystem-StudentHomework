@@ -63,6 +63,7 @@ module.exports.routes = {
 
   // Teachers
   'GET /teacher': 'TeacherController.index',
+  'POST /teacher/markAsRead': 'TeacherController.markAsRead',
 
   // Teachers // Labgroups
   '/teacher/labgroup': 'teacher/LabsController.listLabGroups',

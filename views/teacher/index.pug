@@ -1,5 +1,11 @@
 extends ../includes/layout
 
+block scripts
+    script.
+      $('#setAllAsRead').on('change', function () {
+        $('.checks').prop("checked", this.checked);
+      })
+
 block content
 
     .row
@@ -7,6 +13,28 @@ block content
             include menu
         .hidden-md-down.col-lg-8#tasks-column
             //-include tasks
-            div.d-flex.justify-content-center
-                .col-8
-                    h2.text-center wybierz temat z bocznego menu aby przejsc do poszczególnych zadań, a tak ogólnie to jest dashboard i jakieś pierdoły tu będą
+            .card
+                .card-header.text-center
+                    strong Ostatnie wiadomości
+
+                table.table.table-striped.responsive.table-bordered.table-grouplist
+                    form(method='post', action='/teacher/markAsRead')
+                        table.table.table-striped.table-hover.responsive.table-grouplist
+                            thead
+                                tr
+                                    th
+                                        input(type='checkbox' id='setAllAsRead')
+                                    th Wiadomość
+                                    th Data
+                            tbody
+                                if actions && actions.length!==0
+                                    each action in actions
+                                        tr
+                                            th
+                                                input(type='checkbox' class='checks' name='actions' value=action.id)
+                                            td !{action.message}
+                                            td.text-center=action.updatedAt
+                                else
+                                    tr
+                                        td.text-center(colspan=4) Brak danych
+                        input.btn.btn-primary(type='submit' value='Oznacz przeczytane')

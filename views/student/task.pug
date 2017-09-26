@@ -141,6 +141,7 @@ block content
                             - i++
                         button.list-group-item.list-group-item-action.active.task-comment-markread.justify-content-center#commentMarkAsRead(style=(allviewed ? 'display: none;' : '')) Oznacz wszystko jako przeczytane
                     .input-group
+                        // TODO: dodać spinnera w trakcie wysyłania komentarza, obsłużyć dodanie poprawne i błąd dodawania i wyświetlić że się nie dodało, dodać blokadę przycisku aby nie spamować w trakcie wysyłania
                         textarea.form-control.task-comment-textarea#commentTextArea(type='text', placeholder='Komentarz', name='comment', rows='1')
                         span.input-group-btn
                             button.btn.btn-primary#commentSendButton(type='button') Wyślij

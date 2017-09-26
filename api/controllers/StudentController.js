@@ -76,7 +76,7 @@ module.exports = {
           return res.notFound()
         }
         sails.sendNativeQuery('SELECT tasks.id, tasks.number, tasks.title,\n' +
-          '(case when reply.id IS NOT NULL then 1 else 0 end) hasReply,\n' +
+          '(case when reply.sent = 1 then 1 else 0 end) hasReply,\n' +
           '(case when comments.task IS NOT NULL then 1 else 0 end) hasComments,\n' +
           '(case when reply.id IS NOT NULL then reply.teacherStatus else 0 end) teacherStatus,\n' +
           '(case when reply.id IS NOT NULL then reply.machineStatus else 0 end) machineStatus,\n' +
@@ -242,7 +242,14 @@ WHERE slb.active=1 AND slb.student = $2`,
                   if (err) {
                     return res.serverError(err)
                   }
-                  return res.json({'err': false})
+                  StudentsLabGroups.findOne({student:req.localUser.id, active:true}).exec((err,lab)=>{
+                    if(err) return res.serverError(err)
+                    if(!lab) return res.forbidden('Nie zostałeś aktywowany')
+                    RecentAction.addStudentComment(req.localUser.id,task,lab.labgroup,(err)=>{
+                      if(err) return res.serverError(err)
+                      return res.json({'err': false})
+                    })
+                  })
                 })
             }
           })
@@ -462,7 +469,14 @@ WHERE slb.active=1 AND slb.student = $2`,
           if (err) {
             return res.serverError(err)
           }
-          return res.redirect('/topic/' + topicid + '/task/' + taskid + '?msg=replySent')
+          StudentsLabGroups.findOne({student:req.localUser.id, active:true}).exec((err,lab)=>{
+            if(err) return res.serverError(err)
+            if(!lab) return res.forbidden('Nie zostałeś aktywowany')
+            RecentAction.sendTaskReply(req.localUser.id,taskid,lab.labgroup,(err)=>{
+              if(err) return res.serverError(err)
+              return res.redirect('/topic/' + topicid + '/task/' + taskid + '?msg=replySent')
+            })
+          })
         })
       })
     })

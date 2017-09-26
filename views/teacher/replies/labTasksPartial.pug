@@ -46,7 +46,7 @@ div.d-flex
                                             h7 Tresc:
                                             div
                                                 if file.file.err
-                                                    div(style='border:1px solid black;margin:1px;padding:1px;')
+                                                    div(style='border:1px solid black;margin:1px;padding:1px;overflow: auto;white-space: normal;')
                                                         b BŁĄD
                                                         | Brak zawartości pliku, najpewniej został źle przesłany
                                                 else if file.fileMimeType.includes('text/')
@@ -69,7 +69,8 @@ div.d-flex
                                             div='Data: ' + comment.createdAt
                                             div='Przeczytane: ' + comment.viewed
                                             div Treść:
-                                                div(style='border:1px solid black;margin:1px;padding:1px;background-color:white;')=comment.comment
+                                                div(style='border:1px solid black;margin:1px;padding:1px;background-color:white;')
+                                                    p(style='overflow: auto;margin: 0;white-space: normal;')=comment.comment
                             div(id='loading-student-' + student.id, style='display:none')
                                 | Ładowanie
                                 i.fa.fa-spinner.fa-spin
