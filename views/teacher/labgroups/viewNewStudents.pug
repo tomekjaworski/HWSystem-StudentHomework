@@ -1,9 +1,8 @@
 extends ../../includes/layout
 
 block content
-
     if (message !== undefined && message && message.message && (message.message.length > 0 ))
-        .alert(class='alert-' + message.attribute,role='alert')
+        .alert(class='alert-' + message.attribute, role='alert')
             strong Wiadomość:
             |  #{message.message}
 

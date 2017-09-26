@@ -88,11 +88,59 @@
     })
 
     request.done(function (msg) {
-      taskscolumn.html('<table class="table table-striped table-hover table-responsive table-tasklist"><thead><tr><th>Numer</th><th>Tytuł Zadania</th><th>A</th><th>B</th><th>C</th><th>D</th><th>Termin</th></tr></thead><tbody id="tasks-tbody"></tbody></table>')
+      taskscolumn.html('<table class="table table-striped table-hover table-responsive table-tasklist">' +
+        '<thead>' +
+        '<tr>' +
+        '<th>Numer</th>' +
+        '<th>Tytuł Zadania</th>' +
+        '<th class="text-center" data-toggle="tooltip" data-placement="top" ' +
+            'title="Status przesłania odpowiedzi" data-original-title="Status przesłania odpowiedzi">fS</th>' +
+        '<th class="text-center" data-toggle="tooltip" data-placement="top" ' +
+            'title="Status nowych komentarzy" data-original-title="Status nowych komentarzy">fTC</th>' +
+        '<th class="text-center" data-toggle="tooltip" data-placement="top" ' +
+            'title="Status oceny prowadzącego" data-original-title="Status oceny prowadzącego">sT</th>' +
+        '<th class="text-center" data-toggle="tooltip" data-placement="top" ' +
+            'title="Status testu maszynowego" data-original-title="Status testu maszynowego">sM</th>' +
+        '<th>Termin</th>' +
+        '</tr>' +
+        '</thead>' +
+        '<tbody id="tasks-tbody"></tbody>' +
+        '</table>')
 
       for (let i = 0; i <= msg.length - 1; i++) {
+        if (msg[i].hasReply === 0) {
+          msg[i].hasReply = '-'
+        } else if (msg[i].hasReply === 1) {
+          msg[i].hasReply = '<i class="fa fa-check-circle fa-lg fa-fw text-success"></i>'
+        }
+
+        if (msg[i].hasComments === 0) {
+          msg[i].hasComments = '-'
+        } else if (msg[i].hasComments === 1) {
+          msg[i].hasComments = '<i class="fa fa-exclamation-circle fa-lg fa-fw text-warning"></i>'
+        }
+
+        if (msg[i].teacherStatus === 0) {
+          msg[i].teacherStatus = '-'
+        } else if (msg[i].teacherStatus === 1) {
+          msg[i].teacherStatus = '<i class="fa fa-check-circle fa-lg fa-fw text-success"></i>'
+        } else if (msg[i].teacherStatus === 2) {
+          msg[i].teacherStatus = '<i class="fa fa-times-circle fa-lg fa-fw text-danger"></i>'
+        }
+
+        if (msg[i].machineStatus === 0) {
+          msg[i].machineStatus = '-'
+        } else if (msg[i].machineStatus === 1) {
+          msg[i].machineStatus = '<i class="fa fa-spinner fa-pulse sfa-lg fa-fw text-primary"></i>'
+        } else if (msg[i].machineStatus === 2) {
+          msg[i].machineStatus = '<i class="fa fa-check-circle fa-lg fa-fw text-success"></i>'
+        } else if (msg[i].machineStatus === 3) {
+          msg[i].machineStatus = '<i class="fa fa-times-circle fa-lg fa-fw text-danger"></i>'
+        }
+
         $('#tasks-tbody').append('<tr><th><a href="/topic/' + topicid + '/task/' + msg[i].id + '">' + msg[i].number + '</a></th><td>' + msg[i].title + '</td><td>' + msg[i].hasReply + '</td><td>' + msg[i].hasComments + '</td><td>' + msg[i].teacherStatus + '</td><td>' + msg[i].machineStatus + '</td><td>' + msg[i].deadline + '</td></tr>')
       }
+      $('[data-toggle="tooltip"]').tooltip()
     })
 
     request.fail(function (jqXHR, textStatus) {
