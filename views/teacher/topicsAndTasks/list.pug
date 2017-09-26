@@ -1,0 +1,52 @@
+extends ../../includes/layout
+
+block content
+
+    .row
+        .col-md-12.col-lg-4#topics-column
+            include ../menu
+        //.hidden-md-down.col-lg-8#tasks-column
+            //-include tasks
+        .col-md-12.col-lg-8
+            a(href="/teacher/topics-and-tasks/topic/add")
+                |Dodaj temat
+            div
+                table.table.table-striped.table-hover.responsive.table-bordered
+                    thead
+                        tr
+                            th ID
+                            th Temat
+                            th Deadline
+                    tbody#tablebody
+                        each topic in data
+                            tr(onclick='selectTopic(' + topic.id + ')', style='cursor: pointer;')
+                                th(scope='row')=topic.id
+                                td=topic.number + '. ' + topic.title
+                                td(width="80px")=topic.deadline
+
+
+        script.
+          var topics = !{JSON.stringify(data).replace(/<\//g, '<\\/')}
+          var saved = '';
+
+          function selectTopic (id) {
+            var topic = topics.filter(topic => topic.id === id)[0];
+            if (topic) {
+              saved = document.getElementById('tablebody').innerHTML;
+              var ret = '<tr><th><i onclick="getBack()" style="cursor: pointer;" class="fa fa-arrow-left fa-lg" aria-hidden="true"></i></th><td>' + topic.number + '. ' + topic.title + '</td></tr><tr><td colspan="2"><table class="table table-bordered table-striped table-hover responsive"><tbody id="tablebody">'
+              ret += '<a href="/teacher/topics-and-tasks/topic/'+topic.id+'/task/add">Dodaj zadanie</a>'
+              for (taskn in topic.tasks) {
+                var task = topic.tasks[taskn];
+                ret += '<tr style="cursor: pointer;" onclick="document.location=\'/teacher/topics-and-tasks/view/' + task.id + '\'"><td>' + task.id + '</td><td>' + task.number + '. ' + task.title +'<a href="/teacher/topics-and-tasks/task/edit/'+task.id+'">Edytuj</a> '+ '</td></tr>'
+              }
+              ret += '</tbody></table></td></tr>'
+              document.getElementById('tablebody').innerHTML = ret;
+            }
+          }
+
+          function getBack () {
+            if (saved === '') {
+              return;
+            }
+            document.getElementById('tablebody').innerHTML = saved;
+          }

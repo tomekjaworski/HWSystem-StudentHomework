@@ -1,0 +1,30 @@
+extends ../../includes/layout
+
+block content
+    if (message !== undefined && message && (message.length > 0 ))
+        .alert.alert-danger(role='alert')
+            strong Wiadomość:
+            |  #{message}
+    .row
+        .col-md-12.col-lg-4#topics-column
+            include ../menu
+
+        .col-md-12.col-lg-8
+            h1= title
+            form(method='post')
+                div
+                    label(for='number') Numer:
+                    br
+                    input#number(name='topicNumber')
+                div
+                    label(for='title') Tytuł:
+                    br
+                    input#title(name='topicTitle')
+                div
+                    label(for='dead') Deadline:
+                    br
+                    input#dead(name='topicDeadline')
+
+
+
+                input(type='submit')
