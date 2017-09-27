@@ -1,5 +1,5 @@
 /**
- * hasRoleStudent
+ * isStudent
  *
  * @module      :: Policy
  * @description :: Simple policy to allow only student user
@@ -7,7 +7,7 @@
  *
  */
 module.exports = function (req, res, next) {
-  if (req.localUser.hasRole('student')) {
+  if (!req.localUser.isTeacher) {
     next()
   } else {
     return res.redirect('/')

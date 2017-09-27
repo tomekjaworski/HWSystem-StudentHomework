@@ -78,14 +78,16 @@ function loadFileContent (reply, id) {
     })
 
     response.done(function (msg) {
+      $('.task-c-read').text('przeczytane')
       markAsReadButton.hide()
     })
   }
 
-  function renderComment (author, comment, date, read) {
+  function renderComment (author, isTeacher, comment, date, read) {
     let template = $('#commentAjaxTemplate').find('.list-group-item').clone()
     template.attr('id', 'commentFadeIn')
-    template.find('.task-c-author').text(author)
+    let append = isTeacher ? '<span class="badge badge-primary">Prowadzący</span><span>&nbsp;napisał(a):</span>' : '<span>&nbsp;napisał(a):</span>'
+    template.find('.task-c-author').text(author).append(append)
     template.find('.task-c-timestamp').text(date)
     template.find('.task-c-comment').text(comment)
     template.find('.task-c-read').text(read)
@@ -107,12 +109,16 @@ function loadFileContent (reply, id) {
   }
 
   function sendComment (topic, task) {
+    let val = $('#commentTextArea').val()
+    if (!val) {
+      return
+    }
     let response = $.ajax({
       url: '/topic/' + topic + '/task/' + task,
       method: 'POST',
       data: {
         'action': 'sendComment',
-        'comment': $('#commentTextArea').val()
+        'comment': val
       }
     })
 
@@ -143,8 +149,11 @@ function loadFileContent (reply, id) {
     })
     response.done(function (msg) {
       for (let i = 0; i <= msg.length - 1; i++) {
-        renderComment(msg[i].user.name + ' ' + msg[i].user.surname, msg[i].comment, msg[i].createdAt, msg[i].viewed)
+        renderComment(msg[i].user.name + ' ' + msg[i].user.surname, msg[i].user.isTeacher, msg[i].comment, msg[i].createdAt, msg[i].viewed)
         newLastComment = msg[i].id
+      }
+      if (msg.length >= 1) {
+        markAsReadButton.show()
       }
     })
   }
@@ -156,7 +165,6 @@ function loadFileContent (reply, id) {
     setTimeout(checkComments, 600)
   })
   $('#sendReply').on('click', function () {
-    //
     $('#confirmModalTitle').text('Wysłanie rozwiązania')
     $('#confirmModalBody').html('Czy na pewno chcesz wysłać rozwiązanie? <br><b>Późniejsza edycja będzie niemożliwa!</b>')
     $('#confirmModalButtons').html(`<a href='/topic/` + $(this).data('topic') + `/task/` + $(this).data('task') + `/sendReply/' class='btn btn-primary'>Wyślij rozwiązanie</a>`)

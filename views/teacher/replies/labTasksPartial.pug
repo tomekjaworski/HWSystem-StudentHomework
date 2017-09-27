@@ -25,16 +25,21 @@ div.d-flex
                         else
                             div
                                 h6 Odpowiedź:
-                                div Ocena:
-                                    select(onchange='setTeacherStatus(' + student.reply.id + ', this)')
-                                        each option in [{'id':0, 'name':'Nieocenione'}, {'id':1, 'name': 'Zaliczone'}, {'id':2, 'name':'Niezaliczone'}]
-                                            if student.reply.teacherStatus === option.id
-                                                option(value=option.id, selected)=option.name
-                                            else
-                                                option(value=option.id)=option.name
+                                if !student.reply.newest
+                                    div
+                                        b Odpowiedź nie jest ostateczna
+                                else
+                                    div Ocena:
+                                        select(onchange='setTeacherStatus(' + student.reply.id + ', this)')
+                                            each option in [{'id':0, 'name':'Nieocenione'}, {'id':1, 'name': 'Zaliczone'}, {'id':2, 'name':'Niezaliczone'}]
+                                                if student.reply.teacherStatus === option.id
+                                                    option(value=option.id, selected)=option.name
+                                                else
+                                                    option(value=option.id)=option.name
                                 - var tests = {'0':'Nierozpoczęte', '1':'W kolejce', '2':'Zaliczone', '3':'Niezaliczone'}
                                 div Testy Maszynowe: #{tests[student.reply.machineStatus]}
                                 div Zablokowany: #{student.reply.blocked}
+                                div Odpowiedź po raz: #{student.reply.count}
                             div
                                 h6 Pliki
                                 each file in student.reply.files

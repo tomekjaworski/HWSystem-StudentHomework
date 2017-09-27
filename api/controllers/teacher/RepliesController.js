@@ -109,7 +109,7 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
                   })
                 }
               }
-              TaskReplies.find({task: taskId, student: studentsId}).populate('files').exec((err, replies) => {
+              TaskReplies.find({task: taskId, student: studentsId, lastSent:true}).populate('files').exec((err, replies) => {
                 if (err) {
                   return res.serverError(err)
                 }
@@ -293,7 +293,7 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
         let com = task.map(c => {
           return {
             id: c.id,
-            date: c.createdAt,
+            date: dateFormat(c.createdAt, 'HH:MM dd/mm/yyyy'),
             comment: c.comment,
             viewed: c.viewed,
             name: c.user.name,

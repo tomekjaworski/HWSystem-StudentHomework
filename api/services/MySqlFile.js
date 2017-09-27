@@ -129,54 +129,71 @@ module.exports = function MySqlStore (globalOpts) {
             fileSize: __newFile.byteCount,
             fileExt: fileFormat.ext.substring(1),
             fileMimeType: __newFile.headers['content-type']
-          }).exec((err, createdFile, wasCreatedOrFound) => {
+          }).exec((err, createdFile, created) => {
             if (err) {
               return done(err)
             }
             let file64 = base64.fromByteArray(file)
-            let lastFileId = null
-            if (!wasCreatedOrFound) {
-              lastFileId = createdFile.file
+            if (!created) {
               if (createdFile.fileExt !== fileFormat.ext.substring(1)) {
                 let err = new Error()
                 err.code = 'E_EXTENSION_NOT_ALLOWED'
                 err.name = 'Upload Error'
                 return done(err)
               }
-            }
-            TaskReplyFileContent.create({
-              file: createdFile.id,
-              lastFileContentId: lastFileId,
-              content: file64
-            }).meta({fetch: true})
-              .exec((err, createdFileContent) => {
+              TaskReplyFileContent.findOrCreate({id: createdFile.file, file: createdFile.id}, {file: createdFile.id, content:file64})
+                .exec((err,createdFileContent,created)=>{
                 if (err) {
                   return done(err)
                 }
-                let firstFileId = createdFileContent.id
-                if (!wasCreatedOrFound) {
-                  firstFileId = createdFile.firstFileId
+                if(created){
+                  TaskReplyFiles.update(createdFile.id, {
+                    fileSize: __newFile.byteCount,
+                    file: createdFileContent.id
+                  }).exec((err) => {
+                    if (err) {
+                      return done(err)
+                    }
+                    done()
+                  })
                 }
-                TaskReplyFiles.update(createdFile.id, {
-                  file: createdFileContent.id,
-                  fileSize: __newFile.byteCount,
-                  firstFileId: firstFileId
-                }).exec((err) => {
-                  if (err) {
-                    return done(err)
-                  }
-                  if (!wasCreatedOrFound) {
-                    TaskReplyFileContent.update(lastFileId, {nextFileContentId: createdFileContent.id}).exec((err) => {
+                else{
+                  TaskReplyFileContent.update(createdFile.file,{content: file64}).exec((err)=>{
+                    if (err) {
+                      return done(err)
+                    }
+                    TaskReplyFiles.update(createdFile.id, {
+                      fileSize: __newFile.byteCount
+                    }).exec((err) => {
                       if (err) {
                         return done(err)
                       }
                       done()
                     })
-                  } else {
-                    done()
-                  }
-                })
+                  })
+                }
               })
+            }
+            else{
+              TaskReplyFileContent.create({
+                file: createdFile.id,
+                content: file64
+              }).meta({fetch: true})
+                .exec((err, createdFileContent) => {
+                  if (err) {
+                    return done(err)
+                  }
+                  TaskReplyFiles.update(createdFile.id, {
+                    file: createdFileContent.id,
+                    fileSize: __newFile.byteCount
+                  }).exec((err) => {
+                    if (err) {
+                      return done(err)
+                    }
+                    done()
+                  })
+                })
+            }
           })
         }))
       }

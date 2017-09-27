@@ -29,7 +29,10 @@ const TeacherController = module.exports = {
   },
   markAsRead: function (req, res) {
     let actions = req.param('actions')
-    RecentTeacherActions.update(actions, {seen: true}).exec((err) => {
+    if(!actions || !actions.length===0){
+      return res.redirect('/teacher')
+    }
+    RecentTeacherActions.update({id:actions}, {seen: true}).exec((err) => {
       if (err) return res.serverError(err)
       return res.redirect('/teacher')
     })

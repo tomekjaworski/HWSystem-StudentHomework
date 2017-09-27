@@ -20,6 +20,25 @@ const TaskReplies = module.exports = {
       defaultsTo: false,
     },
 
+    lastSent: {
+      type: 'boolean',
+      defaultsTo: false,
+    },
+
+    newest: {
+      type: 'boolean',
+      defaultsTo: false,
+    },
+
+    firstId: {
+      type: 'number',
+    },
+
+    count: {
+      type: 'number',
+      defaultsTo: 1
+    },
+
     files: {
       collection: 'taskreplyfiles',
       via: 'reply'
@@ -35,8 +54,23 @@ const TaskReplies = module.exports = {
     machineStatus: {
       type: 'number',
       min: 0,
-      max: 3,
+      max: 5,
       defaultsTo: 0
+    },
+
+    machineOk: {
+      type: 'number',
+      min: 0,
+      max: 2,
+      defaultsTo: 0
+    },
+
+    machineRaport: {
+      type: 'string'
+    },
+
+    machineMessage: {
+      type: 'string'
     },
 
     blocked: {

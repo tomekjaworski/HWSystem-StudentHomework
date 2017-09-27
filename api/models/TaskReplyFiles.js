@@ -28,10 +28,6 @@ const TaskReplyFiles = module.exports = {
     visible: {
       type: 'boolean',
       defaultsTo: true
-    },
-
-    firstFileId: {
-      type: 'number'
     }
   }
 }

@@ -1,5 +1,5 @@
 /**
- * hasRoleTeacher
+ * isTeacher
  *
  * @module      :: Policy
  * @description :: Simple policy to allow only teacher user
@@ -7,7 +7,7 @@
  *
  */
 module.exports = function (req, res, next) {
-  if (req.localUser.hasRole('teacher')) {
+  if (req.localUser.isTeacher) {
     next()
   } else {
     return res.forbidden()
