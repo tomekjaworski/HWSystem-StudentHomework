@@ -1,8 +1,12 @@
 var md = window.markdownit();
 
-$('#description').on('change', function () {
+$('#description').on('keyup', function () {
   var text = $(this).val();
   var result = md.render(text);
-  $('#test').html(result);
-
+  $('#mdown').html(result);
+  $(document).ready(function() {
+    $('pre code').each(function(i, block) {
+      hljs.highlightBlock(block);
+    });
+  });
 });

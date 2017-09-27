@@ -37,7 +37,18 @@ block content
               ret += '<a href="/teacher/topics-and-tasks/topic/'+topic.id+'/task/add">Dodaj zadanie</a>'
               for (taskn in topic.tasks) {
                 var task = topic.tasks[taskn];
-                ret += '<tr style="cursor: pointer;" onclick="document.location=\'/teacher/topics-and-tasks/view/' + task.id + '\'"><td>' + task.id + '</td><td>' + task.number + '. ' + task.title +'<a href="/teacher/topics-and-tasks/task/edit/'+task.id+'">Edytuj</a> '+ '</td></tr>'
+                if(task.arduino === true){
+                  var ard = 'tak';
+                }else{
+                  var ard = 'nie';
+                }
+                if (task.computer === true) {
+                  var com = 'tak';
+                } else {
+                  var com = 'nie';
+                }
+                ret += '<tr style="cursor: pointer;" onclick="document.location=\'/teacher/topics-and-tasks/view/' + task.id + '\'"><td>' + task.id + '</td><td>' + task.number + '. ' + task.title +'<a href="/teacher/topics-and-tasks/task/edit/'+task.id+'">Edytuj</a>' +
+                  ' <b>arduino:</b>'+ ard +' <b>komputer:</b> '+ com +'</td><td>up <b>/</b> down</td></tr>'
               }
               ret += '</tbody></table></td></tr>'
               document.getElementById('tablebody').innerHTML = ret;

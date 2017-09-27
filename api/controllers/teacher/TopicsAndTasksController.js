@@ -38,16 +38,16 @@ const TopicsAndTasksController = module.exports = {
   },
 
   addTopic: function (req, res) {
-    let a = (msg) => Roles.findOne({name: 'teacher'}).populate('users').exec((err, role) => {
+    let a = (msg) => Users.find({isTeacher: true }).exec((err, users) => {
       if (err) {
         return res.serverError(err)
       }
-      if (!role) {
+      if (!users || users.length===0) {
         return res.serverError('Nie znaleziono roli prowadzącego, zgłoś się do administratora')
       }
 
       return res.view('teacher/topicsAndTasks/addTopic',
-        {title: 'Add Topic :: Teacher Panel', users: role.users, message: msg})
+        {title: 'Add Topic :: Teacher Panel', users: users, message: msg})
     })
     if (req.method === 'POST') {
       let number = req.param('topicNumber')
@@ -76,11 +76,11 @@ const TopicsAndTasksController = module.exports = {
   },
 
   addTask: function (req, res) {
-    let a = (msg) => Roles.findOne({name: 'teacher'}).populate('users').exec((err, role) => {
+    let a = (msg) => Users.find({isTeacher: true }).exec((err, users) => {
       if (err) {
         return res.serverError(err)
       }
-      if (!role) {
+      if (!users || users.length===0) {
         return res.serverError('Nie znaleziono roli prowadzącego, zgłoś się do administratora')
       }
       Topics.find().exec(function (err, topics) {
@@ -88,7 +88,7 @@ const TopicsAndTasksController = module.exports = {
           return res.serverError(err)
         }
         return res.view('teacher/topicsAndTasks/add',
-          {title: 'Add Tasks :: Teacher Panel', users: role.users, message: msg, topics: topics})
+          {title: 'Add Tasks :: Teacher Panel', users: users, message: msg, topics: topics})
       })
     })
     if (req.method === 'POST') {
@@ -97,6 +97,8 @@ const TopicsAndTasksController = module.exports = {
       let description = req.param('taskDescription')
       let topic = req.param('topicId')
       let vis = req.param('taskVisible')
+      let ard = req.param('arduinoCheck')
+      let com = req.param('komputerCheck')
       if (!_.isString(title) || !_.isString(number) || !_.isString(description) ||
         !title) {
         return a('Uzupełnij wszystkie pola')
@@ -106,11 +108,23 @@ const TopicsAndTasksController = module.exports = {
       }else {
         vis = false
       }
+      if(ard === 'ok'){
+        ard = true
+      }else {
+        ard = false
+      }
+      if(com === 'ok'){
+        com = true
+      }else {
+        com = false
+      }
       Tasks.create({
         number: number,
         title: title,
         visible: vis,
-        topic: topic
+        topic: topic,
+        arduino: ard,
+        computer: com
       }).meta({fetch: true}).exec((err, task) => {
         if (err) {
           return res.serverError(err)
@@ -135,11 +149,11 @@ const TopicsAndTasksController = module.exports = {
 
   editTask: function (req, res) {
     let id = req.param('id')
-    let a = (attr, msg) => Roles.findOne({name: 'teacher'}).populate('users').exec((err, role) => {
+    let a = (attr, msg) => Users.find({isTeacher: true }).exec((err, users) => {
       if (err) {
         return res.serverError(err)
       }
-      if (!role) {
+      if (!users || users.length === 0) {
         return res.serverError('Nie znaleziono roli prowadzącego, zgłoś się do administratora')
       }
       Tasks.findOne({id: id}).populate('description').exec(function (err, task) {
@@ -165,17 +179,31 @@ const TopicsAndTasksController = module.exports = {
       let description = req.param('taskDescription')
       let topic = req.param('taskTopic')
       let vis = req.param('taskVisible')
+      let ard = req.param('arduinoCheck')
+      let com = req.param('komputerCheck')
       if(vis === 'ok'){
         vis = true
       }else {
         vis = false
+      }
+      if(ard === 'ok'){
+        ard = true
+      }else {
+        ard = false
+      }
+      if(com === 'ok'){
+        com = true
+      }else {
+        com = false
       }
       Tasks.update({id: id},
         {
           number: number,
           title: title,
           topic: topic,
-          visible:vis
+          visible:vis,
+          arduino: ard,
+          computer: com
         }).exec(function (err, task) {
         if (err) {
           return res.serverError(err)
