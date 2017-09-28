@@ -99,6 +99,5 @@ module.exports.routes = {
   },
 
   // API
-  '/api/machineTest/tid/:testId/reply/:replyId/status/:status/passed/:passed/raport/:raport/message/:message/rk/:rk': {action: 'api/changeMachineStatus', skipAssets: true}
+  '/api/machineTest/': {action: 'api/changeMachineStatus', skipAssets: true}
 }
-

@@ -18,37 +18,33 @@ const ApiController = module.exports = {
   /**
    * @param req
    * @param res
-   * @req_params {"tid":number, "reply":number<id of student reply>, "status":number<0:ok,1:note,2:warning,3:error>, "passed": boolean<0:repost task to student,1: tests passed>, "raport":string<url>, "message":string<short raport message>, "rk":string<request key>}
+   * @req_params {"tid":number, "reply":number<id of student reply>, "status":number<0:ok,1:note,2:warning,3:error>, "passed": boolean<false:repost task to student,true: tests passed>, "raport":string<url>, "message":string<short raport message>, "rk":string<request key>}
    */
   changeMachineStatus: function (req, res) {
-    console.log(req.body.username)
-    const testId = parseInt(req.param('testId'), '10')
-    const replyId = parseInt(req.param('replyId'), '10')
-    const status = parseInt(req.param('status'), '10')
-    let passed = parseInt(req.param('passed'), '10')
-    const raport = req.param('raport')
-    const message = req.param('message')
-    const rk = req.param('rk')
-    if (!_.isInteger(testId) || !_.isInteger(replyId) || !_.isInteger(status) || !_.isInteger(passed)
-      || !_.isString(raport) || !_.isString(message) || !_.isString(rk)) {
+    if(!req.is('json')){
+      return res.badRequest('Only support json data')
+    }
+    let data = req.body
+    if (!_.isInteger(data.tid) || !_.isInteger(data.reply) || !_.isInteger(data.status) || !_.isBoolean(data.passed)
+      || !_.isString(data.raport) || !_.isString(data.message) || !_.isString(data.rk)) {
       return res.badRequest({'error':'E_PARAM_EMPTY'})
     }
-    if(status<0 || status> 3){
+    if(data.status<0 || data.status> 3){
       return res.badRequest({'error':'E_INVALID_STATUS'})
     }
-    passed = !!passed
 
-    let generated_rk = md5(testId.toString() + replyId.toString() + status.toString() + passed.toString() + raport + message + ManageReplies.machine.apiKey)
-    if(rk !== generated_rk){
+    let generated_rk = md5(data.tid.toString() + data.reply.toString() + data.status.toString() + data.passed.toString() + data.raport + data.message + ManageReplies.machine.apiKey)
+    if(data.rk !== generated_rk){
       return res.badRequest({'error':'E_INVALID_REQUEST_KEY'})
     }
-    ManageReplies.machine.changeStatus(testId,replyId,status,passed,raport,message,(err)=>{
+    ManageReplies.machine.changeStatus(data.tid,data.reply,data.status,data.passed,data.raport,data.message,(err)=>{
       if(err){
-        switch (err.status){
+        switch (err.code){
           case 'E_REPLY_NOT_FOUND':
           case 'E_REPLY_BLOCKED':
           case 'E_REPLY_NOT_SENT':
-            return res.badRequest({'error':err.status})
+          case 'E_REPLY_OLD':
+            return res.badRequest({'error':err.code})
           default:
             sails.log.error(err)
             return res.serverError()

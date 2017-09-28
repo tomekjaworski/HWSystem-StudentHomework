@@ -288,7 +288,7 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
     TaskComments.find({task: taskId, taskStudent: studentId, id: {'>': last}, user: {'!=': null}}).populate('user')
       .exec(function (err, task) {
         if (err) {
-          return res.json(err)
+          return res.serverError(err)
         }
         let com = task.map(c => {
           return {

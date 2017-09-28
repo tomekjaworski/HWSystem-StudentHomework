@@ -59,7 +59,12 @@ const ManageReplies = module.exports = {
           err.code = 'E_REPLY_BLOCKED'
           return cb(err)
         }
-        if (!reply.lastSent || !reply.newest) {
+        if((reply.sent && !reply.lastSent) || (reply.sent && reply.lastSent && !reply.newest)){
+          let err = new Error()
+          err.code = 'E_REPLY_OLD'
+          return cb(err)
+        }
+        if (!reply.lastSent && reply.newest) {
           let err = new Error()
           err.code = 'E_REPLY_NOT_SENT'
           return cb(err)
@@ -79,16 +84,16 @@ const ManageReplies = module.exports = {
             let msg
             switch(status){
               case 2:
-                msg = 'Twoje rozwiązanie przeszło testy maszynowe poprawnie'+(passed ? ' i testy zostały zaliczone.' : ' ale testy nie zostały zaliczone! Sprawdź raport testów.')
+                msg = 'Twoje rozwiązanie przeszło testy maszynowe'+(passed ? ' i testy zostały zaliczone.' : ' ale testy nie zostały zaliczone! Sprawdź raport testów.')
                 break
               case 3:
-                msg = 'Twoje rozwiązanie przeszło testy maszynowe poprawnie z pewnymi dodatkowymi notatkami'+(passed ? ' i testy zostały zaliczone. Możesz sprawdzić notatki w raporcie z testu.' : ' ale testy nie zostały zaliczone! Sprawdź raport testów.')
+                msg = 'Podczas testów maszynowych pojawiły się pewne notatki'+(passed ? ' ale testy zostały zaliczone. Możesz sprawdzić notatki w raporcie z testu.' : ' i testy nie zostały zaliczone! Sprawdź raport testów.')
                 break
               case 4:
-                msg = 'Twoje rozwiązanie przeszło testy maszynowe jednak są ważne uwagi'+(passed ? ' mimo to testy zostały zaliczone. Możesz sprawdzić uwagi w raporcie z testu.' : ' i testy nie zostały zaliczone! Sprawdź raport testów.')
+                msg = 'W Twoim rozwiązaniu występówją ważne uwagi'+(passed ? ' mimo to testy zostały zaliczone. Możesz sprawdzić uwagi w raporcie z testu.' : ' i testy nie zostały zaliczone! Sprawdź raport testów.')
                 break
               case 5:
-                msg = 'Twoje rozwiązanie nie przeszło testów maszynowych'+(passed ? ' ale mimo to testy zostały zaliczone. Zalecane jest sprawdzenie raportu z testów.' : ' i testy nie zostały zaliczone! Sprawdź raport testów.')
+                msg = 'W Twoim rozwiązaniu występują poważne błędy'+(passed ? ' ale mimo to testy zostały zaliczone. Zalecane jest sprawdzenie raportu z testów.' : ' i testy nie zostały zaliczone! Sprawdź raport testów.')
                 break
             }
             TaskComments.create({
@@ -99,7 +104,7 @@ const ManageReplies = module.exports = {
               viewed: false
             }).exec((err) => {
               if (err) {
-                return res.serverError(err)
+                return cb(err)
               }
               if(passed){
                 return cb(null)
@@ -170,7 +175,7 @@ const ManageReplies = module.exports = {
               }
               if (!reply) {
                 let err = new Error()
-                err.code = 'E_REPLY_NOT_CREATED'
+                err.code = 'E_REPLY_NOT_FOUND'
                 return cb(err)
               }
               TaskReplyFiles.find({reply: lastId}).exec((err, files) => {
@@ -208,7 +213,7 @@ const ManageReplies = module.exports = {
                     viewed: false
                   }).exec((err) => {
                     if (err) {
-                      return res.serverError(err)
+                      return cb(err)
                     }
                     cb(null)
                   })
