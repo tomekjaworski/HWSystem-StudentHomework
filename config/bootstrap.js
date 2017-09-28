@@ -19,6 +19,37 @@ module.exports.bootstrap = function (cb) {
       throw error
     }
     if (found === 0) {
+      const defUsers = [{
+        name: 'Test1',
+        surname: 'Tester1',
+        album: 123456,
+        email: '1@p.lodz.pl',
+        password: 'a150f0e3b050a2d9907288d84eee05312eaa384eba3d5775688b4cba26e0af38',
+        salt: 'aaaa',
+        activated: true,
+        isAdmin: true,
+        isTeacher: true
+      }, {
+        name: 'Test2',
+        surname: 'Tester2',
+        album: 654321,
+        email: '2@p.lodz.pl',
+        password: 'a150f0e3b050a2d9907288d84eee05312eaa384eba3d5775688b4cba26e0af38',
+        salt: 'aaaa',
+        activated: true,
+        isTeacher: true
+      }]
+      for (let i = 3; i < 200; i++) {
+        defUsers.push({
+          name: 'Test' + i,
+          surname: 'Tester' + i,
+          album: 200000 - i,
+          email: i + '@p.lodz.pl',
+          password: 'a150f0e3b050a2d9907288d84eee05312eaa384eba3d5775688b4cba26e0af38',
+          salt: 'aaaa',
+          activated: true
+        })
+      }
       Subjects.create({
         name: 'Podstawy Programowania',
         desc: 'Podstawy podstaw'
@@ -28,411 +59,283 @@ module.exports.bootstrap = function (cb) {
             throw err
           }
 
-          Users.createEach([
-            {
-              name: 'Test1',
-              surname: 'Tester1',
-              album: 123456,
-              email: '1@p.lodz.pl',
-              password: 'a150f0e3b050a2d9907288d84eee05312eaa384eba3d5775688b4cba26e0af38',
-              salt: 'aaaa',
-              activated: true,
-              isAdmin: true,
-              isTeacher: true
-            }, {
-              name: 'Test2',
-              surname: 'Tester2',
-              album: 654321,
-              email: '2@p.lodz.pl',
-              password: 'a150f0e3b050a2d9907288d84eee05312eaa384eba3d5775688b4cba26e0af38',
-              salt: 'aaaa',
-              activated: true,
-              isTeacher: true
-            }, {
-              name: 'Test3',
-              surname: 'Tester3',
-              album: 456123,
-              email: '3@p.lodz.pl',
-              password: 'a150f0e3b050a2d9907288d84eee05312eaa384eba3d5775688b4cba26e0af38',
-              salt: 'aaaa',
-              activated: true
-            }, {
-              name: 'Test4',
-              surname: 'Tester4',
-              album: 321654,
-              email: '4@p.lodz.pl',
-              password: 'a150f0e3b050a2d9907288d84eee05312eaa384eba3d5775688b4cba26e0af38',
-              salt: 'aaaa',
-              activated: true
-            }
-          ]).meta({fetch: true})
+          Users.createEach(defUsers).meta({fetch: true})
             .exec(function (err, users) {
               if (err) {
                 throw err
               }
-
+              let students = _.drop(users, 2)
+              let groups = _.chunk(students, 50)
               LabGroups.createEach([
                 {
                   name: 'd3dx9_41',
                   subject: sub.id,
                   owner: users[0].id,
-                  students: [users[2].id]
+                  students: groups[0].map(s => s.id)
                 }, {
                   name: 'd3dx10_20',
                   subject: sub.id,
                   owner: users[0].id,
-                  students: [users[3].id]
+                  students: groups[1].map(s => s.id)
                 }, {
                   name: 'd3dx11',
                   subject: sub.id,
-                  owner: users[1].id
+                  owner: users[1].id,
+                  students: groups[2].map(s => s.id)
                 }, {
                   name: 'd3dx2',
                   subject: sub.id,
-                  owner: users[1].id
+                  owner: users[1].id,
+                  students: groups[3].map(s => s.id)
                 }
               ]).exec(function (err, lab) {
                 if (err) {
                   throw err
                 }
-
-                Topics.createEach([
-                  {
-                    number: '1a',
-                    title: 'Testowy temat 1',
-                    visible: true,
-                    subject: sub.id,
-                    deadline: 1527804000000
-                  }, {
-                    number: '1b',
-                    title: 'Testowy temat 2',
-                    visible: true,
-                    subject: sub.id,
-                    deadline: 1527804000000
-                  }, {
-                    number: '2a',
-                    title: 'Testowy temat 2',
-                    visible: true,
-                    subject: sub.id,
-                    deadline: 1527804000000
-                  }, {
-                    number: '2b',
-                    title: 'Testowy temat 2',
-                    visible: true,
-                    subject: sub.id,
-                    deadline: 1527804000000
+                StudentsLabGroups.update({active: false}, {active: true}).exec((err) => {
+                  if (err) {
+                    throw err
                   }
-                ]).meta({fetch: true})
-                  .exec(function (err, topics) {
-                    if (err) {
-                      throw err
+
+                  Topics.createEach([
+                    {
+                      number: '1a',
+                      title: 'Testowy temat 1',
+                      visible: true,
+                      subject: sub.id,
+                      deadline: 1527804000000
+                    }, {
+                      number: '1b',
+                      title: 'Testowy temat 2',
+                      visible: true,
+                      subject: sub.id,
+                      deadline: 1527804000000
+                    }, {
+                      number: '2a',
+                      title: 'Testowy temat 2',
+                      visible: true,
+                      subject: sub.id,
+                      deadline: 1527804000000
+                    }, {
+                      number: '2b',
+                      title: 'Testowy temat 2',
+                      visible: true,
+                      subject: sub.id,
+                      deadline: 1527804000000
                     }
-
-                    Tasks.createEach([
-                      {
-                        number: '1a',
-                        title: 'Testowe zadanie 1',
-                        visible: true,
-                        topic: topics[0].id
-                      }, {
-                        number: '2a',
-                        title: 'Testowe zadanie 2',
-                        visible: true,
-                        topic: topics[0].id
-                      }, {
-                        number: '3a',
-                        title: 'Testowe zadanie 3',
-                        visible: true,
-                        topic: topics[0].id
-                      }, {
-                        number: '1b',
-                        title: 'Testowe zadanie 1',
-                        visible: true,
-                        topic: topics[1].id
-                      }, {
-                        number: '2b',
-                        title: 'Testowe zadanie 2',
-                        visible: true,
-                        topic: topics[1].id
-                      }, {
-                        number: '3b',
-                        title: 'Testowe zadanie 3',
-                        visible: true,
-                        topic: topics[1].id
+                  ]).meta({fetch: true})
+                    .exec(function (err, topics) {
+                      if (err) {
+                        throw err
                       }
-                    ]).meta({fetch: true})
-                      .exec(function (err, tasks) {
-                        if (err) {
-                          throw err
-                        }
 
-                        TaskDescription.createEach([
-                          {
-                            task: tasks[0].id,
-                            description: 'Opis zadania'
-                          },
-                          {
-                            task: tasks[1].id,
-                            description: 'Opis zadania'
-                          },
-                          {
-                            task: tasks[2].id,
-                            description: 'Opis zadania'
-                          },
-                          {
-                            task: tasks[3].id,
-                            description: 'Opis zadania'
-                          },
-                          {
-                            task: tasks[4].id,
-                            description: 'Opis zadania'
-                          },
-                          {
-                            task: tasks[5].id,
-                            description: 'Opis zadania'
-                          }
-                        ]).exec(function (err, td) {
+                      Tasks.createEach([
+                        {
+                          number: '1a',
+                          title: 'Testowe zadanie 1',
+                          visible: true,
+                          topic: topics[0].id
+                        }, {
+                          number: '2a',
+                          title: 'Testowe zadanie 2',
+                          visible: true,
+                          topic: topics[0].id
+                        }, {
+                          number: '3a',
+                          title: 'Testowe zadanie 3',
+                          visible: true,
+                          topic: topics[0].id
+                        }, {
+                          number: '1b',
+                          title: 'Testowe zadanie 1',
+                          visible: true,
+                          topic: topics[1].id
+                        }, {
+                          number: '2b',
+                          title: 'Testowe zadanie 2',
+                          visible: true,
+                          topic: topics[1].id
+                        }, {
+                          number: '3b',
+                          title: 'Testowe zadanie 3',
+                          visible: true,
+                          topic: topics[1].id
+                        }
+                      ]).meta({fetch: true})
+                        .exec(function (err, tasks) {
                           if (err) {
                             throw err
                           }
 
-                          TaskReplies.createEach([
+                          TaskDescription.createEach([
                             {
-                              student: users[2].id,
                               task: tasks[0].id,
-                              teacherStatus: 0,
-                              machineStatus: 0
-                            }, {
-                              student: users[2].id,
+                              description: 'Opis zadania'
+                            },
+                            {
                               task: tasks[1].id,
-                              teacherStatus: 0,
-                              machineStatus: 0
-                            }, {
-                              student: users[2].id,
+                              description: 'Opis zadania'
+                            },
+                            {
                               task: tasks[2].id,
-                              teacherStatus: 0,
-                              machineStatus: 0
-                            }, {
-                              student: users[3].id,
+                              description: 'Opis zadania'
+                            },
+                            {
                               task: tasks[3].id,
-                              teacherStatus: 0,
-                              machineStatus: 0
-                            }, {
-                              student: users[3].id,
+                              description: 'Opis zadania'
+                            },
+                            {
                               task: tasks[4].id,
-                              teacherStatus: 0,
-                              machineStatus: 0
-                            }, {
-                              student: users[3].id,
+                              description: 'Opis zadania'
+                            },
+                            {
                               task: tasks[5].id,
-                              teacherStatus: 0,
-                              machineStatus: 0
+                              description: 'Opis zadania'
                             }
-                          ]).meta({fetch: true})
-                            .exec(function (err, tr) {
-                              if (err) {
-                                throw err
-                              }
+                          ]).exec(function (err, td) {
+                            if (err) {
+                              throw err
+                            }
+                            let replies = []
+                            for (let student of students) {
+                              let random
+                              replies.push({
+                                student: student.id,
+                                task: tasks[0].id,
+                                teacherStatus: 0,
+                                machineStatus: 0,
+                                sent: random = Math.floor((Math.random() * 2)),
+                                lastSent: random,
+                                newest: true
+                              }, {
+                                student: student.id,
+                                task: tasks[1].id,
+                                teacherStatus: 0,
+                                machineStatus: 0,
+                                sent: random = Math.floor((Math.random() * 2)),
+                                lastSent: random,
+                                newest: true
+                              }, {
+                                student: student.id,
+                                task: tasks[2].id,
+                                teacherStatus: 0,
+                                machineStatus: 0,
+                                sent: random = Math.floor((Math.random() * 2)),
+                                lastSent: random,
+                                newest: true
+                              }, {
+                                student: student.id,
+                                task: tasks[3].id,
+                                teacherStatus: 0,
+                                machineStatus: 0,
+                                sent: random = Math.floor((Math.random() * 2)),
+                                lastSent: random,
+                                newest: true
+                              }, {
+                                student: student.id,
+                                task: tasks[4].id,
+                                teacherStatus: 0,
+                                machineStatus: 0,
+                                sent: random = Math.floor((Math.random() * 2)),
+                                lastSent: random,
+                                newest: true
+                              }, {
+                                student: student.id,
+                                task: tasks[5].id,
+                                teacherStatus: 0,
+                                machineStatus: 0,
+                                sent: random = Math.floor((Math.random() * 2)),
+                                lastSent: random,
+                                newest: true
+                              })
+                            }
 
-                              TaskReplyFiles.createEach([
-                                {
-                                  reply: tr[0].id,
-                                  fileName: 'main',
-                                  fileSize: 200,
-                                  fileExt: 'cpp',
-                                  fileMimeType: 'text/plain',
-                                  firstFileId: 1,
-                                  file: 1
-                                }, {
-                                  reply: tr[0].id,
-                                  fileName: 'main',
-                                  fileSize: 200,
-                                  fileExt: 'h',
-                                  fileMimeType: 'text/plain',
-                                  firstFileId: 2,
-                                  file: 2
-                                }, {
-                                  reply: tr[1].id,
-                                  fileName: 'main',
-                                  fileSize: 200,
-                                  fileExt: 'c',
-                                  fileMimeType: 'text/plain',
-                                  firstFileId: 3,
-                                  file: 3
-                                }, {
-                                  reply: tr[1].id,
-                                  fileName: 'main',
-                                  fileSize: 200,
-                                  fileExt: 'cpp',
-                                  fileMimeType: 'text/plain',
-                                  firstFileId: 4,
-                                  file: 4
-                                }, {
-                                  reply: tr[2].id,
-                                  fileName: 'main',
-                                  fileSize: 200,
-                                  fileExt: 'cpp',
-                                  fileMimeType: 'text/plain',
-                                  firstFileId: 5,
-                                  file: 5
-                                }, {
-                                  reply: tr[2].id,
-                                  fileName: 'main',
-                                  fileSize: 200,
-                                  fileExt: 'cpp',
-                                  fileMimeType: 'text/plain',
-                                  firstFileId: 6,
-                                  file: 6
-                                }, {
-                                  reply: tr[3].id,
-                                  fileName: 'main',
-                                  fileSize: 200,
-                                  fileExt: 'cpp',
-                                  fileMimeType: 'text/plain',
-                                  firstFileId: 7,
-                                  file: 7
-                                }, {
-                                  reply: tr[3].id,
-                                  fileName: 'main',
-                                  fileSize: 200,
-                                  fileExt: 'cpp',
-                                  fileMimeType: 'text/plain',
-                                  firstFileId: 8,
-                                  file: 8
-                                }, {
-                                  reply: tr[4].id,
-                                  fileName: 'main',
-                                  fileSize: 200,
-                                  fileExt: 'cpp',
-                                  fileMimeType: 'text/plain',
-                                  firstFileId: 9,
-                                  file: 9
-                                }, {
-                                  reply: tr[4].id,
-                                  fileName: 'main',
-                                  fileSize: 200,
-                                  fileExt: 'cpp',
-                                  fileMimeType: 'text/plain',
-                                  firstFileId: 10,
-                                  file: 10
-                                }, {
-                                  reply: tr[5].id,
-                                  fileName: 'main',
-                                  fileSize: 200,
-                                  fileExt: 'cpp',
-                                  fileMimeType: 'text/plain',
-                                  firstFileId: 11,
-                                  file: 11
-                                }, {
-                                  reply: tr[5].id,
-                                  fileName: 'main',
-                                  fileSize: 200,
-                                  fileExt: 'cpp',
-                                  fileMimeType: 'text/plain',
-                                  firstFileId: 12,
-                                  file: 12
+                            TaskReplies.createEach(replies).meta({fetch: true})
+                              .exec(function (err, tr) {
+                                if (err) {
+                                  throw err
                                 }
-                              ]).meta({fetch: true})
-                                .exec(function (err, trf) {
-                                  if (err) {
-                                    throw err
-                                  }
-                                  TaskReplyFileContent.createEach([
-                                    {
-                                      file: trf[0].id,
-                                      content: base64.fromByteArray(cs.UTF8.stringToBytes('int main(){\n\treturn 0;\n}'))
-                                    },
-                                    {
-                                      file: trf[1].id,
-                                      content: base64.fromByteArray(cs.UTF8.stringToBytes('int main();'))
-                                    },
-                                    {
-                                      file: trf[2].id,
-                                      content: base64.fromByteArray(cs.UTF8.stringToBytes('int main(){\n\treturn 666;\n}'))
-                                    },
-                                    {
-                                      file: trf[3].id,
-                                      content: base64.fromByteArray(cs.UTF8.stringToBytes('int main(){\n\treturn 1;\n}'))
-                                    },
-                                    {
-                                      file: trf[4].id,
-                                      content: base64.fromByteArray(cs.UTF8.stringToBytes('int main(){\n\treturn 2;\n}'))
-                                    },
-                                    {
-                                      file: trf[5].id,
-                                      content: base64.fromByteArray(cs.UTF8.stringToBytes('int main(){\n\treturn 3;\n}'))
-                                    },
-                                    {
-                                      file: trf[6].id,
-                                      content: base64.fromByteArray(cs.UTF8.stringToBytes('int main(){\n\treturn 4;\n}'))
-                                    },
-                                    {
-                                      file: trf[7].id,
-                                      content: base64.fromByteArray(cs.UTF8.stringToBytes('int main(){\n\treturn 5;\n}'))
-                                    },
-                                    {
-                                      file: trf[8].id,
-                                      content: base64.fromByteArray(cs.UTF8.stringToBytes('int main(){\n\treturn 6;\n}'))
-                                    },
-                                    {
-                                      file: trf[9].id,
-                                      content: base64.fromByteArray(cs.UTF8.stringToBytes('int main(){\n\treturn 7;\n}'))
-                                    },
-                                    {
-                                      file: trf[10].id,
-                                      content: base64.fromByteArray(cs.UTF8.stringToBytes('int main(){\n\treturn 8;\n}'))
-                                    },
-                                    {
-                                      file: trf[11].id,
-                                      content: base64.fromByteArray(cs.UTF8.stringToBytes('int main(){\n\treturn 9;\n}'))
-                                    }
-                                  ]).exec(function (err, trfc) {
+                                let trf = []
+                                let i = 1
+                                for (let reply of tr) {
+                                  trf.push({
+                                    reply: reply.id,
+                                    fileName: 'main',
+                                    fileSize: 200,
+                                    fileExt: 'cpp',
+                                    fileMimeType: 'text/plain',
+                                    firstFileId: i,
+                                    file: i++
+                                  }, {
+                                    reply: reply.id,
+                                    fileName: 'main',
+                                    fileSize: 200,
+                                    fileExt: 'h',
+                                    fileMimeType: 'text/plain',
+                                    firstFileId: i,
+                                    file: i++
+                                  })
+                                }
+
+                                TaskReplyFiles.createEach(trf).meta({fetch: true})
+                                  .exec(function (err, trf) {
                                     if (err) {
                                       throw err
                                     }
-
-                                    TaskComments.createEach([
-                                      {
-                                        taskStudent: users[2].id,
-                                        task: tasks[0].id,
-                                        user: users[1].id,
-                                        comment: 'Test message from Teacher',
-                                        viewed: false
-                                      },
-                                      {
-                                        taskStudent: users[3].id,
-                                        task: tasks[3].id,
-                                        user: users[1].id,
-                                        comment: 'Test message from Teacher',
-                                        viewed: false
-                                      },
-                                      {
-                                        taskStudent: users[2].id,
-                                        task: tasks[0].id,
-                                        user: users[2].id,
-                                        comment: 'Test message from Student',
-                                        viewed: false
-                                      },
-                                      {
-                                        taskStudent: users[3].id,
-                                        task: tasks[3].id,
-                                        user: users[3].id,
-                                        comment: 'Test message from Student',
-                                        viewed: false
+                                    let trfc = []
+                                    for (let file of trf) {
+                                      if (file.fileExt === 'cpp') {
+                                        trfc.push({
+                                          id: file.file,
+                                          file: file.id,
+                                          content: base64.fromByteArray(cs.UTF8.stringToBytes('int main(){\n\treturn 0;\n}'))
+                                        })
                                       }
-                                    ]).exec(function (err, trc) {
+                                      else {
+                                        trfc.push({
+                                          id: file.file,
+                                          file: file.id,
+                                          content: base64.fromByteArray(cs.UTF8.stringToBytes('int main();'))
+                                        })
+                                      }
+                                    }
+                                    TaskReplyFileContent.createEach(trfc).exec(function (err, trfc) {
                                       if (err) {
                                         throw err
                                       }
 
-                                      return cb()
+                                      let tc = []
+                                      for (let reply of tr) {
+                                        tc.push({
+                                            taskStudent: reply.student,
+                                            task: reply.task,
+                                            user: users[Math.floor((Math.random() * 2))].id,
+                                            comment: 'Test message from Teacher',
+                                            viewed: false
+                                          },
+                                          {
+                                            taskStudent: reply.student,
+                                            task: reply.task,
+                                            user: reply.student,
+                                            comment: 'Test message from User',
+                                            viewed: false
+                                          })
+                                      }
+
+                                      TaskComments.createEach(tc).exec(function (err) {
+                                        if (err) {
+                                          throw err
+                                        }
+
+                                        return cb()
+                                      })
                                     })
                                   })
-                                })
-                            })
+                              })
+                          })
                         })
-                      })
-                  })
+                    })
+                })
               })
             })
         })
