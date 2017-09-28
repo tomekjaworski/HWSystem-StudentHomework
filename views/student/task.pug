@@ -18,17 +18,18 @@ mixin commentBlock(com, hidden)
             h5.mb-1
                 if com.user
                     strong.task-c-author=(com.user ? com.user.fullName() : '')
-                    if com.user.hasRole('teacher')
+                    if com.user.isTeacher
                         span.badge.badge-primary Prowadzący
                     span &nbsp;napisał(a):
                 else
-                    span.badge.badge-info Wiadomość systemowa
+                    strong.task-c-author
+                        span.badge.badge-info Wiadomość systemowa
             small.text-muted.task-c-timestamp= com.createdAt
         p.mb-1.task-c-comment= com.comment
         if !com.viewed
-            small.text-muted.task-c-read false
+            small.text-muted.task-c-read nieprzeczytane
         else
-            small.text-muted.task-c-read true
+            small.text-muted.task-c-read przeczytane
 block content
 
     // TODO: jakiś alert ze statusem wykrytym z paska adresu "?msg=kodWiadomosci"
@@ -87,8 +88,29 @@ block content
             #myTabContent.tab-content
                 #task.tab-pane.fade.in.active.show(aria-expanded='true')
                     //-h1 Topic: #{topic.id}
+                    - let teacherStatus = ['Brak','Zaliczone','Niezaliczone']
+                    - let machineStatus = ['Nierozpoczęte','W kolejce','Super','Notatka','Uwagi','Błędy']
+                    - let machineFix = ['','Zaliczone', 'Niezaliczone']
                     h3 Temat: #{topic.number}. #{task.number}. #{task.title}
                     h5 Termin dostarczenia: #{deadline}
+                    if taskReply && taskReply.sent
+                        div.text-right
+                            if !taskReply.lastSent
+                                h5 Dane ostatniego rozwiązania:
+                            h6 Ocena nauczyciela: #{teacherStatus[taskReply.teacherStatus]}
+                            h6 Testy maszynowe: #{machineStatus[taskReply.machineStatus]}
+                                if taskReply.machineOk !== 0
+                                    | &nbsp;/&nbsp;
+                                    =machineFix[taskReply.machineOk]
+                            if taskReply.machineMessage
+                                h6 Skrót testów: #{taskReply.machineMessage}
+                            if taskReply.machineRaport
+                                h6 Report z testów:&nbsp;
+                                    a(href='http://'+taskReply.machineRaport)=taskReply.machineRaport
+                            if !taskReply.lastSent
+                                h6 Najnowsze rozwiązanie nie zostało przesłane!
+                            if taskReply.blocked
+                                h6 Rozwiązywanie zadania zostało zablokowane przez prowadzącego
                     h5 Opis tematu:
                     .card
                         #task-content.card-block!= task.description
@@ -104,7 +126,7 @@ block content
                                         each file in taskReplyFiles
                                             +fileIcon(file)
 
-                            if (taskReply && !taskReply.sent) || !taskReply
+                            if (taskReply && !taskReply.lastSent && !taskReply.blocked) || !taskReply
                                 .card-footer.text-muted
                                     if deadlineCanSend
                                         form(action='/topic/' + topic.id + '/task/' + task.id + '/uploadFile/', enctype='multipart/form-data', method='post')
@@ -141,6 +163,7 @@ block content
                             - i++
                         button.list-group-item.list-group-item-action.active.task-comment-markread.justify-content-center#commentMarkAsRead(style=(allviewed ? 'display: none;' : '')) Oznacz wszystko jako przeczytane
                     .input-group
+                        // TODO: dodać spinnera w trakcie wysyłania komentarza, obsłużyć dodanie poprawne i błąd dodawania i wyświetlić że się nie dodało, dodać blokadę przycisku aby nie spamować w trakcie wysyłania
                         textarea.form-control.task-comment-textarea#commentTextArea(type='text', placeholder='Komentarz', name='comment', rows='1')
                         span.input-group-btn
                             button.btn.btn-primary#commentSendButton(type='button') Wyślij
@@ -170,4 +193,4 @@ block content
     script.
         var task = #{task.id},
           lastComment = #{lastid},
-          replySent = #{(taskReply? taskReply.sent : false)}
+          replySent = #{(taskReply? taskReply.lastSent : false)}

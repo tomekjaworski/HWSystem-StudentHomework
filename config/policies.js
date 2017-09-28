@@ -61,11 +61,22 @@ module.exports.policies = {
   },
 
   TeacherController: {
-    '*': ['isLoggedIn', 'hasRoleTeacher']
+    '*': ['isLoggedIn', 'isTeacher']
+  },
+
+  LabsController: {
+    '*': ['isLoggedIn', 'isTeacher']
+  },
+
+  RepliesController: {
+    '*': ['isLoggedIn', 'isTeacher']
+  },
+
+  TopicAndTasksController: {
+    '*': ['isLoggedIn', 'isTeacher']
   },
 
   StudentController: {
-    '*': ['isLoggedIn', 'hasRoleStudent'],
-    'uploadTaskFiles': true
+    '*': ['isLoggedIn', 'isStudent']
   }
 }

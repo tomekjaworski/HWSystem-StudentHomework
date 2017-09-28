@@ -25,6 +25,16 @@ const Tasks = module.exports = {
       via: 'task'
     },
 
+    arduino: {
+      type: 'boolean',
+      defaultsTo: false
+    },
+
+    computer: {
+      type: 'boolean',
+      defaultsTo: false
+    },
+
     replies: {
       collection: 'taskreplies',
       via: 'task'

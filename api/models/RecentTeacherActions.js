@@ -1,5 +1,5 @@
 /**
- * Roles.js
+ * RecentTeacherActions.js
  *
  * @description :: TODO: You might write a short summary of how this model works and what it represents here.
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
@@ -7,15 +7,23 @@
 
 /* eslint-disable no-unused-vars */
 // noinspection JSUnusedLocalSymbols
-const Roles = module.exports = {
+const RecentTeacherActions = module.exports = {
 
   attributes: {
 
-    name: {type: 'string'},
+    type: {type: 'number'},
 
-    users: {
-      collection: 'users',
-      via: 'roles'
+    student: {model: 'users'},
+
+    task: {model: 'tasks'},
+
+    labgroup: {model: 'labgroups'},
+
+    message: {type: 'string'},
+
+    seen: {
+      type: 'boolean',
+      defaultsTo: false
     }
   }
 }

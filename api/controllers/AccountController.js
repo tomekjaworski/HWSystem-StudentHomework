@@ -61,10 +61,10 @@ const AccountController = module.exports = {
     if(!req.localUser){
       return res.view('homepage');
     }
-    if(req.localUser.hasRole('student')){
+    if(!req.localUser.isTeacher){
       return res.redirect(sails.getUrlFor('StudentController.index'))
     }
-    if(req.localUser.hasRole('teacher')){
+    else {
       return res.redirect(sails.getUrlFor('TeacherController.index'))
     }
     return res.serverError();
@@ -89,7 +89,7 @@ const AccountController = module.exports = {
           !email || !password) {
           return AccountController.loginError(res, 'Źle wporwadzone dane')
         }
-        Users.findOne({email: email}).populate('roles').exec(function (err, user) {
+        Users.findOne({email: email}).exec(function (err, user) {
           if (err) {
             return res.jsonx(err)
           }
@@ -104,7 +104,7 @@ const AccountController = module.exports = {
             if (_.isString(red)) {
               return res.redirect(red)
             } else {
-              if (user.hasRole('teacher')) {
+              if (user.isTeacher) {
                 return res.redirect(sails.getUrlFor('TeacherController.index'))
               }
               return res.redirect(sails.getUrlFor('StudentController.index'))
@@ -153,7 +153,7 @@ const AccountController = module.exports = {
         let rePassword = req.param('repassword')
         let labGroups = req.param('groupl')
         let st = crypto.randomBytes(20).toString('hex')
-        if (!name && !surname && !email && !password) {
+        if (!name || !surname || !email || !password || !album) {
           return AccountController.registerError(res, 'Proszę uzupełnić wszystkie pola.')
         }
         if (name.length > 255) {
@@ -189,12 +189,6 @@ const AccountController = module.exports = {
             return AccountController.registerError(res, 'Twoje hasło powinno zawierać dużą i małą litere')
         }
 
-        // TODO: sprawdzic Dean & Lab
-        Roles.findOne({name: 'student'}).exec(function (err, role) {
-          if (err) {
-            return res.jsonx(err)
-          }
-
           LabGroups.findOne({name: labGroups}).exec(function (err, lab) {
             if (err) {
               res.jsonx(err)
@@ -210,7 +204,6 @@ const AccountController = module.exports = {
               password: AccountController.hashPassword(password, st),
               salt: st,
               activated: true,
-              roles: role,
               labGroups: [lab]
             }).exec(function (err) {
               if (err) {
@@ -220,7 +213,6 @@ const AccountController = module.exports = {
               return res.redirect(sails.getUrlFor('AccountController.login'))
             })
           })
-        })
     }
   },
 

@@ -1,0 +1,56 @@
+extends ../../includes/layout
+
+block content
+    if (message !== undefined && message && (message.length > 0 ))
+        .alert.alert-danger(role='alert')
+            strong Wiadomość:
+            |  #{message}
+    .row
+        .col-md-12.col-lg-4#topics-column
+            include ../menu
+
+        .col-md-12.col-lg-8
+            h1 Edycja Zadania
+            span= task.title
+            form(method='post')
+                div
+                    label(for='number') Numer:
+                    br
+                    input#number(name='taskNumber', value=task.number)
+                div
+                    label(for='title') Tytuł:
+                    br
+                    input#title(name='taskTitle', value=task.title)
+
+                if description
+                    div
+                        label(for="desc") Opis zadania:
+                        br
+                        textarea#description(name="taskDescription") #{description.description}
+                else
+                    div
+                        label(for="desc") Opis zadania:
+                        br
+                        textarea#desc(name="taskDescription")
+                div
+                    label(for="select") Temat zadania:
+                    br
+                    select#select(name="taskTopic")
+                        each t in topics
+                            option(value=t.id)=t.number +' '+ t.title
+                div
+                    label(for='active') Widoczne:
+                    input#active(type='checkbox', name='taskVisible' value="ok" checked)
+
+                div
+                    label
+                        input(type='checkbox' name='komputerCheck' value="ok")
+                        |  Komputer
+                div
+                    label
+                        input(type='checkbox' name='arduinoCheck' value="ok")
+                        |  Arduino
+
+                input(type='submit')
+
+                div#mdown

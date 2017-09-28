@@ -18,9 +18,18 @@ const Users = module.exports = {
     album: {
       type: 'string',
       unique: true,
-      required: true,
       minLength: 6,
       maxLength: 6
+    },
+
+    isTeacher: {
+      type: 'boolean',
+      defaultsTo: false,
+    },
+
+    isAdmin: {
+      type: 'boolean',
+      defaultsTo: false,
     },
 
     email: {
@@ -35,11 +44,6 @@ const Users = module.exports = {
     activated: {
       type: 'boolean',
       defaultsTo: true
-    },
-
-    roles: {
-      collection: 'roles',
-      via: 'users'
     },
 
     labGroups: {
@@ -76,27 +80,6 @@ const Users = module.exports = {
         return this.name + ' ' + this.surname
       }
       return null
-    },
-
-    hasRole: function (name) {
-      if (this.roles && this.roles.length !== 0) {
-        return !!this.roles.filter((role) => role.name === name)[0]
-      } else {
-        let hasrole = false
-        let done = false
-        Roles.findOne({name: name}).populate('users', {id: this.id}).exec((err, role) => {
-          if (err) {
-            throw err
-          }
-          if (!role) {
-            done = true
-          }
-          hasrole = role.users.length === 1
-          done = true
-        })
-        require('deasync').loopWhile(() => { return !done })
-        return hasrole
-      }
     }
   },
 

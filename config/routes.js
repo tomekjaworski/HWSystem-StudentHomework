@@ -63,6 +63,7 @@ module.exports.routes = {
 
   // Teachers
   'GET /teacher': 'TeacherController.index',
+  'POST /teacher/markAsRead': 'TeacherController.markAsRead',
 
   // Teachers // Labgroups
   '/teacher/labgroup': 'teacher/LabsController.listLabGroups',
@@ -79,5 +80,12 @@ module.exports.routes = {
   '/ajax/teacher/replies/setTeacherStatus/:replyid': {action: 'teacher/replies/ajaxSetTeacherStatus', skipAssets: true},
   '/ajax/teacher/replies/setStudentDeadline/:taskid': {action: 'teacher/replies/ajaxSetStudentTaskDeadline', skipAssets: true},
   '/ajax/teacher/replies/sendComment/:taskid': {action: 'teacher/replies/ajaxAddComment', skipAssets: true},
-  '/ajax/teacher/replies/checkComments/:taskid': {action: 'teacher/replies/ajaxCheckComments', skipAssets: true}
+  '/ajax/teacher/replies/checkComments/:taskid': {action: 'teacher/replies/ajaxCheckComments', skipAssets: true},
+
+  // Teachers // Topics & Tasks
+  '/teacher/topics-and-tasks': {action: 'teacher/topicsandtasks/listTopicsAndTasks', skipAssets: true},
+  '/teacher/topics-and-tasks/view/:id': {action: 'teacher/topicsandtasks/taskView', skipAssets: true},
+  '/teacher/topics-and-tasks/topic/add': {action: 'teacher/topicsandtasks/addTopic', skipAssets: true},
+  '/teacher/topics-and-tasks/topic/:topicId/task/add': {action: 'teacher/topicsandtasks/addTask', skipAssets: true},
+  '/teacher/topics-and-tasks/task/edit/:id': {action: 'teacher/topicsandtasks/editTask', skipAssets: true}
 }
