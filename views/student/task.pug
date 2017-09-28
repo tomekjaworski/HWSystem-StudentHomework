@@ -11,7 +11,11 @@ mixin fileIcon(file)
             else
                 i.fa.fa-file-o.fa-3x
         code=file.fileName + '.' + file.fileExt
-
+mixin noFilesInReply
+    .col-12.mb-2.text-center.text-muted
+        i.fa.fa-files-o.fa-4x
+    .col-12.text-center.text-muted
+        | Twoje zadanie obecnie nie ma plików. Użyj guzików poniżej aby dodać pliki i zatwierdzić zadanie.
 mixin commentBlock(com, hidden)
     .list-group-item.list-group-item-action.flex-column.align-items-start(style=(hidden ? 'display: none;': ''))
         .d-flex.w-100.justify-content-between
@@ -123,9 +127,15 @@ block content
                                     | C: #{taskReply.teacherStatus} D: #{taskReply.machineStatus}
                                 .card-block
                                     .row
-                                        each file in taskReplyFiles
-                                            +fileIcon(file)
-
+                                        if taskReplyFiles[0]
+                                            each file in taskReplyFiles
+                                                +fileIcon(file)
+                                        else
+                                            +noFilesInReply
+                            else
+                                .card-block
+                                    .row
+                                        +noFilesInReply
                             if (taskReply && !taskReply.lastSent && !taskReply.blocked) || !taskReply
                                 .card-footer.text-muted
                                     if deadlineCanSend
