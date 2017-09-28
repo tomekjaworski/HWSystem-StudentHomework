@@ -83,11 +83,11 @@ function loadFileContent (reply, id) {
     })
   }
 
-  function renderComment (author, isTeacher, comment, date, read) {
+  function renderComment (user, comment, date, read) {
     let template = $('#commentAjaxTemplate').find('.list-group-item').clone()
     template.attr('id', 'commentFadeIn')
-    let append = isTeacher ? '<span class="badge badge-primary">Prowadzący</span><span>&nbsp;napisał(a):</span>' : '<span>&nbsp;napisał(a):</span>'
-    template.find('.task-c-author').text(author).append(append)
+    let append = user.isTeacher ? '<span class="badge badge-primary">Prowadzący</span><span>&nbsp;napisał(a):</span>' : '<span>&nbsp;napisał(a):</span>'
+    template.find('.task-c-author').text(user.name + ' ' + user.surname).append(append)
     template.find('.task-c-timestamp').text(date)
     template.find('.task-c-comment').text(comment)
     template.find('.task-c-read').text(read)
@@ -149,7 +149,7 @@ function loadFileContent (reply, id) {
     })
     response.done(function (msg) {
       for (let i = 0; i <= msg.length - 1; i++) {
-        renderComment(msg[i].user.name + ' ' + msg[i].user.surname, msg[i].user.isTeacher, msg[i].comment, msg[i].createdAt, msg[i].viewed)
+        renderComment(msg[i].user, msg[i].comment, msg[i].createdAt, msg[i].viewed)
         newLastComment = msg[i].id
       }
       if (msg.length >= 1) {

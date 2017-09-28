@@ -27,7 +27,7 @@ const TaskReplies = module.exports = {
 
     newest: {
       type: 'boolean',
-      defaultsTo: false,
+      defaultsTo: true,
     },
 
     firstId: {
@@ -49,6 +49,10 @@ const TaskReplies = module.exports = {
       min: 0,
       max: 2,
       defaultsTo: 0
+    },
+
+    machineTestId: {
+      type: 'number'
     },
 
     machineStatus: {

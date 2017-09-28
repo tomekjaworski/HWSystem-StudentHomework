@@ -78,7 +78,10 @@ module.exports.routes = {
   '/teacher/replies/view/:taskid': {action: 'teacher/replies/viewTaskReplies', skipAssets: true},
   '/ajax/teacher/replies/view/:taskId/lab/:labId': {action: 'teacher/replies/viewTaskOfLab', skipAssets: true},
   '/ajax/teacher/replies/setTeacherStatus/:replyid': {action: 'teacher/replies/ajaxSetTeacherStatus', skipAssets: true},
-  '/ajax/teacher/replies/setStudentDeadline/:taskid': {action: 'teacher/replies/ajaxSetStudentTaskDeadline', skipAssets: true},
+  '/ajax/teacher/replies/setStudentDeadline/:taskid': {
+    action: 'teacher/replies/ajaxSetStudentTaskDeadline',
+    skipAssets: true
+  },
   '/ajax/teacher/replies/sendComment/:taskid': {action: 'teacher/replies/ajaxAddComment', skipAssets: true},
   '/ajax/teacher/replies/checkComments/:taskid': {action: 'teacher/replies/ajaxCheckComments', skipAssets: true},
 
@@ -87,5 +90,15 @@ module.exports.routes = {
   '/teacher/topics-and-tasks/view/:id': {action: 'teacher/topicsandtasks/taskView', skipAssets: true},
   '/teacher/topics-and-tasks/topic/add': {action: 'teacher/topicsandtasks/addTopic', skipAssets: true},
   '/teacher/topics-and-tasks/topic/:topicId/task/add': {action: 'teacher/topicsandtasks/addTask', skipAssets: true},
-  '/teacher/topics-and-tasks/task/edit/:id': {action: 'teacher/topicsandtasks/editTask', skipAssets: true}
+  '/teacher/topics-and-tasks/task/edit/:id': {action: 'teacher/topicsandtasks/editTask', skipAssets: true},
+
+  // DEBUG
+  '/hw2/enqtest': function (req, res) {
+    sails.log.debug(`?idx=${req.param('idx')}&task=${req.param('task')}&sol=${req.param('sol')}&rk=${req.param('rk')}`)
+    return res.json({status: 100})
+  },
+
+  // API
+  '/api/machineTest/tid/:testId/reply/:replyId/status/:status/passed/:passed/raport/:raport/message/:message/rk/:rk': {action: 'api/changeMachineStatus', skipAssets: true}
 }
+

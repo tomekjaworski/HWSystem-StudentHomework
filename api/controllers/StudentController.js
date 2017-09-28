@@ -602,7 +602,7 @@ module.exports = {
                 createdAt: dateFormat(c.createdAt, 'HH:MM dd/mm/yyyy'),
                 comment: c.comment,
                 viewed: (c.viewed ? 'przeczytane' : 'nieprzeczytane'),
-                user: {id: c.user.id, name: c.user.name, surname: c.user.surname, isTeacher: c.user.isTeacher}
+                user: (c.user ? {id: c.user.id, name: c.user.name, surname: c.user.surname, isTeacher: c.user.isTeacher} : null)
               }
             })
 
