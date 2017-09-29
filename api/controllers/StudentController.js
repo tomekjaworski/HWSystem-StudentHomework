@@ -584,7 +584,7 @@ module.exports = {
     if (req.method === 'GET') {
       Tasks.findOne(taskId).exec(function (err, taskw) {
         if (err) {
-          return res.json(err)
+          return res.serverError(err)
         }
 
         if (!taskw) {
@@ -594,7 +594,7 @@ module.exports = {
         TaskComments.find({task: taskw.id, taskStudent: req.localUser.id, id: {'>': lastComment}}).populate('user')
           .exec(function (err, task) {
             if (err) {
-              return res.json(err)
+              return res.serverError(err)
             }
             let com = task.map(c => {
               return {
@@ -602,7 +602,7 @@ module.exports = {
                 createdAt: dateFormat(c.createdAt, 'HH:MM dd/mm/yyyy'),
                 comment: c.comment,
                 viewed: (c.viewed ? 'przeczytane' : 'nieprzeczytane'),
-                user: {id: c.user.id, name: c.user.name, surname: c.user.surname, isTeacher: c.user.isTeacher}
+                user: (c.user ? {id: c.user.id, name: c.user.name, surname: c.user.surname, isTeacher: c.user.isTeacher} : null)
               }
             })
 

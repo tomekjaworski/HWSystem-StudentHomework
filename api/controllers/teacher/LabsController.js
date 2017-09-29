@@ -123,15 +123,15 @@ const LabsController = module.exports = {
   },
 
   addLabGroup: function (req, res) {
-    let a = (msg) => Roles.findOne({name: 'teacher'}).populate('users').exec((err, role) => {
+    let a = (msg) => Users.find({isTeacher: true}).exec((err, users) => {
       if (err) {
         return res.serverError(err)
       }
-      if (!role) {
-        return res.serverError('Nie znaleziono roli prowadzącego, zgłoś się do administratora')
+      if (!users || users.length===0) {
+        return res.serverError('Nie znaleziono prowadzących, zgłoś się do administratora')
       }
       return res.view('teacher/labgroups/add',
-        {title: 'LabGroups :: Teacher Panel', menuItem: 'labgroups', users: role.users, message: msg})
+        {title: 'LabGroups :: Teacher Panel', menuItem: 'labgroups', users: users, message: msg})
     })
     if (req.method === 'POST') {
       let title = req.param('title')
@@ -164,12 +164,12 @@ const LabsController = module.exports = {
 
   editLabGroup: function (req, res) {
     let id = req.param('id')
-    let a = (attr, msg) => Roles.findOne({name: 'teacher'}).populate('users').exec((err, role) => {
+    let a = (attr, msg) => Users.find({isTeacher: true}).exec((err, users) => {
       if (err) {
         return res.serverError(err)
       }
-      if (!role) {
-        return res.serverError('Nie znaleziono roli prowadzącego, zgłoś się do administratora')
+      if (!users || users.length===0) {
+        return res.serverError('Nie znaleziono prowadzących, zgłoś się do administratora')
       }
       LabGroups.findOne({id: id}).exec((err, lab) => {
         if (err) {
@@ -183,7 +183,7 @@ const LabsController = module.exports = {
             title: 'LabGroups :: Teacher Panel',
             menuItem: 'labgroups',
             data: lab,
-            users: role.users,
+            users: users,
             message: {message: msg, attribute: attr}
           })
       })

@@ -58,7 +58,8 @@ module.exports.http = {
             return res.jsonx(err)
           }
           if (!user) {
-            return res.serverError('Nie znaleziono zalogowanego użytkownika')
+            delete req.session.authed
+            return next()
           }
           req.options.locals.localUser = req.localUser = user
           next()

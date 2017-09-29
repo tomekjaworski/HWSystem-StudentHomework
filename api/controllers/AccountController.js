@@ -58,16 +58,16 @@ const AccountController = module.exports = {
    * @route       :: /login
    */
   index: function (req, res) {
-    if(!req.localUser){
-      return res.view('homepage');
+    if (!req.localUser) {
+      return res.view('homepage')
     }
-    if(!req.localUser.isTeacher){
+    if (!req.localUser.isTeacher) {
       return res.redirect(sails.getUrlFor('StudentController.index'))
     }
     else {
       return res.redirect(sails.getUrlFor('TeacherController.index'))
     }
-    return res.serverError();
+    return res.serverError()
   },
 
   /**
@@ -91,7 +91,7 @@ const AccountController = module.exports = {
         }
         Users.findOne({email: email}).exec(function (err, user) {
           if (err) {
-            return res.jsonx(err)
+            return res.serverError(err)
           }
           if (!user) {
             return AccountController.loginError(res, 'Błędna kombinacja użytkownika i hasła')
@@ -189,48 +189,42 @@ const AccountController = module.exports = {
             return AccountController.registerError(res, 'Twoje hasło powinno zawierać dużą i małą litere')
         }
 
-          LabGroups.findOne({name: labGroups}).exec(function (err, lab) {
+        LabGroups.findOne({name: labGroups}).exec(function (err, lab) {
+          if (err) {
+            res.serverError(err)
+          }
+          if (!lab) {
+            return AccountController.registerError(res, 'Nieprawidłowa grupa laboratoryjna.')
+          }
+          Users.create({
+            name: name,
+            surname: surname,
+            album: album,
+            email: email,
+            password: AccountController.hashPassword(password, st),
+            salt: st,
+            activated: true,
+            labGroups: [lab]
+          }).exec(function (err) {
             if (err) {
-              res.jsonx(err)
+              return res.serverError(err)
             }
-            if (!lab) {
-              return AccountController.registerError(res, 'Nieprawidłowa grupa laboratoryjna.')
-            }
-            Users.create({
-              name: name,
-              surname: surname,
-              album: album,
-              email: email,
-              password: AccountController.hashPassword(password, st),
-              salt: st,
-              activated: true,
-              labGroups: [lab]
-            }).exec(function (err) {
-              if (err) {
-                return res.serverError(err)
-              }
 
-              return res.redirect(sails.getUrlFor('AccountController.login'))
-            })
+            return res.redirect(sails.getUrlFor('AccountController.login'))
           })
+        })
     }
   },
 
   userSettings: function (req, res) {
     switch (req.method) {
       case 'GET':
-
-        Users.findOne({id: req.localUser.id}).exec(function (err, user) {
-          if (err) {
-            return res.json(err)
-          }
           LabGroups.find().populate('owner').exec(function (err, labs) {
             if (err) {
-              return res.json(err)
+              return res.serverError(err)
             }
 
-            return res.view('account/settings', {user: user, labs: labs})
-          })
+            return res.view('account/settings', {labs: labs})
         })
         break
       case 'POST':
@@ -238,83 +232,73 @@ const AccountController = module.exports = {
         let oldPassword = req.param('oldPass')
         let password = req.param('password')
         let rePassword = req.param('repassword')
-        let lab = req.param('lab')
+        const lab = req.param('lab')
         let confpass = req.param('passlabconf')
 
-        Users.findOne({id: req.localUser.id}).exec(function (err, user) {
-          if (err) {
-            return res.json(err)
-          }
+        let user = req.localUser
 
+        LabGroups.find().populate('owner').exec(function (err, labs) {
+          if (err) {
+            return res.serverError(err)
+          }
           // ZMIANA HASŁA
           if (action === 'newPassword') {
-            LabGroups.find().populate('owner').exec(function (err, labs) {
-              if (err) {
-                return res.json(err)
+            if (user.password === AccountController.hashPassword(oldPassword, user.salt)) {
+              if (password !== rePassword) {
+                return AccountController.settingsMessage(res, 'Hasła nie są identyczne.', labs)
               }
-              if (user.password === AccountController.hashPassword(oldPassword, user.salt)) {
-                if (password !== rePassword) {
-                  return AccountController.settingsMessage(res, 'Hasła nie są identyczne', labs)
-                }
-                if (password.length < 8) {
+              if (password.length < 8) {
+                return AccountController.settingsMessage(res, 'Hasło jest za krótkie. Powinno zawierać 8 znaków.', labs)
+              }
+
+              switch (Users.validatePassword(password)) {
+                case 1:
                   return AccountController.settingsMessage(res, 'Hasło jest za krótkie. Powinno zawierać 8 znaków.', labs)
-                }
-
-                switch (Users.validatePassword(password)) {
-                  case 1:
-                    return AccountController.settingsMessage(res, 'Hasło jest za krótkie. Powinno zawierać 8 znaków.', labs)
-                  case 2:
-                    return AccountController.settingsMessage(res, 'Twoje hasło powinno zawierać dużą i małą litere', labs)
-                }
-                user.password = AccountController.hashPassword(password, user.salt)
-
-                user.save({populate: false}, function (err) {
-                  if (err) {
-                    return res.json(err)
-                  }
-                  return AccountController.settingsMessage(res, 'Hasło zostało zmienione.', labs)
-                })
-              } else {
-                return AccountController.settingsMessage(res, 'Stare hasło jest nieprawidłowe', labs)
+                case 2:
+                  return AccountController.settingsMessage(res, 'Twoje hasło powinno zawierać dużą i małą litere.', labs)
               }
-            })
-            // Dodac lab
-          } else if (action === 'newLab') {
-          // ZMIANA LAB GRUPY
+              let passwd = AccountController.hashPassword(password, user.salt)
 
-            LabGroups.findOne({name: lab}).populate('owner').exec(function (err, lab) {
-              if (err) {
-                return res.json(err)
-              }
-              LabGroups.find().populate('owner').exec(function (err, labs) {
+              Users.update(user.id, {password: passwrd}).exec(function (err) {
                 if (err) {
-                  return res.json(err)
+                  return res.serverError(err)
                 }
-                Users.findOne({id: req.localUser.id}).exec(function (err, user) {
+                return AccountController.settingsMessage(res, 'Hasło zostało zmienione.', labs)
+              })
+            } else {
+              return AccountController.settingsMessage(res, 'Stare hasło jest nieprawidłowe', labs)
+            }
+          } else if (action === 'newLab') {
+            // ZMIANA LAB GRUPY
+            if (!labs || labs.length === 0) {
+              return res.badRequest()
+            }
+            let flab = _.find(labs, ['name', lab])
+            if (!flab) {
+              return res.badRequest()
+            }
+
+            if (user.password === AccountController.hashPassword(confpass, user.salt)) {
+              if (err) {
+                return res.serverError(err)
+              }
+              StudentsLabGroups.findOne({student:user.id,labgroup:flab.id}).exec((err,slb)=>{
+                if (err) {
+                  return res.serverError(err)
+                }
+                if(slb){
+                  return AccountController.settingsMessage(res, 'Należysz już do tej grupy laboratoryjnej.', labs)
+                }
+                Users.replaceCollection(user.id, 'labGroups').members([flab.id]).exec((err) => {
                   if (err) {
-                    return res.json(err)
+                    return res.serverError(err)
                   }
-
-                  if (lab === undefined) {
-                    lab = user.labGroups
-                  }
-
-                  if (user.password === AccountController.hashPassword(confpass, user.salt)) {
-                    user.labGroups = lab
-
-                    user.save({populate: false}, function (err) {
-                      if (err) {
-                        return res.badRequest(err)
-                      }
-                        // DODAĆ ACTION ŻEBY SPRFAWDZIĆ KTÓRY FORM
-                      return AccountController.settingsMessage(res, 'Zmieniono grupę laboratoryjną.', labs)
-                    })
-                  } else {
-                    return AccountController.settingsMessage(res, 'Hasło jest niepoprawne', labs)
-                  }
+                  return AccountController.settingsMessage(res, 'Zmieniono grupę laboratoryjną. Wymagana akceptacja przez Prowadzącego.', labs)
                 })
               })
-            })
+            } else {
+              return AccountController.settingsMessage(res, 'Hasło jest niepoprawne.', labs)
+            }
           }
         })
     }
