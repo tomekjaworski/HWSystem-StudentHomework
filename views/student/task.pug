@@ -108,9 +108,9 @@ block content
                                     =machineFix[taskReply.machineOk]
                             if taskReply.machineMessage
                                 h6 Skrót testów: #{taskReply.machineMessage}
-                            if taskReply.machineRaport
+                            if taskReply.machineReport
                                 h6 Report z testów:&nbsp;
-                                    a(href='http://'+taskReply.machineRaport)=taskReply.machineRaport
+                                    a(href='http://'+taskReply.machineReport)=taskReply.machineReport
                             if !taskReply.lastSent
                                 h6 Najnowsze rozwiązanie nie zostało przesłane!
                             if taskReply.blocked

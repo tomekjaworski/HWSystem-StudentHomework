@@ -69,7 +69,7 @@ const TaskReplies = module.exports = {
       defaultsTo: 0
     },
 
-    machineRaport: {
+    machineReport: {
       type: 'string'
     },
 

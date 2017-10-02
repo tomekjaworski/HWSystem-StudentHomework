@@ -44,7 +44,7 @@ const ManageReplies = module.exports = {
       });
     },
 
-    changeStatus: function (testId, replyId, status, passed, raport, message, cb) {
+    changeStatus: function (testId, replyId, status, passed, report, message, cb) {
       TaskReplies.findOne(replyId).exec((err, reply) => {
         if (err) {
           return cb(err)
@@ -74,7 +74,7 @@ const ManageReplies = module.exports = {
           machineStatus: status,
           machineTestid: testId,
           machineOk: passed,
-          machineRaport: raport,
+          machineReport: report,
           machineMessage: message
         }).exec((err) => {
           TaskReplies.findOne(replyId).exec((err, reply) => {

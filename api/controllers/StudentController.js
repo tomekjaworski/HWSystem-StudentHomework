@@ -547,7 +547,7 @@ module.exports = {
               teacherStatus: 0,
               machineMessage: '',
               machineOk: 0,
-              machineRaport: '',
+              machineReport: '',
               machineStatus: 0
             }).exec((err) => {
               if (err) {
