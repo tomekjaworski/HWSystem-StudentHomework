@@ -45,11 +45,11 @@ block content
                         if description
                             .form-group
                                 label(for="taskDescEditor") Opis zadania:
-                                textarea.form-control#taskDescEditor(name="taskDescription", rows='10') #{description.description}
+                                textarea.form-control#taskDescEditor(name="taskDescription") #{description.description}
                         else
                             .form-group
                                 label(for="description") Opis zadania:
-                                textarea.form-control#taskDescEditor(name="taskDescription", rows='10')
+                                textarea.form-control#taskDescEditor(name="taskDescription")
 
                         input.btn.btn-primary(type='submit')
 
