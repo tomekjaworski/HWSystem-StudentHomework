@@ -77,13 +77,15 @@ module.exports.routes = {
   '/teacher/replies': 'teacher/RepliesController.selectTaskReplies',
   '/teacher/replies/view/:taskid': {action: 'teacher/replies/viewTaskReplies', skipAssets: true},
   '/ajax/teacher/replies/view/:taskId/lab/:labId': {action: 'teacher/replies/viewTaskOfLab', skipAssets: true},
-  '/ajax/teacher/replies/setTeacherStatus/:replyid': {action: 'teacher/replies/ajaxSetTeacherStatus', skipAssets: true},
-  '/ajax/teacher/replies/setStudentDeadline/:taskid': {
+  'POST /ajax/teacher/replies/setTeacherStatus/:replyid': {action: 'teacher/replies/ajaxSetTeacherStatus', skipAssets: true},
+  'POST /ajax/teacher/replies/setBlocked/': {action: 'teacher/replies/ajaxSetBlocked', skipAssets: true},
+  'POST /ajax/teacher/replies/repostTask/': {action: 'teacher/replies/ajaxRepostTask', skipAssets: true},
+  'POST /ajax/teacher/replies/setStudentDeadline/:taskid': {
     action: 'teacher/replies/ajaxSetStudentTaskDeadline',
     skipAssets: true
   },
-  '/ajax/teacher/replies/sendComment/:taskid': {action: 'teacher/replies/ajaxAddComment', skipAssets: true},
-  '/ajax/teacher/replies/checkComments/:taskid': {action: 'teacher/replies/ajaxCheckComments', skipAssets: true},
+  'POST /ajax/teacher/replies/sendComment/:taskid': {action: 'teacher/replies/ajaxAddComment', skipAssets: true},
+  'POST /ajax/teacher/replies/checkComments/:taskid': {action: 'teacher/replies/ajaxCheckComments', skipAssets: true},
 
   // Teachers // Topics & Tasks
   '/teacher/topics-and-tasks': {action: 'teacher/topicsandtasks/listTopicsAndTasks', skipAssets: true},

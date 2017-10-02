@@ -7,15 +7,15 @@ div.d-flex
                 h5 Brak aktywnych studentów w grupie
             else
                 each student in data
-                    .col-6(id=(student.reply ? 'reply-'+student.reply.id : ''), style='display: inline-block;float: none;border:1px solid black;vertical-align:top;margin-right:20px' + (student.reply ? (student.reply.teacherStatus === 1 ? 'background-color:lightgreen;' : (student.reply.teacherStatus === 2 ? 'background-color:rgba(200,0,0,0.7);' : '')) : ''))
+                    .col-6(id=(student.reply ? 'reply-' + student.reply.id : ''), style='display: inline-block;float: none;border:1px solid black;vertical-align:top;margin-right:20px;' + (student.reply ? (student.reply.blocked ? 'background-color:rgba(200,0,0,0.7);' : (!student.reply.newest ? 'background-color:rgba(100,100,100,0.7);' : (student.reply.teacherStatus === 2 ? 'background-color:rgba(200,0,0,0.7);' : (student.reply.teacherStatus === 1 ? 'background-color:lightgreen;' : '')))) : ''))
                         div
                             h5=student.name + ' ' + student.surname
                         div
                             | Czas na odpowiedź:
                             br
-                            input(id='deadline-student-'+student.id+'-task-'+task.id, type='date', value=student.deadline)
-                            button(onclick='saveDeadline('+student.id+','+task.id+')') Zapisz
-                            button(onclick='saveDeadline('+student.id+','+task.id+', true)') Skasuj
+                            input(id='deadline-student-' + student.id + '-task-' + task.id, type='date', value=student.deadline)
+                            button(onclick='saveDeadline(' + student.id + ',' + task.id + ')') Zapisz
+                            button(onclick='saveDeadline(' + student.id + ',' + task.id + ', true)') Skasuj
                             br
                             br
                         if !student.reply
@@ -38,13 +38,21 @@ div.d-flex
                                                     option(value=option.id)=option.name
                                 - var tests = {'0':'Nierozpoczęte', '1':'W kolejce', '2':'Zaliczone', '3':'Niezaliczone'}
                                 div Testy Maszynowe: #{tests[student.reply.machineStatus]}
-                                div Zablokowany: #{student.reply.blocked}
+                                div Zablokowany:
+                                    if student.reply.blocked
+                                        input(type='checkbox', name='blocked', checked, onchange='setBlocked(' + student.id + ', ' + task.id + ',' + student.reply.id + ', this)')
+                                    else
+                                        input(type='checkbox', name='blocked', onchange='setBlocked(' + student.id + ', ' + task.id + ',' + student.reply.id + ', this)')
                                 div Odpowiedź po raz: #{student.reply.count}
+                                if student.reply.newest
+                                    div
+                                        // TODO: Seba dodaj jakieś potwierdzenie czy aby napewno chce się to zrobić
+                                        button.btn.btn-danger(id='repost-reply-' + student.reply.id, onclick='repostTask(' + student.id + ', ' + task.id + ', ' + student.reply.id + ')', style=(student.reply.blocked ? 'display:none' : '')) Przydziel zadanie ponownie
                             div
                                 h6 Pliki
                                 each file in student.reply.files
                                     div(style='border:1px solid black; margin-bottom:10px;background-color:white;')
-                                        div='Nazwa: '+file.fileName + '.' + file.fileExt
+                                        div='Nazwa: ' + file.fileName + '.' + file.fileExt
                                         div='Rozmiar: ' + file.fileSize
                                         div='MimeType: ' + file.fileMimeType
                                         div
@@ -66,10 +74,10 @@ div.d-flex
                             h6 Komentarze:
                             - let comment = _.last(student.comments)
                             - comment = (comment? comment.id : 0)
-                            div(id='comments-student-'+student.id, data-last=comment, style='max-height:400px;overflow:auto')
+                            div(id='comments-student-' + student.id, data-last=comment, style='max-height:400px;overflow:auto')
                                 if student.comments
                                     each comment in student.comments
-                                        div(id='comments-student-'+student.id + '-comment-'+comment.id, style='border:1px solid black;margin:1px;padding:1px;')
+                                        div(id='comments-student-' + student.id + '-comment-' + comment.id, style='border:1px solid black;margin:1px;padding:1px;')
                                             div='Autor: ' + comment.user.name + ' ' + comment.user.surname
                                             div='Data: ' + comment.createdAt
                                             div='Przeczytane: ' + comment.viewed
@@ -82,5 +90,5 @@ div.d-flex
                             .input-group
                                 textarea.form-control.task-comment-textarea#commentTextArea(type='text', placeholder='Komentarz', name='comment', rows='1')
                                 span.input-group-btn
-                                    button.btn.btn-primary(onclick='sendComment('+student.id+','+task.id+')', type='button') Wyślij
-                                    button.btn.btn-primary(onclick='checkComments('+student.id+','+task.id+')', type='button') Odśwież
+                                    button.btn.btn-primary(onclick='sendComment(' + student.id + ',' + task.id + ')', type='button') Wyślij
+                                    button.btn.btn-primary(onclick='checkComments(' + student.id + ',' + task.id + ')', type='button') Odśwież
