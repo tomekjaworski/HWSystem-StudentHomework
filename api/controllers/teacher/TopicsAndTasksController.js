@@ -204,11 +204,11 @@ const TopicsAndTasksController = module.exports = {
           visible:vis,
           arduino: ard,
           computer: com
-        }).exec(function (err, task) {
+        }).exec(function (err) {
         if (err) {
           return res.serverError(err)
         }
-        TaskDescription.update({task: task},
+        TaskDescription.update({task: id},
           {
             description: description
           }).exec(function (err, desc) {
