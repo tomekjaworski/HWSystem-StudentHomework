@@ -86,8 +86,12 @@ function loadFileContent (reply, id) {
   function renderComment (user, comment, date, read) {
     let template = $('#commentAjaxTemplate').find('.list-group-item').clone()
     template.attr('id', 'commentFadeIn')
-    let append = user.isTeacher ? '<span class="badge badge-primary">Prowadzący</span><span>&nbsp;napisał(a):</span>' : '<span>&nbsp;napisał(a):</span>'
-    template.find('.task-c-author').text(user.name + ' ' + user.surname).append(append)
+    if (user) {
+      let append = user.isTeacher ? '<span class="badge badge-primary">Prowadzący</span><span>&nbsp;napisał(a):</span>' : '<span>&nbsp;napisał(a):</span>'
+      template.find('.task-c-author').text(user.name + ' ' + user.surname).append(append)
+    } else {
+      template.find('.task-c-author').html('<span class="badge badge-info">Wiadomość systemowa</span>')
+    }
     template.find('.task-c-timestamp').text(date)
     template.find('.task-c-comment').text(comment)
     template.find('.task-c-read').text(read)

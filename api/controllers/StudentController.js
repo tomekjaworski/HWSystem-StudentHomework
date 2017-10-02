@@ -33,7 +33,7 @@ module.exports = {
         '    COUNT(DISTINCT comments.task) repliesCommented,\n' +
         '    sum(case when replies.machineOk = 1 then 1 else 0 end) repliesMachineAccepted,\n' +
         '    sum(case when replies.machineOk = 2 then 1 else 0 end) repliesMachineRejected,\n' +
-        '    sum(case when (replies.machineOk = 1 and replies.teacherStatus = 1) then 1 else 0 end) repliesAccepted\n' +
+        '    sum(case when (replies.machineOk = 1 and replies.teacherStatus = 1 AND replies.blocked = 0) then 1 else 0 end) repliesAccepted\n' +
         '    FROM topics\n' +
         'LEFT JOIN tasks ON tasks.topic = topics.id\n' +
         'LEFT JOIN taskreplies AS replies ON replies.task = tasks.id AND replies.student = $1 AND replies.lastSent = 1 AND replies.newest = 1 \n' +
@@ -81,6 +81,7 @@ module.exports = {
           '(case when reply.id IS NOT NULL then reply.teacherStatus else 0 end) teacherStatus,\n' +
           '(case when reply.id IS NOT NULL then reply.machineStatus else 0 end) machineStatus,\n' +
           '(case when reply.id IS NOT NULL then reply.machineOk else 0 end) machineOk,\n' +
+          '(case when reply.id IS NOT NULL then reply.blocked else 0 end) blocked,\n' +
           '(case when scd.task IS NOT NULL then scd.deadline else\n' +
           ' (case when groupdeadline.deadline IS NOT NULL then groupdeadline.deadline else topics.deadline end) end) deadline\n' +
           'FROM tasks\n' +
@@ -560,6 +561,7 @@ module.exports = {
                   if (err) {
                     return res.serverError(err)
                   }
+                  ManageReplies.machine.updateTimeout(req.localUser.id, taskid, reply.id)
                   return res.redirect('/topic/' + topicid + '/task/' + taskid + '?msg=replySent')
                 })
               })
@@ -598,7 +600,12 @@ module.exports = {
                 createdAt: dateFormat(c.createdAt, 'HH:MM dd/mm/yyyy'),
                 comment: c.comment,
                 viewed: (c.viewed ? 'przeczytane' : 'nieprzeczytane'),
-                user: (c.user ? {id: c.user.id, name: c.user.name, surname: c.user.surname, isTeacher: c.user.isTeacher} : null)
+                user: (c.user ? {
+                  id: c.user.id,
+                  name: c.user.name,
+                  surname: c.user.surname,
+                  isTeacher: c.user.isTeacher
+                } : null)
               }
             })
 

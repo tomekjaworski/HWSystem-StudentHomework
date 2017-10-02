@@ -90,6 +90,53 @@ block content
                           })
                       }
 
+                      function setBlocked (student, task, id, e) {
+                        $.ajax({
+                          url: '/ajax/teacher/replies/setBlocked/',
+                          method: 'POST',
+                          data: {
+                            blocked: e.checked,
+                            studentid: student,
+                            taskid: task
+                          }
+                        }).done(function () {
+                          var task = $('#reply-' + id)
+                          var btn = $('#repost-reply-' + id)
+                          if(e.checked) {
+                            if(btn) {
+                              btn.hide()
+                            }
+                            task.css('background-color', 'rgba(200,0,0,0.7)')
+                          } else {
+                            if (btn) {
+                              btn.show()
+                            }
+                            task.css('background-color', '')
+                          }
+                        })
+                          .fail(function (jqXHR, textStatus, errorThrown) {
+                            alert('Nie udało się zmienić blokady:  ' + textStatus + ' - ' + errorThrown)
+                            e.checked = !e.checked
+                          })
+                      }
+
+                      function repostTask (student, task, id) {
+                        $.ajax({
+                          url: '/ajax/teacher/replies/repostTask/',
+                          method: 'POST',
+                          data: {
+                            studentid: student,
+                            taskid: task
+                          }
+                        }).done(function () {
+                          $('#reply-' + id).css('background-color', 'rgba(100,100,100,0.7)')
+                          $('#repost-reply-' + id).remove()
+                        })
+                          .fail(function (jqXHR, textStatus, errorThrown) {
+                            alert('Nie udało się zresetować zadania:  ' + textStatus + ' - ' + errorThrown)
+                          })
+                      }
+
                       function sendComment (student, task) {
                         const commentTextArea = $('#commentTextArea')
                         let val = commentTextArea.val()

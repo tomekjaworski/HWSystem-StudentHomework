@@ -109,7 +109,11 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
         })
       }
     }
-    TaskReplies.find({task: taskId, student: studentsId, lastSent: true}).populate('files').exec((err, replies) => {
+    TaskReplies.find({
+      task: taskId,
+      student: studentsId,
+      lastSent: true
+    }).populate('files').exec((err, replies) => {
       if (err) {
         return res.serverError(err)
       }
@@ -194,11 +198,7 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
     if (![0, 1, 2].includes(status)) {
       return res.badRequest()
     }
-    let sent = true
-    if (status === 0) {
-      sent = false
-    }
-    TaskReplies.update(replyId, {teacherStatus: status, sent: sent}).meta({fetch: true}).exec((err, reply) => {
+    TaskReplies.update(replyId, {teacherStatus: status}).meta({fetch: true}).exec((err, reply) => {
       if (err) {
         return res.serverError(err)
       }
@@ -217,6 +217,61 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
         }
         return res.json({error: false})
       })
+    })
+  },
+
+  ajaxSetBlocked: function (req, res) {
+    let studentId = parseInt(req.param('studentid'), '10')
+    let taskId = parseInt(req.param('taskid'), '10')
+    let blocked = req.param('blocked')
+    if (!_.isInteger(studentId) || !_.isInteger(taskId) || !_.isString(blocked)) {
+      return res.badRequest()
+    }
+    blocked = (blocked === 'true')
+    TaskReplies.update({
+      student: studentId,
+      task: taskId
+    }, {blocked: blocked}).meta({fetch: true}).exec((err, reply) => {
+      if (err) {
+        return res.serverError(err)
+      }
+      if (reply.length === 0) {
+        return res.notFound()
+      }
+      TaskComments.create({
+        taskStudent: reply[0].student,
+        task: reply[0].task,
+        user: null,
+        comment: 'Prowadzący ' + req.localUser.fullName() + (blocked ? ' zablokował możliwość przesłania zadania' : ' odblokował możliwość przesłania zadania'),
+        viewed: false
+      }).exec((err) => {
+        if (err) {
+          return res.serverError(err)
+        }
+        return res.json({error: false})
+      })
+    })
+  },
+
+  ajaxRepostTask: function (req, res) {
+    let studentId = parseInt(req.param('studentid'), '10')
+    let taskId = parseInt(req.param('taskid'), '10')
+    if (!_.isInteger(studentId) || !_.isInteger(taskId)) {
+      return res.badRequest()
+    }
+    ManageReplies.repostTask(studentId, taskId, req.localUser.fullName(), (err) => {
+      if (err) {
+        switch (err.code) {
+          case 'E_USER_NOT_FOUND':
+          case 'E_TASK_NOT_FOUND':
+          case 'E_REPLY_NOT_FOUND':
+          case 'E_REPLY_BLOCKED':
+            return res.badRequest(err)
+          default:
+            res.serverError(err)
+        }
+      }
+      return res.json({error: false})
     })
   },
 

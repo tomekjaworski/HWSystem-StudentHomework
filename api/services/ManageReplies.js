@@ -8,6 +8,21 @@ const ManageReplies = module.exports = {
     port: 1337,
     apiKey: 'alamakota1234',
 
+    updateTimeout: function (studentId, taskId, replyId, time = 10) {
+      setTimeout(function () {
+        sails.log.verbose('Executing timeouted machine test API request')
+        ManageReplies.machine.sendUpdate(studentId, taskId, replyId, (err) => {
+          if (err) {
+            sails.log.error('Remote machine test API returned error')
+            sails.log.error(`ERROR CODE: ${err.code}`)
+            sails.log.error(err.data)
+            sails.log.error('Scheduling task repeat in 5 minutes from now')
+            ManageReplies.machine.updateTimeout(studentId, taskId, replyId, 5 * 60)
+          }
+        })
+      }, time * 1000)
+    },
+
     sendUpdate: function (studentId, taskId, replyId, cb) {
       let rk = md5(studentId.toString() + taskId.toString() + replyId.toString() + this.apiKey)
       request(`${this.ip}:${this.port}/hw2/enqtest?idx=${studentId}&task=${taskId}&sol=${replyId}&rk=${rk}`, function (error, response, body) {
@@ -17,7 +32,7 @@ const ManageReplies = module.exports = {
         if (!response || response.statusCode !== 200) {
           let err = new Error()
           err.code = 'E_RESPONSE_NOT_OK'
-          err.resposne = response
+          err.data = response
           return cb(err)
         }
         let data = JSON.parse(body)
