@@ -8,10 +8,13 @@ block content
         //.hidden-md-down.col-lg-8#tasks-column
             //-include tasks
         .col-md-12.col-lg-8
-            a(href="/teacher/topics-and-tasks/topic/add")
-                |Dodaj temat
-            div
-                table.table.table-striped.table-hover.responsive.table-bordered
+            .card
+                .card-header.text-center
+                    strong Tasks and Topics
+                .card-block
+                    a.btn.btn-primary(href="/teacher/topics-and-tasks/topic/add") Dodaj temat
+
+                table.table.table-striped.responsive.table-grouplist
                     thead
                         tr
                             th ID
@@ -33,8 +36,8 @@ block content
             var topic = topics.filter(topic => topic.id === id)[0];
             if (topic) {
               saved = document.getElementById('tablebody').innerHTML;
-              var ret = '<tr><th><i onclick="getBack()" style="cursor: pointer;" class="fa fa-arrow-left fa-lg" aria-hidden="true"></i></th><td>' + topic.number + '. ' + topic.title + '</td></tr><tr><td colspan="2"><table class="table table-bordered table-striped table-hover responsive"><tbody id="tablebody">'
-              ret += '<a href="/teacher/topics-and-tasks/topic/'+topic.id+'/task/add">Dodaj zadanie</a>'
+              var ret = '<tr><th><i onclick="getBack()" style="cursor: pointer;" class="fa fa-arrow-left fa-lg" aria-hidden="true"></i></th><td>' + topic.number + '. ' + topic.title + '</td><td></td></tr><tr><td colspan="3"><table class="table table-bordered table-striped table-hover responsive"><tbody id="tablebody">'
+              ret += '<a class="btn btn-primary mb-3" href="/teacher/topics-and-tasks/topic/'+topic.id+'/task/add">Dodaj zadanie</a>'
               for (taskn in topic.tasks) {
                 var task = topic.tasks[taskn];
                 if(task.arduino === true){
@@ -47,7 +50,7 @@ block content
                 } else {
                   var com = 'nie';
                 }
-                ret += '<tr style="cursor: pointer;" onclick="document.location=\'/teacher/topics-and-tasks/view/' + task.id + '\'"><td>' + task.id + '</td><td>' + task.number + '. ' + task.title +'<a href="/teacher/topics-and-tasks/task/edit/'+task.id+'">Edytuj</a>' +
+                ret += '<tr style="cursor: pointer;" onclick="document.location=\'/teacher/topics-and-tasks/view/' + task.id + '\'"><td>' + task.id + '</td><td>' + task.number + '. ' + task.title + ' <a class="btn btn-sm btn-primary" href="/teacher/topics-and-tasks/task/edit/'+task.id+'">Edytuj</a>' +
                   ' <b>arduino:</b>'+ ard +' <b>komputer:</b> '+ com +'</td><td>up <b>/</b> down</td></tr>'
               }
               ret += '</tbody></table></td></tr>'

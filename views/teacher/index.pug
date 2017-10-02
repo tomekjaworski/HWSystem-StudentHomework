@@ -11,7 +11,7 @@ block content
     .row
         .col-md-12.col-lg-4#topics-column
             include menu
-        .hidden-md-down.col-lg-8#tasks-column
+        .col-md-12.col-lg-8#tasks-column
             //-include tasks
             .card
                 .card-header.text-center
@@ -37,4 +37,5 @@ block content
                                 else
                                     tr
                                         td.text-center(colspan=4) Brak danych
-                        input.btn.btn-primary(type='submit' value='Oznacz przeczytane')
+                        .card-block
+                            input.btn.btn-primary.btn-block(type='submit' value='Oznacz przeczytane')

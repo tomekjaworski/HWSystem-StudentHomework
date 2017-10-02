@@ -10,21 +10,21 @@ block content
             include ../menu
 
         .col-md-12.col-lg-8
-            h1= title
-            form(method='post')
-                div
-                    label(for='number') Numer:
-                    br
-                    input#number(name='topicNumber')
-                div
-                    label(for='title') Tytuł:
-                    br
-                    input#title(name='topicTitle')
-                div
-                    label(for='dead') Deadline:
-                    br
-                    input#dead(name='topicDeadline')
+            .card
+                .card-header.text-center
+                    strong=title
+                .card-block
+                    form(method='post')
+                        .form-group
+                            label(for='number') Numer:
+                            input.form-control#number(name='topicNumber')
+                        .form-group
+                            label(for='title') Tytuł:
+                            br
+                            input.form-control#title(name='topicTitle')
+                        .form-group
+                            label(for='dead') Deadline:
+                            input.form-control#dead(name='topicDeadline', type='date')
 
 
-
-                input(type='submit')
+                        input.btn.btn-primary(type='submit')
