@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /**
  * TopicsAndTasksController
  *
@@ -29,20 +30,20 @@ const TopicsAndTasksController = module.exports = {
         return res.notFound()
       }
       TaskDescription.findOne({task: task.id}).exec(function (err, description) {
-        if(err){
+        if (err) {
           return res.serverError(err)
         }
-        return res.view('teacher/topicsAndTasks/taskView', {task: task, description:description})
+        return res.view('teacher/topicsAndTasks/taskView', {task: task, description: description})
       })
     })
   },
 
   addTopic: function (req, res) {
-    let a = (msg) => Users.find({isTeacher: true }).exec((err, users) => {
+    let a = (msg) => Users.find({ isTeacher: true }).exec((err, users) => {
       if (err) {
         return res.serverError(err)
       }
-      if (!users || users.length===0) {
+      if (!users || users.length === 0) {
         return res.serverError('Nie znaleziono roli prowadzącego, zgłoś się do administratora')
       }
 
@@ -76,11 +77,11 @@ const TopicsAndTasksController = module.exports = {
   },
 
   addTask: function (req, res) {
-    let a = (msg) => Users.find({isTeacher: true }).exec((err, users) => {
+    let a = (msg) => Users.find({ isTeacher: true }).exec((err, users) => {
       if (err) {
         return res.serverError(err)
       }
-      if (!users || users.length===0) {
+      if (!users || users.length === 0) {
         return res.serverError('Nie znaleziono roli prowadzącego, zgłoś się do administratora')
       }
       Topics.find().exec(function (err, topics) {
@@ -103,19 +104,19 @@ const TopicsAndTasksController = module.exports = {
         !title) {
         return a('Uzupełnij wszystkie pola')
       }
-      if(vis === 'ok'){
+      if (vis === 'ok') {
         vis = true
-      }else {
+      } else {
         vis = false
       }
-      if(ard === 'ok'){
+      if (ard === 'ok') {
         ard = true
-      }else {
+      } else {
         ard = false
       }
-      if(com === 'ok'){
+      if (com === 'ok') {
         com = true
-      }else {
+      } else {
         com = false
       }
       Tasks.create({
@@ -149,7 +150,7 @@ const TopicsAndTasksController = module.exports = {
 
   editTask: function (req, res) {
     let id = req.param('id')
-    let a = (attr, msg) => Users.find({isTeacher: true }).exec((err, users) => {
+    let a = (attr, msg) => Users.find({ isTeacher: true }).exec((err, users) => {
       if (err) {
         return res.serverError(err)
       }
@@ -164,11 +165,14 @@ const TopicsAndTasksController = module.exports = {
           return res.notFound()
         }
         Topics.find().exec(function (err, topics) {
+          if (err) {
+            return res.serverError(err)
+          }
           TaskDescription.findOne({task: task.id}).exec(function (err, description) {
-            if(err){
+            if (err) {
               return res.serverError(err)
             }
-            return res.view('teacher/topicsAndTasks/editTask', {task: task, topics:topics, description:description})
+            return res.view('teacher/topicsAndTasks/editTask', {task: task, topics: topics, description: description})
           })
         })
       })
@@ -181,19 +185,19 @@ const TopicsAndTasksController = module.exports = {
       let vis = req.param('taskVisible')
       let ard = req.param('arduinoCheck')
       let com = req.param('komputerCheck')
-      if(vis === 'ok'){
+      if (vis === 'ok') {
         vis = true
-      }else {
+      } else {
         vis = false
       }
-      if(ard === 'ok'){
+      if (ard === 'ok') {
         ard = true
-      }else {
+      } else {
         ard = false
       }
-      if(com === 'ok'){
+      if (com === 'ok') {
         com = true
-      }else {
+      } else {
         com = false
       }
       Tasks.update({id: id},
@@ -201,23 +205,23 @@ const TopicsAndTasksController = module.exports = {
           number: number,
           title: title,
           topic: topic,
-          visible:vis,
+          visible: vis,
           arduino: ard,
           computer: com
         }).exec(function (err) {
-        if (err) {
-          return res.serverError(err)
-        }
-        TaskDescription.update({task: id},
-          {
-            description: description
-          }).exec(function (err, desc) {
           if (err) {
             return res.serverError(err)
           }
-          return a('Udało się zaktualizować zadanie')
+          TaskDescription.update({task: id},
+            {
+              description: description
+            }).exec(function (err, desc) {
+              if (err) {
+                return res.serverError(err)
+              }
+              return a('Udało się zaktualizować zadanie')
+            })
         })
-      })
     } else {
       a()
     }

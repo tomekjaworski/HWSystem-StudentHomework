@@ -1,5 +1,5 @@
 const request = require('request')
-const md5 = require('md5');
+const md5 = require('md5')
 
 const ManageReplies = module.exports = {
 
@@ -28,20 +28,18 @@ const ManageReplies = module.exports = {
             }
             return cb()
           })
-        }
-        else if (data.status === 101) {
+        } else if (data.status === 101) {
           let err = new Error()
           err.code = 'E_MACHINE_REJECTED'
           err.data = data
           return cb(err)
-        }
-        else {
+        } else {
           let err = new Error()
           err.code = 'E_UNKNOWN_ERROR'
           err.data = data
           return cb(err)
         }
-      });
+      })
     },
 
     changeStatus: function (testId, replyId, status, passed, report, message, cb) {
@@ -59,7 +57,7 @@ const ManageReplies = module.exports = {
           err.code = 'E_REPLY_BLOCKED'
           return cb(err)
         }
-        if((reply.sent && !reply.lastSent) || (reply.sent && reply.lastSent && !reply.newest)){
+        if ((reply.sent && !reply.lastSent) || (reply.sent && reply.lastSent && !reply.newest)) {
           let err = new Error()
           err.code = 'E_REPLY_OLD'
           return cb(err)
@@ -77,23 +75,26 @@ const ManageReplies = module.exports = {
           machineReport: report,
           machineMessage: message
         }).exec((err) => {
+          if (err) {
+            return cb(err)
+          }
           TaskReplies.findOne(replyId).exec((err, reply) => {
             if (err) {
               return cb(err)
             }
             let msg
-            switch(status){
+            switch (status) {
               case 2:
-                msg = 'Twoje rozwiązanie przeszło testy maszynowe'+(passed ? ' i testy zostały zaliczone.' : ' ale testy nie zostały zaliczone! Sprawdź raport testów.')
+                msg = 'Twoje rozwiązanie przeszło testy maszynowe' + (passed ? ' i testy zostały zaliczone.' : ' ale testy nie zostały zaliczone! Sprawdź raport testów.')
                 break
               case 3:
-                msg = 'Podczas testów maszynowych pojawiły się pewne notatki'+(passed ? ' ale testy zostały zaliczone. Możesz sprawdzić notatki w raporcie z testu.' : ' i testy nie zostały zaliczone! Sprawdź raport testów.')
+                msg = 'Podczas testów maszynowych pojawiły się pewne notatki' + (passed ? ' ale testy zostały zaliczone. Możesz sprawdzić notatki w raporcie z testu.' : ' i testy nie zostały zaliczone! Sprawdź raport testów.')
                 break
               case 4:
-                msg = 'W Twoim rozwiązaniu występówją ważne uwagi'+(passed ? ' mimo to testy zostały zaliczone. Możesz sprawdzić uwagi w raporcie z testu.' : ' i testy nie zostały zaliczone! Sprawdź raport testów.')
+                msg = 'W Twoim rozwiązaniu występówją ważne uwagi' + (passed ? ' mimo to testy zostały zaliczone. Możesz sprawdzić uwagi w raporcie z testu.' : ' i testy nie zostały zaliczone! Sprawdź raport testów.')
                 break
               case 5:
-                msg = 'W Twoim rozwiązaniu występują poważne błędy'+(passed ? ' ale mimo to testy zostały zaliczone. Zalecane jest sprawdzenie raportu z testów.' : ' i testy nie zostały zaliczone! Sprawdź raport testów.')
+                msg = 'W Twoim rozwiązaniu występują poważne błędy' + (passed ? ' ale mimo to testy zostały zaliczone. Zalecane jest sprawdzenie raportu z testów.' : ' i testy nie zostały zaliczone! Sprawdź raport testów.')
                 break
             }
             TaskComments.create({
@@ -106,12 +107,11 @@ const ManageReplies = module.exports = {
               if (err) {
                 return cb(err)
               }
-              if(passed){
+              if (passed) {
                 return cb(null)
-              }
-              else {
-                ManageReplies.repostTask(reply.student, reply.task, null, (err)=>{
-                  if(err){
+              } else {
+                ManageReplies.repostTask(reply.student, reply.task, null, (err) => {
+                  if (err) {
                     return cb(err)
                   }
                   return cb(null)
@@ -237,13 +237,13 @@ LEFT JOIN labgrouptopicdeadline lbtd ON lbtd.group = slb.labgroup AND lbtd.topic
 LEFT JOIN studentcustomdeadlines scdl ON scdl.student = slb.student AND scdl.task = task.id
 WHERE slb.active=1 AND slb.student = $2`,
       [taskId, studentId]).exec((err, result) => {
-      if (err) {
-        return cb(err)
-      }
-      if (result.rows.length === 0) {
-        return cb(null, null)
-      }
-      return cb(null, result.rows[0].deadline)
-    })
+        if (err) {
+          return cb(err)
+        }
+        if (result.rows.length === 0) {
+          return cb(null, null)
+        }
+        return cb(null, result.rows[0].deadline)
+      })
   }
 }

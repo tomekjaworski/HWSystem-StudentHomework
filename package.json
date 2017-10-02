@@ -70,21 +70,29 @@
     "globals": [
       "$",
       "_",
-      "SimpleMDE",
       "hljs",
       "LabGroups",
-      "Users",
-      "sails",
+      "ManageReplies",
+      "MySqlFile",
+      "RecentAction",
+      "RecentTeacherActions",
       "Roles",
-      "Topics",
-      "Tasks",
-      "TaskComments",
+      "sails",
+      "SimpleMDE",
+      "StudentCustomDeadlines",
       "StudentsLabGroups",
       "StudentsLabGroups",
-      "TaskReplies",
-      "TaskDescription",
       "Subjects",
-      "TaskReplyFiles"
+      "TaskComments",
+      "TaskDescription",
+      "TaskReplies",
+      "TaskReplyFileContent",
+      "TaskReplyFiles",
+      "Tasks",
+      "Topics",
+      "TopicsAndTasksController",
+      "Users"
+
     ]
   }
 }

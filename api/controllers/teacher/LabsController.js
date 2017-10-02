@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /**
  * LabsController
  *
@@ -127,7 +128,7 @@ const LabsController = module.exports = {
       if (err) {
         return res.serverError(err)
       }
-      if (!users || users.length===0) {
+      if (!users || users.length === 0) {
         return res.serverError('Nie znaleziono prowadzących, zgłoś się do administratora')
       }
       return res.view('teacher/labgroups/add',
@@ -168,7 +169,7 @@ const LabsController = module.exports = {
       if (err) {
         return res.serverError(err)
       }
-      if (!users || users.length===0) {
+      if (!users || users.length === 0) {
         return res.serverError('Nie znaleziono prowadzących, zgłoś się do administratora')
       }
       LabGroups.findOne({id: id}).exec((err, lab) => {

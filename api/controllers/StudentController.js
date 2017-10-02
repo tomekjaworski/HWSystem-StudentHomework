@@ -151,17 +151,17 @@ module.exports = {
 
                 TaskComments.find({task: task.id, taskStudent: req.localUser.id})
                   .populate('user').exec(function (err, taskComments) {
-                  if (err) {
-                    return res.serverError(err)
-                  }
+                    if (err) {
+                      return res.serverError(err)
+                    }
 
-                  if (taskComments.length > 0) {
-                    taskComments = _.forEach(taskComments, (comment) => {
-                      comment.createdAt = dateFormat(comment.createdAt, 'HH:MM dd/mm/yyyy')
-                    })
-                  }
+                    if (taskComments.length > 0) {
+                      taskComments = _.forEach(taskComments, (comment) => {
+                        comment.createdAt = dateFormat(comment.createdAt, 'HH:MM dd/mm/yyyy')
+                      })
+                    }
 
-                  TaskReplies.findOne({student: req.localUser.id, task: task.id, newest: true})
+                    TaskReplies.findOne({student: req.localUser.id, task: task.id, newest: true})
                     .exec(function (err, taskReply) {
                       if (err) {
                         return res.badRequest(err)
@@ -193,7 +193,7 @@ module.exports = {
                         })
                       })
                     })
-                })
+                  })
               })
             })
           })
@@ -280,11 +280,9 @@ module.exports = {
           let type = ''
           if (['h', 'c'].includes(file.fileExt)) {
             type = 'c'
-          }
-          else if (['hpp', 'cpp'].includes(file.fileExt)) {
+          } else if (['hpp', 'cpp'].includes(file.fileExt)) {
             type = 'c++'
-          }
-          else {
+          } else {
             return res.json({
               mimeType: file.fileMimeType,
               title: file.fileName + '.' + file.fileExt,
@@ -304,8 +302,7 @@ module.exports = {
               body: result
             })
           })
-        }
-        else {
+        } else {
           return res.json({
             mimeType: file.fileMimeType,
             title: file.fileName + '.' + file.fileExt,
@@ -313,8 +310,7 @@ module.exports = {
             body: file.file
           })
         }
-      }
-      else {
+      } else {
         return res.json({
           mimeType: file.fileMimeType,
           title: file.fileName + '.' + file.fileExt,
@@ -342,9 +338,8 @@ module.exports = {
       }
       if (file.file) {
         res.set('Content-disposition', 'attachment; filename=\'' + file.fileName + '.' + file.fileExt + '\'')
-        return res.end(new Buffer(file.file, 'binary'))
-      }
-      else {
+        return res.end(Buffer.from(file.file))
+      } else {
         return res.serverError()
       }
     })
@@ -387,8 +382,7 @@ module.exports = {
             if (err) {
               if (err.code === 'E_EXCEEDS_UPLOAD_LIMIT') {
                 return res.redirect('/topic/' + reply.task.topic + '/task/' + reply.task.id + '?msg=fileTooBig')
-              }
-              else if (err.code === 'E_EXTENSION_NOT_ALLOWED') {
+              } else if (err.code === 'E_EXTENSION_NOT_ALLOWED') {
                 return res.redirect('/topic/' + reply.task.topic + '/task/' + reply.task.id + '?msg=extNotAllowed')
               }
               return res.serverError(err)
@@ -425,6 +419,9 @@ module.exports = {
         newest: true
       })
         .exec((err, reply) => {
+          if (err) {
+            return res.serverError(err)
+          }
           if (reply.lastSent === true) {
             return res.redirect('/topic/' + topicid + '/task/' + taskid + '?msg=cantUploadReplySent')
           }
@@ -435,8 +432,7 @@ module.exports = {
             if (err) {
               if (err.code === 'E_EXCEEDS_UPLOAD_LIMIT') {
                 return res.redirect('/topic/' + topicid + '/task/' + taskid + '?msg=fileTooBig')
-              }
-              else if (err.code === 'E_EXTENSION_NOT_ALLOWED') {
+              } else if (err.code === 'E_EXTENSION_NOT_ALLOWED') {
                 return res.redirect('/topic/' + topicid + '/task/' + taskid + '?msg=extNotAllowed')
               }
               return res.serverError(err)
@@ -612,4 +608,3 @@ module.exports = {
     }
   }
 }
-

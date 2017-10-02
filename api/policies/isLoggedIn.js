@@ -14,7 +14,7 @@ module.exports = function (req, res, next) {
     return next()
   } else {
     if (req.wantsJSON || sails.config.hooks.views === false) {
-        return res.forbidden('Niezalogowany')
+      return res.forbidden('Niezalogowany')
     }
     return res.redirect('/login?redirect=' + req.url)
   }
