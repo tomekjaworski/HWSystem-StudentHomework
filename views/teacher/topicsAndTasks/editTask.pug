@@ -10,47 +10,48 @@ block content
             include ../menu
 
         .col-md-12.col-lg-8
-            h1 Edycja Zadania
-            span= task.title
-            form(method='post')
-                div
-                    label(for='number') Numer:
-                    br
-                    input#number(name='taskNumber', value=task.number)
-                div
-                    label(for='title') Tytuł:
-                    br
-                    input#title(name='taskTitle', value=task.title)
+            .card
+                .card-header.text-center
+                    strong Edycja Zadania - #{task.title}
+                .card-block
+                    form(method='post')
+                        .form-group
+                            label(for='number') Numer:
+                            input.form-control#number(name='taskNumber', value=task.number)
+                        .form-group
+                            label(for='title') Tytuł:
+                            input.form-control#title(name='taskTitle', value=task.title)
+                        .form-group
+                            label(for="select") Temat zadania:
+                            select.form-control#select(name="taskTopic")
+                                each t in topics
+                                    option(value=t.id)=t.number +' '+ t.title
+                        .form-group
+                            label(for="active") Widoczność:
+                            label.custom-control.custom-checkbox.col-12
+                                input.custom-control-input#active(type='checkbox', name='taskVisible' value="ok" checked)
+                                span.custom-control-indicator
+                                span.custom-control-description Zadanie jest widoczne dla studentów
+                        .form-group
+                            label(for="platform") Platforma zadania:
+                            label.custom-control.custom-checkbox.col-12#platform
+                                input.custom-control-input#komputerCheck(type='checkbox' name='komputerCheck' value="ok")
+                                span.custom-control-indicator
+                                span.custom-control-description Komputer
+                            label.custom-control.custom-checkbox.col-12
+                                input.custom-control-input#arduinoCheck(type='checkbox' name='arduinoCheck' value="ok")
+                                span.custom-control-indicator
+                                span.custom-control-description Arduino
+                        if description
+                            .form-group
+                                label(for="taskDescEditor") Opis zadania:
+                                textarea.form-control#taskDescEditor(name="taskDescription", rows='10') #{description.description}
+                        else
+                            .form-group
+                                label(for="description") Opis zadania:
+                                textarea.form-control#taskDescEditor(name="taskDescription", rows='10')
 
-                if description
-                    div
-                        label(for="desc") Opis zadania:
-                        br
-                        textarea#description(name="taskDescription") #{description.description}
-                else
-                    div
-                        label(for="desc") Opis zadania:
-                        br
-                        textarea#desc(name="taskDescription")
-                div
-                    label(for="select") Temat zadania:
-                    br
-                    select#select(name="taskTopic")
-                        each t in topics
-                            option(value=t.id)=t.number +' '+ t.title
-                div
-                    label(for='active') Widoczne:
-                    input#active(type='checkbox', name='taskVisible' value="ok" checked)
+                        input.btn.btn-primary(type='submit')
 
-                div
-                    label
-                        input(type='checkbox' name='komputerCheck' value="ok")
-                        |  Komputer
-                div
-                    label
-                        input(type='checkbox' name='arduinoCheck' value="ok")
-                        |  Arduino
+                        script.
 
-                input(type='submit')
-
-                div#mdown
