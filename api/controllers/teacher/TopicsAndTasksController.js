@@ -32,7 +32,7 @@ const TopicsAndTasksController = module.exports = {
         if(err){
           return res.serverError(err)
         }
-        return res.view('teacher/topicsAndTasks/taskView', {task: task, description:description})
+        return res.view('teacher/topicsAndTasks/taskView', {task: task, description:description, menuItem: 'topics'})
       })
     })
   },
@@ -47,7 +47,7 @@ const TopicsAndTasksController = module.exports = {
       }
 
       return res.view('teacher/topicsAndTasks/addTopic',
-        {title: 'Add Topic :: Teacher Panel', users: users, message: msg})
+        {title: 'Add Topic :: Teacher Panel', users: users, message: msg, menuItem: 'topics'})
     })
     if (req.method === 'POST') {
       let number = req.param('topicNumber')
@@ -88,7 +88,7 @@ const TopicsAndTasksController = module.exports = {
           return res.serverError(err)
         }
         return res.view('teacher/topicsAndTasks/add',
-          {title: 'Add Tasks :: Teacher Panel', users: users, message: msg, topics: topics})
+          {title: 'Add Tasks :: Teacher Panel', users: users, message: msg, topics: topics, menuItem: 'topics'})
       })
     })
     if (req.method === 'POST') {
@@ -168,7 +168,7 @@ const TopicsAndTasksController = module.exports = {
             if(err){
               return res.serverError(err)
             }
-            return res.view('teacher/topicsAndTasks/editTask', {task: task, topics:topics, description:description})
+            return res.view('teacher/topicsAndTasks/editTask', {task: task, topics:topics, description:description, menuItem: 'topics'})
           })
         })
       })
