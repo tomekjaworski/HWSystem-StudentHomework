@@ -35,11 +35,17 @@ block content
                         .form-group
                             label(for="platform") Platforma zadania:
                             label.custom-control.custom-checkbox.col-12#platform
-                                input.custom-control-input#komputerCheck(type='checkbox' name='komputerCheck' value="ok")
+                                if task.computer
+                                    input.custom-control-input#komputerCheck(type='checkbox' name='komputerCheck' value="ok" checked)
+                                else
+                                    input.custom-control-input#komputerCheck(type='checkbox' name='komputerCheck' value="ok")
                                 span.custom-control-indicator
                                 span.custom-control-description Komputer
                             label.custom-control.custom-checkbox.col-12
-                                input.custom-control-input#arduinoCheck(type='checkbox' name='arduinoCheck' value="ok")
+                                if task.arduino
+                                    input.custom-control-input#arduinoCheck(type='checkbox' name='arduinoCheck' value="ok" checked)
+                                else
+                                    input.custom-control-input#arduinoCheck(type='checkbox' name='arduinoCheck' value="ok")
                                 span.custom-control-indicator
                                 span.custom-control-description Arduino
                         if description
