@@ -29,7 +29,10 @@ block content
                         .form-group
                             label(for="active") Widoczność:
                             label.custom-control.custom-checkbox.col-12
-                                input.custom-control-input#active(type='checkbox', name='taskVisible' value="ok" checked)
+                                if task.visible
+                                    input.custom-control-input#active(type='checkbox', name='taskVisible' value="ok" checked)
+                                else
+                                    input.custom-control-input#active(type='checkbox', name='taskVisible' value="ok")
                                 span.custom-control-indicator
                                 span.custom-control-description Zadanie jest widoczne dla studentów
                         .form-group
