@@ -7,89 +7,100 @@ div.d-flex
                 h5 Brak aktywnych studentów w grupie
             else
                 each student in data
-                    .card.col-6.replySortable(id=(student.reply ? 'reply-' + student.reply.id : ''), style='display: inline-block;float: none;vertical-align:top;margin-right:20px;' + (student.reply ? (student.reply.blocked ? 'background-color:rgba(200,0,0,0.7);' : (!student.reply.newest ? 'background-color:rgba(100,100,100,0.7);' : (student.reply.teacherStatus === 2 ? 'background-color:rgba(200,0,0,0.7);' : (student.reply.teacherStatus === 1 ? 'background-color:lightgreen;' : '')))) : ''))
-                        .card-block
-                            div
-                                h5=student.name + ' ' + student.surname
-                            div
-                                | Czas na odpowiedź:
-                                br
-                                input(id='deadline-student-' + student.id + '-task-' + task.id, type='date', value=student.deadline)
-                                button(onclick='saveDeadline(' + student.id + ',' + task.id + ')') Zapisz
-                                button(onclick='saveDeadline(' + student.id + ',' + task.id + ', true)') Skasuj
-                                br
-                                br
-                            if !student.reply
+                    .col-6(id='studentCard-'+ student.id, style='display: inline-block;vertical-align:top;float: none;')
+                        .card.replySortable(id=(student.reply ? 'reply-' + student.reply.id : ''), style=(student.reply ? (student.reply.blocked ? 'background-color:rgba(200,0,0,0.7);' : (!student.reply.newest ? 'background-color:rgba(100,100,100,0.7);' : (student.reply.teacherStatus === 2 ? 'background-color:rgba(200,0,0,0.7);' : (student.reply.teacherStatus === 1 ? 'background-color:lightgreen;' : '')))) : ''))
+                            .card-header.d-flex.justify-content-end.p-0.replySortHandle
+                                .mr-auto.p-2.w-100.replySortableTitle
+                                    .btn.btn-sm
+                                        .fa.fa-bars.fa-lg
+                                    strong(title=student.name + ' ' + student.surname + ' aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaapsik')=student.name + ' ' + student.surname + ' aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaapsik'
+                                .pt-2.pb-2
+                                    button.btn.btn-info.btn-sm(type='button', data-toggle='collapse', data-target='#replyCollapse-' + student.id, aria-expanded='true', aria-controls='#replyCollapse-' + student.id)
+                                        .fa.fa-window-minimize
+                                .p-2
+                                    button.btn.btn-danger.btn-sm.replySortableClose(data-closecard=student.id)
+                                        .fa.fa-times
+                            //.card-block.collapse(id=(student.reply ? 'replyCollapse-' + student.reply.id : ''))
+                            .card-block.collapse.show(id='replyCollapse-' + student.id)
                                 div
-                                    h6 Odpowiedź:
-                                    p Brak
-                            else
-                                div
-                                    h6 Odpowiedź:
-                                    if !student.reply.newest
-                                        div
-                                            b Odpowiedź nie jest ostateczna
-                                    else
-                                        div Ocena:
-                                            select(onchange='setTeacherStatus(' + student.reply.id + ', this)')
-                                                each option in [{'id':0, 'name':'Nieocenione'}, {'id':1, 'name': 'Zaliczone'}, {'id':2, 'name':'Niezaliczone'}]
-                                                    if student.reply.teacherStatus === option.id
-                                                        option(value=option.id, selected)=option.name
-                                                    else
-                                                        option(value=option.id)=option.name
-                                    - var tests = {'0':'Nierozpoczęte', '1':'W kolejce', '2':'Zaliczone', '3':'Niezaliczone'}
-                                    div Testy Maszynowe: #{tests[student.reply.machineStatus]}
-                                    div Zablokowany:
-                                        if student.reply.blocked
-                                            input(type='checkbox', name='blocked', checked, onchange='setBlocked(' + student.id + ', ' + task.id + ',' + student.reply.id + ', this)')
-                                        else
-                                            input(type='checkbox', name='blocked', onchange='setBlocked(' + student.id + ', ' + task.id + ',' + student.reply.id + ', this)')
-                                    div Odpowiedź po raz: #{student.reply.count}
-                                    if student.reply.newest
-                                        div
-                                            // TODO: Seba dodaj jakieś potwierdzenie czy aby napewno chce się to zrobić
-                                            button.btn.btn-danger(id='repost-reply-' + student.reply.id, onclick='repostTask(' + student.id + ', ' + task.id + ', ' + student.reply.id + ')', style=(student.reply.blocked ? 'display:none' : '')) Przydziel zadanie ponownie
-                                div
-                                    h6 Pliki
-                                    each file in student.reply.files
-                                        div(style='border:1px solid black; margin-bottom:10px;background-color:white;')
-                                            div='Nazwa: ' + file.fileName + '.' + file.fileExt
-                                            div='Rozmiar: ' + file.fileSize
-                                            div='MimeType: ' + file.fileMimeType
+                                    | Czas na odpowiedź:
+                                    br
+                                    input(id='deadline-student-' + student.id + '-task-' + task.id, type='date', value=student.deadline)
+                                    button(onclick='saveDeadline(' + student.id + ',' + task.id + ')') Zapisz
+                                    button(onclick='saveDeadline(' + student.id + ',' + task.id + ', true)') Skasuj
+                                    br
+                                    br
+                                if !student.reply
+                                    div
+                                        h6 Odpowiedź:
+                                        p Brak
+                                else
+                                    div
+                                        h6 Odpowiedź:
+                                        if !student.reply.newest
                                             div
-                                                h7 Tresc:
+                                                b Odpowiedź nie jest ostateczna
+                                        else
+                                            div Ocena:
+                                                select(onchange='setTeacherStatus(' + student.reply.id + ', this)')
+                                                    each option in [{'id':0, 'name':'Nieocenione'}, {'id':1, 'name': 'Zaliczone'}, {'id':2, 'name':'Niezaliczone'}]
+                                                        if student.reply.teacherStatus === option.id
+                                                            option(value=option.id, selected)=option.name
+                                                        else
+                                                            option(value=option.id)=option.name
+                                        - var tests = {'0':'Nierozpoczęte', '1':'W kolejce', '2':'Zaliczone', '3':'Niezaliczone'}
+                                        div Testy Maszynowe: #{tests[student.reply.machineStatus]}
+                                        div Zablokowany:
+                                            if student.reply.blocked
+                                                input(type='checkbox', name='blocked', checked, onchange='setBlocked(' + student.id + ', ' + task.id + ',' + student.reply.id + ', this)')
+                                            else
+                                                input(type='checkbox', name='blocked', onchange='setBlocked(' + student.id + ', ' + task.id + ',' + student.reply.id + ', this)')
+                                        div Odpowiedź po raz: #{student.reply.count}
+                                        if student.reply.newest
+                                            div
+                                                // TODO: Seba dodaj jakieś potwierdzenie czy aby napewno chce się to zrobić
+                                                button.btn.btn-danger(id='repost-reply-' + student.reply.id, onclick='repostTask(' + student.id + ', ' + task.id + ', ' + student.reply.id + ')', style=(student.reply.blocked ? 'display:none' : '')) Przydziel zadanie ponownie
+                                    div
+                                        h6 Pliki
+                                        each file in student.reply.files
+                                            div(style='border:1px solid black; margin-bottom:10px;background-color:white;')
+                                                div='Nazwa: ' + file.fileName + '.' + file.fileExt
+                                                div='Rozmiar: ' + file.fileSize
+                                                div='MimeType: ' + file.fileMimeType
                                                 div
-                                                    if file.file.err
-                                                        div(style='border:1px solid black;margin:1px;padding:1px;overflow: auto;white-space: normal;')
-                                                            b BŁĄD
-                                                            | Brak zawartości pliku, najpewniej został źle przesłany
-                                                    else if file.fileMimeType.includes('text/')
-                                                        div(style='border:1px solid black;margin:1px;padding:1px;') !{file.file}
-                                                    else if file.fileMimeType === 'image/png'
-                                                        img.img-fluid(src='data:image/pmg;base64,' + file.file)
-                                                    else if file.fileMimeType === 'image/bmp'
-                                                        img.img-fluid(src='data:image/bmp;base64,' + file.file)
-                                                    else
-                                                        p Nieobsługiwane rozszerzenie
-                            div
-                                h6 Komentarze:
-                                - let comment = _.last(student.comments)
-                                - comment = (comment? comment.id : 0)
-                                div(id='comments-student-' + student.id, data-last=comment, style='max-height:400px;overflow:auto')
-                                    if student.comments
-                                        each comment in student.comments
-                                            div(id='comments-student-' + student.id + '-comment-' + comment.id, style='border:1px solid black;margin:1px;padding:1px;')
-                                                div='Autor: ' + comment.user.name + ' ' + comment.user.surname
-                                                div='Data: ' + comment.createdAt
-                                                div='Przeczytane: ' + comment.viewed
-                                                div Treść:
-                                                    div(style='border:1px solid black;margin:1px;padding:1px;background-color:white;')
-                                                        p(style='overflow: auto;margin: 0;white-space: normal;')=comment.comment
-                                div(id='loading-student-' + student.id, style='display:none')
-                                    | Ładowanie
-                                    i.fa.fa-spinner.fa-spin
-                                .input-group
-                                    textarea.form-control.task-comment-textarea#commentTextArea(type='text', placeholder='Komentarz', name='comment', rows='1')
-                                    span.input-group-btn
-                                        button.btn.btn-primary(onclick='sendComment(' + student.id + ',' + task.id + ')', type='button') Wyślij
-                                        button.btn.btn-primary(onclick='checkComments(' + student.id + ',' + task.id + ')', type='button') Odśwież
+                                                    h7 Tresc:
+                                                    div
+                                                        if file.file.err
+                                                            div(style='border:1px solid black;margin:1px;padding:1px;overflow: auto;white-space: normal;')
+                                                                b BŁĄD
+                                                                | Brak zawartości pliku, najpewniej został źle przesłany
+                                                        else if file.fileMimeType.includes('text/')
+                                                            div(style='border:1px solid black;margin:1px;padding:1px;') !{file.file}
+                                                        else if file.fileMimeType === 'image/png'
+                                                            img.img-fluid(src='data:image/pmg;base64,' + file.file)
+                                                        else if file.fileMimeType === 'image/bmp'
+                                                            img.img-fluid(src='data:image/bmp;base64,' + file.file)
+                                                        else
+                                                            p Nieobsługiwane rozszerzenie
+                                div
+                                    h6 Komentarze:
+                                    - let comment = _.last(student.comments)
+                                    - comment = (comment? comment.id : 0)
+                                    div(id='comments-student-' + student.id, data-last=comment, style='max-height:400px;overflow:auto')
+                                        if student.comments
+                                            each comment in student.comments
+                                                div(id='comments-student-' + student.id + '-comment-' + comment.id, style='border:1px solid black;margin:1px;padding:1px;')
+                                                    div='Autor: ' + comment.user.name + ' ' + comment.user.surname
+                                                    div='Data: ' + comment.createdAt
+                                                    div='Przeczytane: ' + comment.viewed
+                                                    div Treść:
+                                                        div(style='border:1px solid black;margin:1px;padding:1px;background-color:white;')
+                                                            p(style='overflow: auto;margin: 0;white-space: normal;')=comment.comment
+                                    div(id='loading-student-' + student.id, style='display:none')
+                                        | Ładowanie
+                                        i.fa.fa-spinner.fa-spin
+                                    .input-group
+                                        textarea.form-control.task-comment-textarea#commentTextArea(type='text', placeholder='Komentarz', name='comment', rows='1')
+                                        span.input-group-btn
+                                            button.btn.btn-primary(onclick='sendComment(' + student.id + ',' + task.id + ')', type='button') Wyślij
+                                            button.btn.btn-primary(onclick='checkComments(' + student.id + ',' + task.id + ')', type='button') Odśwież

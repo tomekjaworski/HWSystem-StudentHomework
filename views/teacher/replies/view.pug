@@ -44,9 +44,18 @@ block content
                             for (let i = 0; i <= replySortRows.length - 1; i++) {
                               sortable[i] = Sortable.create(replySortRows[i], {
                                 animation: 150,
-                                forceFallback: true
+                                forceFallback: true,
+                                handle: '.replySortHandle'
                               })
                             }
+                            $('.replySortableClose').on('click', function () {
+                              var closeCardId = $(this).data('closecard')
+                              var cardToClose = $('#studentCard-' + closeCardId)
+                              cardToClose.hide('slow', function () {
+                                cardToClose.remove()
+                              })
+
+                            })
                           }));
                         }
                         $.when.apply($, gets).then(function () {
