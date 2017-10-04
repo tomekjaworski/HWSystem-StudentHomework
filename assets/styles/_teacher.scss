@@ -7,3 +7,10 @@
   margin-bottom: 0;
 
 }
+
+.replySortable {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}

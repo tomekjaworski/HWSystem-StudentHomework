@@ -43,7 +43,8 @@ block content
                             let sortable = []
                             for (let i = 0; i <= replySortRows.length - 1; i++) {
                               sortable[i] = Sortable.create(replySortRows[i], {
-                                animation: 150
+                                animation: 150,
+                                forceFallback: true
                               })
                             }
                           }));
