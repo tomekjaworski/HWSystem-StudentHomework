@@ -5,6 +5,7 @@
  * @description :: Server-side logic for managing Topics & Tasks
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
+const pdc = require('pdc')
 const dateFormat = require('dateformat')
 
 const TopicsAndTasksController = module.exports = {
@@ -29,11 +30,19 @@ const TopicsAndTasksController = module.exports = {
       if (!task) {
         return res.notFound()
       }
+
       TaskDescription.findOne({task: task.id}).exec(function (err, description) {
+        console.log(description)
         if (err) {
           return res.serverError(err)
         }
-        return res.view('teacher/topicsAndTasks/taskView', {task: task, description: description, menuItem: 'topics'})
+        pdc(description.description, 'markdown_github', 'html5', function (err, result) {
+          console.log(result)
+          if (err) {
+            return res.serverError(err)
+          }
+          return res.view('teacher/topicsAndTasks/taskView', {task: task, description: result, menuItem: 'topics'})
+        })
       })
     })
   },

@@ -6,23 +6,29 @@ block content
         .col-md-12.col-lg-4
             include ../menu
         .col-md-12.col-lg-8
+
             //-include tasks
-            div.d-flex.justify-content-center
-                .col-12
-                    h2.text-center=data.topic.number + '. ' + data.topic.title
-                    h3.text-center=data.number + '. ' + data.title
+            .card
+                .card-header.text-center
+                    strong Sprawdzanie odpowiedzi do zadań
 
-                    div.text-center
-                        form(onsubmit='return false;')
-                            label(for='selectLab') Wybierz grupy do sprawdzenia
-                            br
-                            select#selectLab(name='labs', multiple)
-                                each lab in data.labs
-                                    option(value=lab.id)= lab.name + ' - ' + lab.owner.fullName()
-                            br
-                            input(type='submit' onclick='getLabTasks();')
+                .card-block
 
-                    div#labs
+                    .col-12
+                        h2.text-center=data.topic.number + '. ' + data.topic.title
+                        h3.text-center=data.number + '. ' + data.title
+
+                        div.text-center
+                            form(onsubmit='return false;')
+                                .form-group
+                                    label(for='selectLab') Wybierz grupy do sprawdzenia
+                                    select.form-control#selectLab(name='labs', size='6', multiple)
+                                        each lab in data.labs
+                                            option(value=lab.id)= lab.name + ' - ' + lab.owner.fullName()
+                                .form-group
+                                    input.btn.btn-primary(type='submit' onclick='getLabTasks();')
+    .row
+        div#labs.col-12
 
 
                     script.
@@ -33,6 +39,13 @@ block content
                         for (var s in selected) {
                           gets.push($.get("/ajax/teacher/replies/view/" + #{data.id} + "/lab/" + selected[s], function (data) {
                             $('#labs').prepend(data);
+                            const replySortRows = $('.replySortRow')
+                            let sortable = []
+                            for (let i = 0; i <= replySortRows.length - 1; i++) {
+                              sortable[i] = Sortable.create(replySortRows[i], {
+                                animation: 150
+                              })
+                            }
                           }));
                         }
                         $.when.apply($, gets).then(function () {

@@ -18,10 +18,6 @@ script(type='text/x-mathjax-config').
       }
     });
 
-script.
-    var md = window.markdownit();
-    var result = md.render('#test');
-
 if sails.config.environment === "production"
     script(src='/min/production.min.js')
 else
@@ -31,3 +27,5 @@ else
     script(src='/js/base64js.min.js')
     script(src='/js/markdown.js')
     script(src='/js/simplemde.min.js')
+    script(src='/js/sortable.js')
+    script(src='/js/taskreplyview.js')

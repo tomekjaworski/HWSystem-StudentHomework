@@ -10,6 +10,6 @@ block content
             h1= task.title
             h2= task.topic.number + task.topic.title
             if description
-                p= description.description
+                div!=description
             else
                 p nie ma opisu zadania

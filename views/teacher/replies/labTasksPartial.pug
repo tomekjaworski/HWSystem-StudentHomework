@@ -2,12 +2,12 @@ div.d-flex
     .col-12
         h4=lab.name
         hr
-        .col-12.well(style='overflow-x:scroll;white-space: nowrap;max-height:600px;')
+        .col-12.well.replySortRow(style='overflow-x:scroll;white-space: nowrap;max-height:600px;')
             if !data
                 h5 Brak aktywnych studentów w grupie
             else
                 each student in data
-                    .col-6(id=(student.reply ? 'reply-' + student.reply.id : ''), style='display: inline-block;float: none;border:1px solid black;vertical-align:top;margin-right:20px;' + (student.reply ? (student.reply.blocked ? 'background-color:rgba(200,0,0,0.7);' : (!student.reply.newest ? 'background-color:rgba(100,100,100,0.7);' : (student.reply.teacherStatus === 2 ? 'background-color:rgba(200,0,0,0.7);' : (student.reply.teacherStatus === 1 ? 'background-color:lightgreen;' : '')))) : ''))
+                    .col-6.replySortable(id=(student.reply ? 'reply-' + student.reply.id : ''), style='display: inline-block;float: none;border:1px solid black;vertical-align:top;margin-right:20px;' + (student.reply ? (student.reply.blocked ? 'background-color:rgba(200,0,0,0.7);' : (!student.reply.newest ? 'background-color:rgba(100,100,100,0.7);' : (student.reply.teacherStatus === 2 ? 'background-color:rgba(200,0,0,0.7);' : (student.reply.teacherStatus === 1 ? 'background-color:lightgreen;' : '')))) : ''))
                         div
                             h5=student.name + ' ' + student.surname
                         div

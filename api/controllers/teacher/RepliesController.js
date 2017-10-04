@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars */
+/* eslint-disable no-unused-vars,indent */
 /**
  * RepliesController
  *
@@ -86,104 +86,101 @@ LEFT JOIN topics topic ON task.topic = topic.id
 LEFT JOIN labgrouptopicdeadline lbtd ON lbtd.group = slb.labgroup AND lbtd.topic = task.topic
 LEFT JOIN studentcustomdeadlines scdl ON scdl.student = slb.student AND scdl.task = task.id
 WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) => {
-  if (err) {
-    return res.serverError(err)
-  }
-  let deadlines = result.rows
-  students = _.forEach(students, (s) => {
-    s.deadline = dateFormat(deadlines.find(d => d.student === s.id).deadline, 'yyyy-mm-dd')
-  })
-  TaskComments.find({
-    task: taskId,
-    taskStudent: studentsId,
-    user: {'!=': null}
-  }).populate('user').exec((err, comments) => {
-    if (err) {
-      return res.serverError(err)
-    }
-    if (comments && comments.length && comments.length > 0) {
-      for (let s of students) {
-        s.comments = comments.filter(c => c.taskStudent === s.id)
-        _.forEach(s.comments, (c) => {
-          c.createdAt = dateFormat(c.createdAt, 'dd/mm/yyyy')
-        })
-      }
-    }
-    TaskReplies.find({
-      task: taskId,
-      student: studentsId,
-      lastSent: true
-    }).populate('files').exec((err, replies) => {
-      if (err) {
-        return res.serverError(err)
-      }
-
-      if (!replies || !replies.length || replies.length === 0) {
-        return res.view('teacher/replies/labTasksPartial',
-          {
-            lab: labgrp,
-            task: task,
-            data: students
-          })
-      } else {
-        MySqlFile().readManyByReply(replies.map(e => e.id), (err, files) => {
-          if (err) {
-            return res.serverError(err)
-          }
-
-          let promises = files.map(function (file) {
-            return new Promise(function (resolve, reject) {
-              file.fileSize = bytes(file.fileSize, {unitSeparator: ' '})
-              if (file.fileMimeType.includes('text/')) {
-                let type = ''
-                if (['h', 'c'].includes(file.fileExt)) {
-                  type = 'c'
-                } else if (['hpp', 'cpp'].includes(file.fileExt)) {
-                  type = 'c++'
-                } else {
-                  return resolve(file)
-                }
-                if (file.file.err) {
-                  return resolve(file)
-                }
-                let content = '```' + type + '\n' + file.file + '\n```'
-                pdc(content, 'markdown_github', 'html5', function (err, result) {
-                  if (err) {
-                    return reject(err)
-                  }
-                  file.file = result
-                  return resolve(file)
-                })
-              } else {
-                return resolve(file)
+            if (err) {
+              return res.serverError(err)
+            }
+            let deadlines = result.rows
+            students = _.forEach(students, (s) => {
+              s.deadline = dateFormat(deadlines.find(d => d.student === s.id).deadline, 'yyyy-mm-dd')
+            })
+            TaskComments.find({
+              task: taskId,
+              taskStudent: studentsId,
+              user: {'!=': null}
+            }).populate('user').exec((err, comments) => {
+              if (err) {
+                return res.serverError(err)
               }
+              if (comments && comments.length && comments.length > 0) {
+                for (let s of students) {
+                  s.comments = comments.filter(c => c.taskStudent === s.id)
+                  _.forEach(s.comments, (c) => {
+                    c.createdAt = dateFormat(c.createdAt, 'dd/mm/yyyy')
+                  })
+                }
+              }
+              TaskReplies.find({
+                task: taskId,
+                student: studentsId,
+                lastSent: true
+              }).populate('files').exec((err, replies) => {
+                if (err) {
+                  return res.serverError(err)
+                }
+
+                if (!replies || !replies.length || replies.length === 0) {
+                  return res.view('teacher/replies/labTasksPartial',
+                    {
+                      lab: labgrp,
+                      task: task,
+                      data: students
+                    })
+                } else {
+                  MySqlFile().readManyByReply(replies.map(e => e.id), (err, files) => {
+                    if (err) {
+                      return res.serverError(err)
+                    }
+
+                    let promises = files.map(function (file) {
+                      return new Promise(function (resolve, reject) {
+                        file.fileSize = bytes(file.fileSize, {unitSeparator: ' '})
+                        if (file.fileMimeType.includes('text/')) {
+                          let type = ''
+                          if (['h', 'c'].includes(file.fileExt)) {
+                            type = 'c'
+                          } else if (['hpp', 'cpp'].includes(file.fileExt)) {
+                            type = 'c++'
+                          } else {
+                            return resolve(file)
+                          }
+                          if (file.file.err) {
+                            return resolve(file)
+                          }
+                          let content = '```' + type + '\n' + file.file + '\n```'
+                          pdc(content, 'markdown_github', 'html5', function (err, result) {
+                            if (err) {
+                              return reject(err)
+                            }
+                            file.file = result
+                            return resolve(file)
+                          })
+                        } else {
+                          return resolve(file)
+                        }
+                      })
+                    })
+
+                    Promise.all(promises).then((files) => {
+                      for (let s of students) {
+                        s.reply = replies.find(r => r.student === s.id)
+                        if (s.reply) {
+                          s.reply.files = files.filter(file => {
+                            return file.reply === s.reply.id
+                          })
+                        }
+                      }
+                      return res.view('teacher/replies/labTasksPartial',
+                        {
+                          lab: labgrp,
+                          task: task,
+                          data: students
+                        })
+                    })
+                  })
+                }
+              })
             })
           })
-
-          Promise.all(promises).then((files) => {
-            for (let s of students) {
-              s.reply = replies.find(r => r.student === s.id)
-              if (s.reply) {
-                s.reply.files = files.filter(file => {
-                  if (file.reply === s.reply.id) {
-                    return true
-                  }
-                  return false
-                })
-              }
-            }
-            return res.view('teacher/replies/labTasksPartial',
-              {
-                lab: labgrp,
-                task: task,
-                data: students
-              })
-          })
-        })
-      }
-    })
-  })
-})
         })
       })
     })
