@@ -169,7 +169,7 @@
     })
 
     request.fail(function (jqXHR, textStatus) {
-      console.log('Request failed: ' + textStatus)
+      throw new Error('Request failed: ' + textStatus)
     })
 
     history.replaceState(null, document.title, location.pathname + '#!/back')

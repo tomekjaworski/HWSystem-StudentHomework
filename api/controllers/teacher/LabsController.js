@@ -24,7 +24,7 @@ const LabsController = module.exports = {
         return res.serverError(err)
       }
       return res.view('teacher/labgroups/list',
-        {title: 'LabGroups :: Teacher Panel', menuItem: 'labgroups', data: groups.rows, show: show})
+        {title: 'LabGroups :: Teacher Panel', menuItem: 'labgroups', data: groups.rows, show: show, breadcrumb: 'list'})
     })
   },
 
@@ -47,7 +47,8 @@ const LabsController = module.exports = {
             title: 'LabGroups :: Teacher Panel',
             menuItem: 'labgroups',
             data: lab,
-            message: {message: msg, attribute: attr}
+            message: {message: msg, attribute: attr},
+            breadcrumb: 'view'
           })
       })
     })
@@ -102,7 +103,8 @@ const LabsController = module.exports = {
             title: 'LabGroups :: Teacher Panel',
             menuItem: 'labgroups',
             data: lab,
-            message: {message: msg, attribute: attr}
+            message: {message: msg, attribute: attr},
+            breadcrumb: 'viewnew'
           })
       })
     })
@@ -132,7 +134,7 @@ const LabsController = module.exports = {
         return res.serverError('Nie znaleziono prowadzących, zgłoś się do administratora')
       }
       return res.view('teacher/labgroups/add',
-        {title: 'LabGroups :: Teacher Panel', menuItem: 'labgroups', users: users, message: msg})
+        {title: 'LabGroups :: Teacher Panel', menuItem: 'labgroups', users: users, message: msg, breadcrumb: 'add'})
     })
     if (req.method === 'POST') {
       let title = req.param('title')
@@ -185,7 +187,8 @@ const LabsController = module.exports = {
             menuItem: 'labgroups',
             data: lab,
             users: users,
-            message: {message: msg, attribute: attr}
+            message: {message: msg, attribute: attr},
+            breadcrumb: 'edit'
           })
       })
     })

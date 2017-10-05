@@ -13,7 +13,7 @@ div.d-flex
                                 .mr-auto.p-2.w-100.replySortableTitle
                                     .btn.btn-sm
                                         .fa.fa-bars.fa-lg
-                                    strong(title=student.name + ' ' + student.surname + ' aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaapsik')=student.name + ' ' + student.surname + ' aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaapsik'
+                                    strong(title=student.name + ' ' + student.surname)=student.name + ' ' + student.surname
                                 .pt-2.pb-2
                                     button.btn.btn-info.btn-sm(type='button', data-toggle='collapse', data-target='#replyCollapse-' + student.id, aria-expanded='true', aria-controls='#replyCollapse-' + student.id)
                                         .fa.fa-window-minimize
@@ -22,12 +22,12 @@ div.d-flex
                                         .fa.fa-times
                             //.card-block.collapse(id=(student.reply ? 'replyCollapse-' + student.reply.id : ''))
                             .card-block.collapse.show(id='replyCollapse-' + student.id)
-                                div
-                                    | Czas na odpowiedź:
-                                    br
-                                    input(id='deadline-student-' + student.id + '-task-' + task.id, type='date', value=student.deadline)
-                                    button(onclick='saveDeadline(' + student.id + ',' + task.id + ')') Zapisz
-                                    button(onclick='saveDeadline(' + student.id + ',' + task.id + ', true)') Skasuj
+                                .form-group
+                                    label Czas na odpowiedź:
+                                    .input-group
+                                        input.form-control(id='deadline-student-' + student.id + '-task-' + task.id, type='date', value=student.deadline)
+                                        button.btn.btn-success(onclick='saveDeadline(' + student.id + ',' + task.id + ')') Zapisz
+                                        button.btn.btn-danger(onclick='saveDeadline(' + student.id + ',' + task.id + ', true)') Skasuj
                                     br
                                     br
                                 if !student.reply

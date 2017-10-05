@@ -7,9 +7,11 @@ block content
             include ../menu
 
         .col-md-12.col-lg-8
-            h1= task.title
-            h2= task.topic.number + task.topic.title
-            if description
-                div!=description
-            else
-                p nie ma opisu zadania
+            h1= task.topic.number + '. ' + task.topic.title
+            h2= task.number + '. ' + task.title
+            .card
+                if description
+                    #task-content.card-block!= description
+                else
+                    .card-block
+                        p Nie ma opisu zadania

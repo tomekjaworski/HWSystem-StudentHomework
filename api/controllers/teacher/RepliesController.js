@@ -38,7 +38,12 @@ const RepliesController = module.exports = {
         }
         task.labs = labs
         return res.view('teacher/replies/view',
-          {title: 'Task Replies :: Teacher Panel', menuItem: 'replies', data: task})
+          {
+            title: 'Task Replies :: Teacher Panel',
+            menuItem: 'replies',
+            data: task,
+            breadcrumb: 'view'
+          })
       })
     })
   },
