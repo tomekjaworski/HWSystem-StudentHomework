@@ -23,3 +23,27 @@
 .sortable-ghost {
   opacity: .5;
 }
+
+.teacher-notifcounter {
+
+}
+
+.teacher-notifcounter-badge {
+  //width: 0;
+  height: 0;
+  pointer-events: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  //float: right;
+  position: relative;
+  //right: .5em;
+
+  .badge {
+    z-index: 999;
+    pointer-events: none;
+    // safari
+    position: relative;
+    left: 2em;
+  }
+}

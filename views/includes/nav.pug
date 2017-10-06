@@ -11,7 +11,7 @@
                         a.nav-link(href='/') Home
                     li.nav-item(class=(data && data.topics) ? 'active' : '')
                         a.nav-link(href='/topics') Topics
-                    //li.nav-item
+                    //-li.nav-item
                         a.nav-link.disabled(href='#') Disabled
                     //-li.nav-item.dropdown
                         a#dropdown04.nav-link.dropdown-toggle(href='http://example.com', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false') Dropdown
@@ -22,21 +22,35 @@
                 ul.navbar-nav.navbar-right#nav-loggedin
                     li.nav-item
                         a.nav-link Witaj #{localUser.fullName()}
+                    // TODO: czy kazdy teacher jest adminem i czy kazdy admin jest teacherem czy jak
+                    -console.log(localUser)
+                    if localUser.isTeacher || localUser.isAdmin
+                        -var tempNotifications = Math.floor(Math.random() * 110)
+                        li.nav-item.pr-2.pb-2.pb-lg-0
+                            if (tempNotifications >= 30) && (tempNotifications <= 60)
+
+                            else if tempNotifications > 0
+                                .teacher-notifcounter-badge
+                                    span.badge.badge-pill.badge-danger=(tempNotifications >= 100 ? '+99' : tempNotifications)
+
+                            button.btn.btn-info.teacher-notifcounter
+                                i.fa.fa-envelope.fa-lg
                     li.nav-item.pr-2.pb-2.pb-lg-0
                         a.btn.btn-primary(href='/settings')
-                            i.fa.fa-cog(aria-hidden='true')
+                            i.fa.fa-cog.fa-lg
                     li.nav-item
                         a.btn.btn-danger(href='/logout') Wyloguj
+
         else
             form.form-inline.ml-md-auto.float-right#nav-form(action='/login' method='post', data-step='0')
                 a.btn.btn-outline-primary.mr-2.l-email#nav-form-register(href='/register') Register
                 input.form-control.mr-sm-2#nav-form-email(type='email', name='email' placeholder='Email', style='display: none')
                 input.form-control.mr-sm-2#nav-form-pass(type='password', name='password' placeholder='Password', style='display: none')
                 input.btn.btn-outline-success.my-2.my-sm-0.l-email#nav-form-button(type='button', value='Login')
-            //ul.navbar-nav
-            //    li.nav-item
-            //        a.btn.btn-primary(href='#') Login
+            //-ul.navbar-nav
+                li.nav-item
+                    a.btn.btn-primary(href='#') Login
 
-            //form.form-inline.my-2.my-md-0
-            //    input.form-control.mr-sm-2(type='text', placeholder='Search')
-            //    button.btn.btn-outline-success.my-2.my-sm-0(type='submit') Search
+            //-form.form-inline.my-2.my-md-0
+                input.form-control.mr-sm-2(type='text', placeholder='Search')
+                button.btn.btn-outline-success.my-2.my-sm-0(type='submit') Search
