@@ -2,7 +2,7 @@ ol.breadcrumb
     li.breadcrumb-item
         a(href='/')
             i.fa.fa-home
-    if localUser && (localUser.isAdmin || localUser.isTeacher)
+    if localUser && localUser.isTeacher
         if menuItem === 'index'
             li.breadcrumb-item.active Dashboard
         else if menuItem === 'labgroups'
@@ -66,8 +66,7 @@ ol.breadcrumb
                 li.breadcrumb-item.active Task Replies
         else if menuItem === 'users'
             li.breadcrumb-item.active Users
-
-    else
+    else if localUser
         if data && data.topics
             li.breadcrumb-item.active#bc-topics
                 a Topics

@@ -22,8 +22,7 @@
                 ul.navbar-nav.navbar-right#nav-loggedin
                     li.nav-item
                         a.nav-link Witaj #{localUser.fullName()}
-                    // TODO: czy kazdy teacher jest adminem i czy kazdy admin jest teacherem czy jak
-                    if localUser.isTeacher || localUser.isAdmin
+                    if localUser.isTeacher
                         -var tempNotifications = Math.floor(Math.random() * 110)
                         li.nav-item.pr-2.pb-2.pb-lg-0
                             if (tempNotifications >= 30) && (tempNotifications <= 60)
