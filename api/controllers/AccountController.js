@@ -267,6 +267,9 @@ const AccountController = module.exports = {
               return AccountController.settingsMessage(res, 'Stare hasło jest nieprawidłowe', labs)
             }
           } else if (action === 'newLab') {
+            if (req.localUser.isTeacher) {
+              return res.badRequest()
+            }
             // ZMIANA LAB GRUPY
             if (!labs || labs.length === 0) {
               return res.badRequest()

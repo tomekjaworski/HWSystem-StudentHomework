@@ -13,7 +13,7 @@ function ttSelectTopic (id) {
         '<i onclick="ttGetBack()" style="cursor: pointer;" class="fa fa-arrow-left fa-lg" aria-hidden="true"></i>' +
       '</th>' +
         '<td>' + topic.number + '. ' + topic.title + '</td>' +
-        '<td></td>' +
+        '<td>' + topic.deadline +'</td>' +
       '</tr>' +
       '<tr>' +
         '<td colspan="3">' +

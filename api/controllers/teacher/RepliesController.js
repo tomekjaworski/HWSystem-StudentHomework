@@ -37,13 +37,24 @@ const RepliesController = module.exports = {
           return res.serverError('Nie zdefiniowano żadnych grup laboratoryjnych')
         }
         task.labs = labs
-        return res.view('teacher/replies/view',
-          {
-            title: 'Task Replies :: Teacher Panel',
-            menuItem: 'replies',
-            data: task,
-            breadcrumb: 'view'
-          })
+        sails.sendNativeQuery(`SELECT \`prevTopicTask\`.\`id\` \`prevTopicTask\`, \`nextTopicTask\`.\`id\` \`nextTopicTask\`, \`prevTask\`.\`id\` \`prevTask\`, \`nextTask\`.\`id\` \`nextTask\` FROM \`tasks\`
+LEFT JOIN \`tasks\` \`nextTopicTask\` ON \`nextTopicTask\`.\`topic\` > $1
+LEFT JOIN \`tasks\` \`prevTopicTask\` ON \`prevTopicTask\`.\`topic\` < $1
+LEFT JOIN \`tasks\` \`prevTask\` ON \`prevTask\`.\`topic\` = $1 AND \`prevTask\`.\`id\` < $2
+LEFT JOIN \`tasks\` \`nextTask\` ON \`nextTask\`.\`topic\` = $1 AND \`nextTask\`.\`id\` > $2
+LIMIT 1`, [task.topic.id, task.id]).exec((err, nextPrev) => {
+          if (err) {
+            return res.serverError(err)
+          }
+          return res.view('teacher/replies/view',
+            {
+              title: 'Task Replies :: Teacher Panel',
+              menuItem: 'replies',
+              data: task,
+              breadcrumb: 'view',
+              nextPrev: nextPrev.rows[0]
+            })
+        })
       })
     })
   },
