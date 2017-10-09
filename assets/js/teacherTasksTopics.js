@@ -25,11 +25,11 @@ function ttSelectTopic (id) {
       ret +=
               '<tr style="cursor: pointer;" onclick="document.location=\'/teacher/topics-and-tasks/view/' + task.id + '\'">' +
                 '<td>' + task.id + '</td>' +
-                '<td>' + task.number + '. ' + task.title +
-                  ' <a class="btn btn-sm btn-primary" href="/teacher/topics-and-tasks/task/edit/' + task.id + '">Edytuj</a>' +
-                  ' <b>arduino:</b>' + task.arduino + ' <b>komputer:</b> ' + task.computer +
-                '</td>' +
-                '<td>up <b>/</b> down</td>' +
+                '<td>' + task.number + '. ' + task.title + '</td>' +
+                '<td class="text-center align-middle"><a class="btn btn-sm btn-primary" href="/teacher/topics-and-tasks/task/edit/' + task.id + '">Edytuj</a></td>' +
+                '<td class="text-center align-middle"><i class="fa fa-microchip ' + (task.arduino ? 'text-success' : 'text-danger') + '"></i></td>' +
+                '<td class="text-center align-middle"><i class="fa fa-desktop ' + (task.computer ? 'text-success' : 'text-danger') + '"></i></td>' +
+                '<td class="text-center"><a class="btn btn-sm btn-link" href="#"><i class="fa fa-lg fa-arrow-up"></i></a> <a class="btn btn-sm btn-link" href="#"><i class="fa fa-lg fa-arrow-down"></i></a></td>' +
               '</tr>'
     }
     ret +=

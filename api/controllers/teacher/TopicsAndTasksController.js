@@ -74,9 +74,10 @@ const TopicsAndTasksController = module.exports = {
         })
     })
     if (req.method === 'POST') {
-      let number = req.param('topicNumber')
-      let title = req.param('topicTitle')
-      let deadline = req.param('topicDeadline')
+      const number = req.param('topicNumber')
+      const title = req.param('topicTitle')
+      const deadline = req.param('topicDeadline')
+      const date = Date.parse(deadline)
       // if (!_.isString(title) || !_.isString(number) || !deadline) {
       //   return a('Uzupełnij wszystkie pola')
       // }
@@ -84,8 +85,8 @@ const TopicsAndTasksController = module.exports = {
         number: number,
         title: title,
         visible: true,
-        deadline: deadline
-      }).exec(function (err, topic) {
+        deadline: date
+      }).meta({fetch: true}).exec(function (err, topic) {
         if (err) {
           return res.serverError(err)
         }

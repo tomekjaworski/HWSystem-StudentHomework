@@ -292,7 +292,7 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
         return res.json({error: false})
       })
     } else {
-      var date = Date.parse(deadline)
+      const date = Date.parse(deadline)
       StudentCustomDeadlines.findOrCreate({student: studentId, task: taskId}, {
         student: studentId,
         task: taskId,
