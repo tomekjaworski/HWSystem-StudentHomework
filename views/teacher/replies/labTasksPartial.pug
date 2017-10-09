@@ -26,8 +26,8 @@ div.d-flex
                                     label Czas na odpowiedź:
                                     .input-group.replySortDate
                                         input.form-control.dateInput(id='deadline-student-' + student.id + '-task-' + task.id, type='date', value=student.deadline)
-                                        button.btn.btn-success.dateSave(onclick='saveDeadline(' + student.id + ',' + task.id + ')') Zapisz
-                                        button.btn.btn-danger.dateErase(onclick='saveDeadline(' + student.id + ',' + task.id + ', true)') Skasuj
+                                        button.btn.btn-success.dateSave(data-studentid=student.id, data-taskid=task.id) Zapisz
+                                        button.btn.btn-danger.dateErase(data-studentid=student.id, data-taskid=task.id) Skasuj
                                 hr
 
                                 if !student.reply
@@ -44,7 +44,7 @@ div.d-flex
                                             div.form-group.row
                                                 label.col-4.col-form-label Ocena
                                                 .col-8
-                                                    select.form-control(onchange='setTeacherStatus(' + student.reply.id + ', this)')
+                                                    select.form-control.setTeacherStatus(data-studentreplyid=student.reply.id)
                                                         each option in [{'id':0, 'name':'Nieocenione'}, {'id':1, 'name': 'Zaliczone'}, {'id':2, 'name':'Niezaliczone'}]
                                                             if student.reply.teacherStatus === option.id
                                                                 option(value=option.id, selected)=option.name
@@ -61,9 +61,9 @@ div.d-flex
                                                 .mt-1
                                                     label.custom-control.custom-checkbox
                                                         if student.reply.blocked
-                                                            input.custom-control-input(type='checkbox', name='blocked', checked, onchange='setBlocked(' + student.id + ', ' + task.id + ',' + student.reply.id + ', this)')
+                                                            input.custom-control-input.setBlocked(type='checkbox', name='blocked', data-studentid=student.id, data-taskid=task.id, data-studentreplyid=student.reply.id, checked)
                                                         else
-                                                            input.custom-control-input(type='checkbox', name='blocked', onchange='setBlocked(' + student.id + ', ' + task.id + ',' + student.reply.id + ', this)')
+                                                            input.custom-control-input.setBlocked(type='checkbox', name='blocked', data-studentid=student.id, data-taskid=task.id, data-studentreplyid=student.reply.id)
                                                         span.custom-control-indicator
                                                         span.custom-control-description Zablokowane
 
@@ -71,7 +71,8 @@ div.d-flex
                                         if student.reply.newest
                                             div
                                                 // TODO: Seba dodaj jakieś potwierdzenie czy aby napewno chce się to zrobić
-                                                button.btn.btn-danger(id='repost-reply-' + student.reply.id, onclick='repostTask(' + student.id + ', ' + task.id + ', ' + student.reply.id + ')', style=(student.reply.blocked ? 'display:none' : '')) Przydziel zadanie ponownie
+                                                    // todo: ok
+                                                button.btn.btn-danger.repostTask(id='repost-reply-' + student.reply.id, data-studentid=student.id, data-taskid=task.id, data-studentreplyid=student.reply.id, style=(student.reply.blocked ? 'display:none' : '')) Przydziel zadanie ponownie
                                     hr
                                     div
                                         h6 Pliki
