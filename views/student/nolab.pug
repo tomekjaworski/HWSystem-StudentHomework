@@ -1,0 +1,14 @@
+extends ../includes/layout
+
+
+block content
+    .row
+        .hidden-md-down.col-lg-12
+            div.d-flex.justify-content-center
+                .col-8
+                    .card
+                        .card-block
+                            if lab
+                                h2 Prowadzący grupy laboratoryjnej '#{lab.labgroup.name}' jeszcze Cię nie aktywował
+                            else
+                                h2 Nie jesteś przydzielony do żadnej grupy laboratoryjnej, udaj się do ustawień profilu aby wybrać jakąś

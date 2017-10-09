@@ -9,7 +9,7 @@
 const LabsController = module.exports = {
   listLabGroups: function (req, res) {
     let show = req.param('show')
-    let cond = 'SELECT `labgroups`.`id`, `labgroups`.`active`, `labgroups`.`name`, COUNT(`sa`.`id`) `studentsCount`, COUNT(`sna`.`id`) `studentsNotCount`, `users`.`name` as ownerName, `users`.`surname` as ownerSurname FROM `labgroups` \n' +
+    let cond = 'SELECT `labgroups`.`id`, `labgroups`.`active`, `labgroups`.`name`, COUNT(DISTINCT `sa`.`id`) `studentsCount`, COUNT(DISTINCT `sna`.`id`) `studentsNotCount`, `users`.`name` as ownerName, `users`.`surname` as ownerSurname FROM `labgroups` \n' +
       'LEFT JOIN `studentslabgroups` `sa` ON `sa`.`labgroup` = `labgroups`.`id` AND `sa`.`active`=1\n' +
       'LEFT JOIN `studentslabgroups` `sna` ON `sna`.`labgroup` = `labgroups`.`id` AND `sna`.`active`=0\n' +
       'LEFT JOIN `users` ON `users`.`id` = `labgroups`.`owner`'
@@ -29,7 +29,10 @@ const LabsController = module.exports = {
   },
 
   viewLabGroup: function (req, res) {
-    let id = req.param('id')
+    let id = parseInt(req.param('id'), '10')
+    if (!_.isInteger(id)) {
+      return res.notFound()
+    }
     let a = (attr, msg) => LabGroups.findOne({id: id}).exec((err, lab) => {
       if (err) {
         return res.serverError(err)
@@ -85,7 +88,10 @@ const LabsController = module.exports = {
   },
 
   viewNewStudentsLabGroup: function (req, res) {
-    let id = req.param('id')
+    let id = parseInt(req.param('id'), '10')
+    if (!_.isInteger(id)) {
+      return res.notFound()
+    }
     let a = (attr, msg) => LabGroups.findOne({id: id}).exec((err, lab) => {
       if (err) {
         return res.serverError(err)
@@ -165,8 +171,37 @@ const LabsController = module.exports = {
     }
   },
 
+  delLabGroup: function (req, res) {
+    let id = parseInt(req.param('id'), '10')
+    if (!_.isInteger(id)) {
+      return res.notFound()
+    }
+    LabGroups.findOne(id).populate('students').exec((err,lab)=>{
+      if (err) {
+        return res.serverError(err)
+      }
+      if (!lab) {
+        return res.notFound()
+      }
+      StudentsLabGroups.destroy({student:lab.students.map(s=>s.id)}).exec((err)=>{
+        if (err) {
+          return res.serverError(err)
+        }
+        LabGroups.destroy(id).exec((err)=>{
+          if (err) {
+            return res.serverError(err)
+          }
+          return res.redirect('/teacher/labgroup')
+        })
+      })
+    })
+  },
+
   editLabGroup: function (req, res) {
-    let id = req.param('id')
+    let id = parseInt(req.param('id'), '10')
+    if (!_.isInteger(id)) {
+      return res.notFound()
+    }
     let a = (attr, msg) => Users.find({isTeacher: true}).exec((err, users) => {
       if (err) {
         return res.serverError(err)

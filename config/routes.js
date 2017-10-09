@@ -72,6 +72,7 @@ module.exports.routes = {
   '/teacher/labgroup/view/:id/new': 'teacher/LabsController.viewNewStudentsLabGroup',
   '/teacher/labgroup/edit/:id': {action: 'teacher/labs/editLabGroup', skipAssets: true},
   '/teacher/labgroup/add': 'teacher/LabsController.addLabGroup',
+  'POST /teacher/labgroup/del': 'teacher/LabsController.delLabGroup',
 
   // Teachers // Replies
   '/teacher/replies': 'teacher/RepliesController.selectTaskReplies',

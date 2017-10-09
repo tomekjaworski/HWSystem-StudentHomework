@@ -16,23 +16,31 @@ block content
 
                     .col-12
                         .row
-                            .col-2.text-center
-                                a.btn.btn-secondary(href="#")
-                                    i.fa.fa-arrow-left
+                            if nextPrev && nextPrev.prevTopicTask
+                                .col-2.text-center
+                                    a.btn.btn-secondary(href="/teacher/replies/view/" + nextPrev.prevTopicTask)
+                                        i.fa.fa-arrow-left
+                            else
+                                .offset-2
                             .col-8
                                 h2.text-center=data.topic.number + '. ' + data.topic.title
-                            .col-2.text-center
-                                a.btn.btn-secondary(href="#")
-                                    i.fa.fa-arrow-right
+                            if nextPrev && nextPrev.nextTopicTask
+                                .col-2.text-center
+                                    a.btn.btn-secondary(href="/teacher/replies/view/" + nextPrev.nextTopicTask)
+                                        i.fa.fa-arrow-right
                         .row
-                            .col-2.text-center
-                                a.btn.btn-secondary(href="#")
-                                    i.fa.fa-arrow-left
+                            if nextPrev && nextPrev.prevTask
+                                .col-2.text-center
+                                    a.btn.btn-secondary(href="/teacher/replies/view/" + nextPrev.prevTask)
+                                        i.fa.fa-arrow-left
+                            else
+                                .offset-2
                             .col-8
                                 h3.text-center=data.number + '. ' + data.title
-                            .col-2.text-center
-                                a.btn.btn-secondary(href="#")
-                                    i.fa.fa-arrow-right
+                            if nextPrev && nextPrev.nextTask
+                                .col-2.text-center
+                                    a.btn.btn-secondary(href="/teacher/replies/view/" + nextPrev.nextTask)
+                                        i.fa.fa-arrow-right
 
                         div.text-center
                             form(onsubmit='return false;')
