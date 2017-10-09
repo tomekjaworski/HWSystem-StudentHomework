@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+// todo: przy errorze jak sie dodaje, zostawic wartosci
 /**
  * TopicsAndTasksController
  *

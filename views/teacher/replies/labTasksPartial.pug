@@ -24,12 +24,12 @@ div.d-flex
                             .card-block.collapse.show(id='replyCollapse-' + student.id)
                                 .form-group
                                     label Czas na odpowiedź:
-                                    .input-group
-                                        input.form-control(id='deadline-student-' + student.id + '-task-' + task.id, type='date', value=student.deadline)
-                                        button.btn.btn-success(onclick='saveDeadline(' + student.id + ',' + task.id + ')') Zapisz
-                                        button.btn.btn-danger(onclick='saveDeadline(' + student.id + ',' + task.id + ', true)') Skasuj
-                                    br
-                                    br
+                                    .input-group.replySortDate
+                                        input.form-control.dateInput(id='deadline-student-' + student.id + '-task-' + task.id, type='date', value=student.deadline)
+                                        button.btn.btn-success.dateSave(onclick='saveDeadline(' + student.id + ',' + task.id + ')') Zapisz
+                                        button.btn.btn-danger.dateErase(onclick='saveDeadline(' + student.id + ',' + task.id + ', true)') Skasuj
+                                hr
+
                                 if !student.reply
                                     div
                                         h6 Odpowiedź:
@@ -41,25 +41,38 @@ div.d-flex
                                             div
                                                 b Odpowiedź nie jest ostateczna
                                         else
-                                            div Ocena:
-                                                select(onchange='setTeacherStatus(' + student.reply.id + ', this)')
-                                                    each option in [{'id':0, 'name':'Nieocenione'}, {'id':1, 'name': 'Zaliczone'}, {'id':2, 'name':'Niezaliczone'}]
-                                                        if student.reply.teacherStatus === option.id
-                                                            option(value=option.id, selected)=option.name
-                                                        else
-                                                            option(value=option.id)=option.name
+                                            div.form-group.row
+                                                label.col-4.col-form-label Ocena
+                                                .col-8
+                                                    select.form-control(onchange='setTeacherStatus(' + student.reply.id + ', this)')
+                                                        each option in [{'id':0, 'name':'Nieocenione'}, {'id':1, 'name': 'Zaliczone'}, {'id':2, 'name':'Niezaliczone'}]
+                                                            if student.reply.teacherStatus === option.id
+                                                                option(value=option.id, selected)=option.name
+                                                            else
+                                                                option(value=option.id)=option.name
                                         - var tests = {'0':'Nierozpoczęte', '1':'W kolejce', '2':'Zaliczone', '3':'Niezaliczone'}
-                                        div Testy Maszynowe: #{tests[student.reply.machineStatus]}
-                                        div Zablokowany:
-                                            if student.reply.blocked
-                                                input(type='checkbox', name='blocked', checked, onchange='setBlocked(' + student.id + ', ' + task.id + ',' + student.reply.id + ', this)')
-                                            else
-                                                input(type='checkbox', name='blocked', onchange='setBlocked(' + student.id + ', ' + task.id + ',' + student.reply.id + ', this)')
+                                        div.form-group.row
+                                            label.col-4.col-form-label Testy Maszynowe
+                                            .col-8
+                                                span.form-control #{tests[student.reply.machineStatus]}
+                                        div.form-group.row
+                                            label.col-4.col-form-label Status
+                                            .col-8
+                                                .mt-1
+                                                    label.custom-control.custom-checkbox
+                                                        if student.reply.blocked
+                                                            input.custom-control-input(type='checkbox', name='blocked', checked, onchange='setBlocked(' + student.id + ', ' + task.id + ',' + student.reply.id + ', this)')
+                                                        else
+                                                            input.custom-control-input(type='checkbox', name='blocked', onchange='setBlocked(' + student.id + ', ' + task.id + ',' + student.reply.id + ', this)')
+                                                        span.custom-control-indicator
+                                                        span.custom-control-description Zablokowane
+
                                         div Odpowiedź po raz: #{student.reply.count}
                                         if student.reply.newest
                                             div
                                                 // TODO: Seba dodaj jakieś potwierdzenie czy aby napewno chce się to zrobić
                                                 button.btn.btn-danger(id='repost-reply-' + student.reply.id, onclick='repostTask(' + student.id + ', ' + task.id + ', ' + student.reply.id + ')', style=(student.reply.blocked ? 'display:none' : '')) Przydziel zadanie ponownie
+                                    hr
                                     div
                                         h6 Pliki
                                         each file in student.reply.files

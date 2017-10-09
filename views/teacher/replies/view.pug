@@ -15,8 +15,24 @@ block content
                 .card-block
 
                     .col-12
-                        h2.text-center=data.topic.number + '. ' + data.topic.title
-                        h3.text-center=data.number + '. ' + data.title
+                        .row
+                            .col-2.text-center
+                                a.btn.btn-secondary(href="#")
+                                    i.fa.fa-arrow-left
+                            .col-8
+                                h2.text-center=data.topic.number + '. ' + data.topic.title
+                            .col-2.text-center
+                                a.btn.btn-secondary(href="#")
+                                    i.fa.fa-arrow-right
+                        .row
+                            .col-2.text-center
+                                a.btn.btn-secondary(href="#")
+                                    i.fa.fa-arrow-left
+                            .col-8
+                                h3.text-center=data.number + '. ' + data.title
+                            .col-2.text-center
+                                a.btn.btn-secondary(href="#")
+                                    i.fa.fa-arrow-right
 
                         div.text-center
                             form(onsubmit='return false;')

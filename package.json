@@ -8,6 +8,7 @@
     "base64-js": "^1.2.1",
     "bytes": "^3.0.0",
     "concat-stream": "^1.6.0",
+    "connect-redis": "^3.3.2",
     "consolidate": "^0.14.5",
     "convert-string": "^0.1.0",
     "dateformat": "^2.2.0",
@@ -93,7 +94,6 @@
       "Topics",
       "TopicsAndTasksController",
       "Users"
-
     ]
   }
 }
