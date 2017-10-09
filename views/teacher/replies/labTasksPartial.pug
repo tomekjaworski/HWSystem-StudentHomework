@@ -116,5 +116,5 @@ div.d-flex
                                     .input-group
                                         textarea.form-control.task-comment-textarea#commentTextArea(type='text', placeholder='Komentarz', name='comment', rows='1')
                                         span.input-group-btn
-                                            button.btn.btn-primary(onclick='sendComment(' + student.id + ',' + task.id + ')', type='button') Wyślij
-                                            button.btn.btn-primary(onclick='checkComments(' + student.id + ',' + task.id + ')', type='button') Odśwież
+                                            button.btn.btn-primary.sendCommentButton(data-studentid=student.id, data-taskid=task.id, type='button') Wyślij
+                                            button.btn.btn-primary.checkCommentsButton(data-studentid=student.id, data-taskid=task.id, type='button') Odśwież

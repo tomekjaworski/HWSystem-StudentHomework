@@ -78,6 +78,16 @@ function repliesGetBack () {
           const studentreplyid = $(this).data('studentreplyid')
           repostTask(studentid, taskid, studentreplyid)
         })
+        $('.sendCommentButton').on('click', function () {
+          const studentid = $(this).data('studentid')
+          const taskid = $(this).data('taskid')
+          sendComment(studentid, taskid)
+        })
+        $('.checkCommentsButton').on('click', function () {
+          const studentid = $(this).data('studentid')
+          const taskid = $(this).data('taskid')
+          checkComments(studentid, taskid)
+        })
       }))
     }
     $.when.apply($, gets).then(function () {
