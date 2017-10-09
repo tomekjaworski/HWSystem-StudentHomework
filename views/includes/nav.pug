@@ -33,7 +33,7 @@
                                 .teacher-notifcounter-badge
                                     span.badge.badge-pill.badge-danger=(tempNotifications >= 100 ? '+99' : tempNotifications)
 
-                            button.btn.btn-info.teacher-notifcounter
+                            a(href='/teacher').btn.btn-info.teacher-notifcounter
                                 i.fa.fa-envelope.fa-lg
                     li.nav-item.pr-2.pb-2.pb-lg-0
                         a.btn.btn-primary(href='/settings')
