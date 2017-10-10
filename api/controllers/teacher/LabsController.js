@@ -110,18 +110,24 @@ const LabsController = module.exports = {
         if (err) {
           return res.serverError(err)
         }
-        topics = _.forEach(topics, (t) => {
-          t.deadline = dateFormat(t.deadline, 'yyyy-mm-dd')
-        })
-        lab.topics = topics
-        return res.view('teacher/labgroups/deadlines',
-          {
-            title: 'LabGroups :: Teacher Panel',
-            menuItem: 'labgroups',
-            data: lab,
-            message: {message: msg, attribute: attr},
-            breadcrumb: 'view'
+        LabGroupTopicDeadline.find({group: id}).exec((err, deadlines) => {
+          if (err) {
+            return res.serverError(err)
+          }
+          topics = _.forEach(topics, (t) => {
+            let custom = _.find(deadlines, d=>d.topic===t.id)
+            t.deadline = dateFormat((custom ? custom : t.deadline), 'yyyy-mm-dd')
           })
+          lab.topics = topics
+          return res.view('teacher/labgroups/deadlines',
+            {
+              title: 'LabGroups :: Teacher Panel',
+              menuItem: 'labgroups',
+              data: lab,
+              message: {message: msg, attribute: attr},
+              breadcrumb: 'view'
+            })
+        })
       })
     })
     a()

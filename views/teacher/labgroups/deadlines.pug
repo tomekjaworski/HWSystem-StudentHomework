@@ -36,6 +36,7 @@ block content
                                     th(scope='row')=topics.id
                                     td=topics.number + '. ' + topics.title
                                     td
-                                        input(type='date', value=topics.deadline)
+                                        input(type='date', value=topics.deadline, required="required")
                                     td
-                                        a lol
+                                        button.btn.btn-success.dateSave() Zapisz
+                                        button.btn.btn-danger.dateErase() Skasuj
