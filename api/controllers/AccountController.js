@@ -205,7 +205,7 @@ const AccountController = module.exports = {
             labGroups: lab[0]
           }).exec(function (err) {
             if (err) {
-              if (err.code === 'E_UNIQUE'){
+              if (err.code === 'E_UNIQUE') {
                 return AccountController.registerError(res, 'Taki album lub email już istnieje')
               }
               return res.serverError(err)

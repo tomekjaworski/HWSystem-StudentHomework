@@ -110,7 +110,7 @@ const LabsController = module.exports = {
         if (err) {
           return res.serverError(err)
         }
-        topics = _.forEach(topics, (t)=>{
+        topics = _.forEach(topics, (t) => {
           t.deadline = dateFormat(t.deadline, 'yyyy-mm-dd')
         })
         lab.topics = topics

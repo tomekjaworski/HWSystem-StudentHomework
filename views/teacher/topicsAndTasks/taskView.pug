@@ -8,7 +8,7 @@ block content
 
         .col-md-12.col-lg-8
             -var id = task.id
-            button#del(data-id=id) Usuń
+            button.deleteTaskButton.btn.btn-danger(data-id=id) Usuń
             h1= task.topic.number + '. ' + task.topic.title
             h2= task.number + '. ' + task.title
             .card
