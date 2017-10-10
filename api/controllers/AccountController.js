@@ -187,7 +187,7 @@ const AccountController = module.exports = {
             return AccountController.registerError(res, 'Twoje hasło powinno zawierać dużą i małą litere')
         }
 
-        LabGroups.findOne({name: labGroups}).exec(function (err, lab) {
+        LabGroups.findOne({id: labGroups}).exec(function (err, lab) {
           if (err) {
             res.serverError(err)
           }
@@ -202,12 +202,14 @@ const AccountController = module.exports = {
             password: AccountController.hashPassword(password, st),
             salt: st,
             activated: true,
-            labGroups: [lab]
+            labGroups: lab[0]
           }).exec(function (err) {
             if (err) {
+              if (err.code === 'E_UNIQUE'){
+                return AccountController.registerError(res, 'Taki album lub email już istnieje')
+              }
               return res.serverError(err)
             }
-
             return res.redirect(sails.getUrlFor('AccountController.login'))
           })
         })

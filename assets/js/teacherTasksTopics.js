@@ -23,9 +23,9 @@ function ttSelectTopic (id) {
     for (let taskn in topic.tasks) {
       const task = topic.tasks[taskn]
       ret +=
-              '<tr style="cursor: pointer;" onclick="document.location=\'/teacher/topics-and-tasks/view/' + task.id + '\'">' +
+              '<tr style="cursor: pointer;">' +
                 '<td>' + task.id + '</td>' +
-                '<td>' + task.number + '. ' + task.title + '</td>' +
+                '<td onclick="document.location=\'/teacher/topics-and-tasks/view/' + task.id + '\'">' + task.number + '. ' + task.title + '</td>' +
                 '<td class="text-center align-middle"><a class="btn btn-sm btn-primary" href="/teacher/topics-and-tasks/task/edit/' + task.id + '">Edytuj</a></td>' +
                 '<td class="text-center align-middle"><i class="fa fa-microchip ' + (task.arduino ? 'text-success' : 'text-danger') + '"></i></td>' +
                 '<td class="text-center align-middle"><i class="fa fa-desktop ' + (task.computer ? 'text-success' : 'text-danger') + '"></i></td>' +

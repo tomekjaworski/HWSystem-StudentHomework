@@ -102,8 +102,8 @@ module.exports.routes = {
   'POST /ajax/topic/deleted': 'teacher/topicsandtasks/topicDelete',
 
   // User
-  '/teacher/user': {action: 'teacher/user/listUser', skipAssets: true},
-  '/teacher/user/add': {action: 'teacher/user/addUser', skipAssets: true},
+  '/teacher/users': {action: 'teacher/user/listUser', skipAssets: true},
+  '/teacher/users/add': {action: 'teacher/user/addUser', skipAssets: true},
 
   // DEBUG
   '/hw2/enqtest': function (req, res) {

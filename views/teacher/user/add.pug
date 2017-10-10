@@ -7,6 +7,33 @@ block content
         //.hidden-md-down.col-lg-8#tasks-column
             //-include tasks
         .col-md-12.col-lg-8
-            form
-                input(placeholder="Imię")
-                input(placeholder="Nazwisko")
+            form(method="post")
+                input(placeholder="Imię" name="name")
+                br
+                input(placeholder="Nazwisko" name="sur")
+                br
+                input(placeholder="Nr albumu" name="album")
+                br
+                label Admin
+                input(type="checkbox" name="admin")
+                br
+                label Teacher
+                input(type="checkbox" name="teacher")
+                br
+                input(placeholder="email" name="email")
+                br
+                label Hasło
+                input(type="password" name="pass")
+                br
+                label Powtórz hasło
+                input(type="password" name="repass")
+                br
+                label Aktywny
+                input(type="checkbox" checked name="active")
+                br
+                br
+                select(name='groupl')
+                    each l in labs
+                        option(value=l.id)= l.name + l.owner.fullName()
+                br
+                input(type="submit" value="stwórz")
