@@ -79,7 +79,12 @@
 
   let newLastComment = null
   let markAsReadButton = $('#commentMarkAsRead')
+  let commenticons = {
+    read: '<span class="fa-stack fa-lg text-primary"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-inverse fa-stack-1x"></i></span>',
+    unread: '<span class="fa-stack fa-lg"><i class="fa fa-circle-thin fa-stack-2x"></i></span>'
+  }
 
+  // TODO: moze zsyncrhonizowac markasread miedzy oknami?
   function markAsRead (topic, task) {
     let response = $.ajax({
       url: '/topic/' + topic + '/task/' + task,
@@ -91,7 +96,7 @@
     })
 
     response.done(function (msg) {
-      $('.task-c-read').text('przeczytane')
+      $('.task-c-read').html(commenticons.read)
       markAsReadButton.hide()
     })
   }
@@ -107,7 +112,7 @@
     }
     template.find('.task-c-timestamp').text(date)
     template.find('.task-c-comment').text(comment)
-    template.find('.task-c-read').text(read)
+    template.find('.task-c-read').html((read ? commenticons.read : commenticons.unread))
 
     $(template).insertBefore(markAsReadButton)
 
@@ -169,8 +174,8 @@
         renderComment(msg[i].user, msg[i].comment, msg[i].createdAt, msg[i].viewed)
         newLastComment = msg[i].id
       }
-      if (msg.length >= 1) {
-        markAsReadButton.show()
+      if (msg[msg.length - 1].viewed) {
+        markAsRead(tData.top, tData.tas)
       }
     })
   }

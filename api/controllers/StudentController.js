@@ -8,7 +8,7 @@ const dateFormat = require('dateformat')
 const pdc = require('pdc')
 
 const StudentController = module.exports = {
-  noLab: function (req, res) {
+  noLab (req, res) {
     StudentsLabGroups.findOne({student: req.localUser.id}).populate('labgroup').exec((err, lab) => {
       if (err) {
         return res.serverError(err)
@@ -27,7 +27,7 @@ const StudentController = module.exports = {
    * @route       :: /topics
    * @route       :: /topic/:topicid/tasks
    */
-  index: function (req, res) {
+  index (req, res) {
     StudentsLabGroups.findOne({
       student: req.localUser.id,
       active: true
@@ -72,7 +72,7 @@ const StudentController = module.exports = {
    * @description :: Ajax api for getting list of task in selected topic
    * @route       :: /ajax/topic/:id/tasks
    */
-  tasks: function (req, res) {
+  tasks (req, res) {
     StudentsLabGroups.findOne({
       student: req.localUser.id,
       active: true
@@ -124,7 +124,7 @@ const StudentController = module.exports = {
       })
     })
   },
-  task: function (req, res) {
+  task (req, res) {
     StudentsLabGroups.findOne({
       student: req.localUser.id,
       active: true
@@ -288,7 +288,7 @@ const StudentController = module.exports = {
     })
   },
 
-  ajaxGetFileContent: function (req, res) {
+  ajaxGetFileContent (req, res) {
     StudentsLabGroups.findOne({
       student: req.localUser.id,
       active: true
@@ -365,7 +365,7 @@ const StudentController = module.exports = {
     })
   },
 
-  downloadTaskFile: function (req, res) {
+  downloadTaskFile (req, res) {
     StudentsLabGroups.findOne({
       student: req.localUser.id,
       active: true
@@ -400,7 +400,7 @@ const StudentController = module.exports = {
     })
   },
 
-  updateFile: function (req, res) {
+  updateFile (req, res) {
     StudentsLabGroups.findOne({
       student: req.localUser.id,
       active: true
@@ -459,7 +459,7 @@ const StudentController = module.exports = {
     })
   },
 
-  uploadTaskFiles: function (req, res) {
+  uploadTaskFiles (req, res) {
     StudentsLabGroups.findOne({
       student: req.localUser.id,
       active: true
@@ -520,7 +520,7 @@ const StudentController = module.exports = {
     })
   },
 
-  ajaxRemoveFile: function (req, res) {
+  ajaxRemoveFile (req, res) {
     StudentsLabGroups.findOne({
       student: req.localUser.id,
       active: true
@@ -573,7 +573,7 @@ const StudentController = module.exports = {
     })
   },
 
-  sendReply: function (req, res) {
+  sendReply (req, res) {
     StudentsLabGroups.findOne({
       student: req.localUser.id,
       active: true
@@ -670,7 +670,7 @@ const StudentController = module.exports = {
     })
   },
 
-  ajaxCommentsCheck: function (req, res) {
+  ajaxCommentsCheck (req, res) {
     StudentsLabGroups.findOne({
       student: req.localUser.id,
       active: true
@@ -707,7 +707,8 @@ const StudentController = module.exports = {
                   id: c.id,
                   createdAt: dateFormat(c.createdAt, 'HH:MM dd/mm/yyyy'),
                   comment: c.comment,
-                  viewed: (c.viewed ? 'przeczytane' : 'nieprzeczytane'),
+                  viewed: c.viewed,
+                  // viewed: (c.viewed ? 'przeczytane' : 'nieprzeczytane'),
                   user: (c.user ? {
                     id: c.user.id,
                     name: c.user.name,

@@ -14,8 +14,7 @@ mixin fileIcon(file)
 mixin noFilesInReply
     .col-12.mb-2.text-center.text-muted
         i.fa.fa-files-o.fa-4x
-    .col-12.text-center.text-muted
-        | Twoje zadanie obecnie nie ma plików. Użyj guzików poniżej aby dodać pliki i zatwierdzić zadanie.
+    .col-12.text-center.text-muted=i18n('student.task.nofiles')
 mixin commentBlock(com, hidden)
     .list-group-item.list-group-item-action.flex-column.align-items-start(style=(hidden ? 'display: none;': ''))
         .d-flex.w-100.justify-content-between
@@ -23,17 +22,25 @@ mixin commentBlock(com, hidden)
                 if com.user
                     strong.task-c-author=(com.user ? com.user.fullName() : '')
                     if com.user.isTeacher
-                        span.badge.badge-primary.ml-2 Prowadzący
-                    span.ml-2 napisał(a):
+                        span.badge.badge-primary.ml-2=i18n('student.task.teacher')
+                    span.ml-2=i18n('student.task.wrote')
                 else
                     strong.task-c-author
-                        span.badge.badge-info Wiadomość systemowa
-            small.text-muted.task-c-timestamp= com.createdAt
-        p.mb-1.task-c-comment= com.comment
+                        span.badge.badge-info=i18n('student.task.sysmsg')
+            small.text-muted.task-c-timestamp=com.createdAt
+        p.mb-1.task-c-comment=com.comment
         if !com.viewed
-            small.text-muted.task-c-read nieprzeczytane
+            div.text-right.w-100
+                small.text-muted.task-c-read
+                    span.fa-stack.fa-lg
+                        i.fa.fa-circle-thin.fa-stack-2x
         else
-            small.text-muted.task-c-read przeczytane
+            div.text-right.w-100
+                small.text-muted.task-c-read
+                    span.fa-stack.fa-lg.text-primary
+                        i.fa.fa-circle.fa-stack-2x
+                        i.fa.fa-check.fa-inverse.fa-stack-1x
+            //=i18n('student.task.read')
 block content
 
     // TODO: jakiś alert ze statusem wykrytym z paska adresu "?msg=kodWiadomosci"
