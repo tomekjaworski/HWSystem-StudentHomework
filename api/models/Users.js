@@ -51,6 +51,10 @@ const Users = module.exports = {
       collection: 'labgroups',
       via: 'student',
       through: 'studentslabgroups'
+    },
+    languagePreference: {
+      type: 'string',
+      defaultsTo: 'pl'
     }
 
     // fullName: function () {

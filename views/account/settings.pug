@@ -8,40 +8,50 @@ block content
             if message
                 //.row
                 .alert.alert-info(role='alert')
-                    strong Wiadomość:&nbsp;
+                    strong=i18n('settings.message')
                     | #{message}
             .row
+                .col-12.mb-3
+                    h5=i18n('settings.language.title')
+                    form(method='post' action='/settings', name='languagePreference')
+                        .form-group
+                            label(for='inputLanguage')=i18n('settings.language.label')
+                            input#inputLanguage.form-control(type='text', name='language', value=req.localUser.languagePreference)
+                        input(type='hidden' name='action' value='languagePreference')
+
+                        input.btn.btn-primary.mb-4.mb-md-0(type='submit', value=i18n('settings.language.change'))
+            .row
                 .col-sm-6
-                    h5 Zmiana hasła
+                    h5=i18n('settings.password.title')
                     form(method='post' action='/settings')
                         .form-group
-                            label(for='inputOldPass') Stare hasło
+                            label(for='inputOldPass')=i18n('settings.password.oldpass')
                             input#inputOldPass.form-control(type='password', name='oldPass', required)
 
                         .form-group
-                            label(for='inputPassword') Nowe hasło
+                            label(for='inputPassword')=i18n('settings.password.password')
                             input#inputPassword.form-control(type='password', name='password', required)
 
                         .form-group
-                            label(for='inputRePassword') Powtórz nowe hasło
+                            label(for='inputRePassword')=i18n('settings.password.repassword')
                             input#inputRePassword.form-control(type='password', name='repassword', required)
                         input(type='hidden' name='action' value='newPassword')
 
-                        button.btn.btn-primary.mb-4.mb-md-0(type='submit') Zmień hasło
+                        button.btn.btn-primary.mb-4.mb-md-0(type='submit')=i18n('settings.password.change')
                 if !localUser.isTeacher
                     .col-sm-6
-                        h5 Zmiana labu
+                        h5=i18n('settings.lab.title')
                         form(method='post' action='/settings')
                             .form-group
-                                label(for='inputLabSelect') Wybierz lab
+                                label(for='inputLabSelect')=i18n('settings.lab.choose')
                                 select#inputLabSelect.selectpicker(name='lab', data-live-search="true")
                                     //- console.log(labs)
                                     each l in labs
                                         option(value=l.name, data-subtext=l.owner.fullName())= l.name
                             .form-group
-                                label(for='inputLabSelectPass') Podaj hasło aby dokonać zmiany
+                                label(for='inputLabSelectPass')=i18n('settings.lab.confirmpass')
                                 input#inputLabSelectPass.form-control(type='password', name='passlabconf', required)
 
                             input(type='hidden' name='action' value="newLab")
 
-                            button.btn.btn-primary(type='submit') Zmień lab
+                            button.btn.btn-primary(type='submit')=i18n('settings.lab.change')

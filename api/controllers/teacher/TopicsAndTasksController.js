@@ -335,7 +335,12 @@ const TopicsAndTasksController = module.exports = {
             return res.notFound()
           }
 
-          return res.view('teacher/topicsAndTasks/editTopic', {topic: topic, menuItem: 'topics', message: msg})
+          return res.view('teacher/topicsAndTasks/editTopic', {
+            topic: topic,
+            menuItem: 'topics',
+            message: msg,
+            breadcrumb: 'edittopic'
+          })
         })
       })
     }

@@ -47,36 +47,38 @@ module.exports.policies = {
   // before letting any users feed our rabbits
   // feed : ['isNiceToAnimals', 'hasRabbitFood']
   // }
+  '*': ['localize'],
+
   TestController: {
-    '*': 'isLoggedIn',
+    '*': ['isLoggedIn', 'localize'],
     'index': true,
     'login': true,
     'logout': true
   },
 
   AccountController: {
-    '*': 'isLoggedIn',
+    '*': ['isLoggedIn', 'localize'],
     'login': true,
     'register': true
   },
 
   TeacherController: {
-    '*': ['isLoggedIn', 'isTeacher']
+    '*': ['isLoggedIn', 'isTeacher', 'localize']
   },
 
   LabsController: {
-    '*': ['isLoggedIn', 'isTeacher']
+    '*': ['isLoggedIn', 'isTeacher', 'localize']
   },
 
   RepliesController: {
-    '*': ['isLoggedIn', 'isTeacher']
+    '*': ['isLoggedIn', 'isTeacher', 'localize']
   },
 
   TopicAndTasksController: {
-    '*': ['isLoggedIn', 'isTeacher']
+    '*': ['isLoggedIn', 'isTeacher', 'localize']
   },
 
   StudentController: {
-    '*': ['isLoggedIn', 'isStudent']
+    '*': ['isLoggedIn', 'isStudent', 'localize']
   }
 }

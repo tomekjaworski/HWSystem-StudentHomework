@@ -235,6 +235,7 @@ const AccountController = module.exports = {
         const lab = req.param('lab')
         let confpass = req.param('passlabconf')
 
+        const language = req.param('language')
         let user = req.localUser
 
         LabGroups.find().populate('owner').exec(function (err, labs) {
@@ -302,6 +303,17 @@ const AccountController = module.exports = {
             } else {
               return AccountController.settingsMessage(res, 'Hasło jest niepoprawne.', labs)
             }
+          } else if (action === 'languagePreference') {
+            Users.update(user.id, {languagePreference: language}).exec(function (err) {
+              if (err) {
+                return res.serverError(err)
+              }
+              req.setLocale(language)
+              req.i18n.locale = language
+              return AccountController.settingsMessage(res, req.i18n.__('settings.message.languagechanged'), labs)
+            })
+          } else {
+            return res.serverError()
           }
         })
     }

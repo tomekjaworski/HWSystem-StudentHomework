@@ -26,6 +26,7 @@
     "grunt-contrib-watch": "^1.0.0",
     "grunt-sails-linker": "^0.10.1",
     "grunt-sync": "^0.5.2",
+    "i18n-2": "^0.7.2",
     "include-all": "^1.0.8",
     "lodash": "^4.17.4",
     "lusca": "^1.5.2",
