@@ -108,7 +108,11 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
             }
             let deadlines = result.rows
             students = _.forEach(students, (s) => {
-              s.deadline = dateFormat(deadlines.find(d => d.student === s.id).deadline, 'yyyy-mm-dd')
+              try {
+                s.deadline = dateFormat(deadlines.find(d => d.student === s.id).deadline, 'yyyy-mm-dd')
+              } catch (err) {
+                return res.serverError(err)
+              }
             })
             TaskComments.find({
               task: taskId,
@@ -122,7 +126,11 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
                 for (let s of students) {
                   s.comments = comments.filter(c => c.taskStudent === s.id)
                   _.forEach(s.comments, (c) => {
-                    c.createdAt = dateFormat(c.createdAt, 'dd/mm/yyyy')
+                    try {
+                      c.createdAt = dateFormat(c.createdAt, 'dd/mm/yyyy')
+                    } catch (err) {
+                      return res.serverError(err)
+                    }
                   })
                 }
               }
@@ -356,13 +364,17 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
           return res.serverError(err)
         }
         let com = task.map(c => {
-          return {
-            id: c.id,
-            date: dateFormat(c.createdAt, 'HH:MM dd/mm/yyyy'),
-            comment: c.comment,
-            viewed: c.viewed,
-            name: c.user.name,
-            surname: c.user.surname
+          try {
+            return {
+              id: c.id,
+              date: dateFormat(c.createdAt, 'HH:MM dd/mm/yyyy'),
+              comment: c.comment,
+              viewed: c.viewed,
+              name: c.user.name,
+              surname: c.user.surname
+            }
+          } catch (err) {
+            return res.serverError(err)
           }
         })
         if (com.length === 0) {

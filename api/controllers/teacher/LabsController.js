@@ -99,7 +99,7 @@ const LabsController = module.exports = {
     if (!_.isInteger(id)) {
       return res.notFound()
     }
-    let a = (attr, msg) => LabGroups.findOne({id: id}).exec((err, lab) => {
+    let a = (attr, msg) => LabGroups.findOne(id).exec((err, lab) => {
       if (err) {
         return res.serverError(err)
       }
@@ -115,8 +115,13 @@ const LabsController = module.exports = {
             return res.serverError(err)
           }
           topics = _.forEach(topics, (t) => {
-            let custom = _.find(deadlines, d=>d.topic===t.id)
-            t.deadline = dateFormat((custom ? custom : t.deadline), 'yyyy-mm-dd')
+            let custom = _.find(deadlines, d => d.topic === t.id)
+            try {
+              t.deadline = dateFormat((custom ? custom.deadline : t.deadline), 'yyyy-mm-dd')
+              t.custom = !!custom
+            } catch (err) {
+              return res.serverError(err)
+            }
           })
           lab.topics = topics
           return res.view('teacher/labgroups/deadlines',
@@ -130,7 +135,43 @@ const LabsController = module.exports = {
         })
       })
     })
-    a()
+    if (req.method === 'POST') {
+      let date = req.param('date')
+      let topic = parseInt(req.param('topic'), '10')
+      if (!_.isInteger(topic)) {
+        return res.notFound()
+      }
+      if (!date) {
+        LabGroupTopicDeadline.destroy({group: id, topic: topic}).exec((err)=>{
+          if (err) {
+            return res.serverError(err)
+          }
+          return res.ok()
+        })
+      } else {
+        date = Date.parse(date)
+        if (isNaN(date)) {
+          return res.badRequest()
+        }
+        LabGroupTopicDeadline.findOrCreate({group: id, topic: topic}, {group: id, topic: topic, deadline: date}).exec((err, deadline, created)=>{
+          if (err) {
+            return res.serverError(err)
+          }
+          if (!created) {
+            LabGroupTopicDeadline.update(deadline.id, {deadline: date}).exec((err)=>{
+              if (err) {
+                return res.serverError(err)
+              }
+              return res.ok()
+            })
+          } else {
+            return res.ok()
+          }
+        })
+      }
+    } else {
+      a()
+    }
   },
 
   viewNewStudentsLabGroup: function (req, res) {

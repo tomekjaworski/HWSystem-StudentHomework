@@ -116,7 +116,11 @@ const StudentController = module.exports = {
               return res.serverError(err)
             }
             data.rows = _.forEach(data.rows, (e) => {
-              e.deadline = dateFormat(e.deadline, 'dd/mm/yyyy')
+              try {
+                e.deadline = dateFormat(e.deadline, 'dd/mm/yyyy')
+              } catch (err) {
+                return res.serverError(err)
+              }
             })
             return res.json(data.rows)
           }
@@ -189,7 +193,11 @@ const StudentController = module.exports = {
 
                     if (taskComments.length > 0) {
                       taskComments = _.forEach(taskComments, (comment) => {
-                        comment.createdAt = dateFormat(comment.createdAt, 'HH:MM dd/mm/yyyy')
+                        try {
+                          comment.createdAt = dateFormat(comment.createdAt, 'HH:MM dd/mm/yyyy')
+                        } catch (err) {
+                          return res.serverError(err)
+                        }
                       })
                     }
 
@@ -199,30 +207,37 @@ const StudentController = module.exports = {
                           return res.badRequest(err)
                         }
                         if (!taskReply) {
-                          return res.view('student/task', {
-                            topic: topic,
-                            task: task,
-                            taskReply: taskReply,
-                            taskReplyFiles: null,
-                            deadline: dateFormat(deadline, 'dd/mm/yyyy'),
-                            deadlineCanSend: deadlineCanSend,
-                            taskComments: taskComments
-                          })
+                          try {
+                            return res.view('student/task', {
+                              topic: topic,
+                              task: task,
+                              taskReply: taskReply,
+                              taskReplyFiles: null,
+                              deadline: dateFormat(deadline, 'dd/mm/yyyy'),
+                              deadlineCanSend: deadlineCanSend,
+                              taskComments: taskComments
+                            })
+                          } catch (err) {
+                            return res.serverError(err)
+                          }
                         }
                         MySqlFile().ls(taskReply.id, (err, taskReplyFiles) => {
                           if (err) {
                             return res.badRequest(err)
                           }
-
-                          return res.view('student/task', {
-                            topic: topic,
-                            task: task,
-                            taskReply: taskReply,
-                            taskReplyFiles: taskReplyFiles,
-                            deadline: dateFormat(deadline, 'dd/mm/yyyy'),
-                            deadlineCanSend: deadlineCanSend,
-                            taskComments: taskComments
-                          })
+                          try {
+                            return res.view('student/task', {
+                              topic: topic,
+                              task: task,
+                              taskReply: taskReply,
+                              taskReplyFiles: taskReplyFiles,
+                              deadline: dateFormat(deadline, 'dd/mm/yyyy'),
+                              deadlineCanSend: deadlineCanSend,
+                              taskComments: taskComments
+                            })
+                          } catch (err) {
+                            return res.serverError(err)
+                          }
                         })
                       })
                   })
@@ -703,18 +718,22 @@ const StudentController = module.exports = {
                 return res.serverError(err)
               }
               let com = task.map(c => {
-                return {
-                  id: c.id,
-                  createdAt: dateFormat(c.createdAt, 'HH:MM dd/mm/yyyy'),
-                  comment: c.comment,
-                  viewed: c.viewed,
-                  // viewed: (c.viewed ? 'przeczytane' : 'nieprzeczytane'),
-                  user: (c.user ? {
-                    id: c.user.id,
-                    name: c.user.name,
-                    surname: c.user.surname,
-                    isTeacher: c.user.isTeacher
-                  } : null)
+                try {
+                  return {
+                    id: c.id,
+                    createdAt: dateFormat(c.createdAt, 'HH:MM dd/mm/yyyy'),
+                    comment: c.comment,
+                    viewed: c.viewed,
+                    // viewed: (c.viewed ? 'przeczytane' : 'nieprzeczytane'),
+                    user: (c.user ? {
+                      id: c.user.id,
+                      name: c.user.name,
+                      surname: c.user.surname,
+                      isTeacher: c.user.isTeacher
+                    } : null)
+                  }
+                } catch (err) {
+                  return res.serverError(err)
                 }
               })
 

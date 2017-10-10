@@ -21,7 +21,7 @@ module.exports.session = {
    * of your users, forcing them to log in again.                             *
    *                                                                          *
    ***************************************************************************/
-  secret: 'd3c12025acc75e8df01527f5bbb4e7c9'
+  secret: 'd3c12025acc75e8df01527f5bbb4e7c9',
 
   /***************************************************************************
    *                                                                          *
@@ -44,7 +44,7 @@ module.exports.session = {
    ***************************************************************************/
 
   // TODO: trzeba bedzie tego uzyc do sesji potem, sprawdzalem i nie bylo problemow u mnie, trzeba postawic redisa i `npm install connect-redis --save` jak będziemy to na prod wrzucac -seba
-  // adapter: 'redis',
+  adapter: 'redis',
 
   /***************************************************************************
    *                                                                          *
@@ -55,7 +55,7 @@ module.exports.session = {
    *                                                                          *
    ***************************************************************************/
 
-  // host: 'localhost',
+  host: '172.20.20.22',
   // port: 6379,
   // ttl: <redis session TTL in seconds>,
   // db: 0,

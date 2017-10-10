@@ -50,35 +50,35 @@ module.exports.policies = {
   '*': ['localize'],
 
   TestController: {
-    '*': ['isLoggedIn', 'localize'],
+    '*': ['isLoggedIn'],
     'index': true,
     'login': true,
     'logout': true
   },
 
   AccountController: {
-    '*': ['isLoggedIn', 'localize'],
+    '*': ['isLoggedIn'],
     'login': true,
     'register': true
   },
 
   TeacherController: {
-    '*': ['isLoggedIn', 'isTeacher', 'localize']
+    '*': ['isLoggedIn', 'isTeacher']
   },
 
   LabsController: {
-    '*': ['isLoggedIn', 'isTeacher', 'localize']
+    '*': ['isLoggedIn', 'isTeacher']
   },
 
   RepliesController: {
-    '*': ['isLoggedIn', 'isTeacher', 'localize']
+    '*': ['isLoggedIn', 'isTeacher']
   },
 
   TopicAndTasksController: {
-    '*': ['isLoggedIn', 'isTeacher', 'localize']
+    '*': ['isLoggedIn', 'isTeacher']
   },
 
   StudentController: {
-    '*': ['isLoggedIn', 'isStudent', 'localize']
+    '*': ['isLoggedIn', 'isStudent']
   }
 }
