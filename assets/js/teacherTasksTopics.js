@@ -9,14 +9,14 @@ function ttSelectTopic (id) {
     saved = document.getElementById('tablebody').innerHTML
     let ret =
       '<tr>' +
-      '<th>' +
-        '<i onclick="ttGetBack()" style="cursor: pointer;" class="fa fa-arrow-left fa-lg" aria-hidden="true"></i>' +
-      '</th>' +
-        '<td>' + topic.number + '. ' + topic.title + '</td>' +
+        '<td>' +
+          '<i onclick="ttGetBack()" style="cursor: pointer;" class="fa fa-arrow-left fa-lg" aria-hidden="true"></i>' +
+        '</td>' +
+        '<td class="w-100" colspan="3">' + topic.number + '. ' + topic.title + '</td>' +
         '<td>' + topic.deadline +'</td>' +
       '</tr>' +
       '<tr>' +
-        '<td colspan="3">' +
+        '<td colspan="5">' +
           '<table class="table table-bordered table-striped table-hover responsive">' +
             '<tbody id="tablebody">' +
               '<a class="btn btn-primary mb-3" href="/teacher/topics-and-tasks/topic/' + topic.id + '/task/add">Dodaj zadanie</a>'

@@ -77,7 +77,7 @@
     bctopics.removeClass('active')
     topicentryactive.removeClass('topic-entry-active')
     $('#topic-a-' + topicid).addClass('topic-entry-active')
-    bctopics.find('a').attr('href', '/account')
+    bctopics.find('a').attr('href', '/topics')
     bccurrenttopic.show()
 
     let request = $.ajax({
@@ -179,7 +179,7 @@
       if (location.hash === '#!/back') {
         history.replaceState(null, document.title, location.pathname)
         setTimeout(function () {
-          location.replace('/account')
+          location.replace('/topics')
         }, 0)
       }
     }, false)

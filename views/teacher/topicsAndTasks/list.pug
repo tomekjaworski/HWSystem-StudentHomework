@@ -18,16 +18,18 @@ block content
                     thead
                         tr
                             th ID
-                            th Temat
+                            th(colspan=3) Temat
                             th Deadline
                     tbody#tablebody
                         each topic in data
                             -var id= topic.id
                             tr(onclick='ttSelectTopic(' + topic.id + ')', style='cursor: pointer;')
-                                th(scope='row')=topic.id
-                                td=topic.number + '. ' + topic.title
-                                    button(data-id=id onclick="delTopic("+id+")") usun
-                                    a(href="/teacher/topics-and-tasks/topic/edit/"+id) Edytuj
+                                td.text-center=topic.id
+                                td(class='w-100')=topic.number + '. ' + topic.title
+                                td
+                                    button.btn.btn-sm.btn-danger(data-id=id onclick="delTopic("+id+")") Usuń
+                                td
+                                    a.btn.btn-sm.btn-primary(href="/teacher/topics-and-tasks/topic/edit/"+id) Edytuj
                                 td(width="80px")=topic.deadline
 
 

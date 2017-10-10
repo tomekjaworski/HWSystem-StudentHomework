@@ -52,6 +52,6 @@ const Tasks = module.exports = {
       via: 'task'
     },
 
-    place: {type: 'integer'}
+    place: {type: 'number'}
   }
 }
