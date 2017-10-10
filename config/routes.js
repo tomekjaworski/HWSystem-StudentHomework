@@ -70,6 +70,7 @@ module.exports.routes = {
   '/teacher/labgroup/list': 'teacher/LabsController.listLabGroups',
   '/teacher/labgroup/view/:id': {action: 'teacher/labs/viewLabGroup', skipAssets: true},
   '/teacher/labgroup/view/:id/new': 'teacher/LabsController.viewNewStudentsLabGroup',
+  '/teacher/labgroup/view/:id/topics': 'teacher/LabsController.labGroupDeadlines',
   '/teacher/labgroup/edit/:id': {action: 'teacher/labs/editLabGroup', skipAssets: true},
   '/teacher/labgroup/add': 'teacher/LabsController.addLabGroup',
   'POST /teacher/labgroup/del': 'teacher/LabsController.delLabGroup',

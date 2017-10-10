@@ -5,6 +5,7 @@
  * @description :: Server-side logic for managing Labs
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
+const dateFormat = require('dateformat')
 
 const LabsController = module.exports = {
   listLabGroups: function (req, res) {
@@ -45,14 +46,20 @@ const LabsController = module.exports = {
           return res.serverError(err)
         }
         lab.students = students
-        return res.view('teacher/labgroups/view',
-          {
-            title: 'LabGroups :: Teacher Panel',
-            menuItem: 'labgroups',
-            data: lab,
-            message: {message: msg, attribute: attr},
-            breadcrumb: 'view'
-          })
+        StudentsLabGroups.count({labgroup: id, active: false}).exec((err, count) => {
+          if (err) {
+            return res.serverError(err)
+          }
+          lab.notActive = count
+          return res.view('teacher/labgroups/view',
+            {
+              title: 'LabGroups :: Teacher Panel',
+              menuItem: 'labgroups',
+              data: lab,
+              message: {message: msg, attribute: attr},
+              breadcrumb: 'view'
+            })
+        })
       })
     })
 
@@ -87,6 +94,39 @@ const LabsController = module.exports = {
     }
   },
 
+  labGroupDeadlines: function (req, res) {
+    let id = parseInt(req.param('id'), '10')
+    if (!_.isInteger(id)) {
+      return res.notFound()
+    }
+    let a = (attr, msg) => LabGroups.findOne({id: id}).exec((err, lab) => {
+      if (err) {
+        return res.serverError(err)
+      }
+      if (!lab) {
+        return res.notFound()
+      }
+      Topics.find({visible: true}).exec((err, topics) => {
+        if (err) {
+          return res.serverError(err)
+        }
+        topics = _.forEach(topics, (t)=>{
+          t.deadline = dateFormat(t.deadline, 'yyyy-mm-dd')
+        })
+        lab.topics = topics
+        return res.view('teacher/labgroups/deadlines',
+          {
+            title: 'LabGroups :: Teacher Panel',
+            menuItem: 'labgroups',
+            data: lab,
+            message: {message: msg, attribute: attr},
+            breadcrumb: 'view'
+          })
+      })
+    })
+    a()
+  },
+
   viewNewStudentsLabGroup: function (req, res) {
     let id = parseInt(req.param('id'), '10')
     if (!_.isInteger(id)) {
@@ -104,17 +144,24 @@ const LabsController = module.exports = {
           return res.serverError(err)
         }
         lab.students = students
-        return res.view('teacher/labgroups/viewNewStudents',
-          {
-            title: 'LabGroups :: Teacher Panel',
-            menuItem: 'labgroups',
-            data: lab,
-            message: {message: msg, attribute: attr},
-            breadcrumb: 'viewnew'
-          })
+        StudentsLabGroups.count({labgroup: id, active: true}).exec((err, count) => {
+          if (err) {
+            return res.serverError(err)
+          }
+          lab.activeStudents = count
+          return res.view('teacher/labgroups/viewNewStudents',
+            {
+              title: 'LabGroups :: Teacher Panel',
+              menuItem: 'labgroups',
+              data: lab,
+              message: {message: msg, attribute: attr},
+              breadcrumb: 'viewnew'
+            })
+        })
       })
     })
     let active = req.param('active')
+    let message = req.param('message')
     if (active) {
       StudentsLabGroups.update({student: active, labgroup: id, active: false}, {active: true}).meta({fetch: true})
         .exec((err, slg) => {
@@ -126,6 +173,10 @@ const LabsController = module.exports = {
           }
           a('info', 'Pomyślnie aktywowano użytkownika w grupie')
         })
+    } else if (message) {
+      res.status(307)
+      res.location('/teacher/labgroup/view/' + id)
+      return res.send()
     } else {
       a()
     }
@@ -176,18 +227,18 @@ const LabsController = module.exports = {
     if (!_.isInteger(id)) {
       return res.notFound()
     }
-    LabGroups.findOne(id).populate('students').exec((err,lab)=>{
+    LabGroups.findOne(id).populate('students').exec((err, lab) => {
       if (err) {
         return res.serverError(err)
       }
       if (!lab) {
         return res.notFound()
       }
-      StudentsLabGroups.destroy({student:lab.students.map(s=>s.id)}).exec((err)=>{
+      StudentsLabGroups.destroy({student: lab.students.map(s => s.id)}).exec((err) => {
         if (err) {
           return res.serverError(err)
         }
-        LabGroups.destroy(id).exec((err)=>{
+        LabGroups.destroy(id).exec((err) => {
           if (err) {
             return res.serverError(err)
           }

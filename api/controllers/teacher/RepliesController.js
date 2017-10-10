@@ -42,6 +42,7 @@ LEFT JOIN \`tasks\` \`nextTopicTask\` ON \`nextTopicTask\`.\`topic\` > $1
 LEFT JOIN \`tasks\` \`prevTopicTask\` ON \`prevTopicTask\`.\`topic\` < $1
 LEFT JOIN \`tasks\` \`prevTask\` ON \`prevTask\`.\`topic\` = $1 AND \`prevTask\`.\`id\` < $2
 LEFT JOIN \`tasks\` \`nextTask\` ON \`nextTask\`.\`topic\` = $1 AND \`nextTask\`.\`id\` > $2
+ORDER BY \`prevTask\`.\`id\` DESC, \`prevTopicTask\`.\`id\` DESC, \`nextTask\`.\`id\` ASC, \`nextTopicTask\`.\`id\` ASC
 LIMIT 1`, [task.topic.id, task.id]).exec((err, nextPrev) => {
           if (err) {
             return res.serverError(err)

@@ -11,27 +11,44 @@ block content
             include ../menu
         .col-md-12.col-lg-8
             .card
-                .card-header.text-center
-                    strong=data.name
+                .card-header
+                    .text-center
+                        strong=data.name
+                    ul.nav.nav-tabs.nav-fill.task-tab
+                        li.nav-item
+                            a.nav-link.active() Studenci
+                        li.nav-item
+                            a.nav-link(href='/teacher/labgroup/view/' + data.id + '/topics') Tematy
                 .card-block
-
-                    a.btn.btn-primary(href='/teacher/labgroup/view/'+data.id) Pokaż aktywnych studentów
-
-                table.table.table-striped.table-hover.responsive.table-grouplist
-                    thead
-                        tr
-                            th ID
-                            th Student
-                            th Album
-                            th Opcje
-                    tbody
-                        if data.students.length === 0
+                    form(method='post').form-inline.mb-0.mb-sm-2
+                        label.mr-sm-2(for='message') Wiadomość:
+                        input.form-control.mb-2.mr-sm-2.mb-sm-0#message(name='message', value=data.message)
+                        input.btn.btn-primary.mb-2.mr-sm-2.mb-sm-0(type='submit', value='Ustaw')
+                        a.btn.btn-primary.mb-2.mr-sm-2.mb-sm-0(href='/teacher/labgroup/edit/' + data.id + '/') Edytuj grupę
+                .card-header
+                    ul.nav.nav-tabs.nav-fill.task-tab
+                        li.nav-item
+                            a.nav-link(href='/teacher/labgroup/view/' + data.id) Aktywni
+                                span.badge.badge-pill.badge-primary=data.activeStudents
+                        li.nav-item
+                            a.nav-link.active() Oczekujący
+                                span.badge.badge-pill.badge-primary=data.students.length
+                .card-block
+                    table.table.table-striped.table-hover.responsive.table-grouplist
+                        thead
                             tr
-                                td.text-center(colspan='4') Brak studentów do aktywacji
-                        each student in data.students
-                            tr
-                                th(scope='row')=student.student.id
-                                td=student.student.fullName()
-                                td=student.student.album
-                                td
-                                    a.btn.btn-sm.btn-success(href='?active='+student.student.id) Aktywuj
+                                th ID
+                                th Student
+                                th Album
+                                th Opcje
+                        tbody
+                            if data.students.length === 0
+                                tr
+                                    td.text-center(colspan='4') Brak studentów do aktywacji
+                            each student in data.students
+                                tr
+                                    th(scope='row')=student.student.id
+                                    td=student.student.fullName()
+                                    td=student.student.album
+                                    td
+                                        a.btn.btn-sm.btn-success(href='?active='+student.student.id) Aktywuj

@@ -1,0 +1,41 @@
+extends ../../includes/layout
+
+block content
+    if (message !== undefined && message && message.message && (message.message.length > 0 ))
+        .alert(class='alert-' + message.attribute, role='alert')
+            strong Wiadomość:
+            |  #{message.message}
+
+    .row
+        .col-md-12.col-lg-4
+            include ../menu
+        .col-md-12.col-lg-8
+            .card
+                .card-header
+                    .text-center
+                        strong=data.name
+                    ul.nav.nav-tabs.nav-fill.task-tab
+                        li.nav-item
+                            a.nav-link(href='/teacher/labgroup/view/' + data.id) Studenci
+                        li.nav-item
+                            a.nav-link.active() Tematy
+                .card-block
+                    table.table.table-striped.table-hover.responsive.table-grouplist
+                        thead
+                            tr
+                                th ID
+                                th Tytuł
+                                th Deadline
+                                th Opcje
+                        tbody
+                            if data.topics.length === 0
+                                tr
+                                    td.text-center(colspan='4') Brak dostępnych tematów
+                            each topics in data.topics
+                                tr
+                                    th(scope='row')=topics.id
+                                    td=topics.number + '. ' + topics.title
+                                    td
+                                        input(type='date', value=topics.deadline)
+                                    td
+                                        a lol
