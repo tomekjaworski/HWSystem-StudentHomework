@@ -33,6 +33,7 @@ const Users = module.exports = {
     },
 
     email: {
+      unique: true,
       type: 'string',
       isEmail: true
     },

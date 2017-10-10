@@ -31,7 +31,7 @@ mixin form
             .col-sm-8
                 select#inputGroupL.custom-select(name='groupl', required)
                     each l in labs
-                        option(value=l.name)= l.name + l.owner.fullName()
+                        option(value=l.id)= l.name + l.owner.fullName()
 
         if error
             input.btn.btn-lg.btn-danger.btn-block(type='submit' value='Register')
