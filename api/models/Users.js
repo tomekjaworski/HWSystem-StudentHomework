@@ -24,12 +24,12 @@ const Users = module.exports = {
 
     isTeacher: {
       type: 'boolean',
-      defaultsTo: false,
+      defaultsTo: false
     },
 
     isAdmin: {
       type: 'boolean',
-      defaultsTo: false,
+      defaultsTo: false
     },
 
     email: {

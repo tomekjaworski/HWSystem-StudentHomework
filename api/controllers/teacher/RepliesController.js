@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars,indent */
 /**
  * RepliesController
  *
@@ -36,14 +37,29 @@ const RepliesController = module.exports = {
           return res.serverError('Nie zdefiniowano żadnych grup laboratoryjnych')
         }
         task.labs = labs
-        return res.view('teacher/replies/view',
-          {title: 'Task Replies :: Teacher Panel', menuItem: 'replies', data: task})
+        sails.sendNativeQuery(`SELECT \`prevTopicTask\`.\`id\` \`prevTopicTask\`, \`nextTopicTask\`.\`id\` \`nextTopicTask\`, \`prevTask\`.\`id\` \`prevTask\`, \`nextTask\`.\`id\` \`nextTask\` FROM \`tasks\`
+LEFT JOIN \`tasks\` \`nextTopicTask\` ON \`nextTopicTask\`.\`topic\` > $1
+LEFT JOIN \`tasks\` \`prevTopicTask\` ON \`prevTopicTask\`.\`topic\` < $1
+LEFT JOIN \`tasks\` \`prevTask\` ON \`prevTask\`.\`topic\` = $1 AND \`prevTask\`.\`id\` < $2
+LEFT JOIN \`tasks\` \`nextTask\` ON \`nextTask\`.\`topic\` = $1 AND \`nextTask\`.\`id\` > $2
+LIMIT 1`, [task.topic.id, task.id]).exec((err, nextPrev) => {
+          if (err) {
+            return res.serverError(err)
+          }
+          return res.view('teacher/replies/view',
+            {
+              title: 'Task Replies :: Teacher Panel',
+              menuItem: 'replies',
+              data: task,
+              breadcrumb: 'view',
+              nextPrev: nextPrev.rows[0]
+            })
+        })
       })
     })
   },
 
   viewTaskOfLab: function (req, res) {
-
     let taskId = parseInt(req.param('taskId'), '10')
     let labId = parseInt(req.param('labId'), '10')
     if (!_.isInteger(taskId) || !_.isInteger(labId)) {
@@ -109,7 +125,11 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
                   })
                 }
               }
-              TaskReplies.find({task: taskId, student: studentsId, lastSent:true}).populate('files').exec((err, replies) => {
+              TaskReplies.find({
+                task: taskId,
+                student: studentsId,
+                lastSent: true
+              }).populate('files').exec((err, replies) => {
                 if (err) {
                   return res.serverError(err)
                 }
@@ -134,17 +154,15 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
                           let type = ''
                           if (['h', 'c'].includes(file.fileExt)) {
                             type = 'c'
-                          }
-                          else if (['hpp', 'cpp'].includes(file.fileExt)) {
+                          } else if (['hpp', 'cpp'].includes(file.fileExt)) {
                             type = 'c++'
-                          }
-                          else {
+                          } else {
                             return resolve(file)
                           }
                           if (file.file.err) {
                             return resolve(file)
                           }
-                          content = '```' + type + '\n' + file.file + '\n```'
+                          let content = '```' + type + '\n' + file.file + '\n```'
                           pdc(content, 'markdown_github', 'html5', function (err, result) {
                             if (err) {
                               return reject(err)
@@ -152,8 +170,7 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
                             file.file = result
                             return resolve(file)
                           })
-                        }
-                        else {
+                        } else {
                           return resolve(file)
                         }
                       })
@@ -164,10 +181,7 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
                         s.reply = replies.find(r => r.student === s.id)
                         if (s.reply) {
                           s.reply.files = files.filter(file => {
-                            if (file.reply === s.reply.id) {
-                              return true
-                            }
-                            return false
+                            return file.reply === s.reply.id
                           })
                         }
                       }
@@ -197,11 +211,7 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
     if (![0, 1, 2].includes(status)) {
       return res.badRequest()
     }
-    let sent = true
-    if (status === 0) {
-      sent = false
-    }
-    TaskReplies.update(replyId, {teacherStatus: status, sent: sent}).meta({fetch: true}).exec((err, reply) => {
+    TaskReplies.update(replyId, {teacherStatus: status}).meta({fetch: true}).exec((err, reply) => {
       if (err) {
         return res.serverError(err)
       }
@@ -223,6 +233,61 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
     })
   },
 
+  ajaxSetBlocked: function (req, res) {
+    let studentId = parseInt(req.param('studentid'), '10')
+    let taskId = parseInt(req.param('taskid'), '10')
+    let blocked = req.param('blocked')
+    if (!_.isInteger(studentId) || !_.isInteger(taskId) || !_.isString(blocked)) {
+      return res.badRequest()
+    }
+    blocked = (blocked === 'true')
+    TaskReplies.update({
+      student: studentId,
+      task: taskId
+    }, {blocked: blocked}).meta({fetch: true}).exec((err, reply) => {
+      if (err) {
+        return res.serverError(err)
+      }
+      if (reply.length === 0) {
+        return res.notFound()
+      }
+      TaskComments.create({
+        taskStudent: reply[0].student,
+        task: reply[0].task,
+        user: null,
+        comment: 'Prowadzący ' + req.localUser.fullName() + (blocked ? ' zablokował możliwość przesłania zadania' : ' odblokował możliwość przesłania zadania'),
+        viewed: false
+      }).exec((err) => {
+        if (err) {
+          return res.serverError(err)
+        }
+        return res.json({error: false})
+      })
+    })
+  },
+
+  ajaxRepostTask: function (req, res) {
+    let studentId = parseInt(req.param('studentid'), '10')
+    let taskId = parseInt(req.param('taskid'), '10')
+    if (!_.isInteger(studentId) || !_.isInteger(taskId)) {
+      return res.badRequest()
+    }
+    ManageReplies.repostTask(studentId, taskId, req.localUser.fullName(), (err) => {
+      if (err) {
+        switch (err.code) {
+          case 'E_USER_NOT_FOUND':
+          case 'E_TASK_NOT_FOUND':
+          case 'E_REPLY_NOT_FOUND':
+          case 'E_REPLY_BLOCKED':
+            return res.badRequest(err)
+          default:
+            res.serverError(err)
+        }
+      }
+      return res.json({error: false})
+    })
+  },
+
   ajaxSetStudentTaskDeadline: function (req, res) {
     let taskId = parseInt(req.param('taskid'), '10')
     let studentId = parseInt(req.param('student'), '10')
@@ -237,9 +302,8 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
         }
         return res.json({error: false})
       })
-    }
-    else {
-      var date = Date.parse(deadline)
+    } else {
+      const date = Date.parse(deadline)
       StudentCustomDeadlines.findOrCreate({student: studentId, task: taskId}, {
         student: studentId,
         task: taskId,
@@ -300,8 +364,8 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
             surname: c.user.surname
           }
         })
-        if(com.length===0){
-          return res.json({error:'noNew'})
+        if (com.length === 0) {
+          return res.json({error: 'noNew'})
         }
 
         return res.json({student: studentId, last: _.maxBy(com, 'id').id, comments: com})

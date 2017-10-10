@@ -27,6 +27,7 @@ module.exports.models = {
    * See http://sailsjs.org/#!/documentation/concepts/ORM/model-settings.html  *
    *                                                                          *
    ***************************************************************************/
+  // TODO: na prod trzeba to bedzie dac na 'safe'
   migrate: 'alter',
 
   attributes: {

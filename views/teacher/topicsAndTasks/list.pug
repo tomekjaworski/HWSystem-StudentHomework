@@ -23,7 +23,7 @@ block content
                     tbody#tablebody
                         each topic in data
                             -var id= topic.id
-                            tr(onclick='selectTopic(' + topic.id + ')', style='cursor: pointer;')
+                            tr(onclick='ttSelectTopic(' + topic.id + ')', style='cursor: pointer;')
                                 th(scope='row')=topic.id
                                 td=topic.number + '. ' + topic.title
                                     button(data-id=id onclick="delTopic("+id+")") usun
@@ -34,40 +34,4 @@ block content
         script.
           var topics = !{JSON.stringify(data).replace(/<\//g, '<\\/')}
           var saved = '';
-          function selectTopic (id) {
-            var topic = topics.filter(topic => topic.id === id)[0];
-            if (topic) {
-              saved = document.getElementById('tablebody').innerHTML;
-              var ret = '<tr><th><i onclick="getBack()" style="cursor: pointer;" class="fa fa-arrow-left fa-lg" aria-hidden="true"></i></th><td>' + topic.number + '. ' + topic.title + '</td><td></td></tr><tr><td colspan="3"><table class="table table-bordered table-striped table-hover responsive sortable" id="toSort"><tbody id="tablebody">'
-              ret += '<a class="btn btn-primary mb-3" href="/teacher/topics-and-tasks/topic/'+topic.id+'/task/add">Dodaj zadanie</a>'
-              var place = []
-              for (taskn in topic.tasks) {
-                var task = topic.tasks[taskn];
-                if(task.arduino === true){
-                  var ard = 'tak';
-                }else{
-                  var ard = 'nie';
-                }
-                if (task.computer === true) {
-                  var com = 'tak';
-                } else {
-                  var com = 'nie';
-                }
-                var number = task.place
-                place.push(number)
-                ret += '<tr style="cursor: pointer;" id="'+topic.id+task.place+'"><td onclick="document.location=\'/teacher/topics-and-tasks/view/' + task.id + '\'">' + task.id + '</td><td>' + task.number + '. ' + task.title + ' <a class="btn btn-sm btn-primary" href="/teacher/topics-and-tasks/task/edit/'+task.id+'">Edytuj</a>' +
-                  ' <b>arduino:</b>'+ ard +' <b>komputer:</b> '+ com +'</td><td><span id="s'+topic.id+task.place+'" style="color: #00C853; font-weight: 800; cursor: pointer;" onclick="taskUp('+task.id +', '+task.place+', '+task.topic +')">up</span> <b>/</b> <span style="cursor: pointer; color: #C62828; font-weight: 800;" onclick="taskDown('+task.id +', '+task.place+', '+task.topic +')">down</span></td></tr>'
-              }
-              ret += '</tbody></table></td></tr>'
-              document.getElementById('tablebody').innerHTML = ret;
-
-            }
-          }
-
-          function getBack () {
-            if (saved === '') {
-              return;
-            }
-            document.getElementById('tablebody').innerHTML = saved;
-          }
 

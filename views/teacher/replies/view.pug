@@ -6,133 +6,54 @@ block content
         .col-md-12.col-lg-4
             include ../menu
         .col-md-12.col-lg-8
+
             //-include tasks
-            div.d-flex.justify-content-center
-                .col-12
-                    h2.text-center=data.topic.number + '. ' + data.topic.title
-                    h3.text-center=data.number + '. ' + data.title
+            .card
+                .card-header.text-center
+                    strong Sprawdzanie odpowiedzi do zadań
 
-                    div.text-center
-                        form(onsubmit='return false;')
-                            label(for='selectLab') Wybierz grupy do sprawdzenia
-                            br
-                            select#selectLab(name='labs', multiple)
-                                each lab in data.labs
-                                    option(value=lab.id)= lab.name + ' - ' + lab.owner.fullName()
-                            br
-                            input(type='submit' onclick='getLabTasks();')
+                .card-block
 
-                    div#labs
+                    .col-12
+                        .row
+                            if nextPrev && nextPrev.prevTopicTask
+                                .col-2.text-center
+                                    a.btn.btn-secondary(href="/teacher/replies/view/" + nextPrev.prevTopicTask)
+                                        i.fa.fa-arrow-left
+                            else
+                                .offset-2
+                            .col-8
+                                h2.text-center=data.topic.number + '. ' + data.topic.title
+                            if nextPrev && nextPrev.nextTopicTask
+                                .col-2.text-center
+                                    a.btn.btn-secondary(href="/teacher/replies/view/" + nextPrev.nextTopicTask)
+                                        i.fa.fa-arrow-right
+                        .row
+                            if nextPrev && nextPrev.prevTask
+                                .col-2.text-center
+                                    a.btn.btn-secondary(href="/teacher/replies/view/" + nextPrev.prevTask)
+                                        i.fa.fa-arrow-left
+                            else
+                                .offset-2
+                            .col-8
+                                h3.text-center=data.number + '. ' + data.title
+                            if nextPrev && nextPrev.nextTask
+                                .col-2.text-center
+                                    a.btn.btn-secondary(href="/teacher/replies/view/" + nextPrev.nextTask)
+                                        i.fa.fa-arrow-right
+
+                        div.text-center
+                            form(onsubmit='return false;')
+                                .form-group
+                                    label(for='selectLab') Wybierz grupy do sprawdzenia
+                                    select.form-control#selectLab(name='labs', size='6', multiple)
+                                        each lab in data.labs
+                                            option(value=lab.id)= lab.name + ' - ' + lab.owner.fullName()
+                                .form-group
+                                    input.btn.btn-primary.getLabTasksButton(type='submit' data-id=data.id)
+    .row
+        div#labs.col-12
 
 
                     script.
-                      function getLabTasks () {
-                        var selected = $('#selectLab').val();
-                        $('#labs').html('<h3 id="labSpinner">Ładowanie <i class=\'fa fa-spinner fa-spin\'></i></h3>');
-                        var gets = [];
-                        for (var s in selected) {
-                          gets.push($.get("/ajax/teacher/replies/view/" + #{data.id} + "/lab/" + selected[s], function (data) {
-                            $('#labs').prepend(data);
-                          }));
-                        }
-                        $.when.apply($, gets).then(function () {
-                          $('#labSpinner').remove()
-                        }, function (jqXHR, textStatus, errorThrown) {
-                          alert('Nie udało się pobrać danych:  ' + textStatus + ' - ' + errorThrown)
-                          $('#labSpinner').remove()
-                        })
-                        return false;
-                      }
 
-                      function saveDeadline (student, task, del) {
-                        var deadline = $('#deadline-student-' + student + '-task-' + task)
-                        $.ajax({
-                          url: '/ajax/teacher/replies/setStudentDeadline/' + task,
-                          method: 'POST',
-                          data: {
-                            student: student,
-                            deadline: deadline.val(),
-                            remove: del
-                          }
-                        }).done(function () {
-                          if (del) {
-                            alert('Skasowano własny termin')
-                          }
-                          else {
-                            alert('Ustawiono własny termin')
-                          }
-                        })
-                          .fail(function (jqXHR, textStatus, errorThrown) {
-                            alert('Nie udało się zmienić terminu:  ' + textStatus + ' - ' + errorThrown)
-                          })
-                      }
-
-                      function setTeacherStatus (id, e) {
-                        $.ajax({
-                          url: '/ajax/teacher/replies/setTeacherStatus/' + id,
-                          method: 'POST',
-                          data: {
-                            status: e.value
-                          }
-                        }).done(function () {
-                          var task = $('#reply-' + id);
-                          if (e.value === '0') {
-                            task.css('background-color', '')
-                          }
-                          else if (e.value === '1') {
-                            task.css('background-color', 'lightgreen')
-                          } else if (e.value === '2') {
-                            task.css('background-color', 'rgba(200,0,0,0.7)')
-                          }
-                        })
-                          .fail(function (jqXHR, textStatus, errorThrown) {
-                            alert('Nie udało się zmienić oceny:  ' + textStatus + ' - ' + errorThrown)
-                          })
-                      }
-
-                      function sendComment (student, task) {
-                        const commentTextArea = $('#commentTextArea')
-                        let val = commentTextArea.val()
-                        commentTextArea.val('')
-                        if (!val || !val.trim()) {
-                          return
-                        }
-                        $('#loading-student-' + student).show()
-                        $.ajax({
-                          url: '/ajax/teacher/replies/sendComment/' + task,
-                          method: 'POST',
-                          data: {
-                            'student': student,
-                            'comment': val
-                          }
-                        }).done(function () {
-                          checkComments (student, task)
-                        })
-                      }
-
-                      function checkComments (student, task) {
-                        var commentBlock = $('#comments-student-' + student)
-                        var last = commentBlock.data('last')
-                        $('#loading-student-' + student).show()
-                        $.ajax({
-                          url: '/ajax/teacher/replies/checkComments/' + task,
-                          method: 'POST',
-                          data: {
-                            'student': student,
-                            'last': last
-                          }
-                        }).done(function (data) {
-                          $('#loading-student-' + student).hide()
-                          if(data.error && data.error==='noNew'){
-                            return
-                          }
-                          for (var id in data.comments) {
-                            var comment = data.comments[id]
-                            commentBlock.append('<div id="comments-student-' + data.student + '-comment-' + comment.id + '" style="border:1px solid black;margin:1px;padding:1px;"><div>Autor: ' + comment.name + ' ' + comment.surname + '</div><div>Data: ' + comment.date + '</div><div>Przeczytane: ' + comment.viewed + '</div><div> Treść:<div style="border:1px solid black;margin:1px;padding:1px;background-color:white;">' + comment.comment + '</div></div>')
-                          }
-                          commentBlock.data('last',data.last)
-                          commentBlock.animate({
-                            scrollTop: commentBlock.prop("scrollHeight")
-                          }, 300);
-                        })
-                      }

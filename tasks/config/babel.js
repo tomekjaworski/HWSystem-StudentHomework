@@ -20,9 +20,20 @@ module.exports = function (grunt) {
         presets: ['env']
       },
       dist: {
+        // files: [
+        //   {
+        //     expand: true,
+        //     cwd: 'assets/js/',
+        //     src: ['*.js'],
+        //     dest: '.tmp/public/js/'
+        //   }
+        // ]
         files: {
           '.tmp/public/js/main.js': 'assets/js/main.js',
-          '.tmp/public/js/task.js': 'assets/js/task.js'
+          '.tmp/public/js/markdown.js': 'assets/js/markdown.js',
+          '.tmp/public/js/task.js': 'assets/js/task.js',
+          '.tmp/public/js/teacherReplies.js': 'assets/js/teacherReplies.js',
+          '.tmp/public/js/teacherTasksTopics.js': 'assets/js/teacherTasksTopics.js'
         }
       }
     }

@@ -1,9 +1,12 @@
+/* eslint-disable no-unused-vars */
+// todo: przy errorze jak sie dodaje, zostawic wartosci
 /**
  * TopicsAndTasksController
  *
  * @description :: Server-side logic for managing Topics & Tasks
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
+const pdc = require('pdc')
 const dateFormat = require('dateformat')
 
 const TopicsAndTasksController = module.exports = {
@@ -15,7 +18,11 @@ const TopicsAndTasksController = module.exports = {
       topics = _.forEach(topics, (t) => {
         t.deadline = dateFormat(t.deadline, 'dd/mm/yyyy')
       })
-      return res.view('teacher/topicsAndTasks/list', {data: topics, menuItem: 'topics'})
+      return res.view('teacher/topicsAndTasks/list', {
+        data: topics,
+        menuItem: 'topics',
+        breadcrumb: 'list'
+      })
     })
   },
 
@@ -28,17 +35,28 @@ const TopicsAndTasksController = module.exports = {
       if (!task) {
         return res.notFound()
       }
+
       TaskDescription.findOne({task: task.id}).exec(function (err, description) {
         if (err) {
           return res.serverError(err)
         }
-        return res.view('teacher/topicsAndTasks/taskView', {task: task, description: description, menuItem: 'topics'})
+        pdc(description.description, 'markdown_github', 'html5', function (err, result) {
+          if (err) {
+            return res.serverError(err)
+          }
+          return res.view('teacher/topicsAndTasks/taskView', {
+            task: task,
+            description: result,
+            menuItem: 'topics',
+            breadcrumb: 'view'
+          })
+        })
       })
     })
   },
 
   addTopic: function (req, res) {
-    let a = (msg) => Users.find({isTeacher: true }).exec((err, users) => {
+    let a = (msg) => Users.find({isTeacher: true}).exec((err, users) => {
       if (err) {
         return res.serverError(err)
       }
@@ -47,12 +65,19 @@ const TopicsAndTasksController = module.exports = {
       }
 
       return res.view('teacher/topicsAndTasks/addTopic',
-        {title: 'Add Topic :: Teacher Panel', users: users, message: msg, menuItem: 'topics'})
+        {
+          title: 'Add Topic :: Teacher Panel',
+          users: users,
+          message: msg,
+          menuItem: 'topics',
+          breadcrumb: 'addtopic'
+        })
     })
     if (req.method === 'POST') {
-      let number = req.param('topicNumber')
-      let title = req.param('topicTitle')
-      let deadline = req.param('topicDeadline')
+      const number = req.param('topicNumber')
+      const title = req.param('topicTitle')
+      const deadline = req.param('topicDeadline')
+      const date = Date.parse(deadline)
       // if (!_.isString(title) || !_.isString(number) || !deadline) {
       //   return a('Uzupełnij wszystkie pola')
       // }
@@ -60,8 +85,8 @@ const TopicsAndTasksController = module.exports = {
         number: number,
         title: title,
         visible: true,
-        deadline: deadline
-      }).exec(function (err, topic) {
+        deadline: date
+      }).meta({fetch: true}).exec(function (err, topic) {
         if (err) {
           return res.serverError(err)
         }
@@ -76,7 +101,7 @@ const TopicsAndTasksController = module.exports = {
   },
 
   addTask: function (req, res) {
-    let a = (msg) => Users.find({isTeacher: true }).exec((err, users) => {
+    let a = (msg) => Users.find({isTeacher: true}).exec((err, users) => {
       if (err) {
         return res.serverError(err)
       }
@@ -88,7 +113,14 @@ const TopicsAndTasksController = module.exports = {
           return res.serverError(err)
         }
         return res.view('teacher/topicsAndTasks/add',
-          {title: 'Add Tasks :: Teacher Panel', users: users, message: msg, topics: topics, menuItem: 'topics'})
+          {
+            title: 'Add Tasks :: Teacher Panel',
+            users: users,
+            message: msg,
+            topics: topics,
+            menuItem: 'topics',
+            breadcrumb: 'addtask'
+          })
       })
     })
     if (req.method === 'POST') {
@@ -99,25 +131,12 @@ const TopicsAndTasksController = module.exports = {
       let vis = req.param('taskVisible')
       let ard = req.param('arduinoCheck')
       let com = req.param('komputerCheck')
-      if (!_.isString(title) || !_.isString(number) || !_.isString(description) ||
-        !title) {
+      if (!_.isString(title) || !_.isString(number) || !_.isString(description) || !title) {
         return a('Uzupełnij wszystkie pola')
       }
-      if (vis === 'ok') {
-        vis = true
-      } else {
-        vis = false
-      }
-      if (ard === 'ok') {
-        ard = true
-      } else {
-        ard = false
-      }
-      if (com === 'ok') {
-        com = true
-      } else {
-        com = false
-      }
+      vis = vis === 'ok'
+      ard = ard === 'ok'
+      com = com === 'ok'
       Tasks.create({
         number: number,
         title: title,
@@ -149,7 +168,7 @@ const TopicsAndTasksController = module.exports = {
 
   editTask: function (req, res) {
     let id = req.param('id')
-    let a = (attr, msg) => Users.find({isTeacher: true }).exec((err, users) => {
+    let a = (attr, msg) => Users.find({isTeacher: true}).exec((err, users) => {
       if (err) {
         return res.serverError(err)
       }
@@ -164,11 +183,20 @@ const TopicsAndTasksController = module.exports = {
           return res.notFound()
         }
         Topics.find().exec(function (err, topics) {
+          if (err) {
+            return res.serverError(err)
+          }
           TaskDescription.findOne({task: task.id}).exec(function (err, description) {
             if (err) {
               return res.serverError(err)
             }
-            return res.view('teacher/topicsAndTasks/editTask', {task: task, topics: topics, description: description, menuItem: 'topics'})
+            return res.view('teacher/topicsAndTasks/editTask', {
+              task: task,
+              topics: topics,
+              description: description,
+              menuItem: 'topics',
+              breadcrumb: 'edittask'
+            })
           })
         })
       })
@@ -181,21 +209,9 @@ const TopicsAndTasksController = module.exports = {
       let vis = req.param('taskVisible')
       let ard = req.param('arduinoCheck')
       let com = req.param('komputerCheck')
-      if (vis === 'ok') {
-        vis = true
-      } else {
-        vis = false
-      }
-      if (ard === 'ok') {
-        ard = true
-      } else {
-        ard = false
-      }
-      if (com === 'ok') {
-        com = true
-      } else {
-        com = false
-      }
+      vis = vis === 'ok'
+      ard = ard === 'ok'
+      com = com === 'ok'
       Tasks.update({id: id},
         {
           number: number,

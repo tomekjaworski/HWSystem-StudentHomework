@@ -16,31 +16,32 @@ block content
                     form(method='post' action='/settings')
                         .form-group
                             label(for='inputOldPass') Stare hasło
-                            input#inputOldPass.form-control(type='password', name='oldPass')
+                            input#inputOldPass.form-control(type='password', name='oldPass', required)
 
                         .form-group
                             label(for='inputPassword') Nowe hasło
-                            input#inputPassword.form-control(type='password', name='password')
+                            input#inputPassword.form-control(type='password', name='password', required)
 
                         .form-group
                             label(for='inputRePassword') Powtórz nowe hasło
-                            input#inputRePassword.form-control(type='password', name='repassword')
+                            input#inputRePassword.form-control(type='password', name='repassword', required)
                         input(type='hidden' name='action' value='newPassword')
 
                         button.btn.btn-primary.mb-4.mb-md-0(type='submit') Zmień hasło
-                .col-sm-6
-                    h5 Zmiana labu
-                    form(method='post' action='/settings')
-                        .form-group
-                            label(for='inputLabSelect') Wybierz lab
-                            select#inputLabSelect.selectpicker(name='lab', data-live-search="true")
-                                //- console.log(labs)
-                                each l in labs
-                                    option(value=l.name, data-subtext=l.owner.fullName())= l.name
-                        .form-group
-                            label(for='inputLabSelectPass') Podaj hasło aby dokonać zmiany
-                            input#inputLabSelectPass.form-control(type='password', name='passlabconf')
+                if !localUser.isTeacher
+                    .col-sm-6
+                        h5 Zmiana labu
+                        form(method='post' action='/settings')
+                            .form-group
+                                label(for='inputLabSelect') Wybierz lab
+                                select#inputLabSelect.selectpicker(name='lab', data-live-search="true")
+                                    //- console.log(labs)
+                                    each l in labs
+                                        option(value=l.name, data-subtext=l.owner.fullName())= l.name
+                            .form-group
+                                label(for='inputLabSelectPass') Podaj hasło aby dokonać zmiany
+                                input#inputLabSelectPass.form-control(type='password', name='passlabconf', required)
 
-                        input(type='hidden' name='action' value="newLab")
+                            input(type='hidden' name='action' value="newLab")
 
-                        button.btn.btn-primary(type='submit') Zmień lab
+                            button.btn.btn-primary(type='submit') Zmień lab

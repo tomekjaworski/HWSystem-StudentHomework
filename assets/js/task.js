@@ -1,70 +1,82 @@
-/* eslint-disable no-undef */
+/* eslint-disable no-undef,no-unused-vars */
 /* global $, tData, task, lastComment */
 
 /* exported loadFileContent */
-
-function removeFile (reply, id) {
-  $.ajax({
-    url: '/ajax/removeFile',
-    method: 'POST',
-    data: {
-      reply: reply,
-      id: id
-    }
-  }).done(function () {
-    window.location.reload()
-  })
-    .fail(function (jqXHR, textStatus, errorThrown) {
-      alert('Nie udało się skasować pliku:  ' + textStatus + ' - ' + errorThrown)
-    })
-}
-
-function removeFileConfirm (reply, id, name) {
-  $('#confirmModalTitle').text('Kasowanie pliku')
-  $('#confirmModalBody').text('Czy na pewno chcesz skasować plik ' + name + '?')
-  $('#confirmModalButtons').html(`<button type="button" class="btn btn-danger" onclick="removeFile(` + reply + `,` + id + `)">Skasuj</button>`)
-  $('#confirmModal').modal()
-}
-
-function replaceFile (reply, id, name, ext) {
-  $('#confirmModalTitle').text('Podmiana pliku ' + name)
-  $('#confirmModalBody').html(`<form action='/reply/` + reply + `/updateFile/` + id + `' enctype='multipart/form-data' method='post'>
-<input type='file' name='file' accept='.` + ext + `'>
-<input type="submit" value="Podmień plik" class="btn btn-primary"/>`)
-  $('#confirmModalButtons').html('')
-  $('#confirmModal').modal()
-}
-
-function loadFileContent (reply, id) {
-  // TODO: Seba dodaj jakiegoś ładnego spinnera ładowania
-  $.getJSON('/ajax/reply/' + reply + '/loadFileContent/' + id)
-    .done(function (data) {
-      $('#fileContentModalTitle').text(data.title)
-      if (data.mimeType.includes('text/')) {
-        $('#fileContentModalBody').html(data.body)
-      } else if (data.mimeType === 'image/png') {
-        $('#fileContentModalBody').html('<img class="img-fluid" src="data:image/png;base64,' + data.body + '"/>')
-      } else if (data.mimeType === 'image/bmp') {
-        $('#fileContentModalBody').html('<img class="img-fluid" src="data:image/bmp;base64,' + data.body + '"/>')
-      } else {
-        $('#fileContentModalBody').text('Nieobsługiwane rozszerzenie')
-      }
-      if (!replySent) {
-        $('#fileContentModalRemove').attr('onclick', 'removeFileConfirm(' + reply + ', ' + id + ', "' + data.title + '")')
-        $('#fileContentModalReplace').attr('onclick', 'replaceFile(' + reply + ', ' + id + ', "' + data.title + '", "' + data.ext + '")')
-      } else {
-        $('#fileContentModalRemove').hide()
-        $('#fileContentModalReplace').hide()
-      }
-      $('#fileContentModalDownload').attr('href', '/downloadFile/' + id)
-      $('#fileContentModal').modal()
-    })
-    .fail(function (jqXHR, textStatus, errorThrown) {
-      alert('Nie udało się wczytać danych: ' + textStatus + ' - ' + errorThrown + (jqXHR.responseJSON ? '\n' + jqXHR.responseJSON : ''))
-    })
-}
-
 (function () {
+  function removeFile (reply, id) {
+    $.ajax({
+      url: '/ajax/removeFile',
+      method: 'POST',
+      data: {
+        reply: reply,
+        id: id
+      }
+    }).done(function () {
+      window.location.reload()
+    })
+      .fail(function (jqXHR, textStatus, errorThrown) {
+        alert('Nie udało się skasować pliku:  ' + textStatus + ' - ' + errorThrown)
+      })
+  }
+
+  function removeFileConfirm (reply, id, name) {
+    $('#confirmModalTitle').text('Kasowanie pliku')
+    $('#confirmModalBody').text('Czy na pewno chcesz skasować plik ' + name + '?')
+    $('#confirmModalButtons').html(`<button type="button" class="btn btn-danger fileRemoveButton" data-removereply="` + reply + `" data-removeid="` + id + `">Skasuj</button>`)
+    $('#confirmModal').modal()
+    $('.fileRemoveButton').on('click', function () {
+      const reply = $(this).data('removereply')
+      const id = $(this).data('removeid')
+      removeFile(reply, id)
+    })
+  }
+
+  function replaceFile (reply, id, name, ext) {
+    $('#confirmModalTitle').text('Podmiana pliku ' + name)
+    $('#confirmModalBody').html(`<form action='/reply/` + reply + `/updateFile/` + id + `' enctype='multipart/form-data' method='post'>
+  <input type='file' name='file' accept='.` + ext + `'>
+  <input type="submit" value="Podmień plik" class="btn btn-primary"/>`)
+    $('#confirmModalButtons').html('')
+    $('#confirmModal').modal()
+  }
+  $('.replyFileIcon').on('click', function () {
+    const reply = $(this).data('filereply')
+    const id = $(this).data('fileid')
+    loadFileContent(reply, id)
+  })
+  function loadFileContent (reply, id) {
+    // TODO: Seba dodaj jakiegoś ładnego spinnera ładowania
+    $.getJSON('/ajax/reply/' + reply + '/loadFileContent/' + id)
+      .done(function (data) {
+        $('#fileContentModalTitle').text(data.title)
+        if (data.mimeType.includes('text/')) {
+          $('#fileContentModalBody').html(data.body)
+        } else if (data.mimeType === 'image/png') {
+          $('#fileContentModalBody').html('<img class="img-fluid" src="data:image/png;base64,' + data.body + '"/>')
+        } else if (data.mimeType === 'image/bmp') {
+          $('#fileContentModalBody').html('<img class="img-fluid" src="data:image/bmp;base64,' + data.body + '"/>')
+        } else {
+          $('#fileContentModalBody').text('Nieobsługiwane rozszerzenie')
+        }
+        if (!replySent) {
+          $('#fileContentModalRemove').on('click', function () {
+            removeFileConfirm(reply, id, data.title)
+          })
+          $('#fileContentModalReplace').on('click', function () {
+            replaceFile(reply, id, data.title, data.ext)
+          })
+        } else {
+          $('#fileContentModalRemove').hide()
+          $('#fileContentModalReplace').hide()
+        }
+        $('#fileContentModalDownload').attr('href', '/downloadFile/' + id)
+        $('#fileContentModal').modal()
+      })
+      .fail(function (jqXHR, textStatus, errorThrown) {
+        alert('Nie udało się wczytać danych: ' + textStatus + ' - ' + errorThrown + (jqXHR.responseJSON ? '\n' + jqXHR.responseJSON : ''))
+      })
+  }
+
   let newLastComment = null
   let markAsReadButton = $('#commentMarkAsRead')
 
@@ -87,8 +99,12 @@ function loadFileContent (reply, id) {
   function renderComment (user, comment, date, read) {
     let template = $('#commentAjaxTemplate').find('.list-group-item').clone()
     template.attr('id', 'commentFadeIn')
-    let append = user.isTeacher ? '<span class="badge badge-primary">Prowadzący</span><span>&nbsp;napisał(a):</span>' : '<span>&nbsp;napisał(a):</span>'
-    template.find('.task-c-author').text(user.name + ' ' + user.surname).append(append)
+    if (user) {
+      let append = user.isTeacher ? '<span class="badge badge-primary">Prowadzący</span><span>&nbsp;napisał(a):</span>' : '<span>&nbsp;napisał(a):</span>'
+      template.find('.task-c-author').text(user.name + ' ' + user.surname).append(append)
+    } else {
+      template.find('.task-c-author').html('<span class="badge badge-info">Wiadomość systemowa</span>')
+    }
     template.find('.task-c-timestamp').text(date)
     template.find('.task-c-comment').text(comment)
     template.find('.task-c-read').text(read)

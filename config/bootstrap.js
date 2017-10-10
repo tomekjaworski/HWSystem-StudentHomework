@@ -296,8 +296,7 @@ module.exports.bootstrap = function (cb) {
                                           file: file.id,
                                           content: base64.fromByteArray(cs.UTF8.stringToBytes('int main(){\n\treturn 0;\n}'))
                                         })
-                                      }
-                                      else {
+                                      } else {
                                         trfc.push({
                                           id: file.file,
                                           file: file.id,
@@ -313,12 +312,12 @@ module.exports.bootstrap = function (cb) {
                                       let tc = []
                                       for (let reply of tr) {
                                         tc.push({
-                                            taskStudent: reply.student,
-                                            task: reply.task,
-                                            user: users[Math.floor((Math.random() * 2))].id,
-                                            comment: 'Test message from Teacher',
-                                            viewed: false
-                                          },
+                                          taskStudent: reply.student,
+                                          task: reply.task,
+                                          user: users[Math.floor((Math.random() * 2))].id,
+                                          comment: 'Test message from Teacher',
+                                          viewed: false
+                                        },
                                           {
                                             taskStudent: reply.student,
                                             task: reply.task,

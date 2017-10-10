@@ -78,9 +78,8 @@ module.exports = function MySqlStore (globalOpts) {
               err = new Error()
               err.name = 'File fontents not found'
               err.code = 'E_FILE_CONTENTS_NOT_FOUND'
-              file.file = {err:err}
-            }
-            else if (globalOpts.convert) {
+              file.file = {err: err}
+            } else if (globalOpts.convert) {
               if (file.fileMimeType.includes('text/')) {
                 file.file = _.values(base64.toByteArray(file.file.content))
                 file.file = cs.UTF8.bytesToString(file.file)
@@ -141,40 +140,38 @@ module.exports = function MySqlStore (globalOpts) {
                 err.name = 'Upload Error'
                 return done(err)
               }
-              TaskReplyFileContent.findOrCreate({id: createdFile.file, file: createdFile.id}, {file: createdFile.id, content:file64})
-                .exec((err,createdFileContent,created)=>{
-                if (err) {
-                  return done(err)
-                }
-                if(created){
-                  TaskReplyFiles.update(createdFile.id, {
-                    fileSize: __newFile.byteCount,
-                    file: createdFileContent.id
-                  }).exec((err) => {
-                    if (err) {
-                      return done(err)
-                    }
-                    done()
-                  })
-                }
-                else{
-                  TaskReplyFileContent.update(createdFile.file,{content: file64}).exec((err)=>{
-                    if (err) {
-                      return done(err)
-                    }
+              TaskReplyFileContent.findOrCreate({id: createdFile.file, file: createdFile.id}, {file: createdFile.id, content: file64})
+                .exec((err, createdFileContent, created) => {
+                  if (err) {
+                    return done(err)
+                  }
+                  if (created) {
                     TaskReplyFiles.update(createdFile.id, {
-                      fileSize: __newFile.byteCount
+                      fileSize: __newFile.byteCount,
+                      file: createdFileContent.id
                     }).exec((err) => {
                       if (err) {
                         return done(err)
                       }
                       done()
                     })
-                  })
-                }
-              })
-            }
-            else{
+                  } else {
+                    TaskReplyFileContent.update(createdFile.file, {content: file64}).exec((err) => {
+                      if (err) {
+                        return done(err)
+                      }
+                      TaskReplyFiles.update(createdFile.id, {
+                        fileSize: __newFile.byteCount
+                      }).exec((err) => {
+                        if (err) {
+                          return done(err)
+                        }
+                        done()
+                      })
+                    })
+                  }
+                })
+            } else {
               TaskReplyFileContent.create({
                 file: createdFile.id,
                 content: file64

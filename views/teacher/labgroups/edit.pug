@@ -1,6 +1,22 @@
 extends ../../includes/layout
 
 block content
+
+    #confirmModal.modal.fade
+        .modal-dialog(role='document')
+            .modal-content
+                .modal-header
+                    h5.modal-title Czy na pewno chcesz skasować tę grupę laboratoryjną?
+                    button.close(type='button', data-dismiss='modal', aria-label='Anuluj')
+                        span(aria-hidden='true') ×
+                .modal-body
+                    | Skasowanie grupy spowoduje zablokowanie wszystkich znajdujących sie w niej studentów do czasu ich ponownego przypisania do innej grupy.
+                .modal-footer
+                    form(action='/teacher/labgroup/del', method='post')
+                        input(type='hidden', name='id', value=data.id)
+                        button.btn.btn-danger(type='submit') Skasuj
+                    button.btn.btn-secondary(type='button', data-dismiss='modal') Anuluj
+
     if (message !== undefined && message &&  message.message && (message.message.length > 0 ))
         .alert(class='alert-'+message.attribute, role='alert')
             strong Wiadomość:
@@ -46,30 +62,13 @@ block content
                                             else
                                                 option(value=user.id)= user.fullName()
                             .form-group.row
-                                .col-sm-12
-                                    button.btn.btn-primary(type='submit') Dodaj
-                //.card-block
+                                .col-sm-10
+                                    button.btn.btn-primary(type='submit') Edytuj
+                                .col-sm-2
+                                    button.btn.btn-danger(id='delete-confirm', type='button') Skasuj
 
-                    form(method='post')
-                        div
-                            label(for='title') Tytuł:
-                            input#title(name='title', value=data.name)
-                        div
-                            label(for='description') Opis:
-                            input#description(name='desc')
-                        div
-                            label(for='active') Aktywna:
-                            if data.active
-                                input#active(type='checkbox', name='active', checked)
-                            else
-                                input#active(type='checkbox', name='active')
-                        div
-                            label(for='owner') Prowadzący:
-                            select#owner(name='owner')
-                                for user in users
-                                    if user.id === data.owner
-                                        option(value=user.id, selected)= user.fullName()
-                                    else
-                                        option(value=user.id)= user.fullName()
-                        input(type='submit')
-
+block scripts
+    script.
+        $('#delete-confirm').click(function (){
+            $('#confirmModal').modal()
+        })

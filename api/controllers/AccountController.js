@@ -63,11 +63,9 @@ const AccountController = module.exports = {
     }
     if (!req.localUser.isTeacher) {
       return res.redirect(sails.getUrlFor('StudentController.index'))
-    }
-    else {
+    } else {
       return res.redirect(sails.getUrlFor('TeacherController.index'))
     }
-    return res.serverError()
   },
 
   /**
@@ -219,12 +217,12 @@ const AccountController = module.exports = {
   userSettings: function (req, res) {
     switch (req.method) {
       case 'GET':
-          LabGroups.find().populate('owner').exec(function (err, labs) {
-            if (err) {
-              return res.serverError(err)
-            }
+        LabGroups.find().populate('owner').exec(function (err, labs) {
+          if (err) {
+            return res.serverError(err)
+          }
 
-            return res.view('account/settings', {labs: labs})
+          return res.view('account/settings', {labs: labs})
         })
         break
       case 'POST':
@@ -259,7 +257,7 @@ const AccountController = module.exports = {
               }
               let passwd = AccountController.hashPassword(password, user.salt)
 
-              Users.update(user.id, {password: passwrd}).exec(function (err) {
+              Users.update(user.id, {password: passwd}).exec(function (err) {
                 if (err) {
                   return res.serverError(err)
                 }
@@ -269,6 +267,9 @@ const AccountController = module.exports = {
               return AccountController.settingsMessage(res, 'Stare hasło jest nieprawidłowe', labs)
             }
           } else if (action === 'newLab') {
+            if (req.localUser.isTeacher) {
+              return res.badRequest()
+            }
             // ZMIANA LAB GRUPY
             if (!labs || labs.length === 0) {
               return res.badRequest()
@@ -282,11 +283,11 @@ const AccountController = module.exports = {
               if (err) {
                 return res.serverError(err)
               }
-              StudentsLabGroups.findOne({student:user.id,labgroup:flab.id}).exec((err,slb)=>{
+              StudentsLabGroups.findOne({student: user.id, labgroup: flab.id}).exec((err, slb) => {
                 if (err) {
                   return res.serverError(err)
                 }
-                if(slb){
+                if (slb) {
                   return AccountController.settingsMessage(res, 'Należysz już do tej grupy laboratoryjnej.', labs)
                 }
                 Users.replaceCollection(user.id, 'labGroups').members([flab.id]).exec((err) => {

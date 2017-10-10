@@ -7,3 +7,60 @@
   margin-bottom: 0;
 
 }
+
+.replySortableTitle {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.replySortHandle {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.sortable-ghost {
+  opacity: .5;
+}
+
+.teacher-notifcounter {
+
+}
+
+.teacher-notifcounter-badge {
+  //width: 0;
+  height: 0;
+  pointer-events: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  //float: right;
+  position: relative;
+  //right: .5em;
+
+  .badge {
+    z-index: 8;
+    pointer-events: none;
+    // safari
+    position: relative;
+    left: 2em;
+  }
+}
+
+.replySortDate {
+  .dateInput {
+    display: -webkit-box;
+    max-height: 40px;
+    padding-top: 5px;
+    border-top-left-radius: 17.25px;
+    border-bottom-left-radius: 17.25px;
+  }
+  .dateSave {
+    border-radius: 0;
+  }
+  .dateErase {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+}

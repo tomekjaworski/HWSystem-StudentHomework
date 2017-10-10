@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const RecentAction = module.exports = {
   generator: {
     studentComment: function (studentId, taskId, labgroupId, cb) {
@@ -88,8 +89,7 @@ const RecentAction = module.exports = {
               return cb(null)
             })
           })
-        }
-        else {
+        } else {
           RecentTeacherActions.update(action.id, {updatedAt: Date.now()}).exec((err) => {
             if (err) {
               return cb(err)

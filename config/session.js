@@ -43,6 +43,7 @@ module.exports.session = {
    *                                                                          *
    ***************************************************************************/
 
+  // TODO: trzeba bedzie tego uzyc do sesji potem, sprawdzalem i nie bylo problemow u mnie, trzeba postawic redisa i `npm install connect-redis --save` jak będziemy to na prod wrzucac -seba
   // adapter: 'redis',
 
   /***************************************************************************

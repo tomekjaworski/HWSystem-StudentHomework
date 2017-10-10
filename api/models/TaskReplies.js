@@ -17,21 +17,21 @@ const TaskReplies = module.exports = {
 
     sent: {
       type: 'boolean',
-      defaultsTo: false,
+      defaultsTo: false
     },
 
     lastSent: {
       type: 'boolean',
-      defaultsTo: false,
+      defaultsTo: false
     },
 
     newest: {
       type: 'boolean',
-      defaultsTo: true,
+      defaultsTo: true
     },
 
     firstId: {
-      type: 'number',
+      type: 'number'
     },
 
     count: {

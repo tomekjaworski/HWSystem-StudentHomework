@@ -94,13 +94,15 @@
         '<th>Numer</th>' +
         '<th>Tytuł Zadania</th>' +
         '<th class="text-center" data-toggle="tooltip" data-placement="top" ' +
-            'title="Status przesłania odpowiedzi" data-original-title="Status przesłania odpowiedzi">fS</th>' +
+        'title="Status przesłania odpowiedzi" data-original-title="Status przesłania odpowiedzi">fS</th>' +
         '<th class="text-center" data-toggle="tooltip" data-placement="top" ' +
-            'title="Status nowych komentarzy" data-original-title="Status nowych komentarzy">fTC</th>' +
+        'title="Status nowych komentarzy" data-original-title="Status nowych komentarzy">fTC</th>' +
         '<th class="text-center" data-toggle="tooltip" data-placement="top" ' +
-            'title="Status oceny prowadzącego" data-original-title="Status oceny prowadzącego">sT</th>' +
+        'title="Status oceny prowadzącego" data-original-title="Status oceny prowadzącego">sT</th>' +
         '<th class="text-center" data-toggle="tooltip" data-placement="top" ' +
-            'title="Status testu maszynowego" data-original-title="Status testu maszynowego">sM</th>' +
+        'title="Status testu maszynowego" data-original-title="Status testu maszynowego">sM</th>' +
+        '<th class="text-center" data-toggle="tooltip" data-placement="top" ' +
+        'title="Status blokady" data-original-title="Status blokady">sB</th>' +
         '<th>Termin</th>' +
         '</tr>' +
         '</thead>' +
@@ -142,6 +144,12 @@
         }
         */
 
+        if (msg[i].blocked) {
+          msg[i].blocked = '<i class="fa fa-times-circle fa-lg fa-fw text-danger"></i>'
+        } else {
+          msg[i].blocked = '-'
+        }
+
         if (msg[i].machineStatus === 1) {
           msg[i].machineStatus = '<i class="fa fa-spinner fa-pulse sfa-lg fa-fw text-primary"></i>'
         } else if (msg[i].machineOk === 0) {
@@ -152,7 +160,7 @@
           msg[i].machineStatus = '<i class="fa fa-times-circle fa-lg fa-fw text-danger"></i>'
         }
 
-        $('#tasks-tbody').append('<tr class="taskentry" data-taskid="' + msg[i].id + '"><th><a href="/topic/' + topicid + '/task/' + msg[i].id + '">' + msg[i].number + '</a></th><td>' + msg[i].title + '</td><td>' + msg[i].hasReply + '</td><td>' + msg[i].hasComments + '</td><td>' + msg[i].teacherStatus + '</td><td>' + msg[i].machineStatus + '</td><td>' + msg[i].deadline + '</td></tr>')
+        $('#tasks-tbody').append('<tr class="taskentry" data-taskid="' + msg[i].id + '"><th><a href="/topic/' + topicid + '/task/' + msg[i].id + '">' + msg[i].number + '</a></th><td>' + msg[i].title + '</td><td>' + msg[i].hasReply + '</td><td>' + msg[i].hasComments + '</td><td>' + msg[i].teacherStatus + '</td><td>' + msg[i].machineStatus + '</td><td>' + msg[i].blocked + '</td><td>' + msg[i].deadline + '</td></tr>')
       }
       $('[data-toggle="tooltip"]').tooltip()
       $('.taskentry').on('click', function () {
@@ -161,7 +169,7 @@
     })
 
     request.fail(function (jqXHR, textStatus) {
-      console.log('Request failed: ' + textStatus)
+      throw new Error('Request failed: ' + textStatus)
     })
 
     history.replaceState(null, document.title, location.pathname + '#!/back')
