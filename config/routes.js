@@ -91,6 +91,15 @@ module.exports.routes = {
   '/teacher/topics-and-tasks/topic/add': {action: 'teacher/topicsandtasks/addTopic', skipAssets: true},
   '/teacher/topics-and-tasks/topic/:topicId/task/add': {action: 'teacher/topicsandtasks/addTask', skipAssets: true},
   '/teacher/topics-and-tasks/task/edit/:id': {action: 'teacher/topicsandtasks/editTask', skipAssets: true},
+  '/teacher/topics-and-tasks/topic/edit/:id': {action: 'teacher/topicsandtasks/editTopic', skipAssets: true},
+
+  '/ajax/task/place': 'teacher/topicsandtasks/ajaxPlace',
+  'POST /ajax/task/deleted': 'teacher/topicsandtasks/taskDelete',
+  'POST /ajax/topic/deleted': 'teacher/topicsandtasks/topicDelete',
+
+  // User
+  '/teacher/user': {action: 'teacher/user/listUser', skipAssets: true},
+  '/teacher/user/add': {action: 'teacher/user/addUser', skipAssets: true},
 
   // DEBUG
   '/hw2/enqtest': function (req, res) {

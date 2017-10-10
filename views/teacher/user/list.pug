@@ -1,0 +1,31 @@
+extends ../../includes/layout
+
+block content
+
+    .row
+        .col-md-12.col-lg-4
+            include ../menu
+        //.hidden-md-down.col-lg-8#tasks-column
+            //-include tasks
+        .col-md-12.col-lg-8
+            .card
+                .card-header.text-center
+                    strong Tasks and Topics
+                .card-block
+                    a.btn.btn-primary(href="/teacher/user/add") Dodaj użytkownika
+
+                table.table.table-striped.responsive.table-grouplist
+                    thead
+                        tr
+                            th ID
+                            th nazwa
+                    tbody#tablebody
+                        each user in users
+                            -var id= user.id
+                            tr(onclick='selectTopic(' + user.id + ')', style='cursor: pointer;')
+                                th(scope='row')=user.id
+                                td= user.fullName()
+
+
+
+

@@ -1,0 +1,33 @@
+extends ../../includes/layout
+
+block content
+    if (message !== undefined && message && (message.length > 0 ))
+        .alert.alert-danger(role='alert')
+            strong Wiadomość:
+            |  #{message}
+    .row
+        .col-md-12.col-lg-4
+            include ../menu
+
+        .col-md-12.col-lg-8
+            h1 Edycja Topic
+            form(method='post')
+                label numer
+                br
+                input(value=topic.number name="topicNumber")
+                br
+                label tytuł
+                br
+                input(value=topic.title name="topicTitle")
+                br
+                label Widoczne
+                br
+                input(type='checkbox' checked name="topicVisible")
+                br
+                label Deadline
+                br
+                input(value=topic.deadline name="topicDeadline")
+                br
+                br
+                input(type='submit' value='zatwierdź')
+

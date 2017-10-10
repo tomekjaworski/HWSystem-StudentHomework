@@ -50,6 +50,8 @@ const Tasks = module.exports = {
     comments: {
       collection: 'taskcomments',
       via: 'task'
-    }
+    },
+
+    place: {type: 'integer'}
   }
 }

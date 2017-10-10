@@ -135,31 +135,37 @@ module.exports.bootstrap = function (cb) {
                           title: 'Testowe zadanie 1',
                           visible: true,
                           topic: topics[0].id
+                          // place: 1
                         }, {
                           number: '2a',
                           title: 'Testowe zadanie 2',
                           visible: true,
                           topic: topics[0].id
+                          // place: 2
                         }, {
                           number: '3a',
                           title: 'Testowe zadanie 3',
                           visible: true,
                           topic: topics[0].id
+                          // place: 3
                         }, {
                           number: '1b',
                           title: 'Testowe zadanie 1',
                           visible: true,
                           topic: topics[1].id
+                          // place: 1
                         }, {
                           number: '2b',
                           title: 'Testowe zadanie 2',
                           visible: true,
                           topic: topics[1].id
+                          // place: 2
                         }, {
                           number: '3b',
                           title: 'Testowe zadanie 3',
                           visible: true,
                           topic: topics[1].id
+                          // place: 3
                         }
                       ]).meta({fetch: true})
                         .exec(function (err, tasks) {
