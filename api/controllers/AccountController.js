@@ -16,7 +16,7 @@ const AccountController = module.exports = {
    * @param res   :: Response object
    * @param err   :: Error message
    */
-  loginError: function (res, err) {
+  loginError (res, err) {
     return res.view('account/login', {title: 'Logowanie', error: err})
   },
 
@@ -26,7 +26,7 @@ const AccountController = module.exports = {
    * @param salt      :: Salt to hash password
    * @returns {*}     :: Hashed password
    */
-  hashPassword: function (password, salt) {
+  hashPassword (password, salt) {
     return crypto.createHmac('sha256', salt)
       .update(password, 'utf8').digest('hex')
   },
@@ -41,7 +41,7 @@ const AccountController = module.exports = {
    * @param error
    */
 
-  registerError: function (res, error) {
+  registerError (res, error) {
     LabGroups.find({}).populate('owner').exec(function (err, labs) {
       return res.view('account/register', {title: 'Rejestracja', labs: labs, error: err || error})
     })
@@ -57,7 +57,7 @@ const AccountController = module.exports = {
    * @description :: Redirect user based on if authed and if user or teacher
    * @route       :: /login
    */
-  index: function (req, res) {
+  index (req, res) {
     if (!req.localUser) {
       return res.view('homepage')
     }
@@ -72,7 +72,7 @@ const AccountController = module.exports = {
    * @description :: Login to system
    * @route       :: /login
    */
-  login: function (req, res) {
+  login (req, res) {
     if (req.session.authed) {
       return res.redirect('/')
     }
@@ -121,7 +121,7 @@ const AccountController = module.exports = {
    * @description :: Logout from system
    * @route       :: /logout
    */
-  logout: function (req, res) {
+  logout (req, res) {
     if (req.session.authed) {
       req.session.authed = null
     }
@@ -132,7 +132,7 @@ const AccountController = module.exports = {
    * @description :: Register to system
    * @route       :: /register
    */
-  register: function (req, res) {
+  register (req, res) {
     switch (req.method) {
       case 'GET':
         LabGroups.find({}).populate('owner').exec(function (err, labs) {
@@ -216,7 +216,7 @@ const AccountController = module.exports = {
     }
   },
 
-  userSettings: function (req, res) {
+  userSettings (req, res) {
     switch (req.method) {
       case 'GET':
         LabGroups.find().populate('owner').exec(function (err, labs) {

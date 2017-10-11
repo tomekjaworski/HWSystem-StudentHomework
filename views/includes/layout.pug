@@ -10,7 +10,7 @@ html
         else
             title= brand
         include styles
-    body
+    body.mb-5
         noscript
             .container
                 .alert.alert-danger(role='alert')
@@ -29,6 +29,8 @@ html
             include breadcrumbs
 
             block content
+
+            .mb-5.pt-5
 
         include scripts
         block scripts
