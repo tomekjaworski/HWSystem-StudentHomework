@@ -21,6 +21,7 @@ script(type='text/x-mathjax-config').
 if sails.config.environment === "production"
     script(src='/min/production.min.js')
 else
+    script(src='/js/locale.js')
     script(src='/js/main.js')
     script(src='/js/bootstrap-select.js')
     script(src='/js/task.js')

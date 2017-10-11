@@ -20,9 +20,9 @@
   }
 
   function removeFileConfirm (reply, id, name) {
-    $('#confirmModalTitle').text('Kasowanie pliku')
-    $('#confirmModalBody').text('Czy na pewno chcesz skasować plik ' + name + '?')
-    $('#confirmModalButtons').html(`<button type="button" class="btn btn-danger fileRemoveButton" data-removereply="` + reply + `" data-removeid="` + id + `">Skasuj</button>`)
+    $('#confirmModalTitle').text(jsLocale.task.removefile.title)
+    $('#confirmModalBody').text(jsLocale.task.removefile.body(name))
+    $('#confirmModalButtons').html('<button type="button" class="btn btn-danger fileRemoveButton" data-removereply="' + reply + '" data-removeid="' + id + '">' + jsLocale.task.removefile.button + '</button>')
     $('#confirmModal').modal()
     $('.fileRemoveButton').on('click', function () {
       const reply = $(this).data('removereply')
@@ -32,10 +32,10 @@
   }
 
   function replaceFile (reply, id, name, ext) {
-    $('#confirmModalTitle').text('Podmiana pliku ' + name)
-    $('#confirmModalBody').html(`<form action='/reply/` + reply + `/updateFile/` + id + `' enctype='multipart/form-data' method='post'>
-  <input type='file' name='file' accept='.` + ext + `'>
-  <input type="submit" value="Podmień plik" class="btn btn-primary"/>`)
+    $('#confirmModalTitle').text(jsLocale.task.replacefile.title(name))
+    $('#confirmModalBody').html('<form action="reply/' + reply + '/updateFile/' + id + '" enctype="multipart/form-data" method="post">' +
+      '<input type="file" name="file" accept=".' + ext + '">' +
+      '<input type="submit" value="' + jsLocale.task.replacefile.button + '" plik" class="btn btn-primary"/>')
     $('#confirmModalButtons').html('')
     $('#confirmModal').modal()
   }
@@ -50,13 +50,13 @@
       .done(function (data) {
         $('#fileContentModalTitle').text(data.title)
         if (data.mimeType.includes('text/')) {
-          $('#fileContentModalBody').html(data.body)
+          $('#fileContentModalBody').text(data.body)
         } else if (data.mimeType === 'image/png') {
           $('#fileContentModalBody').html('<img class="img-fluid" src="data:image/png;base64,' + data.body + '"/>')
         } else if (data.mimeType === 'image/bmp') {
           $('#fileContentModalBody').html('<img class="img-fluid" src="data:image/bmp;base64,' + data.body + '"/>')
         } else {
-          $('#fileContentModalBody').text('Nieobsługiwane rozszerzenie')
+          $('#fileContentModalBody').text(jsLocale.task.showfile.unsupported)
         }
         if (!replySent) {
           $('#fileContentModalRemove').on('click', function () {
@@ -174,8 +174,10 @@
         renderComment(msg[i].user, msg[i].comment, msg[i].createdAt, msg[i].viewed)
         newLastComment = msg[i].id
       }
-      if (msg[msg.length - 1].viewed) {
-        markAsRead(tData.top, tData.tas)
+      if (msg.length >= 1) {
+        if (msg[msg.length - 1].viewed) {
+          markAsRead(tData.top, tData.tas)
+        }
       }
     })
   }

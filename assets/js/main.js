@@ -91,19 +91,19 @@
       taskscolumn.html('<table class="table table-striped table-hover table-responsive table-tasklist">' +
         '<thead>' +
         '<tr>' +
-        '<th>Numer</th>' +
-        '<th>Tytuł Zadania</th>' +
+        '<th>' + jsLocale.main.tasknumber + '</th>' +
+        '<th>' + jsLocale.main.tasktitle + '</th>' +
         '<th class="text-center" data-toggle="tooltip" data-placement="top" ' +
-        'title="Status przesłania odpowiedzi" data-original-title="Status przesłania odpowiedzi">fS</th>' +
+        'title="' + jsLocale.main.taskfs + '" data-original-title="' + jsLocale.main.taskfs + '">fS</th>' +
         '<th class="text-center" data-toggle="tooltip" data-placement="top" ' +
-        'title="Status nowych komentarzy" data-original-title="Status nowych komentarzy">fTC</th>' +
+        'title="' + jsLocale.main.taskftc + '" data-original-title="' + jsLocale.main.taskftc + '">fTC</th>' +
         '<th class="text-center" data-toggle="tooltip" data-placement="top" ' +
-        'title="Status oceny prowadzącego" data-original-title="Status oceny prowadzącego">sT</th>' +
+        'title="' + jsLocale.main.taskst + '" data-original-title="' + jsLocale.main.taskst + '">sT</th>' +
         '<th class="text-center" data-toggle="tooltip" data-placement="top" ' +
-        'title="Status testu maszynowego" data-original-title="Status testu maszynowego">sM</th>' +
+        'title="' + jsLocale.main.tasksm + '" data-original-title="' + jsLocale.main.tasksm + '">sM</th>' +
         '<th class="text-center" data-toggle="tooltip" data-placement="top" ' +
-        'title="Status blokady" data-original-title="Status blokady">sB</th>' +
-        '<th>Termin</th>' +
+        'title="' + jsLocale.main.tasksb + '" data-original-title="' + jsLocale.main.tasksb + '">sB</th>' +
+        '<th>' + jsLocale.main.taskdeadline + '</th>' +
         '</tr>' +
         '</thead>' +
         '<tbody id="tasks-tbody"></tbody>' +

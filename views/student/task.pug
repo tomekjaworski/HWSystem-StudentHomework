@@ -97,9 +97,9 @@ block content
             #myTabContent.tab-content
                 #task.tab-pane.fade.in.active.show(aria-expanded='true')
                     //-h1 Topic: #{topic.id}
-                    - let teacherStatus = [i18n('student.task.ts.none'),i18n('student.task.ts.pass'),i18n('student.task.ts.fail')]
-                    - let machineStatus = [i18n('student.task.ms.notstarted'),i18n('student.task.ms.inqueue'),i18n('student.task.ms.super'),i18n('student.task.ms.note'),i18n('student.task.ms.notices'),i18n('student.task.ms.errors')]
-                    - let machineFix = ['','Zaliczone', 'Niezaliczone']
+                    - let teacherStatus = [i18n('student.task.ts.none'), i18n('student.task.ts.pass'), i18n('student.task.ts.fail')]
+                    - let machineStatus = [i18n('student.task.ms.notstarted'), i18n('student.task.ms.inqueue'), i18n('student.task.ms.super'), i18n('student.task.ms.note'), i18n('student.task.ms.notices'), i18n('student.task.ms.errors')]
+                    - let machineFix = ['', i18n('student.task.ts.pass'), i18n('student.task.ts.fail')]
                     h3=i18n('student.task.task')
                         span #{topic.number}. #{task.number}. #{task.title}
                     h5=i18n('student.task.deadline.%s', deadline)
@@ -149,7 +149,7 @@ block content
                                             label.custom-task-file
                                                 input#file.custom-task-file-input(type='file', name='files', accept='.c,.cpp,.h,.hpp,.inc,.txt,.bmp,.png', multiple)
                                                 // todo: i18n tutaj trzeba bedzie wykombinowac bo te stringi sa w scssie lul
-                                                span.custom-task-file-control(lang='pl')
+                                                span.custom-task-file-control(lang=req.i18n.locale)
                                             | &nbsp;
                                             input.btn.btn-primary(type='submit', value=i18n('student.task.files.send'))
                                             // TODO: Seba dodaj walidacje wielkości każdego pliku przez javascripta

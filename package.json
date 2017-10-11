@@ -73,6 +73,7 @@
       "$",
       "_",
       "hljs",
+      "jsLocale",
       "LabGroups",
       "ManageReplies",
       "MySqlFile",
