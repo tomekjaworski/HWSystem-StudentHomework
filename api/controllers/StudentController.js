@@ -406,7 +406,7 @@ const StudentController = module.exports = {
           return res.forbidden()
         }
         if (file.file) {
-          res.set('Content-disposition', 'attachment; filename=\'' + file.fileName + '.' + file.fileExt + '\'')
+          res.set('Content-disposition', 'attachment; filename=' + file.fileName + '.' + file.fileExt)
           return res.end(Buffer.from(file.file))
         } else {
           return res.serverError()
