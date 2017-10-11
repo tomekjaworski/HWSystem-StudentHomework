@@ -13,3 +13,5 @@ TODO: Widok wysłanych zadań przez studentów
 TODO: Wystawienie api do pobierania zadań w formacie dokuwiki
 
 TODO: Komunikacja z zewnętrznymi aplikacjami
+
+TODO: Stworzyć na produkcji wiązania w bazie, tj np przy kasowaniu taska kasować wszystkie powiązane rekordy, trzeba ręcznie
