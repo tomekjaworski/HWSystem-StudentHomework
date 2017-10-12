@@ -127,5 +127,17 @@
 	"student.task.modal.sendreply.title": "Zatwierdzanie rozwiązania",
 	"student.task.modal.sendreply.body": "Czy na pewno chcesz wysłać rozwiązanie?",
 	"student.task.modal.sendreply.body.bold": "Późniejsza edycja będzie niemożliwa!",
-	"student.task.modal.sendreply.button": "Zatwierdź"
+	"student.task.modal.sendreply.button": "Zatwierdź",
+	"teacher.labs.teacherpanel": "Lab Grupy :: Panel Nauczyciela",
+	"teacher.labs.message.set": "Pomyślnie ustawiono wartość",
+	"teacher.labs.deactivate.error": "Błędny użytkownik",
+	"teacher.labs.deactivate.success": "Pomyślnie deaktywowano użytkownika w grupie",
+	"teacher.labs.activate.error": "Błędny użtkownik",
+	"teacher.labs.activate.success": "Pomyślnie aktywowano użytkownika w grupie",
+	"teacher.labs.noteachers": "Nie znaleziono prowadzących, zgłoś się do administratora",
+	"teacher.labs.fillall": "Należy uzupełnić wszystkie pola",
+	"teacher.labs.edit.success": "Edycja grupy przebiegła pomyślnie",
+	"teacher.labs.add.error": "Nie udało się utworzyć grupy",
+	"teacher.replies.teacherpanel": "Odpowiedzi do zadań :: Panel Nauczyciela"
+
 }

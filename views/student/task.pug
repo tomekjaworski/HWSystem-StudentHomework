@@ -105,7 +105,7 @@ block content
                         b=i18n('student.task.modal.sendreply.body.bold')
                     .modal-footer
 
-                        a(href='/topic/{{:topic}}/task/{{:task}}/sendReply').btn.btn-primary(type='button')=i18n('student.task.modal.sendreply.button')
+                        a(href='/topic/{{:topic}}/task/{{:task}}/sendReply', type='button').btn.btn-primary=i18n('student.task.modal.sendreply.button')
                         button.btn.btn-secondary(type='button', data-dismiss='modal')=i18n('student.task.modal.cancel')
     script#tmplCommentAjax(type='text/x-jsrender')
         .list-group-item.list-group-item-action.flex-column.align-items-start#commentFadeIn(style='display: none;')

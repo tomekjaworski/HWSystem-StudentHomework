@@ -16,7 +16,7 @@ const RepliesController = module.exports = {
         return res.serverError(err)
       }
       return res.view('teacher/replies/index',
-        {title: 'Task Replies :: Teacher Panel', menuItem: 'replies', data: topics})
+        {title: req.i18n.__('teacher.replies.teacherpanel'), menuItem: 'replies', data: topics})
     })
   },
 
@@ -49,7 +49,7 @@ LIMIT 1`, [task.topic.id, task.id]).exec((err, nextPrev) => {
           }
           return res.view('teacher/replies/view',
             {
-              title: 'Task Replies :: Teacher Panel',
+              title: req.i18n.__('teacher.replies.teacherpanel'),
               menuItem: 'replies',
               data: task,
               breadcrumb: 'view',

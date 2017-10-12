@@ -25,7 +25,7 @@ const LabsController = module.exports = {
         return res.serverError(err)
       }
       return res.view('teacher/labgroups/list',
-        {title: 'LabGroups :: Teacher Panel', menuItem: 'labgroups', data: groups.rows, show: show, breadcrumb: 'list'})
+        {title: req.i18n.__('teacher.labs.teacherpanel'), menuItem: 'labgroups', data: groups.rows, show: show, breadcrumb: 'list'})
     })
   },
 
@@ -53,7 +53,7 @@ const LabsController = module.exports = {
           lab.notActive = count
           return res.view('teacher/labgroups/view',
             {
-              title: 'LabGroups :: Teacher Panel',
+              title: req.i18n.__('teacher.labs.teacherpanel'),
               menuItem: 'labgroups',
               data: lab,
               message: {message: msg, attribute: attr},
@@ -70,7 +70,7 @@ const LabsController = module.exports = {
           if (err) {
             return res.serverError(err)
           }
-          a('info', 'Pomyślnie ustawiono wiadomość')
+          a('info', req.i18n.__('teacher.labs.message.set'))
         })
       } else {
         a()
@@ -84,9 +84,9 @@ const LabsController = module.exports = {
               return res.serverError(err)
             }
             if (!slg || slg.length !== 1) {
-              return a('danger', 'Błędny uzytkownik')
+              return a('danger', req.i18n.__('teacher.labs.deactivate.error'))
             }
-            a('info', 'Pomyślnie deaktywowano użytkownika w grupie')
+            a('info', req.i18n.__('teacher.labs.deactivate.success'))
           })
       } else {
         a()
@@ -126,7 +126,7 @@ const LabsController = module.exports = {
           lab.topics = topics
           return res.view('teacher/labgroups/deadlines',
             {
-              title: 'LabGroups :: Teacher Panel',
+              title: req.i18n.__('teacher.labs.teacherpanel'),
               menuItem: 'labgroups',
               data: lab,
               message: {message: msg, attribute: attr},
@@ -142,7 +142,7 @@ const LabsController = module.exports = {
         return res.notFound()
       }
       if (!date) {
-        LabGroupTopicDeadline.destroy({group: id, topic: topic}).exec((err)=>{
+        LabGroupTopicDeadline.destroy({group: id, topic: topic}).exec((err) => {
           if (err) {
             return res.serverError(err)
           }
@@ -153,12 +153,12 @@ const LabsController = module.exports = {
         if (isNaN(date)) {
           return res.badRequest()
         }
-        LabGroupTopicDeadline.findOrCreate({group: id, topic: topic}, {group: id, topic: topic, deadline: date}).exec((err, deadline, created)=>{
+        LabGroupTopicDeadline.findOrCreate({group: id, topic: topic}, {group: id, topic: topic, deadline: date}).exec((err, deadline, created) => {
           if (err) {
             return res.serverError(err)
           }
           if (!created) {
-            LabGroupTopicDeadline.update(deadline.id, {deadline: date}).exec((err)=>{
+            LabGroupTopicDeadline.update(deadline.id, {deadline: date}).exec((err) => {
               if (err) {
                 return res.serverError(err)
               }
@@ -198,7 +198,7 @@ const LabsController = module.exports = {
           lab.activeStudents = count
           return res.view('teacher/labgroups/viewNewStudents',
             {
-              title: 'LabGroups :: Teacher Panel',
+              title: req.i18n.__('teacher.labs.teacherpanel'),
               menuItem: 'labgroups',
               data: lab,
               message: {message: msg, attribute: attr},
@@ -216,9 +216,9 @@ const LabsController = module.exports = {
             return res.serverError(err)
           }
           if (!slg || slg.length !== 1) {
-            return a('danger', 'Błędny uzytkownik')
+            return a('danger', req.i18n.__('teacher.labs.activate.error'))
           }
-          a('info', 'Pomyślnie aktywowano użytkownika w grupie')
+          a('info', req.i18n.__('teacher.labs.activate.success'))
         })
     } else if (message) {
       res.status(307)
@@ -235,10 +235,10 @@ const LabsController = module.exports = {
         return res.serverError(err)
       }
       if (!users || users.length === 0) {
-        return res.serverError('Nie znaleziono prowadzących, zgłoś się do administratora')
+        return res.serverError(req.i18n.__('teacher.labs.noteachers'))
       }
       return res.view('teacher/labgroups/add',
-        {title: 'LabGroups :: Teacher Panel', menuItem: 'labgroups', users: users, message: msg, breadcrumb: 'add'})
+        {title: req.i18n.__('teacher.labs.teacherpanel'), menuItem: 'labgroups', users: users, message: msg, breadcrumb: 'add'})
     })
     if (req.method === 'POST') {
       let title = req.param('title')
@@ -247,7 +247,7 @@ const LabsController = module.exports = {
       let owner = req.param('owner')
       if (!_.isString(title) || !_.isString(desc) || !_.isString(owner) ||
         !title || !desc || !owner) {
-        return a('Uzupełnij wszystkie pola')
+        return a(req.i18n.__('teacher.labs.fillall'))
       }
       LabGroups.create({
         name: title,
@@ -260,7 +260,7 @@ const LabsController = module.exports = {
           return res.serverError(err)
         }
         if (!lab) {
-          return res.serverError('Nie udało sie uwtorzyć grupy')
+          return res.serverError(req.i18n.__('teacher.labs.add.error'))
         }
         return res.redirect('/teacher/labgroup/view/' + lab.id)
       })
@@ -305,7 +305,7 @@ const LabsController = module.exports = {
         return res.serverError(err)
       }
       if (!users || users.length === 0) {
-        return res.serverError('Nie znaleziono prowadzących, zgłoś się do administratora')
+        return res.serverError(req.i18n.__('teacher.labs.noteachers'))
       }
       LabGroups.findOne({id: id}).exec((err, lab) => {
         if (err) {
@@ -316,7 +316,7 @@ const LabsController = module.exports = {
         }
         return res.view('teacher/labgroups/edit',
           {
-            title: 'LabGroups :: Teacher Panel',
+            title: req.i18n.__('teacher.labs.teacherpanel'),
             menuItem: 'labgroups',
             data: lab,
             users: users,
@@ -332,7 +332,7 @@ const LabsController = module.exports = {
       let owner = req.param('owner')
       if (!_.isString(title) || !_.isString(desc) || !_.isString(owner) ||
         !title || !desc || !owner) {
-        return a('danger', 'Uzupełnij wszystkie pola')
+        return a('danger', req.i18n.__('teacher.labs.fillall'))
       }
       LabGroups.update({id: id}, {
         name: title,
@@ -343,7 +343,7 @@ const LabsController = module.exports = {
         if (err) {
           return res.serverError(err)
         }
-        return a('info', 'Pomyślnie edytowano grupę')
+        return a('info', req.i18n.__('teacher.labs.edit.success'))
       })
     } else {
       a()

@@ -123,5 +123,9 @@
 	"student.topics.taskdeadline": "Deadline",
 	"student.task.modal.remove.title": "Removing file",
 	"student.task.modal.remove.body.%s": "Are you sure you want to remove file %s?",
-	"student.task.modal.replace.title.%s": "Replacing file %s"
+	"student.task.modal.replace.title.%s": "Replacing file %s",
+	"student.task.modal.sendreply.title": "student.task.modal.sendreply.title",
+	"student.task.modal.sendreply.body": "student.task.modal.sendreply.body",
+	"student.task.modal.sendreply.body.bold": "student.task.modal.sendreply.body.bold",
+	"student.task.modal.sendreply.button": "student.task.modal.sendreply.button"
 }
