@@ -112,5 +112,16 @@
 	"student.topics.warning": "Tasks with teacher remarks or comments",
 	"student.topics.ms.pass": "Tasks with positive automated testing status",
 	"student.topics.ms.fail": "Tasks with negative automated testing status",
-	"student.topics.passed": "Passed tasks"
+	"student.topics.passed": "Passed tasks",
+	"student.topics.tasknumber": "Number",
+	"student.topics.tasktitle": "Task Title",
+	"student.topics.taskfs": "Reply sent status",
+	"student.topics.taskftc": "New comment status",
+	"student.topics.taskst": "Teacher assessment status",
+	"student.topics.tasksm": "Automatic testing status",
+	"student.topics.tasksb": "Blocked status",
+	"student.topics.taskdeadline": "Deadline",
+	"student.task.modal.remove.title": "Removing file",
+	"student.task.modal.remove.body.%s": "Are you sure you want to remove file %s?",
+	"student.task.modal.replace.title.%s": "Replacing file %s"
 }

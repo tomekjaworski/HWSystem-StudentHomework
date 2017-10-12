@@ -88,26 +88,11 @@
     })
 
     request.done(function (msg) {
-      taskscolumn.html('<table class="table table-striped table-hover table-responsive table-tasklist">' +
-        '<thead>' +
-        '<tr>' +
-        '<th>' + jsLocale.main.tasknumber + '</th>' +
-        '<th>' + jsLocale.main.tasktitle + '</th>' +
-        '<th class="text-center" data-toggle="tooltip" data-placement="top" ' +
-        'title="' + jsLocale.main.taskfs + '" data-original-title="' + jsLocale.main.taskfs + '">fS</th>' +
-        '<th class="text-center" data-toggle="tooltip" data-placement="top" ' +
-        'title="' + jsLocale.main.taskftc + '" data-original-title="' + jsLocale.main.taskftc + '">fTC</th>' +
-        '<th class="text-center" data-toggle="tooltip" data-placement="top" ' +
-        'title="' + jsLocale.main.taskst + '" data-original-title="' + jsLocale.main.taskst + '">sT</th>' +
-        '<th class="text-center" data-toggle="tooltip" data-placement="top" ' +
-        'title="' + jsLocale.main.tasksm + '" data-original-title="' + jsLocale.main.tasksm + '">sM</th>' +
-        '<th class="text-center" data-toggle="tooltip" data-placement="top" ' +
-        'title="' + jsLocale.main.tasksb + '" data-original-title="' + jsLocale.main.tasksb + '">sB</th>' +
-        '<th>' + jsLocale.main.taskdeadline + '</th>' +
-        '</tr>' +
-        '</thead>' +
-        '<tbody id="tasks-tbody"></tbody>' +
-        '</table>')
+      const tmplTableTasks = $.templates('#tmplTableTasks')
+
+      const renderedTableTasks = tmplTableTasks.render()
+
+      taskscolumn.html(renderedTableTasks)
 
       for (let i = 0; i <= msg.length - 1; i++) {
         if (msg[i].hasReply === 0) {

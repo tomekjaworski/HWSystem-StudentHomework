@@ -66,19 +66,69 @@ block content
                     a#fileContentModalDownload.btn.btn-warning=i18n('student.task.modal.download')
                     button#fileContentModalRemove.btn.btn-danger=i18n('student.task.modal.remove')
                     button.btn.btn-primary(data-dismiss='modal')=i18n('student.task.modal.close')
+    script#tmplRemoveModal(type='text/x-jsrender')
+        #removeModal.removeModal.modal.fade
+            .modal-dialog(role='document')
+                .modal-content
+                    .modal-header
+                        h5.modal-title=i18n('student.task.modal.remove.title')
+                        button.close(type='button', data-dismiss='modal', aria-label=i18n('student.task.modal.cancel'))
+                            span(aria-hidden='true') ×
+                    .modal-body=i18n('student.task.modal.remove.body.%s', '{{:name}}')
+                    .modal-footer
+                        button.btn.btn-danger.fileRemoveButton(type='button', data-removereply='{{:reply}}', data-removeid='{{:id}}')=i18n('student.task.modal.remove')
+                        button.btn.btn-secondary(type='button', data-dismiss='modal')=i18n('student.task.modal.cancel')
+    script#tmplReplaceModal(type='text/x-jsrender')
+        #replaceModal.replaceModal.modal.fade
+            .modal-dialog(role='document')
+                form.modal-content(action='reply/{{:reply}}/updateFile/{{:id}}', enctype='multipart/form-data', method='post')
+                    .modal-header
+                        h5.modal-title=i18n('student.task.modal.replace.title.%s', '{{:name}}')
+                        button.close(type='button', data-dismiss='modal', aria-label=i18n('student.task.modal.cancel'))
+                            span(aria-hidden='true') ×
+                    .modal-body
+                        input(type='file', name='file', accept='.{{:ext}}')
 
-    #confirmModal.modal.fade
-        .modal-dialog(role='document')
-            .modal-content
-                .modal-header
-                    h5#confirmModalTitle.modal-title=i18n('student.task.modal.loading')
-                    button.close(type='button', data-dismiss='modal', aria-label=i18n('student.task.modal.cancel'))
-                        span(aria-hidden='true') ×
-                #confirmModalBody.modal-body=i18n('student.task.modal.loading')
-                .modal-footer
-                    div#confirmModalButtons
-                        button.btn.btn-primary(type='button')=i18n('student.task.modal.save')
-                    button.btn.btn-secondary(type='button', data-dismiss='modal')=i18n('student.task.modal.cancel')
+                    .modal-footer
+                        input.btn.btn-primary.btn-success(type='submit', value=i18n('student.task.modal.replace'))
+                        button.btn.btn-secondary(type='button', data-dismiss='modal')=i18n('student.task.modal.cancel')
+    script#tmplSendReplyModal(type='text/x-jsrender')
+        #sendReplyModal.modal.fade
+            .modal-dialog(role='document')
+                .modal-content
+                    .modal-header
+                        h5#sendReplyModalTitle.modal-title=i18n('student.task.modal.sendreply.title')
+                        button.close(type='button', data-dismiss='modal', aria-label=i18n('student.task.modal.cancel'))
+                            span(aria-hidden='true') ×
+                    #sendReplyModalBody.modal-body=i18n('student.task.modal.sendreply.body')
+                        br
+                        b=i18n('student.task.modal.sendreply.body.bold')
+                    .modal-footer
+
+                        a(href='/topic/{{:topic}}/task/{{:task}}/sendReply').btn.btn-primary(type='button')=i18n('student.task.modal.sendreply.button')
+                        button.btn.btn-secondary(type='button', data-dismiss='modal')=i18n('student.task.modal.cancel')
+    script#tmplCommentAjax(type='text/x-jsrender')
+        .list-group-item.list-group-item-action.flex-column.align-items-start#commentFadeIn(style='display: none;')
+            .d-flex.w-100.justify-content-between
+                h5.mb-1
+                    | {{if user}}
+                    strong.task-c-author
+                        span.task-c-author-studentname {{:name}}
+                        | {{if teacher}}
+                        span.badge.badge-primary.ml-2=i18n('student.task.teacher')
+                        | {{/if}}
+                        span.ml-2=i18n('student.task.wrote')
+                    | {{else}}
+                    strong.task-c-author
+                            span.badge.badge-info=i18n('student.task.sysmsg')
+                    | {{/if}}
+                small.text-muted.task-c-timestamp {{:timestamp}}
+            p.mb-1.task-c-comment {{:comment}}
+            div.text-right.w-100
+                small.text-muted.task-c-read
+                    span.fa-stack.fa-lg.text-warning
+                        i.fa.fa-circle-thin.fa-stack-2x
+                        i.fa.fa-spinner.fa-spin.fa-stack-1x
 
 
     .card
@@ -161,10 +211,6 @@ block content
                                         small.form-text.text-muted=i18n('student.task.files.afterdeadline')
 
                 #comments.tab-pane.fade(aria-expanded='false')
-                    //h1 Task comments: #{taskComments[0].reply}
-                    #commentAjaxTemplate
-                        +commentBlock({}, true)
-
                     .list-group.mb-3#commentArea
                         - var allviewed = true
                         - var lastid = 1

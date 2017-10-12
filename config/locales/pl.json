@@ -114,5 +114,18 @@
 	"student.topics.ms.fail": "Rozwiązania z negatywnym raportem maszynowym",
 	"student.topics.passed": "Zadania zaliczone",
 	"student.topics.tasknumber": "Numer",
-	"student.topics.tasktitle": "Tytuł zadania"
+	"student.topics.tasktitle": "Tytuł zadania",
+	"student.topics.taskfs": "Status przesłania odpowiedzi",
+	"student.topics.taskftc": "Status nowych komentarzy",
+	"student.topics.taskst": "Status oceny prowadzącego",
+	"student.topics.tasksm": "Status testu maszynowego",
+	"student.topics.tasksb": "Status blokady",
+	"student.topics.taskdeadline": "Termin",
+	"student.task.modal.remove.title": "Usuwanie pliku",
+	"student.task.modal.remove.body.%s": "Czy na pewno chcesz skasować plik %s?",
+	"student.task.modal.replace.title.%s": "Zamiana pliku %s",
+	"student.task.modal.sendreply.title": "Zatwierdzanie rozwiązania",
+	"student.task.modal.sendreply.body": "Czy na pewno chcesz wysłać rozwiązanie?",
+	"student.task.modal.sendreply.body.bold": "Późniejsza edycja będzie niemożliwa!",
+	"student.task.modal.sendreply.button": "Zatwierdź"
 }

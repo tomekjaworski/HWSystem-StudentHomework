@@ -190,7 +190,7 @@ function repliesGetBack () {
   }
 
   function sendComment (student, task) {
-    const commentTextArea = $('#commentTextArea')
+    const commentTextArea = $('#commentTextArea-' + student)
     let val = commentTextArea.val()
     commentTextArea.val('')
     if (!val || !val.trim()) {

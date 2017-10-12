@@ -114,7 +114,7 @@ div.d-flex
                                         | Ładowanie
                                         i.fa.fa-spinner.fa-spin
                                     .input-group
-                                        textarea.form-control.task-comment-textarea#commentTextArea(type='text', placeholder='Komentarz', name='comment', rows='1')
+                                        textarea.form-control.task-comment-textarea(id='commentTextArea-' + student.id, type='text', placeholder='Komentarz', name='comment', rows='1')
                                         span.input-group-btn
                                             button.btn.btn-primary.sendCommentButton(data-studentid=student.id, data-taskid=task.id, type='button') Wyślij
                                             button.btn.btn-primary.checkCommentsButton(data-studentid=student.id, data-taskid=task.id, type='button') Odśwież
