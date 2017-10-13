@@ -168,7 +168,7 @@ const TopicsAndTasksController = module.exports = {
             return res.serverError(err)
           }
           if (!task) {
-            return res.serverError('Nie udało sie uwtorzyć zadania')
+            return res.serverError(req.i18n.__('teacher.tt.addtask.fail'))
           }
           TaskDescription.create({
             task: task.id,

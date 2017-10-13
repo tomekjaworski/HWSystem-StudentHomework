@@ -151,9 +151,9 @@ block content
         .card-header
             ul.nav.nav-tabs.nav-fill.task-tab
                 li.nav-item
-                    a.nav-link.active(data-toggle='tab', href='#task', aria-expanded='true')=i18n('student.task.tab.task')
+                    a.nav-link(class=(req.query.msg ? '' : 'active'), data-toggle='tab', href='#task', aria-expanded=(req.query.msg ? 'false' : 'true'))=i18n('student.task.tab.task')
                 li.nav-item
-                    a.nav-link(data-toggle='tab', href='#files', aria-expanded='false')=i18n('student.task.tab.files')
+                    a.nav-link(class=(req.query.msg ? 'active' : ''), data-toggle='tab', href='#files', aria-expanded=(req.query.msg ? 'true' : 'false'))=i18n('student.task.tab.files')
                 li.nav-item
                     a.nav-link(data-toggle='tab', href='#comments', aria-expanded='false')=i18n('student.task.tab.comments')
                         if taskComments && taskComments.length > 0
@@ -161,7 +161,7 @@ block content
 
         .card-block
             #myTabContent.tab-content
-                #task.tab-pane.fade.in.active.show(aria-expanded='true')
+                #task.tab-pane.fade(class=(req.query.msg ? '' : 'in active show'), aria-expanded=(req.query.msg ? 'false' : 'true'))
                     //-h1 Topic: #{topic.id}
                     - let teacherStatus = [i18n('student.task.ts.none'), i18n('student.task.ts.pass'), i18n('student.task.ts.fail')]
                     - let machineStatus = [i18n('student.task.ms.notstarted'), i18n('student.task.ms.inqueue'), i18n('student.task.ms.super'), i18n('student.task.ms.note'), i18n('student.task.ms.notices'), i18n('student.task.ms.errors')]
@@ -191,7 +191,7 @@ block content
                     .card
                         #task-content.card-block!= task.description
 
-                #files.tab-pane.fade(aria-expanded='false')
+                #files.tab-pane.fade(class=(req.query.msg ? 'in active show' : ''),aria-expanded=(req.query.msg ? 'true' : 'false'))
                         .card.text-center
                             if taskReply
                                 .card-header

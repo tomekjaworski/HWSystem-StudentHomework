@@ -175,7 +175,7 @@
 	"teacher.tt.addtopic.title": "Dodaj temat :: Teacher Panel",
 	"teacher.tt.addtopic.fail": "Nie udało się utworzyć tematu",
 	"teacher.tt.addtask.title": "Dodaj zadanie :: Teacher Panel",
-	"teacher.tt.addtask.fail": "Nie udało się utworzyć tematu",
+	"teacher.tt.addtask.fail": "Nie udało się utworzyć zadania",
 	"teacher.tt.editask.success": "Udało się zaktualizować zadanie",
 	"teacher.users.title": "User :: Teacher Panel",
 	"teacher.users.repass.fail": "Hasła nie są identyczne",
