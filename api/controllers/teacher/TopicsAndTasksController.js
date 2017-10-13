@@ -376,6 +376,10 @@ const TopicsAndTasksController = module.exports = {
       if (!number || !title || !deadline) {
         a('danger', req.i18n.__('teacher.labs.fillall'))
       } else {
+        deadline = Date.parse(deadline)
+        if (isNaN(deadline)) {
+          return res.badRequest()
+        }
         Topics.update({id: id},
           {
             number: number,
