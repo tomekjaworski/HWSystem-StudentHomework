@@ -356,6 +356,8 @@ const TopicsAndTasksController = module.exports = {
             return res.notFound()
           }
 
+          topic.deadline = dateFormat(topic.deadline, 'yyyy-mm-dd')
+
           return res.view('teacher/topicsAndTasks/editTopic', {
             topic: topic,
             menuItem: 'topics',
