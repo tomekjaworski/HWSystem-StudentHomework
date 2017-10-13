@@ -21,6 +21,14 @@ module.exports = {
   //   connection: 'someMysqlServer'
   // },
 
+  settings: {
+    machine: {
+      ip: 'http://localhost',
+      port: 1337,
+      apiKey: 'alamakota1234'
+    }
+  }
+
   /***************************************************************************
    * Set the port in the production environment to 80                        *
    ***************************************************************************/

@@ -312,7 +312,7 @@ const TopicsAndTasksController = module.exports = {
     let id = req.param('taskId')
     Tasks.destroy({id: id}).exec(function (err) {
       if (err) {
-        res.serverError(err)
+        return res.serverError(err)
       }
       return res.ok('ok')
     })
