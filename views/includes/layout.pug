@@ -1,5 +1,5 @@
 doctype html
-html
+html(lang=req.i18n.locale)
     head
         block pugincludes
 
@@ -10,22 +10,30 @@ html
         else
             title= brand
         include styles
-    body
+    body.mb-5
         noscript
             .container
                 .alert.alert-danger(role='alert')
-                    h4.alert-heading Uwaga!
-                    p.mb-0
-                        | Ta strona internetowa wymaga włączonej obsługi skryptów JavaScript do poprawnego działania!
+                    h4.alert-heading=i18n('noscript.header')
+                    p.mb-0=i18n('noscript.body')
 
 
         include nav
 
+
+
         .container
+            code DEBUG:
+            code=i18n('locale')
+            code=req.i18n.locale
 
             include breadcrumbs
 
             block content
+
+            .mb-5.pt-5
+
+        #modalContainer
 
         include scripts
         block scripts

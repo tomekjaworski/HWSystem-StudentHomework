@@ -21,7 +21,11 @@ const TeacherController = module.exports = {
       RecentTeacherActions.find({labgroup: labs.map(l => l.id), seen: false}).sort('updatedAt DESC').exec((err, actions) => {
         if (err) return res.serverError(err)
         _.forEach(actions, (a) => {
-          a.updatedAt = dateFormat(a.updatedAt, 'HH:MM dd/mm/yyyy')
+          try {
+            a.updatedAt = dateFormat(a.updatedAt, 'HH:MM dd/mm/yyyy')
+          } catch (err) {
+            return res.serverError(err)
+          }
         })
         return res.view('teacher/index', {title: 'Dashboard :: Teacher Panel', menuItem: 'index', actions: actions})
       })

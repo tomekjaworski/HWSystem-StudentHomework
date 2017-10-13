@@ -14,8 +14,7 @@ mixin fileIcon(file)
 mixin noFilesInReply
     .col-12.mb-2.text-center.text-muted
         i.fa.fa-files-o.fa-4x
-    .col-12.text-center.text-muted
-        | Twoje zadanie obecnie nie ma plików. Użyj guzików poniżej aby dodać pliki i zatwierdzić zadanie.
+    .col-12.text-center.text-muted=i18n('student.task.files.nofiles')
 mixin commentBlock(com, hidden)
     .list-group-item.list-group-item-action.flex-column.align-items-start(style=(hidden ? 'display: none;': ''))
         .d-flex.w-100.justify-content-between
@@ -23,17 +22,25 @@ mixin commentBlock(com, hidden)
                 if com.user
                     strong.task-c-author=(com.user ? com.user.fullName() : '')
                     if com.user.isTeacher
-                        span.badge.badge-primary Prowadzący
-                    span &nbsp;napisał(a):
+                        span.badge.badge-primary.ml-2=i18n('student.task.teacher')
+                    span.ml-2=i18n('student.task.wrote')
                 else
                     strong.task-c-author
-                        span.badge.badge-info Wiadomość systemowa
-            small.text-muted.task-c-timestamp= com.createdAt
-        p.mb-1.task-c-comment= com.comment
+                        span.badge.badge-info=i18n('student.task.sysmsg')
+            small.text-muted.task-c-timestamp=com.createdAt
+        p.mb-1.task-c-comment=com.comment
         if !com.viewed
-            small.text-muted.task-c-read nieprzeczytane
+            div.text-right.w-100
+                small.text-muted.task-c-read
+                    span.fa-stack.fa-lg
+                        i.fa.fa-circle-thin.fa-stack-2x
         else
-            small.text-muted.task-c-read przeczytane
+            div.text-right.w-100
+                small.text-muted.task-c-read
+                    span.fa-stack.fa-lg.text-primary
+                        i.fa.fa-circle.fa-stack-2x
+                        i.fa.fa-check.fa-inverse.fa-stack-1x
+            //=i18n('student.task.read')
 block content
 
     // TODO: jakiś alert ze statusem wykrytym z paska adresu "?msg=kodWiadomosci"
@@ -50,41 +57,89 @@ block content
         .modal-dialog.modal-lg(role='document')
             .modal-content
                 .modal-header
-                    h5#fileContentModalTitle.modal-title Plik
-                    button.close(type='button', data-dismiss='modal', aria-label='Zamknij')
+                    h5#fileContentModalTitle.modal-title=i18n('student.task.modal.loading')
+                    button.close(type='button', data-dismiss='modal', aria-label=i18n('student.task.modal.close'))
                         span(aria-hidden='true') ×
-                #fileContentModalBody.modal-body
-                    | Loading
-                .modal-footer
-                    button#fileContentModalReplace.btn.btn-success Zastąp
-                    a#fileContentModalDownload.btn.btn-warning Pobierz
-                    button#fileContentModalRemove.btn.btn-danger Skasuj
-                    button.btn.btn-primary(data-dismiss='modal') Zamknij
+                #fileContentModalBody.modal-body=i18n('student.task.modal.loading')
+                .modal-footer.flex-wrap.align-content-around
+                    button#fileContentModalReplace.btn.btn-success=i18n('student.task.modal.replace')
+                    a#fileContentModalDownload.btn.btn-warning=i18n('student.task.modal.download')
+                    button#fileContentModalRemove.btn.btn-danger=i18n('student.task.modal.remove')
+                    button.btn.btn-primary(data-dismiss='modal')=i18n('student.task.modal.close')
+    script#tmplRemoveModal(type='text/x-jsrender')
+        #removeModal.removeModal.modal.fade
+            .modal-dialog(role='document')
+                .modal-content
+                    .modal-header
+                        h5.modal-title=i18n('student.task.modal.remove.title')
+                        button.close(type='button', data-dismiss='modal', aria-label=i18n('student.task.modal.cancel'))
+                            span(aria-hidden='true') ×
+                    .modal-body=i18n('student.task.modal.remove.body.%s', '{{:name}}')
+                    .modal-footer
+                        button.btn.btn-danger.fileRemoveButton(type='button', data-removereply='{{:reply}}', data-removeid='{{:id}}')=i18n('student.task.modal.remove')
+                        button.btn.btn-secondary(type='button', data-dismiss='modal')=i18n('student.task.modal.cancel')
+    script#tmplReplaceModal(type='text/x-jsrender')
+        #replaceModal.replaceModal.modal.fade
+            .modal-dialog(role='document')
+                form.modal-content(action='reply/{{:reply}}/updateFile/{{:id}}', enctype='multipart/form-data', method='post')
+                    .modal-header
+                        h5.modal-title=i18n('student.task.modal.replace.title.%s', '{{:name}}')
+                        button.close(type='button', data-dismiss='modal', aria-label=i18n('student.task.modal.cancel'))
+                            span(aria-hidden='true') ×
+                    .modal-body
+                        input(type='file', name='file', accept='.{{:ext}}')
 
-    #confirmModal.modal.fade
-        .modal-dialog(role='document')
-            .modal-content
-                .modal-header
-                    h5#confirmModalTitle.modal-title Info
-                    button.close(type='button', data-dismiss='modal', aria-label='Anuluj')
-                        span(aria-hidden='true') ×
-                #confirmModalBody.modal-body
-                    | Tyrytytyty
-                .modal-footer
-                    div#confirmModalButtons
-                        button.btn.btn-primary(type='button') Save changes
-                    button.btn.btn-secondary(type='button', data-dismiss='modal') Anuluj
+                    .modal-footer
+                        input.btn.btn-primary.btn-success(type='submit', value=i18n('student.task.modal.replace'))
+                        button.btn.btn-secondary(type='button', data-dismiss='modal')=i18n('student.task.modal.cancel')
+    script#tmplSendReplyModal(type='text/x-jsrender')
+        #sendReplyModal.modal.fade
+            .modal-dialog(role='document')
+                .modal-content
+                    .modal-header
+                        h5#sendReplyModalTitle.modal-title=i18n('student.task.modal.sendreply.title')
+                        button.close(type='button', data-dismiss='modal', aria-label=i18n('student.task.modal.cancel'))
+                            span(aria-hidden='true') ×
+                    #sendReplyModalBody.modal-body=i18n('student.task.modal.sendreply.body')
+                        br
+                        b=i18n('student.task.modal.sendreply.body.bold')
+                    .modal-footer
+
+                        a(href='/topic/{{:topic}}/task/{{:task}}/sendReply', type='button').btn.btn-primary=i18n('student.task.modal.sendreply.button')
+                        button.btn.btn-secondary(type='button', data-dismiss='modal')=i18n('student.task.modal.cancel')
+    script#tmplCommentAjax(type='text/x-jsrender')
+        .list-group-item.list-group-item-action.flex-column.align-items-start#commentFadeIn(style='display: none;')
+            .d-flex.w-100.justify-content-between
+                h5.mb-1
+                    | {{if user}}
+                    strong.task-c-author
+                        span.task-c-author-studentname {{:name}}
+                        | {{if teacher}}
+                        span.badge.badge-primary.ml-2=i18n('student.task.teacher')
+                        | {{/if}}
+                        span.ml-2=i18n('student.task.wrote')
+                    | {{else}}
+                    strong.task-c-author
+                            span.badge.badge-info=i18n('student.task.sysmsg')
+                    | {{/if}}
+                small.text-muted.task-c-timestamp {{:timestamp}}
+            p.mb-1.task-c-comment {{:comment}}
+            div.text-right.w-100
+                small.text-muted.task-c-read
+                    span.fa-stack.fa-lg.text-warning
+                        i.fa.fa-circle-thin.fa-stack-2x
+                        i.fa.fa-spinner.fa-spin.fa-stack-1x
 
 
     .card
         .card-header
             ul.nav.nav-tabs.nav-fill.task-tab
                 li.nav-item
-                    a.nav-link.active(data-toggle='tab', href='#task', aria-expanded='true') Zadanie
+                    a.nav-link.active(data-toggle='tab', href='#task', aria-expanded='true')=i18n('student.task.tab.task')
                 li.nav-item
-                    a.nav-link(data-toggle='tab', href='#files', aria-expanded='false') Pliki
+                    a.nav-link(data-toggle='tab', href='#files', aria-expanded='false')=i18n('student.task.tab.files')
                 li.nav-item
-                    a.nav-link(data-toggle='tab', href='#comments', aria-expanded='false') Komentarze
+                    a.nav-link(data-toggle='tab', href='#comments', aria-expanded='false')=i18n('student.task.tab.comments')
                         if taskComments && taskComments.length > 0
                             span.badge.badge-pill.badge-primary= taskComments.length
 
@@ -92,30 +147,31 @@ block content
             #myTabContent.tab-content
                 #task.tab-pane.fade.in.active.show(aria-expanded='true')
                     //-h1 Topic: #{topic.id}
-                    - let teacherStatus = ['Brak','Zaliczone','Niezaliczone']
-                    - let machineStatus = ['Nierozpoczęte','W kolejce','Super','Notatka','Uwagi','Błędy']
-                    - let machineFix = ['','Zaliczone', 'Niezaliczone']
-                    h3 Temat: #{topic.number}. #{task.number}. #{task.title}
-                    h5 Termin dostarczenia: #{deadline}
+                    - let teacherStatus = [i18n('student.task.ts.none'), i18n('student.task.ts.pass'), i18n('student.task.ts.fail')]
+                    - let machineStatus = [i18n('student.task.ms.notstarted'), i18n('student.task.ms.inqueue'), i18n('student.task.ms.super'), i18n('student.task.ms.note'), i18n('student.task.ms.notices'), i18n('student.task.ms.errors')]
+                    - let machineFix = ['', i18n('student.task.ts.pass'), i18n('student.task.ts.fail')]
+                    h3=i18n('student.task.task')
+                        span #{topic.number}. #{task.number}. #{task.title}
+                    h5=i18n('student.task.deadline.%s', deadline)
                     if taskReply && taskReply.sent
                         div.text-right
                             if !taskReply.lastSent
-                                h5 Dane ostatniego rozwiązania:
-                            h6 Ocena nauczyciela: #{teacherStatus[taskReply.teacherStatus]}
-                            h6 Testy maszynowe: #{machineStatus[taskReply.machineStatus]}
+                                h5=i18n('student.task.lastsent.a')
+                            h6=i18n('student.task.ts.status.%s', teacherStatus[taskReply.teacherStatus])
+                            h6=i18n('student.task.ms.status.%s', machineStatus[taskReply.machineStatus])
                                 if taskReply.machineOk !== 0
                                     | &nbsp;/&nbsp;
                                     =machineFix[taskReply.machineOk]
                             if taskReply.machineMessage
-                                h6 Skrót testów: #{taskReply.machineMessage}
+                                h6=i18n('student.task.ms.machinemessage.%s', taskReply.machineMessage)
                             if taskReply.machineReport
-                                h6 Report z testów:&nbsp;
+                                h6=i18n('student.task.ms.machinereport')
                                     a(href='http://'+taskReply.machineReport)=taskReply.machineReport
                             if !taskReply.lastSent
-                                h6 Najnowsze rozwiązanie nie zostało przesłane!
+                                h6=i18n('student.task.lastsent.b')
                             if taskReply.blocked
-                                h6 Rozwiązywanie zadania zostało zablokowane przez prowadzącego
-                    h5 Opis tematu:
+                                h6=i18n('student.task.blocked')
+                    h5=i18n('student.task.description')
                     .card
                         #task-content.card-block!= task.description
 
@@ -142,23 +198,19 @@ block content
                                         form(action='/topic/' + topic.id + '/task/' + task.id + '/uploadFile/', enctype='multipart/form-data', method='post')
                                             label.custom-task-file
                                                 input#file.custom-task-file-input(type='file', name='files', accept='.c,.cpp,.h,.hpp,.inc,.txt,.bmp,.png', multiple)
-                                                span.custom-task-file-control(lang='pl')
+                                                // todo: i18n tutaj trzeba bedzie wykombinowac bo te stringi sa w scssie lul
+                                                span.custom-task-file-control(lang=req.i18n.locale)
                                             | &nbsp;
-                                            input.btn.btn-primary(type='submit', value='Wyślij pliki')
-                                            small.form-text.text-muted
-                                                // TODO: Seba dodaj walidacje wielkości każdego pliku przez javascripta
-                                                | Dopuszczalne rozszerzenia: c, cpp, h, hpp, inc, txt, bmp, png. Wielkość pliku nie może przekraczać 100 KB.
+                                            input.btn.btn-primary(type='submit', value=i18n('student.task.files.send'))
+                                            // TODO: Seba dodaj walidacje wielkości każdego pliku przez javascripta
+                                            small.form-text.text-muted=i18n('student.task.files.reqs')
                                         if taskReplyFiles && taskReplyFiles.length > 0
                                             hr.taskReplyConfirm
-                                            button#sendReply.btn.btn-success(data-topic=topic.id, data-task=task.id) Zatwierdź rozwiązanie
+                                            button#sendReply.btn.btn-success(data-topic=topic.id, data-task=task.id)=i18n('student.task.files.confirm')
                                     else
-                                        small.form-text.text-muted Upłynął termin przesyłania odpowiedzi
+                                        small.form-text.text-muted=i18n('student.task.files.afterdeadline')
 
                 #comments.tab-pane.fade(aria-expanded='false')
-                    //h1 Task comments: #{taskComments[0].reply}
-                    #commentAjaxTemplate
-                        +commentBlock({}, true)
-
                     .list-group.mb-3#commentArea
                         - var allviewed = true
                         - var lastid = 1
@@ -171,12 +223,12 @@ block content
                             if !com.viewed
                                 - allviewed = false
                             - i++
-                        button.list-group-item.list-group-item-action.active.task-comment-markread.justify-content-center#commentMarkAsRead(style=(allviewed ? 'display: none;' : '')) Oznacz wszystko jako przeczytane
+                        button.list-group-item.list-group-item-action.active.task-comment-markread.justify-content-center#commentMarkAsRead(style=(allviewed ? 'display: none;' : ''))=i18n('student.task.comment.markasread')
                     .input-group
                         // TODO: dodać spinnera w trakcie wysyłania komentarza, obsłużyć dodanie poprawne i błąd dodawania i wyświetlić że się nie dodało, dodać blokadę przycisku aby nie spamować w trakcie wysyłania
-                        textarea.form-control.task-comment-textarea#commentTextArea(type='text', placeholder='Komentarz', name='comment', rows='1')
+                        textarea.form-control.task-comment-textarea#commentTextArea(type='text', placeholder=i18n('student.task.comment'), name='comment', rows='1')
                         span.input-group-btn
-                            button.btn.btn-primary#commentSendButton(type='button') Wyślij
+                            button.btn.btn-primary#commentSendButton(type='button')=i18n('student.task.comment.send')
 
                     //-.form-group.mb-0
                         textarea#exampleTextarea.form-control(rows='1', placeholder='Komentarz')

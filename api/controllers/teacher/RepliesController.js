@@ -16,7 +16,7 @@ const RepliesController = module.exports = {
         return res.serverError(err)
       }
       return res.view('teacher/replies/index',
-        {title: 'Task Replies :: Teacher Panel', menuItem: 'replies', data: topics})
+        {title: req.i18n.__('teacher.replies.teacherpanel'), menuItem: 'replies', data: topics})
     })
   },
 
@@ -42,13 +42,14 @@ LEFT JOIN \`tasks\` \`nextTopicTask\` ON \`nextTopicTask\`.\`topic\` > $1
 LEFT JOIN \`tasks\` \`prevTopicTask\` ON \`prevTopicTask\`.\`topic\` < $1
 LEFT JOIN \`tasks\` \`prevTask\` ON \`prevTask\`.\`topic\` = $1 AND \`prevTask\`.\`id\` < $2
 LEFT JOIN \`tasks\` \`nextTask\` ON \`nextTask\`.\`topic\` = $1 AND \`nextTask\`.\`id\` > $2
+ORDER BY \`prevTask\`.\`id\` DESC, \`prevTopicTask\`.\`id\` DESC, \`nextTask\`.\`id\` ASC, \`nextTopicTask\`.\`id\` ASC
 LIMIT 1`, [task.topic.id, task.id]).exec((err, nextPrev) => {
           if (err) {
             return res.serverError(err)
           }
           return res.view('teacher/replies/view',
             {
-              title: 'Task Replies :: Teacher Panel',
+              title: req.i18n.__('teacher.replies.teacherpanel'),
               menuItem: 'replies',
               data: task,
               breadcrumb: 'view',
@@ -107,7 +108,11 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
             }
             let deadlines = result.rows
             students = _.forEach(students, (s) => {
-              s.deadline = dateFormat(deadlines.find(d => d.student === s.id).deadline, 'yyyy-mm-dd')
+              try {
+                s.deadline = dateFormat(deadlines.find(d => d.student === s.id).deadline, 'yyyy-mm-dd')
+              } catch (err) {
+                return res.serverError(err)
+              }
             })
             TaskComments.find({
               task: taskId,
@@ -121,7 +126,11 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
                 for (let s of students) {
                   s.comments = comments.filter(c => c.taskStudent === s.id)
                   _.forEach(s.comments, (c) => {
-                    c.createdAt = dateFormat(c.createdAt, 'dd/mm/yyyy')
+                    try {
+                      c.createdAt = dateFormat(c.createdAt, 'dd/mm/yyyy')
+                    } catch (err) {
+                      return res.serverError(err)
+                    }
                   })
                 }
               }
@@ -355,13 +364,17 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
           return res.serverError(err)
         }
         let com = task.map(c => {
-          return {
-            id: c.id,
-            date: dateFormat(c.createdAt, 'HH:MM dd/mm/yyyy'),
-            comment: c.comment,
-            viewed: c.viewed,
-            name: c.user.name,
-            surname: c.user.surname
+          try {
+            return {
+              id: c.id,
+              date: dateFormat(c.createdAt, 'HH:MM dd/mm/yyyy'),
+              comment: c.comment,
+              viewed: c.viewed,
+              name: c.user.name,
+              surname: c.user.surname
+            }
+          } catch (err) {
+            return res.serverError(err)
           }
         })
         if (com.length === 0) {

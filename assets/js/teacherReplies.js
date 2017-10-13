@@ -10,7 +10,7 @@ function repliesSelectTopic (id) {
     let ret = '<tr><th><i onclick="repliesGetBack()" style="cursor: pointer;" class="fa fa-arrow-left fa-lg"></i></th><td>' + topic.number + '. ' + topic.title + '</td></tr><tr><td colspan="2"><table class="table table-bordered table-striped table-hover responsive"><tbody id="tablebody">'
     for (let taskn in topic.tasks) {
       const task = topic.tasks[taskn]
-      ret += '<tr style="cursor: pointer;" onclick="document.location=\'/teacher/replies/view/' + task.id + '\'"><td>' + task.id + '</td><td>' + task.number + '. ' + task.title + '</td></tr>'
+      ret += '<tr style="cursor: pointer;" onclick="document.location=\'/teacher/replies/view/' + task.id + '\'"><td>' + task.id + '</td><td class="w-100">' + task.number + '. ' + task.title + '</td></tr>'
     }
     ret += '</tbody></table></td></tr>'
     document.getElementById('tablebody').innerHTML = ret
@@ -190,7 +190,7 @@ function repliesGetBack () {
   }
 
   function sendComment (student, task) {
-    const commentTextArea = $('#commentTextArea')
+    const commentTextArea = $('#commentTextArea-' + student)
     let val = commentTextArea.val()
     commentTextArea.val('')
     if (!val || !val.trim()) {

@@ -28,7 +28,7 @@ module.exports.models = {
    *                                                                          *
    ***************************************************************************/
   // TODO: na prod trzeba to bedzie dac na 'safe'
-  migrate: 'alter',
+  migrate: 'safe',
 
   attributes: {
     createdAt: {type: 'number', autoCreatedAt: true},

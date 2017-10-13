@@ -14,7 +14,15 @@ const RecentAction = module.exports = {
             if (err) {
               return cb(err)
             }
-            cb(null, `Student ${student.fullName()} napisał komentarz do zadania <a href='/teacher/replies/view/${task.id}'>[${task.topic.number}. ${task.topic.title}/${task.number}. ${task.title}]</a> w grupie laboratoryjnej ${labgroup.name}`)
+            let topicTitle = task.topic.title.substr(0, 20)
+            if (task.topic.title.length > 20) {
+              topicTitle += '[...]'
+            }
+            let taskTitle = task.title.substr(0, 20)
+            if (task.title.length > 20) {
+              taskTitle += '[...]'
+            }
+            cb(null, `Student ${student.fullName()} napisał komentarz do zadania <a href='/teacher/replies/view/${task.id}'>[${task.topic.number}. ${topicTitle}/${task.number}. ${taskTitle}]</a> w grupie laboratoryjnej ${labgroup.name}`)
           })
         })
       })
@@ -32,7 +40,15 @@ const RecentAction = module.exports = {
             if (err) {
               return cb(err)
             }
-            cb(null, `Student ${student.fullName()} wysłał ${(again ? '<u>KOLEJNĄ</u> ' : '')}odpowiedź do zadania <a href='/teacher/replies/view/${task.id}'>[${task.topic.number}. ${task.topic.title}/${task.number}. ${task.title}]</a> w grupie laboratoryjnej ${labgroup.name}`)
+            let topicTitle = task.topic.title.substr(0, 20)
+            if (task.topic.title.length > 20) {
+              topicTitle += '[...]'
+            }
+            let taskTitle = task.title.substr(0, 20)
+            if (task.title.length > 20) {
+              taskTitle += '[...]'
+            }
+            cb(null, `Student ${student.fullName()} wysłał ${(again ? '<u>KOLEJNĄ</u> ' : '')}odpowiedź do zadania <a href='/teacher/replies/view/${task.id}'>[${task.topic.number}. ${topicTitle}/${task.number}. ${taskTitle}]</a> w grupie laboratoryjnej ${labgroup.name}`)
           })
         })
       })

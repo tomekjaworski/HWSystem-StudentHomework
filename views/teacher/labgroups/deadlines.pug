@@ -1,0 +1,66 @@
+extends ../../includes/layout
+
+block content
+    if (message !== undefined && message && message.message && (message.message.length > 0 ))
+        .alert(class='alert-' + message.attribute, role='alert')
+            strong Wiadomość:
+            |  #{message.message}
+
+    .row
+        .col-md-12.col-lg-4
+            include ../menu
+        .col-md-12.col-lg-8
+            .card
+                .card-header
+                    .text-center
+                        strong=data.name
+                    ul.nav.nav-tabs.nav-fill.task-tab
+                        li.nav-item
+                            a.nav-link(href='/teacher/labgroup/view/' + data.id) Studenci
+                        li.nav-item
+                            a.nav-link.active() Tematy
+                .card-block
+                    table.table.table-striped.table-hover.responsive.table-grouplist
+                        thead
+                            tr
+                                th ID
+                                th Tytuł
+                                th Deadline
+                                th Opcje
+                        tbody
+                            if data.topics.length === 0
+                                tr
+                                    td.text-center(colspan='4') Brak dostępnych tematów
+                            each topic in data.topics
+                                tr
+                                    th(scope='row')=topic.id
+                                    td=topic.number + '. ' + topic.title
+                                    td
+                                        input(autocomplete="off", id='input-topic-' + topic.id, type='date', value=topic.deadline, required="required")
+                                        if topic.custom
+                                            div.badge.badge-pill.badge-success(id='badge-topic-' + topic.id) Data ustawiona dla grupy
+                                    td
+                                        button.btn.btn-success.dateSave.date(data-topic=topic.id, data-lab=data.id) Zapisz
+                                        button.btn.btn-danger.dateErase.date(data-topic=topic.id, data-lab=data.id) Skasuj
+
+block scripts
+    script.
+      $('.date').click(function () {
+        var btn = $(this)
+        var topic = btn.data('topic')
+        var val = btn.hasClass('dateSave') ? $('#input-topic-' + topic).val() : null
+        $.ajax({
+          url: '/teacher/labgroup/view/' + btn.data('lab') + '/topics',
+          method: 'POST',
+          dataType: 'text',
+          data: {
+            topic: topic,
+            date: val
+          }
+        }).done(function () {
+          window.location.reload()
+        })
+          .fail(function (jqXHR, textStatus, errorThrown) {
+            alert('Nie udało się zmienić daty:  ' + textStatus + ' - ' + errorThrown)
+          })
+      })

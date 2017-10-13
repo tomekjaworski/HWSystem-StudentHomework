@@ -7,9 +7,9 @@
         if localUser
             #containerNavbar.collapse.navbar-collapse
                 ul.navbar-nav.mr-auto
-                    li.nav-item(class=(homepage) ? 'active' : '')
+                    //-li.nav-item(class=(homepage) ? 'active' : '')
                         a.nav-link(href='/') Home
-                    li.nav-item(class=(data && data.topics) ? 'active' : '')
+                    //-li.nav-item(class=(data && data.topics) ? 'active' : '')
                         a.nav-link(href='/topics') Topics
                     //-li.nav-item
                         a.nav-link.disabled(href='#') Disabled
@@ -21,7 +21,7 @@
                             a.dropdown-item(href='#') Something else here
                 ul.navbar-nav.navbar-right#nav-loggedin
                     li.nav-item
-                        a.nav-link Witaj #{localUser.fullName()}
+                        a.nav-link=i18n('nav.welcome.%s', localUser.fullName())
                     if localUser.isTeacher
                         -var tempNotifications = Math.floor(Math.random() * 110)
                         li.nav-item.pr-2.pb-2.pb-lg-0
@@ -37,14 +37,14 @@
                         a.btn.btn-primary(href='/settings')
                             i.fa.fa-cog.fa-lg
                     li.nav-item
-                        a.btn.btn-danger(href='/logout') Wyloguj
+                        a.btn.btn-danger(href='/logout')=i18n('nav.logout')
 
         else
             form.form-inline.ml-md-auto.float-right#nav-form(action='/login' method='post', data-step='0')
-                a.btn.btn-outline-primary.mr-2.l-email#nav-form-register(href='/register') Register
-                input.form-control.mr-sm-2#nav-form-email(type='email', name='email' placeholder='Email', style='display: none')
-                input.form-control.mr-sm-2#nav-form-pass(type='password', name='password' placeholder='Password', style='display: none')
-                input.btn.btn-outline-success.my-2.my-sm-0.l-email#nav-form-button(type='button', value='Login')
+                a.btn.btn-outline-primary.mr-2.l-email#nav-form-register(href='/register')=i18n('nav.register')
+                input.form-control.mr-sm-2#nav-form-email(type='email', name='email' placeholder=i18n('nav.email'), style='display: none')
+                input.form-control.mr-sm-2#nav-form-pass(type='password', name='password' placeholder=i18n('nav.password'), style='display: none')
+                input.btn.btn-outline-success.my-2.my-sm-0.l-email#nav-form-button(type='button', value=i18n('nav.login'))
             //-ul.navbar-nav
                 li.nav-item
                     a.btn.btn-primary(href='#') Login

@@ -29,14 +29,27 @@ mixin topicentry(id, title, percent, values)
 
         .collapse.w-100(id='topic-collapse-' + id, role='tabpanel', aria-labelledby='topic-entry-' + id)
             ul.list-group.w-100.mt-2
-                +topiclist("Wszystkie dostępne zadania", values[0])
-                +topiclist("Przesłane rozwiązania", values[1], 'info')
-                +topiclist("Zatwierdzone rozwiązania ", values[2],'success')
-                +topiclist("Niezaliczone zadania", values[3] , 'danger')
-                +topiclist("Rozwiązania z uwagami/komentarzami prowadzącego", values[4], 'warning')
-                +topiclist("Rozwiązania z pozytywnym raportem maszynowym", values[5], 'success')
-                +topiclist("Rozwiązania z negatywnym raportem maszynowym", values[6], 'danger')
-                +topiclist("Zadania zaliczone", values[7], 'success')
+                +topiclist(i18n('student.topics.available'), values[0])
+                +topiclist(i18n('student.topics.sent'), values[1], 'info')
+                +topiclist(i18n('student.topics.accepted'), values[2],'success')
+                +topiclist(i18n('student.topics.rejected'), values[3] , 'danger')
+                +topiclist(i18n('student.topics.warning'), values[4], 'warning')
+                +topiclist(i18n('student.topics.ms.pass'), values[5], 'success')
+                +topiclist(i18n('student.topics.ms.fail'), values[6], 'danger')
+                +topiclist(i18n('student.topics.passed'), values[7], 'success')
+script#tmplTableTasks(type='text/x-jsrender')
+    table.table.table-striped.table-hover.table-responsive.table-tasklist
+        thead
+            tr
+                th=i18n('student.topics.tasknumber')
+                th=i18n('student.topics.tasktitle')
+                th.text-center(data-toggle='tooltip', data-placement='top', title=i18n('student.topics.taskfs'), data-original-title=i18n('student.topics.taskfs')) fS
+                th.text-center(data-toggle='tooltip', data-placement='top', title=i18n('student.topics.taskftc'), data-original-title=i18n('student.topics.taskftc')) fTC
+                th.text-center(data-toggle='tooltip', data-placement='top', title=i18n('student.topics.taskst'), data-original-title=i18n('student.topics.taskst')) sT
+                th.text-center(data-toggle='tooltip', data-placement='top', title=i18n('student.topics.tasksm'), data-original-title=i18n('student.topics.tasksm')) sM
+                th.text-center(data-toggle='tooltip', data-placement='top', title=i18n('student.topics.tasksb'), data-original-title=i18n('student.topics.tasksb')) sB
+                th=i18n('student.topics.taskdeadline')
+        tbody#tasks-tbody
 
 
 .list-group#topics-accordion(role='tablist', aria-multiselectable='true')

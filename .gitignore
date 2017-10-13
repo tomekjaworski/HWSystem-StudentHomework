@@ -85,3 +85,5 @@ gen
 .sass-cache/*
 
 config/connections\.js
+
+.DS_Store

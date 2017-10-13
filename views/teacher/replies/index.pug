@@ -10,11 +10,11 @@ block content
                 .card-header.text-center
                     strong Wybierz temat i zadanie do wyświetlenia odpowiedzi
 
-                table.table.table-striped.responsive.table-bordered.table-grouplist
+                table.table.table-striped.responsive.table-grouplist
                     thead
                         tr
                             th ID
-                            th Temat
+                            th.w-100 Temat
                     tbody#tablebody
                         each topic in data
                             tr(onclick='repliesSelectTopic('+topic.id+')', style='cursor: pointer;')

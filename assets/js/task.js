@@ -20,24 +20,52 @@
   }
 
   function removeFileConfirm (reply, id, name) {
-    $('#confirmModalTitle').text('Kasowanie pliku')
-    $('#confirmModalBody').text('Czy na pewno chcesz skasować plik ' + name + '?')
-    $('#confirmModalButtons').html(`<button type="button" class="btn btn-danger fileRemoveButton" data-removereply="` + reply + `" data-removeid="` + id + `">Skasuj</button>`)
-    $('#confirmModal').modal()
+    let removeModal = $('.removeModal')
+
+    if (removeModal.length > 0) {
+      return false
+    }
+
+    const tmplRemoveModal = $.templates('#tmplRemoveModal')
+
+    const renderedRemoveModal = tmplRemoveModal.render({name: name, reply: reply, id: id})
+
+    $('#modalContainer').html(renderedRemoveModal)
+
+    removeModal = $('#removeModal')
+    removeModal.modal()
+
+    removeModal.on('hidden.bs.modal', function () {
+      $(this).remove()
+    })
+
     $('.fileRemoveButton').on('click', function () {
       const reply = $(this).data('removereply')
       const id = $(this).data('removeid')
       removeFile(reply, id)
+      removeModal.remove()
     })
   }
 
   function replaceFile (reply, id, name, ext) {
-    $('#confirmModalTitle').text('Podmiana pliku ' + name)
-    $('#confirmModalBody').html(`<form action='/reply/` + reply + `/updateFile/` + id + `' enctype='multipart/form-data' method='post'>
-  <input type='file' name='file' accept='.` + ext + `'>
-  <input type="submit" value="Podmień plik" class="btn btn-primary"/>`)
-    $('#confirmModalButtons').html('')
-    $('#confirmModal').modal()
+    let replaceModal = $('.replaceModal')
+
+    if (replaceModal.length > 0) {
+      return false
+    }
+    const tmplReplaceModal = $.templates('#tmplReplaceModal')
+
+    const renderedReplaceModal = tmplReplaceModal.render({name: name, reply: reply, id: id, ext: ext})
+
+    $('#modalContainer').html(renderedReplaceModal)
+
+    replaceModal = $('#replaceModal')
+
+    replaceModal.modal()
+
+    replaceModal.on('hidden.bs.modal', function () {
+      $(this).remove()
+    })
   }
   $('.replyFileIcon').on('click', function () {
     const reply = $(this).data('filereply')
@@ -50,13 +78,13 @@
       .done(function (data) {
         $('#fileContentModalTitle').text(data.title)
         if (data.mimeType.includes('text/')) {
-          $('#fileContentModalBody').html(data.body)
+          $('#fileContentModalBody').text(data.body)
         } else if (data.mimeType === 'image/png') {
           $('#fileContentModalBody').html('<img class="img-fluid" src="data:image/png;base64,' + data.body + '"/>')
         } else if (data.mimeType === 'image/bmp') {
           $('#fileContentModalBody').html('<img class="img-fluid" src="data:image/bmp;base64,' + data.body + '"/>')
         } else {
-          $('#fileContentModalBody').text('Nieobsługiwane rozszerzenie')
+          $('#fileContentModalBody').text('bad file ext') // TODO: i18n this
         }
         if (!replySent) {
           $('#fileContentModalRemove').on('click', function () {
@@ -73,13 +101,18 @@
         $('#fileContentModal').modal()
       })
       .fail(function (jqXHR, textStatus, errorThrown) {
-        alert('Nie udało się wczytać danych: ' + textStatus + ' - ' + errorThrown + (jqXHR.responseJSON ? '\n' + jqXHR.responseJSON : ''))
+        alert('Nie udało się wczytać danych: ' + textStatus + ' - ' + errorThrown + (jqXHR.responseJSON ? '\n' + jqXHR.responseJSON : '')) // TODO: this into modal
       })
   }
 
   let newLastComment = null
   let markAsReadButton = $('#commentMarkAsRead')
+  let commenticons = {
+    read: '<span class="fa-stack fa-lg text-primary"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-inverse fa-stack-1x"></i></span>',
+    unread: '<span class="fa-stack fa-lg"><i class="fa fa-circle-thin fa-stack-2x"></i></span>'
+  }
 
+  // TODO: moze zsyncrhonizowac markasread miedzy oknami?
   function markAsRead (topic, task) {
     let response = $.ajax({
       url: '/topic/' + topic + '/task/' + task,
@@ -91,25 +124,37 @@
     })
 
     response.done(function (msg) {
-      $('.task-c-read').text('przeczytane')
+      $('.task-c-read').html(commenticons.read)
       markAsReadButton.hide()
     })
   }
 
-  function renderComment (user, comment, date, read) {
-    let template = $('#commentAjaxTemplate').find('.list-group-item').clone()
-    template.attr('id', 'commentFadeIn')
-    if (user) {
-      let append = user.isTeacher ? '<span class="badge badge-primary">Prowadzący</span><span>&nbsp;napisał(a):</span>' : '<span>&nbsp;napisał(a):</span>'
-      template.find('.task-c-author').text(user.name + ' ' + user.surname).append(append)
-    } else {
-      template.find('.task-c-author').html('<span class="badge badge-info">Wiadomość systemowa</span>')
-    }
-    template.find('.task-c-timestamp').text(date)
-    template.find('.task-c-comment').text(comment)
-    template.find('.task-c-read').text(read)
+  function renderComment (user, commentContent, date, read) {
+    const tmplCommentAjax = $.templates('#tmplCommentAjax')
 
-    $(template).insertBefore(markAsReadButton)
+    const template = tmplCommentAjax.render({
+      user: (!user ? false : user),
+      teacher: (user ? user.isTeacher : false),
+      name: (user ? user.name + ' ' + user.surname : ''),
+      comment: commentContent,
+      timestamp: date,
+      read: read
+    })
+
+    markAsReadButton.before(template)
+
+    const comment = $('#commentFadeIn')
+
+    // // let template = $('#commentAjaxTemplate').find('.list-group-item').clone()
+    // if (user) {
+    //   let append = user.isTeacher ? '<span class="badge badge-primary">Prowadzący</span><span>&nbsp;napisał(a):</span>' : '<span>&nbsp;napisał(a):</span>'
+    //   comment.find('.task-c-author').text(user.name + ' ' + user.surname).append(append)
+    // } else {
+    //   comment.find('.task-c-author').html('<span class="badge badge-info">Wiadomość systemowa</span>')
+    // }
+    // comment.find('.task-c-timestamp').text(date)
+    // comment.find('.task-c-comment').text(commentContent)
+    comment.find('.task-c-read').html((read ? commenticons.read : commenticons.unread))
 
     if (read === false) {
       markAsReadButton.fadeIn()
@@ -120,9 +165,8 @@
     //   $('#commentArea').append(template)
     // }
 
-    const commentFadeIn = $('#commentFadeIn')
-    commentFadeIn.fadeIn()
-    commentFadeIn.attr('id', '')
+    comment.fadeIn()
+    comment.attr('id', '')
   }
 
   function sendComment (topic, task) {
@@ -170,7 +214,9 @@
         newLastComment = msg[i].id
       }
       if (msg.length >= 1) {
-        markAsReadButton.show()
+        if (msg[msg.length - 1].viewed) {
+          markAsRead(tData.top, tData.tas)
+        }
       }
     })
   }
@@ -182,10 +228,26 @@
     setTimeout(checkComments, 600)
   })
   $('#sendReply').on('click', function () {
-    $('#confirmModalTitle').text('Wysłanie rozwiązania')
-    $('#confirmModalBody').html('Czy na pewno chcesz wysłać rozwiązanie? <br><b>Późniejsza edycja będzie niemożliwa!</b>')
-    $('#confirmModalButtons').html(`<a href='/topic/` + $(this).data('topic') + `/task/` + $(this).data('task') + `/sendReply/' class='btn btn-primary'>Wyślij rozwiązanie</a>`)
-    $('#confirmModal').modal()
+    let sendReplyModal = $('.sendReplyModal')
+
+    if (sendReplyModal.length > 0) {
+      return false
+    }
+
+    const tmplSendReplyModal = $.templates('#tmplSendReplyModal')
+
+    const renderedSendReplyModal = tmplSendReplyModal.render({topic: $(this).data('topic'), task: $(this).data('task')})
+
+    $('#modalContainer').html(renderedSendReplyModal)
+
+    sendReplyModal = $('#sendReplyModal')
+    sendReplyModal.modal()
+
+    sendReplyModal.on('hidden.bs.modal', function () {
+      $(this).remove()
+    })
+
+    sendReplyModal.modal()
   })
 
   $(markAsReadButton).on('click', function () {
@@ -199,88 +261,3 @@
     }, 10000)
   }
 })()
-
-function taskUp (idUp, place, topic) {
-  console.log('start')
-  let response = $.ajax({
-    url: '/ajax/task/place',
-    method: 'POST',
-    data: {
-      value: 'up',
-      idUp: idUp,
-      place: place,
-      nextPlace: place,
-      topic: topic
-    }
-  })
-  var b4Place = parseInt(place)
-  b4Place = b4Place - 1
-  var b4 = $('#' + topic + b4Place)
-  var a = $('#' + topic + place)
-  // var spanb4 = $('#s' + topic + b4Place)
-  // var spana = $('#s' + topic + place)
-  console.log(b4)
-  console.log(a)
-  response.done(function () {
-    b4.before(a)
-    b4.attr('id', '' + topic + '' + place + '')
-    // spanb4.unbind()
-    // spanb4.attr('onclick', taskUp(idUp, place, topic))
-    // spana.attr('onclick', taskUp(idUp, parseInt(place - 1), topic))
-    a.attr('id', '' + topic + '' + b4Place + '')
-  })
-}
-function taskDown (idDown, place, topic) {
-  console.log('start')
-  let response = $.ajax({
-    url: '/ajax/task/place',
-    method: 'POST',
-    data: {
-      value: 'down',
-      idUp: idDown,
-      place: place,
-      nextPlace: place,
-      topic: topic
-    },
-    error: function (request, status, error) {
-      console.log(request.responseText)
-    }
-  })
-
-  response.done(function () {
-    console.log('ok')
-  })
-}
-
-$('#del').on('click', function () {
-  var data = $(this).data('id')
-  var response = $.ajax({
-    url: '/ajax/task/deleted',
-    method: 'POST',
-    data: {
-      taskId: data
-    }
-  })
-
-  response.done(function () {
-    console.log('ok')
-    // TODO: redirecta
-    window.history.back()
-  })
-})
-
-function delTopic (id) {
-  console.log('start')
-  var data = id
-  var response = $.ajax({
-    url: '/ajax/topic/deleted',
-    method: 'POST',
-    data: {
-      topicId: data
-    }
-  })
-
-  response.done(function () {
-    console.log('done')
-  })
-}

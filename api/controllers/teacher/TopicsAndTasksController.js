@@ -16,7 +16,11 @@ const TopicsAndTasksController = module.exports = {
         return res.serverError(err)
       }
       topics = _.forEach(topics, (t) => {
-        t.deadline = dateFormat(t.deadline, 'dd/mm/yyyy')
+        try {
+          t.deadline = dateFormat(t.deadline, 'dd/mm/yyyy')
+        } catch (err) {
+          return res.serverError(err)
+        }
       })
       return res.view('teacher/topicsAndTasks/list', {
         data: topics,
@@ -335,7 +339,12 @@ const TopicsAndTasksController = module.exports = {
             return res.notFound()
           }
 
-          return res.view('teacher/topicsAndTasks/editTopic', {topic: topic, menuItem: 'topics', message: msg})
+          return res.view('teacher/topicsAndTasks/editTopic', {
+            topic: topic,
+            menuItem: 'topics',
+            message: msg,
+            breadcrumb: 'edittopic'
+          })
         })
       })
     }

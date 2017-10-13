@@ -4,84 +4,88 @@ ol.breadcrumb
             i.fa.fa-home
     if localUser && localUser.isTeacher
         if menuItem === 'index'
-            li.breadcrumb-item.active Dashboard
+            li.breadcrumb-item.active=i18n('breadcrumbs.dashboard')
         else if menuItem === 'labgroups'
             if breadcrumb === 'list'
-                li.breadcrumb-item.active Lab Groups
+                li.breadcrumb-item.active=i18n('breadcrumbs.labgroups')
             else if breadcrumb === 'add'
                 li.breadcrumb-item
-                    a(href='/teacher/labgroup') Lab Groups
-                li.breadcrumb-item.active Add
+                    a(href='/teacher/labgroup')=i18n('breadcrumbs.labgroups')
+                li.breadcrumb-item.active=i18n('breadcrumbs.labgroups.add')
             else if (breadcrumb === 'view') && data
                 li.breadcrumb-item
-                    a(href='/teacher/labgroup') Lab Groups
-                li.breadcrumb-item.active View Group - #{data.name}
+                    a(href='/teacher/labgroup')=i18n('breadcrumbs.labgroups')
+                li.breadcrumb-item.active=i18n('breadcrumbs.labgroups.viewgroup.%s', data.name)
             else if (breadcrumb === 'viewnew') && data
                 li.breadcrumb-item
-                    a(href='/teacher/labgroup') Lab Groups
+                    a(href='/teacher/labgroup')=i18n('breadcrumbs.labgroups')
                 li.breadcrumb-item
-                    a(href='/teacher/labgroup/view/' + data.id ) View Group - #{data.name}
-                li.breadcrumb-item.active View Pending Students
+                    a(href='/teacher/labgroup/view/' + data.id )=i18n('breadcrumbs.labgroups.viewgroup.%s', data.name)
+                li.breadcrumb-item.active=i18n('breadcrumbs.labgroups.viewgroup.viewpending')
             else if (breadcrumb === 'edit') && data
                 li.breadcrumb-item
-                    a(href='/teacher/labgroup') Lab Groups
+                    a(href='/teacher/labgroup')=i18n('breadcrumbs.labgroups')
                 li.breadcrumb-item
-                    a(href='/teacher/labgroup/view/' + data.id ) View Group - #{data.name}
-                li.breadcrumb-item.active Edit Group
+                    a(href='/teacher/labgroup/view/' + data.id )=i18n('breadcrumbs.labgroups.viewgroup.%s', data.name)
+                li.breadcrumb-item.active=i18n('breadcrumbs.labgroups.viewgroup.edit')
             else
                 li.breadcrumb-item
-                    a(href='/teacher/labgroup') Lab Groups
+                    a(href='/teacher/labgroup')=i18n('breadcrumbs.labgroups')
         else if menuItem === 'topics'
             if breadcrumb === 'list'
-                li.breadcrumb-item.active Topics & Tasks
+                li.breadcrumb-item.active=i18n('breadcrumbs.tt')
             else if breadcrumb === 'addtopic'
                 li.breadcrumb-item
-                    a(href='/teacher/topics-and-tasks') Topics & Tasks
-                li.breadcrumb-item.active Add Topic
+                    a(href='/teacher/topics-and-tasks')=i18n('breadcrumbs.tt')
+                li.breadcrumb-item.active=i18n('breadcrumbs.tt.addtopic')
             else if breadcrumb === 'addtask'
                 li.breadcrumb-item
-                    a(href='/teacher/topics-and-tasks') Topics & Tasks
-                li.breadcrumb-item.active Add Task
+                    a(href='/teacher/topics-and-tasks')=i18n('breadcrumbs.tt')
+                li.breadcrumb-item.active=i18n('breadcrumbs.tt.addtask')
             else if breadcrumb === 'edittopic'
                 li.breadcrumb-item
-                    a(href='/teacher/topics-and-tasks') Topics & Tasks
-                li.breadcrumb-item.active Edit Topic
+                    a(href='/teacher/topics-and-tasks')=i18n('breadcrumbs.tt')
+                li.breadcrumb-item.active=i18n('breadcrumbs.tt.edittopic')
             else if breadcrumb === 'edittask'
                 li.breadcrumb-item
-                    a(href='/teacher/topics-and-tasks') Topics & Tasks
-                li.breadcrumb-item.active Edit Task
+                    a(href='/teacher/topics-and-tasks')=i18n('breadcrumbs.tt')
+                li.breadcrumb-item.active=i18n('breadcrumbs.tt.edittask')
             else if breadcrumb === 'view'
                 li.breadcrumb-item
-                    a(href='/teacher/topics-and-tasks') Topics & Tasks
-                li.breadcrumb-item.active Preview Task
+                    a(href='/teacher/topics-and-tasks')=i18n('breadcrumbs.tt')
+                li.breadcrumb-item.active=i18n('breadcrumbs.tt.previewtask')
             else
                 li.breadcrumb-item
-                    a(href='/teacher/topics-and-tasks') Topics & Tasks
+                    a(href='/teacher/topics-and-tasks')=i18n('breadcrumbs.tt')
         else if menuItem === 'replies'
             if breadcrumb === 'view'
                 li.breadcrumb-item
-                    a(href='/teacher/replies') Task Replies
-                li.breadcrumb-item.active View Replies
+                    a(href='/teacher/replies')=i18n('breadcrumbs.replies')
+                li.breadcrumb-item.active=i18n('breadcrumbs.replies.view')
             else
-                li.breadcrumb-item.active Task Replies
+                li.breadcrumb-item.active=i18n('breadcrumbs.replies')
         else if menuItem === 'users'
-            li.breadcrumb-item.active Users
+            li.breadcrumb-item.active=i18n('breadcrumbs.users')
     else if localUser
         if data && data.topics
             li.breadcrumb-item.active#bc-topics
-                a Topics
-            li.breadcrumb-item.active#bc-current-topic(style='display: none') Topic
+                a=i18n('breadcrumbs.topics')
+            li.breadcrumb-item.active#bc-current-topic(style='display: none')=i18n('breadcrumbs.topic')
         else if task
             li.breadcrumb-item
-                a(href='/topics') Topics
+                a(href='/topics')=i18n('breadcrumbs.topics')
             li.breadcrumb-item
-                a#bc-current-topic-link(href='/topic/'+ task.topic +'/tasks') Topic
-            li.breadcrumb-item.active Task
+                a#bc-current-topic-link(href='/topic/'+ task.topic +'/tasks')=i18n('breadcrumbs.topic')
+            li.breadcrumb-item.active=i18n('breadcrumbs.task')
         else if user
-            li.breadcrumb-item.active User Settings
+            li.breadcrumb-item.active=i18n('breadcrumbs.settings')
         else if loginpage
-            li.breadcrumb-item.active Login
+            li.breadcrumb-item.active=i18n('breadcrumbs.login')
         else if registerpage
-            li.breadcrumb-item.active Register
+            li.breadcrumb-item.active=i18n('breadcrumbs.register')
+    else if loginpage
+        li.breadcrumb-item.active=i18n('breadcrumbs.login')
+    else if registerpage
+        li.breadcrumb-item.active=i18n('breadcrumbs.register')
 
         //li.breadcrumb-item.active Data

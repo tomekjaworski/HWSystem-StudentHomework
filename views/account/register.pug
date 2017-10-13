@@ -1,42 +1,42 @@
 extends ../includes/layout
 mixin form
     form.form-register(method='post', action='/register')
-        h2.form-register-heading Please register
+        h2.form-register-heading=i18n('register.header')
         .form-group.row
-            label.col-sm-4.col-form-label(for='inputFirstName') First Name
+            label.col-sm-4.col-form-label(for='inputFirstName')=i18n('register.firstname')
             .col-sm-8
-                input#inputFirstName.form-control(type='text', placeholder='Jan', name='name', required, autofocus)
+                input#inputFirstName.form-control(type='text', placeholder=i18n('register.firstname.placeholder'), name='name', required, autofocus)
         .form-group.row
-            label.col-sm-4.col-form-label(for='inputLastName') Last Name
+            label.col-sm-4.col-form-label(for='inputLastName')=i18n('register.lastname')
             .col-sm-8
-                input#inputLastName.form-control(type='text', placeholder='Kowalski', name='surname', required)
+                input#inputLastName.form-control(type='text', placeholder=i18n('register.lastname.placeholder'), name='surname', required)
         .form-group.row
-            label.col-sm-4.col-form-label(for='inputAlbum') Album
+            label.col-sm-4.col-form-label(for='inputAlbum')=i18n('register.album')
             .col-sm-8
-                input#inputAlbum.form-control(type='text', placeholder='123456', name='album', required)
+                input#inputAlbum.form-control(type='text', placeholder=i18n('register.album.placeholder'), name='album', required)
         .form-group.row
-            label.col-sm-4.col-form-label(for='inputEmail') Email
+            label.col-sm-4.col-form-label(for='inputEmail')=i18n('register.email')
             .col-sm-8
-                input#inputEmail.form-control(type='email', placeholder='123456@edu.p.lodz.pl', name='email', required)
+                input#inputEmail.form-control(type='email', placeholder=i18n('register.email.placeholder'), name='email', required)
         .form-group.row
-            label.col-sm-4.col-form-label(for='inputPassword') Password
+            label.col-sm-4.col-form-label(for='inputPassword')=i18n('register.password')
             .col-sm-8
-                input#inputPassword.form-control(type='password', placeholder='Password', name='password', required)
+                input#inputPassword.form-control(type='password', placeholder=i18n('register.password.placeholder'), name='password', required)
         .form-group.row
-            label.col-sm-4.col-form-label(for='inputRePassword') Confirm password
+            label.col-sm-4.col-form-label(for='inputRePassword')=i18n('register.repassword')
             .col-sm-8
-                input#inputRePassword.form-control(type='password', placeholder='Confirm password', name='repassword', required)
+                input#inputRePassword.form-control(type='password', placeholder=i18n('register.repassword.placeholder'), name='repassword', required)
         .form-group.row
-            label.col-sm-4.col-form-label(for='inputGroupL') Lab Group
+            label.col-sm-4.col-form-label(for='inputGroupL')=i18n('register.labgroup')
             .col-sm-8
                 select#inputGroupL.custom-select(name='groupl', required)
                     each l in labs
                         option(value=l.id)= l.name + l.owner.fullName()
 
         if error
-            input.btn.btn-lg.btn-danger.btn-block(type='submit' value='Register')
+            input.btn.btn-lg.btn-danger.btn-block(type='submit' value=i18n('register.register'))
         else
-            input.btn.btn-lg.btn-primary.btn-block(type='submit' value='Register')
+            input.btn.btn-lg.btn-primary.btn-block(type='submit' value=i18n('register.register'))
 
 
 block content

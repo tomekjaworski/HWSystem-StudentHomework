@@ -77,7 +77,7 @@
     bctopics.removeClass('active')
     topicentryactive.removeClass('topic-entry-active')
     $('#topic-a-' + topicid).addClass('topic-entry-active')
-    bctopics.find('a').attr('href', '/account')
+    bctopics.find('a').attr('href', '/topics')
     bccurrenttopic.show()
 
     let request = $.ajax({
@@ -88,26 +88,11 @@
     })
 
     request.done(function (msg) {
-      taskscolumn.html('<table class="table table-striped table-hover table-responsive table-tasklist">' +
-        '<thead>' +
-        '<tr>' +
-        '<th>Numer</th>' +
-        '<th>Tytuł Zadania</th>' +
-        '<th class="text-center" data-toggle="tooltip" data-placement="top" ' +
-        'title="Status przesłania odpowiedzi" data-original-title="Status przesłania odpowiedzi">fS</th>' +
-        '<th class="text-center" data-toggle="tooltip" data-placement="top" ' +
-        'title="Status nowych komentarzy" data-original-title="Status nowych komentarzy">fTC</th>' +
-        '<th class="text-center" data-toggle="tooltip" data-placement="top" ' +
-        'title="Status oceny prowadzącego" data-original-title="Status oceny prowadzącego">sT</th>' +
-        '<th class="text-center" data-toggle="tooltip" data-placement="top" ' +
-        'title="Status testu maszynowego" data-original-title="Status testu maszynowego">sM</th>' +
-        '<th class="text-center" data-toggle="tooltip" data-placement="top" ' +
-        'title="Status blokady" data-original-title="Status blokady">sB</th>' +
-        '<th>Termin</th>' +
-        '</tr>' +
-        '</thead>' +
-        '<tbody id="tasks-tbody"></tbody>' +
-        '</table>')
+      const tmplTableTasks = $.templates('#tmplTableTasks')
+
+      const renderedTableTasks = tmplTableTasks.render()
+
+      taskscolumn.html(renderedTableTasks)
 
       for (let i = 0; i <= msg.length - 1; i++) {
         if (msg[i].hasReply === 0) {
@@ -179,7 +164,7 @@
       if (location.hash === '#!/back') {
         history.replaceState(null, document.title, location.pathname)
         setTimeout(function () {
-          location.replace('/account')
+          location.replace('/topics')
         }, 0)
       }
     }, false)
