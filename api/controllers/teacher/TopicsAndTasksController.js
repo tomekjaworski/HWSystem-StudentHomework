@@ -141,28 +141,44 @@ const TopicsAndTasksController = module.exports = {
       vis = vis === 'ok'
       ard = ard === 'ok'
       com = com === 'ok'
-      Tasks.create({
-        number: number,
-        title: title,
-        visible: vis,
-        topic: topic,
-        arduino: ard,
-        computer: com
-      }).meta({fetch: true}).exec((err, task) => {
-        if (err) {
-          return res.serverError(err)
+      Topics.findOne({id: topic}).populate('tasks').exec(function (err, topics) {
+        let place
+        let allPlace = []
+        for (let i = 0; i < topics.tasks.length; i++) {
+          allPlace.push(topics.tasks[i].place)
         }
-        if (!task) {
-          return res.serverError('teacher.tt.addtask.fail')
+        if (allPlace.length === 0) {
+          place = 1
+        } else {
+          let max = Math.max(...allPlace)
+          place = max + 1
         }
-        TaskDescription.create({
-          task: task.id,
-          description: description
-        }).exec(function (err) {
+        // console.log(allPlace)
+        // console.log(topics.tasks.length)
+        Tasks.create({
+          number: number,
+          title: title,
+          visible: vis,
+          topic: topic,
+          arduino: ard,
+          computer: com,
+          place: place
+        }).meta({fetch: true}).exec((err, task) => {
           if (err) {
             return res.serverError(err)
           }
-          return res.redirect('/teacher/topics-and-tasks/view/' + task.id)
+          if (!task) {
+            return res.serverError('Nie udało sie uwtorzyć zadania')
+          }
+          TaskDescription.create({
+            task: task.id,
+            description: description
+          }).exec(function (err) {
+            if (err) {
+              return res.serverError(err)
+            }
+            return res.redirect('/teacher/topics-and-tasks/view/' + task.id)
+          })
         })
       })
     } else {

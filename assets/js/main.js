@@ -84,7 +84,15 @@
       url: '/ajax/topic/' + topicid + '/tasks',
       // url: "/",
       method: 'GET',
-      dataType: 'json'
+      dataType: 'json',
+      statusCode: {
+        404: function () {
+          taskscolumn.html('<h2>Nie znaleziono podanego tematu</h2>')
+        },
+        500: function () {
+          taskscolumn.html('<h2>Wystąpił błąd serwera</h2>')
+        }
+      }
     })
 
     request.done(function (msg) {
@@ -151,10 +159,6 @@
       $('.taskentry').on('click', function () {
         window.location = '/topic/' + topicid + '/task/' + $(this).data('taskid')
       })
-    })
-
-    request.fail(function (jqXHR, textStatus) {
-      throw new Error('Request failed: ' + textStatus)
     })
 
     history.replaceState(null, document.title, location.pathname + '#!/back')
