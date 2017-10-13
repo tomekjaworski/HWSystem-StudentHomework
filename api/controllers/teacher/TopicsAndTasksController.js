@@ -65,12 +65,12 @@ const TopicsAndTasksController = module.exports = {
         return res.serverError(err)
       }
       if (!users || users.length === 0) {
-        return res.serverError('Nie znaleziono roli prowadzącego, zgłoś się do administratora')
+        return res.serverError(req.i18n.__('teacher.labs.noteachers'))
       }
 
       return res.view('teacher/topicsAndTasks/addTopic',
         {
-          title: 'Add Topic :: Teacher Panel',
+          title: req.i18n.__('teacher.tt.addtopic.title'),
           users: users,
           message: msg,
           menuItem: 'topics',
@@ -95,7 +95,7 @@ const TopicsAndTasksController = module.exports = {
           return res.serverError(err)
         }
         if (!topic) {
-          return res.serverError('Nie udało się utworzyć tematu')
+          return res.serverError(req.i18n.__('teacher.tt.addtopic.fail'))
         }
         return res.redirect('/teacher/topics-and-tasks/')
       })
@@ -110,7 +110,7 @@ const TopicsAndTasksController = module.exports = {
         return res.serverError(err)
       }
       if (!users || users.length === 0) {
-        return res.serverError('Nie znaleziono roli prowadzącego, zgłoś się do administratora')
+        return res.serverError(req.i18n.__('teacher.labs.noteachers'))
       }
       Topics.find().exec(function (err, topics) {
         if (err) {
@@ -118,7 +118,7 @@ const TopicsAndTasksController = module.exports = {
         }
         return res.view('teacher/topicsAndTasks/add',
           {
-            title: 'Add Tasks :: Teacher Panel',
+            title: req.i18n.__('teacher.addtask.title'),
             users: users,
             message: msg,
             topics: topics,
@@ -136,7 +136,7 @@ const TopicsAndTasksController = module.exports = {
       let ard = req.param('arduinoCheck')
       let com = req.param('komputerCheck')
       if (!_.isString(title) || !_.isString(number) || !_.isString(description) || !title) {
-        return a('Uzupełnij wszystkie pola')
+        return a(req.i18n.__('teacher.labs.fillall'))
       }
       vis = vis === 'ok'
       ard = ard === 'ok'
@@ -153,7 +153,7 @@ const TopicsAndTasksController = module.exports = {
           return res.serverError(err)
         }
         if (!task) {
-          return res.serverError('Nie udało sie uwtorzyć zadania')
+          return res.serverError('teacher.tt.addtask.fail')
         }
         TaskDescription.create({
           task: task.id,
@@ -177,7 +177,7 @@ const TopicsAndTasksController = module.exports = {
         return res.serverError(err)
       }
       if (!users || users.length === 0) {
-        return res.serverError('Nie znaleziono roli prowadzącego, zgłoś się do administratora')
+        return res.serverError('teacher.labs.noteachers')
       }
       Tasks.findOne({id: id}).populate('description').exec(function (err, task) {
         if (err) {
@@ -235,7 +235,7 @@ const TopicsAndTasksController = module.exports = {
               if (err) {
                 return res.serverError(err)
               }
-              return a('Udało się zaktualizować zadanie')
+              return a(req.i18n.__('teacher.tt.edittask.success'))
             })
         })
     } else {
@@ -243,6 +243,7 @@ const TopicsAndTasksController = module.exports = {
     }
   },
   ajaxPlace: function (req, res) {
+    // todo: usunąć console logi i wogole co to za 'ops coś się zepsuło'
     if (req.method === 'POST') {
       let topic = req.param('topic')
       let value = req.param('value')
@@ -329,7 +330,7 @@ const TopicsAndTasksController = module.exports = {
           return res.serverError(err)
         }
         if (!users || users.length === 0) {
-          return res.serverError('Nie znaleziono roli prowadzącego, zgłoś się do administratora')
+          return res.serverError(req.i18n.__('teacher.labs.noteachers'))
         }
         Topics.findOne({id: id}).exec(function (err, topic) {
           if (err) {
@@ -355,7 +356,7 @@ const TopicsAndTasksController = module.exports = {
       let deadline = req.param('topicDeadline')
       visible = !!(visible)
       if (!number || !title || !deadline) {
-        a('danger', 'Uzupełnij wszystkie pola')
+        a('danger', req.i18n.__('teacher.labs.fillall'))
       } else {
         Topics.update({id: id},
           {

@@ -34,7 +34,7 @@ const RepliesController = module.exports = {
           return res.serverError(err)
         }
         if (!labs) {
-          return res.serverError('Nie zdefiniowano żadnych grup laboratoryjnych')
+          return res.serverError(req.i18n.__('teacher.replies.nolabgroups'))
         }
         task.labs = labs
         sails.sendNativeQuery(`SELECT \`prevTopicTask\`.\`id\` \`prevTopicTask\`, \`nextTopicTask\`.\`id\` \`nextTopicTask\`, \`prevTask\`.\`id\` \`prevTask\`, \`nextTask\`.\`id\` \`nextTask\` FROM \`tasks\`
@@ -231,7 +231,7 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
         taskStudent: reply[0].student,
         task: reply[0].task,
         user: null,
-        comment: 'Prowadzący ' + req.localUser.fullName() + (status === 1 ? ' zaliczył Twoje rozwiązanie' : (status === 2 ? ' nie zaliczył Twojego rozwiązania' : ' skasował ocenę')),
+        comment: 'Prowadzący ' + req.localUser.fullName() + (status === 1 ? ' zaliczył Twoje rozwiązanie' : (status === 2 ? ' nie zaliczył Twojego rozwiązania' : ' skasował ocenę')), // todo: kuurwa czemu to tak
         viewed: false
       }).exec((err) => {
         if (err) {
@@ -264,7 +264,7 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
         taskStudent: reply[0].student,
         task: reply[0].task,
         user: null,
-        comment: 'Prowadzący ' + req.localUser.fullName() + (blocked ? ' zablokował możliwość przesłania zadania' : ' odblokował możliwość przesłania zadania'),
+        comment: 'Prowadzący ' + req.localUser.fullName() + (blocked ? ' zablokował możliwość przesłania zadania' : ' odblokował możliwość przesłania zadania'), // todo: i to też
         viewed: false
       }).exec((err) => {
         if (err) {

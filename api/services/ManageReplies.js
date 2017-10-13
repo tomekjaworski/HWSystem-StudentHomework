@@ -98,6 +98,7 @@ const ManageReplies = module.exports = {
               return cb(err)
             }
             let msg
+            // todo: przebudowac to zeby bylo mozna przetlumaczyc w layoucie
             switch (status) {
               case 2:
                 msg = 'Twoje rozwiązanie przeszło testy maszynowe' + (passed ? ' i testy zostały zaliczone.' : ' ale testy nie zostały zaliczone! Sprawdź raport testów.')
@@ -219,6 +220,7 @@ const ManageReplies = module.exports = {
                     err.code = 'E_FILES_NOT_CREATED'
                     return cb(err)
                   }
+                  // todo: przebudowac to zeby bylo mozna przetlumaczyc w layoucie
                   let msg = (teacherName ? 'Prowadzący ' + teacherName : 'System') + ' odblokował zadanie w celu jego edycji i ponownego przesłania'
                   TaskComments.create({
                     taskStudent: studentId,

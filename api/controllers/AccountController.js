@@ -41,14 +41,14 @@ const AccountController = module.exports = {
    * @param error
    */
 
-  registerError (res, error) {
+  registerError (req, res, error) {
     LabGroups.find({}).populate('owner').exec(function (err, labs) {
-      return res.view('account/register', {title: 'Rejestracja', labs: labs, error: err || error})
+      return res.view('account/register', {title: req.i18n.__('register.header'), labs: labs, error: err || error})
     })
   },
 
-  settingsMessage (res, message, labs) {
-    return res.view('account/settings', {title: 'Settings', message: message, labs: labs})
+  settingsMessage (req, res, message, labs) {
+    return res.view('account/settings', {title: req.i18n.__('settings.title'), message: message, labs: labs})
   },
 
   // Controller Actions
@@ -78,25 +78,25 @@ const AccountController = module.exports = {
     }
     switch (req.method) {
       case 'GET':
-        return res.view('account/login', {title: 'Logowanie', redirect: req.param('redirect'), loginpage: true})
+        return res.view('account/login', {title: req.i18n.__('login.header'), redirect: req.param('redirect'), loginpage: true})
       case 'POST':
         let email = req.param('email')
         let password = req.param('password')
         let red = req.param('redirect')
         if (!_.isString(email) || !_.isString(password) ||
           !email || !password) {
-          return AccountController.loginError(res, 'Źle wporwadzone dane')
+          return AccountController.loginError(res, req.i18n.__('login.error.badrequest'))
         }
         Users.findOne({email: email}).exec(function (err, user) {
           if (err) {
             return res.serverError(err)
           }
           if (!user) {
-            return AccountController.loginError(res, 'Błędna kombinacja użytkownika i hasła')
+            return AccountController.loginError(res, req.i18n.__('login.error.credentials'))
           }
           if (user.password === AccountController.hashPassword(password, user.salt)) {
             if (!user.activated) {
-              return AccountController.loginError(res, 'Konto nie jest aktywne')
+              return AccountController.loginError(res, req.i18n.__('login.error.inactive'))
             }
             req.session.authed = user.id
             if (_.isString(red)) {
@@ -108,7 +108,7 @@ const AccountController = module.exports = {
               return res.redirect(sails.getUrlFor('StudentController.index'))
             }
           } else {
-            return AccountController.loginError(res, 'Błędna kombinacja użytkownika i hasła')
+            return AccountController.loginError(res, req.i18n.__('login.error.credentials'))
           }
         })
         break
@@ -139,7 +139,7 @@ const AccountController = module.exports = {
           if (err) {
             return res.serverError(err)
           }
-          return res.view('account/register', {title: 'Rejestracja', labs: labs, registerpage: true})
+          return res.view('account/register', {title: req.i18n.__('register.header'), labs: labs, registerpage: true})
         })
         break
       case 'POST':
@@ -152,39 +152,40 @@ const AccountController = module.exports = {
         let labGroups = req.param('groupl')
         let st = crypto.randomBytes(20).toString('hex')
         if (!name || !surname || !email || !password || !album) {
-          return AccountController.registerError(res, 'Proszę uzupełnić wszystkie pola.')
+          return AccountController.registerError(res, req.i18n.__('register.error.fillall'))
         }
         if (name.length > 255) {
-          return AccountController.registerError(res, 'Imię jest za długie')
+          return AccountController.registerError(res, req.i18n.__('register.error.name'))
         }
         if (surname.length > 255) {
-          return AccountController.registerError(res, 'Nazwisko jest za długie')
+          return AccountController.registerError(res, req.i18n.__('register.error.surname'))
         }
         let regexEmail = /^\w+@(p\.lodz\.pl)|\w+@(edu\.p\.lodz\.pl)$/
         if (!regexEmail.test(email)) {
-          return AccountController.registerError(res, 'Rejestracja dostępna tylko z uczelnienych maili')
+          return AccountController.registerError(res, req.i18n.__('register.error.email.domain'))
         }
         if (email.length > 255) {
-          return AccountController.registerError(res, 'E-mail jest za długie')
+          return AccountController.registerError(res, req.i18n.__('register.error.email.toolong'))
         }
-        if (album.length !== 6) {
-          return AccountController.registerError(res, 'Numer albumu jest nieprawidłowy.')
+        // todo: może tak być?, parseInt tu dodałem
+        if (parseInt(album.length) !== 6) {
+          return AccountController.registerError(res, req.i18n.__('register.error.album'))
         }
         if (password !== rePassword) {
-          return AccountController.registerError(res, 'Hasła nie są identyczne')
+          return AccountController.registerError(res, req.i18n.__('register.error.repassword'))
         }
         if (password.length > 255) {
-          return AccountController.registerError(res, 'Hasło jest za długie')
+          return AccountController.registerError(res, req.i18n.__('register.error.password.long'))
         }
         if (password.length < 8) {
-          return AccountController.registerError(res, 'Hasło jest za krótkie. Powinno zawierać 8 znaków.')
+          return AccountController.registerError(res, req.i18n.__('register.error.password.short'))
         }
 
         switch (Users.validatePassword(password)) {
           case 1:
-            return AccountController.registerError(res, 'Hasło jest za krótkie. Powinno zawierać 8 znaków.')
+            return AccountController.registerError(res, req.i18n.__('register.error.password.short'))
           case 2:
-            return AccountController.registerError(res, 'Twoje hasło powinno zawierać dużą i małą litere')
+            return AccountController.registerError(res, req.i18n.__('register.error.password.reqs'))
         }
 
         LabGroups.findOne({id: labGroups}).exec(function (err, lab) {
@@ -192,7 +193,7 @@ const AccountController = module.exports = {
             res.serverError(err)
           }
           if (!lab) {
-            return AccountController.registerError(res, 'Nieprawidłowa grupa laboratoryjna.')
+            return AccountController.registerError(res, req.i18n.__('register.error.labgroup'))
           }
           Users.create({
             name: name,
@@ -206,7 +207,7 @@ const AccountController = module.exports = {
           }).exec(function (err) {
             if (err) {
               if (err.code === 'E_UNIQUE') {
-                return AccountController.registerError(res, 'Taki album lub email już istnieje')
+                return AccountController.registerError(res, req.i18n.__('register.error.unique'))
               }
               return res.serverError(err)
             }
@@ -246,17 +247,17 @@ const AccountController = module.exports = {
           if (action === 'newPassword') {
             if (user.password === AccountController.hashPassword(oldPassword, user.salt)) {
               if (password !== rePassword) {
-                return AccountController.settingsMessage(res, 'Hasła nie są identyczne.', labs)
+                return AccountController.settingsMessage(req, res, req.i18n.__('register.error.repassword'), labs)
               }
               if (password.length < 8) {
-                return AccountController.settingsMessage(res, 'Hasło jest za krótkie. Powinno zawierać 8 znaków.', labs)
+                return AccountController.settingsMessage(req, res, req.i18n.__('register.error.password.short'), labs)
               }
 
               switch (Users.validatePassword(password)) {
                 case 1:
-                  return AccountController.settingsMessage(res, 'Hasło jest za krótkie. Powinno zawierać 8 znaków.', labs)
+                  return AccountController.settingsMessage(req, res, req.i18n.__('register.error.password.short'), labs)
                 case 2:
-                  return AccountController.settingsMessage(res, 'Twoje hasło powinno zawierać dużą i małą litere.', labs)
+                  return AccountController.settingsMessage(req, res, req.i18n.__('register.error.password.reqs'), labs)
               }
               let passwd = AccountController.hashPassword(password, user.salt)
 
@@ -264,10 +265,10 @@ const AccountController = module.exports = {
                 if (err) {
                   return res.serverError(err)
                 }
-                return AccountController.settingsMessage(res, 'Hasło zostało zmienione.', labs)
+                return AccountController.settingsMessage(req, res, req.i18n.__('settings.message.passwordchanged'), labs)
               })
             } else {
-              return AccountController.settingsMessage(res, 'Stare hasło jest nieprawidłowe', labs)
+              return AccountController.settingsMessage(req, res, req.i18n.__('settings.error.oldpassword'), labs)
             }
           } else if (action === 'newLab') {
             if (req.localUser.isTeacher) {
@@ -291,17 +292,17 @@ const AccountController = module.exports = {
                   return res.serverError(err)
                 }
                 if (slb) {
-                  return AccountController.settingsMessage(res, 'Należysz już do tej grupy laboratoryjnej.', labs)
+                  return AccountController.settingsMessage(req, res, req.i18n.__('settings.error.labgroup.belong'), labs)
                 }
                 Users.replaceCollection(user.id, 'labGroups').members([flab.id]).exec((err) => {
                   if (err) {
                     return res.serverError(err)
                   }
-                  return AccountController.settingsMessage(res, 'Zmieniono grupę laboratoryjną. Wymagana akceptacja przez Prowadzącego.', labs)
+                  return AccountController.settingsMessage(req, res, req.i18n.__('settings.message.labgroupchanged'), labs)
                 })
               })
             } else {
-              return AccountController.settingsMessage(res, 'Hasło jest niepoprawne.', labs)
+              return AccountController.settingsMessage(req, res, req.i18n.__('settings.error.password'), labs)
             }
           } else if (action === 'languagePreference') {
             Users.update(user.id, {languagePreference: language}).exec(function (err) {
@@ -310,7 +311,7 @@ const AccountController = module.exports = {
               }
               req.setLocale(language)
               req.i18n.locale = language
-              return AccountController.settingsMessage(res, req.i18n.__('settings.message.languagechanged'), labs)
+              return AccountController.settingsMessage(req, res, req.i18n.__('settings.message.languagechanged'), labs)
             })
           } else {
             return res.serverError()

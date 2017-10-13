@@ -42,16 +42,32 @@ mixin commentBlock(com, hidden)
                         i.fa.fa-check.fa-inverse.fa-stack-1x
             //=i18n('student.task.read')
 block content
-
-    // TODO: jakiś alert ze statusem wykrytym z paska adresu "?msg=kodWiadomosci"
-        TODO: "cantUploadReplaySent" - nie można wgrać pliku po zgłoszeniu odpowiedzi
-        TODO: "fileTooBig" - jeden z wgrywanych plików jest za duży
-        TODO: "extNotAllowed" - niedozwolone rozszerzenie
-        TODO: "fileUpdateSuccess" - przesyłanie plików zakończone powodzeniem
-        TODO: "noFilesInReply" - Nie można przesłać rozwiązania bez plików
-        TODO: "replyAlreadySent" - Rozwiązanie już zgłoszone
-        TODO: "noMainFile" - Brak głównego pliku main.c lub main.cpp
-        TODO: "replySent" - Rozwiązanie wysłane
+    if req.query.msg === 'fileUpdateSuccess' || req.query.msg === 'replySent' || req.query.msg === 'fileUploadSuccess'
+        .alert.alert-success
+            case req.query.msg
+                when 'fileUpdateSuccess'
+                    span=i18n('student.task.files.updatesuccess')
+                when 'replySent'
+                    span=i18n('student.task.reply.sent')
+                when 'fileUploadSuccess'
+                    span=i18n('student.task.files.uploadsuccess')
+    else if req.query.msg
+        .alert.alert-danger
+            case req.query.msg
+                when 'cantUploadReplaySent'
+                    span=i18n('student.task.files.replyalreadysent')
+                when 'fileTooBig'
+                    span=i18n('student.task.files.toobig')
+                when 'extNotAllowed'
+                    span=i18n('student.task.files.extnotallowed')
+                when 'noFilesInReply'
+                    span=i18n('student.task.reply.nofiles')
+                when 'replyAlreadySent'
+                    span=i18n('student.task.reply.replyalreadysent')
+                when 'noMainFile'
+                    span=i18n('student.task.reply.nomainfile')
+                default
+                    span=i18n('error')
 
     #fileContentModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='fileContentModalTitle', aria-hidden='true')
         .modal-dialog.modal-lg(role='document')

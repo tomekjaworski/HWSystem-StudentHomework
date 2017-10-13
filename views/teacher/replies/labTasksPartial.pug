@@ -7,7 +7,7 @@ div.d-flex
                 h5 Brak aktywnych studentów w grupie
             else
                 each student in data
-                    .col-6(id='studentCard-'+ student.id, style='display: inline-block;vertical-align:top;float: none;')
+                    .col-6.studentCard(id='studentCard-'+ student.id, style='display: inline-block;vertical-align:top;float: none;')
                         .card.replySortable(id=(student.reply ? 'reply-' + student.reply.id : ''), style=(student.reply ? (student.reply.blocked ? 'background-color:rgba(200,0,0,0.7);' : (!student.reply.newest ? 'background-color:rgba(100,100,100,0.7);' : (student.reply.teacherStatus === 2 ? 'background-color:rgba(200,0,0,0.7);' : (student.reply.teacherStatus === 1 ? 'background-color:lightgreen;' : '')))) : ''))
                             .card-header.d-flex.justify-content-end.p-0.replySortHandle
                                 .mr-auto.p-2.w-100.replySortableTitle
