@@ -29,6 +29,12 @@
 module.exports.settings = {
   csrf: false,
 
+  machine: {
+    ip: 'http://localhost',
+    port: 1337,
+    apiKey: 'alamakota1234'
+  },
+
   cors: {
 
     /***************************************************************************

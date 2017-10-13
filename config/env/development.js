@@ -21,6 +21,14 @@ module.exports = {
   //   connection: 'someMongodbServer'
   // }
 
+  settings: {
+    machine: {
+      ip: 'http://localhost',
+      port: 1337,
+      apiKey: 'alamakota1234'
+    }
+  },
+
   datastores: {
 
     /***************************************************************************
