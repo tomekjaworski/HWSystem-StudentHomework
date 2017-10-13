@@ -81,7 +81,7 @@ block content
     script#tmplReplaceModal(type='text/x-jsrender')
         #replaceModal.replaceModal.modal.fade
             .modal-dialog(role='document')
-                form.modal-content(action='reply/{{:reply}}/updateFile/{{:id}}', enctype='multipart/form-data', method='post')
+                form.modal-content(action='/reply/{{:reply}}/updateFile/{{:id}}', enctype='multipart/form-data', method='post')
                     .modal-header
                         h5.modal-title=i18n('student.task.modal.replace.title.%s', '{{:name}}')
                         button.close(type='button', data-dismiss='modal', aria-label=i18n('student.task.modal.cancel'))

@@ -78,7 +78,7 @@
       .done(function (data) {
         $('#fileContentModalTitle').text(data.title)
         if (data.mimeType.includes('text/')) {
-          $('#fileContentModalBody').text(data.body)
+          $('#fileContentModalBody').html('<pre></pre>').find('pre').text(data.body)
         } else if (data.mimeType === 'image/png') {
           $('#fileContentModalBody').html('<img class="img-fluid" src="data:image/png;base64,' + data.body + '"/>')
         } else if (data.mimeType === 'image/bmp') {
