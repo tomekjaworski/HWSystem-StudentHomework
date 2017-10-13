@@ -78,7 +78,12 @@
       .done(function (data) {
         $('#fileContentModalTitle').text(data.title)
         if (data.mimeType.includes('text/')) {
-          $('#fileContentModalBody').html('<pre></pre>').find('pre').text(data.body)
+          if (['h', 'c', 'hpp', 'cpp'].includes(data.ext)) {
+            $('#fileContentModalBody').html(data.body)
+          }
+          else {
+            $('#fileContentModalBody').html('<pre></pre>').find('pre').text(data.body)
+          }
         } else if (data.mimeType === 'image/png') {
           $('#fileContentModalBody').html('<img class="img-fluid" src="data:image/png;base64,' + data.body + '"/>')
         } else if (data.mimeType === 'image/bmp') {
