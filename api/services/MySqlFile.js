@@ -8,7 +8,7 @@ const concat = require('concat-stream')
 const base64 = require('base64-js')
 const cs = require('convert-string')
 const path = require('path')
-const Magic = require('mmmagic').Magic
+const mmmagic = require('mmmagic')
 
 module.exports = function MySqlStore (globalOpts) {
   globalOpts = globalOpts || {}
@@ -140,22 +140,23 @@ module.exports = function MySqlStore (globalOpts) {
 
         __newFile.pipe(concat((file) => {
           if (__newFile.headers['content-type'] === 'application/octet-stream') {
-            let magic = new Magic()
+            let magic = new mmmagic.Magic(mmmagic.MAGIC_MIME_TYPE)
             let buf = Buffer.from(file)
             magic.detect(buf, function (err, result) {
               if (err) {
                 throw new Error(err)
               }
-              if ((result.includes('ASCII text')) ||
-                (result.includes('UTF-8 Unicode (with BOM) text')) ||
-                (result.includes('UTF-8 Unicode text')) ||
-                (result.includes('UTF-16 Unicode text'))) {
+              const arrayPng = ['application/png', 'application/x-png', 'image/png', 'image/x-png']
+              const arrayBmp = ['application/bmp', 'application/preview', 'application/x-bmp', 'application/x-win-bitmap', 'image/bmp', 'image/ms-bmp', 'image/x-bitmap', 'image/x-bmp', 'image/x-ms-bmp', 'image/x-win-bitmap', 'image/x-windows-bmp', 'image/x-xbitmap']
+
+              if (result.includes('text/')) {
                 __newFile.headers['content-type'] = 'text/plain'
-              } else if (result.includes('PNG image data')) {
+              } else if (arrayPng.indexOf(result) > -1) {
                 __newFile.headers['content-type'] = 'image/png'
-              } else if (result.includes('PC bitmap')) {
+              } else if (arrayBmp.indexOf(result) > -1) {
                 __newFile.headers['content-type'] = 'image/bmp'
               }
+
               TaskReplyFiles.findOrCreate({id: options.updateFileId}, {
                 reply: options.replyId,
                 fileName: fileFormat.name,
