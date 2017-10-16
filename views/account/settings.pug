@@ -11,17 +11,7 @@ block content
                     strong=i18n('settings.message')
                     | #{message}
             .row
-                .col-12.mb-3
-                    h5=i18n('settings.language.title')
-                    form(method='post' action='/settings', name='languagePreference')
-                        .form-group
-                            label(for='inputLanguage')=i18n('settings.language.label')
-                            input#inputLanguage.form-control(type='text', name='language', value=req.localUser.languagePreference)
-                        input(type='hidden' name='action' value='languagePreference')
-
-                        input.btn.btn-primary.mb-4.mb-md-0(type='submit', value=i18n('settings.language.change'))
-            .row
-                .col-sm-6
+                .col-sm-6.mb-3
                     h5=i18n('settings.password.title')
                     form(method='post' action='/settings')
                         .form-group
@@ -39,7 +29,7 @@ block content
 
                         button.btn.btn-primary.mb-4.mb-md-0(type='submit')=i18n('settings.password.change')
                 if !localUser.isTeacher
-                    .col-sm-6
+                    .col-sm-6.mb-3
                         h5=i18n('settings.lab.title')
                         form(method='post' action='/settings')
                             .form-group
@@ -55,3 +45,38 @@ block content
                             input(type='hidden' name='action' value="newLab")
 
                             button.btn.btn-primary(type='submit')=i18n('settings.lab.change')
+                .col-sm-6.mb-3
+                    h5=i18n('settings.language.title')
+                    form(method='post' action='/settings', name='languagePreference')
+                        //.form-group
+                        //    label(for='inputLanguage')=i18n('settings.language.label')
+                        //    input#inputLanguage.form-control(type='text', name='language', value=req.localUser.languagePreference)
+                        input(type='hidden' name='action' value='languagePreference')
+                        .row
+                            //- https://github.com/twitter/twemoji/blob/gh-pages/README.md#attribution-requirements
+                            // Twitter Emoji (Twemoji)
+                            // Copyright 2017 Twitter, Inc and other contributors
+                            // Graphics licensed under CC-BY 4.0: https://creativecommons.org/licenses/by/4.0/
+                            .col-6.text-center
+                                img(src='/images/pol.png').img-fluid
+                            .col-6.text-center
+                                img(src='/images/eng.png').img-fluid
+                        .form-group.row
+                            .col-6.text-center
+                                label.custom-control.custom-radio
+                                    if (req.i18n.locale === 'pl')
+                                        input#inputLanguage1.custom-control-input(name='language', type='radio', value='pl' checked)
+                                    else
+                                        input#inputLanguage1.custom-control-input(name='language', type='radio', value='pl')
+                                    span.custom-control-indicator
+                                    span.custom-control-description PL
+                            .col-6.text-center
+                                label.custom-control.custom-radio
+                                    if (req.i18n.locale === 'en')
+                                        input#inputLanguage2.custom-control-input(name='language', type='radio', value='en' checked)
+                                    else
+                                        input#inputLanguage2.custom-control-input(name='language', type='radio', value='en')
+                                    span.custom-control-indicator
+                                    span.custom-control-description EN
+                        .text-center
+                            input.btn.btn-primary.mb-4.mb-md-0(type='submit', value=i18n('settings.language.change'))

@@ -305,14 +305,19 @@ const AccountController = module.exports = {
               return AccountController.settingsMessage(req, res, req.i18n.__('settings.error.password'), labs)
             }
           } else if (action === 'languagePreference') {
-            Users.update(user.id, {languagePreference: language}).exec(function (err) {
-              if (err) {
-                return res.serverError(err)
-              }
-              req.setLocale(language)
-              req.i18n.locale = language
-              return AccountController.settingsMessage(req, res, req.i18n.__('settings.message.languagechanged'), labs)
-            })
+            if (Object.keys(req.i18n.locales).indexOf(language) > -1) {
+              Users.update(user.id, {languagePreference: language}).exec(function (err) {
+                if (err) {
+                  return res.serverError(err)
+                }
+                req.setLocale(language)
+                req.i18n.locale = language
+                return AccountController.settingsMessage(req, res, req.i18n.__('settings.message.languagechanged'), labs)
+              })
+            } else {
+              return AccountController.settingsMessage(req, res, req.i18n.__('settings.message.wronglanguage'), labs)
+              // return res.serverError()
+            }
           } else {
             return res.serverError()
           }

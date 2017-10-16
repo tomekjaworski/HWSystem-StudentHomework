@@ -214,7 +214,6 @@ block content
                                         form(action='/topic/' + topic.id + '/task/' + task.id + '/uploadFile/', enctype='multipart/form-data', method='post')
                                             label.custom-task-file
                                                 input#file.custom-task-file-input(type='file', name='files', accept='.c,.cpp,.h,.hpp,.inc,.txt,.bmp,.png', multiple)
-                                                // todo: i18n tutaj trzeba bedzie wykombinowac bo te stringi sa w scssie lul
                                                 span.custom-task-file-control(lang=req.i18n.locale)
                                             | &nbsp;
                                             input.btn.btn-primary(type='submit', value=i18n('student.task.files.send'))

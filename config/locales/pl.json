@@ -43,6 +43,7 @@
 	"settings.language.change": "Zmień",
 	"settings.message": "Wiadomość: ",
 	"settings.message.languagechanged": "Język został zmieniony",
+	"settings.message.wronglanguage": "Wybrany język jest niepoprawny",
 	"settings.message.passwordchanged": "Hasło zostało zmienione",
 	"settings.message.labgroupchanged": "Zmieniono grupę laboratoryjną. Wymagana akceptacja przez Prowadzącego.",
 	"settings.error.oldpassword": "Stare hasło jest nieprawidłowe",
@@ -172,12 +173,12 @@
 	"teacher.labs.add.error": "Nie udało się utworzyć grupy",
 	"teacher.replies.teacherpanel": "Odpowiedzi do zadań :: Panel Nauczyciela",
 	"teacher.replies.nolabgroups": "Nie zdefiniowano żadnych grup laboratoryjnych",
-	"teacher.tt.addtopic.title": "Dodaj temat :: Teacher Panel",
+	"teacher.tt.addtopic.title": "Dodaj temat :: Panel nauczyciela",
 	"teacher.tt.addtopic.fail": "Nie udało się utworzyć tematu",
-	"teacher.tt.addtask.title": "Dodaj zadanie :: Teacher Panel",
+	"teacher.tt.addtask.title": "Dodaj zadanie :: Panel nauczyciela",
 	"teacher.tt.addtask.fail": "Nie udało się utworzyć zadania",
 	"teacher.tt.editask.success": "Udało się zaktualizować zadanie",
-	"teacher.users.title": "User :: Teacher Panel",
+	"teacher.users.title": "Użytkownicy :: Panel nauczyciela",
 	"teacher.users.repass.fail": "Hasła nie są identyczne",
-	"teacher.dashboard.title": "Dashboard :: Teacher Panel"
+	"teacher.dashboard.title": "Dashboard :: Panel nauczyciela"
 }
