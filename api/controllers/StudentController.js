@@ -15,9 +15,9 @@ const StudentController = module.exports = {
       }
       if (req.wantsJSON) {
         if (!lab) {
-          return res.forbidden('Nie jesteś przydzielony do żadnej grupy laboratoryjnej')
+          return res.forbidden(req.i18n.__('student.nolab'))
         }
-        return res.forbidden(`Prowadzący grupy laboratoryjnej '${lab.labgroup.name}' jeszcze Cię nie aktywował`)
+        return res.forbidden(req.i18n.__('student.nolab.inactive.%s', lab.labgroup.name))
       }
       return res.view('student/nolab', {lab: lab})
     })
@@ -53,6 +53,7 @@ const StudentController = module.exports = {
         'LEFT JOIN tasks ON tasks.topic = topics.id\n' +
         'LEFT JOIN taskreplies AS replies ON replies.task = tasks.id AND replies.student = $1 AND replies.lastSent = 1 AND replies.newest = 1 \n' +
         'LEFT JOIN ( SELECT task, taskStudent FROM taskcomments GROUP BY task, taskStudent ) comments ON comments.task = tasks.id AND comments.taskStudent = $1\n' +
+        'WHERE topics.visible = 1\n' +
         'GROUP BY topics.id', [req.localUser.id]).exec((err, data) => {
           if (err) {
             return res.serverError(err)
@@ -73,6 +74,10 @@ const StudentController = module.exports = {
    * @route       :: /ajax/topic/:id/tasks
    */
   tasks (req, res) {
+    let topicId = parseInt(req.param('id'), '10')
+    if (!_.isInteger(topicId)) {
+      return res.badRequest()
+    }
     StudentsLabGroups.findOne({
       student: req.localUser.id,
       active: true
@@ -83,11 +88,7 @@ const StudentController = module.exports = {
       if (!lab) {
         return StudentController.noLab(req, res)
       }
-      let topicId = parseInt(req.param('id'), '10')
-      if (!_.isInteger(topicId)) {
-        return res.badRequest()
-      }
-      Topics.count({'id': topicId}, (err, count) => {
+      Topics.count({'id': topicId, visible: true}, (err, count) => {
         if (err) {
           return res.serverError(err)
         }
@@ -108,7 +109,7 @@ const StudentController = module.exports = {
           'LEFT JOIN taskcomments comments ON comments.task = tasks.id AND comments.viewed = false\n' +
           'LEFT JOIN topics ON topics.id = tasks.topic\n' +
           'LEFT JOIN studentcustomdeadlines scd ON scd.task = tasks.id AND scd.student = $1 \n' +
-          'LEFT JOIN labgrouptopicdeadline groupdeadline ON groupdeadline.group = $2 \n' +
+          'LEFT JOIN labgrouptopicdeadline groupdeadline ON groupdeadline.group = $2 AND groupdeadline.topic = $3 \n' +
           'WHERE tasks.topic = $3 \n' +
           'GROUP BY tasks.id, reply.id, tasks.topic, scd.deadline, groupdeadline.deadline',
           [req.localUser.id, lab.labgroup, topicId]).exec((err, data) => {
@@ -148,7 +149,7 @@ const StudentController = module.exports = {
             return res.notFound()
           }
 
-          Topics.findOne({id: topicparam}).exec(function (err, topic) {
+          Topics.findOne({id: topicparam, visible: true}).exec(function (err, topic) {
             if (err) {
               return res.badRequest(err)
             }
@@ -157,7 +158,7 @@ const StudentController = module.exports = {
               return res.notFound()
             }
 
-            Tasks.findOne({id: taskparam}).populate('description').exec(function (err, task) {
+            Tasks.findOne({id: taskparam, topic: topicparam, visible: true}).populate('description').exec(function (err, task) {
               if (err) {
                 return res.badRequest(err)
               }
@@ -178,7 +179,7 @@ const StudentController = module.exports = {
                     return res.serverError(err)
                   }
                   if (!deadline) {
-                    return res.forbidden('Nie zostałeś aktywowany')
+                    return res.forbidden(req.i18n.__('student.inactive'))
                   }
 
                   let deadlineCanSend = deadline > Date.now()
@@ -287,7 +288,7 @@ const StudentController = module.exports = {
                       return res.serverError(err)
                     }
                     if (!lab) {
-                      return res.forbidden('Nie zostałeś aktywowany')
+                      return res.forbidden(req.i18n.__('student.inactive'))
                     }
                     RecentAction.addStudentComment(req.localUser.id, task, lab.labgroup, (err) => {
                       if (err) {
@@ -325,7 +326,7 @@ const StudentController = module.exports = {
             return res.notFound()
           }
           if (err.code === 'E_FILE_CONTENTS_NOT_FOUND') {
-            return res.serverError('Plik nie ma treści, najpewniej błąd podczas wysyłania, prosimy przesłać ponownie')
+            return res.serverError(req.i18n.__('student.task.error.emptyfile'))
           }
           return res.serverError(err)
         }
@@ -450,10 +451,10 @@ const StudentController = module.exports = {
               return res.serverError(err)
             }
             if (!deadline) {
-              return res.forbidden('Nie zostałeś aktywowany')
+              return res.forbidden(req.i18n.__('student.inactive'))
             }
             if (deadline < Date.now()) {
-              return res.forbidden('Upłynął termin odpowiedzi')
+              return res.forbidden(req.i18n.__('student.task.files.afterdeadline'))
             }
             if (reply.lastSent === true) {
               return res.redirect('/topic/' + reply.task.topic + '/task/' + reply.task.id + '?msg=cantUploadReplaySent')
@@ -495,10 +496,10 @@ const StudentController = module.exports = {
           return res.serverError(err)
         }
         if (!deadline) {
-          return res.forbidden('Nie zostałeś aktywowany')
+          return res.forbidden(req.i18n.__('student.inactive'))
         }
         if (deadline < Date.now()) {
-          return res.forbidden('Upłynął termin odpowiedzi')
+          return res.forbidden(req.i18n.__('student.task.files.afterdeadline'))
         }
         TaskReplies.findOrCreate({
           student: req.localUser.id,
@@ -571,10 +572,10 @@ const StudentController = module.exports = {
               return res.serverError(err)
             }
             if (!deadline) {
-              return res.forbidden('Nie zostałeś aktywowany')
+              return res.forbidden(req.i18n.__('student.inactive'))
             }
             if (deadline < Date.now()) {
-              return res.forbidden('Upłynął termin odpowiedzi')
+              return res.forbidden(req.i18n.__('student.task.files.afterdeadline'))
             }
             file.visible = false
             TaskReplyFiles.update({id: id, reply: reply, visible: true}).set({visible: false}).exec((err) => {
@@ -609,10 +610,10 @@ const StudentController = module.exports = {
           return res.serverError(err)
         }
         if (!deadline) {
-          return res.forbidden('Nie zostałeś aktywowany')
+          return res.forbidden(req.i18n.__('student.inactive'))
         }
         if (deadline < Date.now()) {
-          return res.forbidden('Upłynął termin odpowiedzi')
+          return res.forbidden(req.i18n.__('student.task.files.afterdeadline'))
         }
         TaskReplies.findOne({
           student: req.localUser.id,
@@ -667,7 +668,7 @@ const StudentController = module.exports = {
                     return res.serverError(err)
                   }
                   if (!lab) {
-                    return res.forbidden('Nie zostałeś aktywowany')
+                    return res.forbidden(req.i18n.__('student.inactive'))
                   }
                   RecentAction.sendTaskReply(req.localUser.id, taskid, lab.labgroup, reply.sent, (err) => {
                     if (err) {

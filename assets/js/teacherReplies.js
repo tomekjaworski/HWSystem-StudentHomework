@@ -93,7 +93,7 @@ function repliesGetBack () {
     $.when.apply($, gets).then(function () {
       $('#labSpinner').remove()
     }, function (jqXHR, textStatus, errorThrown) {
-      alert('Nie udało się pobrać danych:  ' + textStatus + ' - ' + errorThrown)
+      alert('Nie udało się pobrać danych:  ' + textStatus + ' - ' + errorThrown) // todo: i18n
       $('#labSpinner').remove()
     })
     return false
@@ -111,13 +111,13 @@ function repliesGetBack () {
       }
     }).done(function () {
       if (del) {
-        alert('Skasowano własny termin')
+        alert('Skasowano własny termin') // todo: i18n
       } else {
-        alert('Ustawiono własny termin')
+        alert('Ustawiono własny termin') // todo: i18n
       }
     })
       .fail(function (jqXHR, textStatus, errorThrown) {
-        alert('Nie udało się zmienić terminu:  ' + textStatus + ' - ' + errorThrown)
+        alert('Nie udało się zmienić terminu:  ' + textStatus + ' - ' + errorThrown) // todo: i18n
       })
   }
 
@@ -138,7 +138,7 @@ function repliesGetBack () {
         task.css('background-color', 'rgba(200,0,0,0.7)')
       }
     }).fail(function (jqXHR, textStatus, errorThrown) {
-      alert('Nie udało się zmienić oceny:  ' + textStatus + ' - ' + errorThrown)
+      alert('Nie udało się zmienić oceny:  ' + textStatus + ' - ' + errorThrown) // todo: i18n
     })
   }
 
@@ -166,7 +166,7 @@ function repliesGetBack () {
         task.css('background-color', '')
       }
     }).fail(function (jqXHR, textStatus, errorThrown) {
-      alert('Nie udało się zmienić blokady:  ' + textStatus + ' - ' + errorThrown)
+      alert('Nie udało się zmienić blokady:  ' + textStatus + ' - ' + errorThrown) // todo: i18n
       // TODO: fix this
       // e.checked = !e.checked
     })
@@ -185,7 +185,7 @@ function repliesGetBack () {
       $('#repost-reply-' + id).remove()
     })
       .fail(function (jqXHR, textStatus, errorThrown) {
-        alert('Nie udało się zresetować zadania:  ' + textStatus + ' - ' + errorThrown)
+        alert('Nie udało się zresetować zadania:  ' + textStatus + ' - ' + errorThrown) // todo: i18n
       })
   }
 
@@ -227,6 +227,7 @@ function repliesGetBack () {
       }
       for (let id in data.comments) {
         let comment = data.comments[id]
+        // todo: i18n, + jsRender(?)
         commentBlock.append('<div id="comments-student-' + data.student + '-comment-' + comment.id + '" style="border:1px solid black;margin:1px;padding:1px;"><div>Autor: ' + comment.name + ' ' + comment.surname + '</div><div>Data: ' + comment.date + '</div><div>Przeczytane: ' + comment.viewed + '</div><div> Treść:<div style="border:1px solid black;margin:1px;padding:1px;background-color:white;">' + comment.comment + '</div></div>')
       }
       commentBlock.data('last', data.last)

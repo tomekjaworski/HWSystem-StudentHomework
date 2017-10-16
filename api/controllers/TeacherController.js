@@ -16,7 +16,7 @@ const TeacherController = module.exports = {
     LabGroups.find({owner: req.localUser.id}).exec((err, labs) => {
       if (err) return res.serverError(err)
       if (labs.length === 0) {
-        return res.view('teacher/index', {title: 'Dashboard :: Teacher Panel', menuItem: 'index'})
+        return res.view('teacher/index', {title: req.i18n.__('teacher.dashboard.title'), menuItem: 'index'})
       }
       RecentTeacherActions.find({labgroup: labs.map(l => l.id), seen: false}).sort('updatedAt DESC').exec((err, actions) => {
         if (err) return res.serverError(err)
@@ -27,7 +27,7 @@ const TeacherController = module.exports = {
             return res.serverError(err)
           }
         })
-        return res.view('teacher/index', {title: 'Dashboard :: Teacher Panel', menuItem: 'index', actions: actions})
+        return res.view('teacher/index', {title: req.i18n.__('teacher.dashboard.title'), menuItem: 'index', actions: actions})
       })
     })
   },

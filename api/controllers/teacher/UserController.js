@@ -32,14 +32,14 @@ const UserController = module.exports = {
         return res.serverError(err)
       }
       if (!users || users.length === 0) {
-        return res.serverError('Nie znaleziono roli prowadzącego, zgłoś się do administratora')
+        return res.serverError(req.i18n.__('teacher.labs.noteachers'))
       }
       LabGroups.find().populate('owner').exec(function (err, labs) {
         if (err) {
           return res.serverError(err)
         }
         return res.view('teacher/user/add',
-          {title: 'User :: Teacher Panel', users: users, labs: labs, message: msg, menuItem: 'users'})
+          {title: req.i18n.__('teacher.users.title'), users: users, labs: labs, message: msg, menuItem: 'users'})
       })
     })
     if (req.method === 'POST') {
@@ -55,10 +55,10 @@ const UserController = module.exports = {
       let lab = req.param('groupl')
       let st = crypto.randomBytes(20).toString('hex')
       if (!name || !surname || !album || !email || !pass || !repass || !lab) {
-        return a('Uzupełni wszystkie pola')
+        return a(req.i18n.__('teacher.labs.fillall'))
       }
       if (pass !== repass) {
-        return a('Hasła nie są identyczne')
+        return a(req.i18n.__('teacher.users.repass.fail'))
       }
       admin = !!(admin)
       teacher = !!(teacher)

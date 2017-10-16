@@ -42,16 +42,32 @@ mixin commentBlock(com, hidden)
                         i.fa.fa-check.fa-inverse.fa-stack-1x
             //=i18n('student.task.read')
 block content
-
-    // TODO: jakiś alert ze statusem wykrytym z paska adresu "?msg=kodWiadomosci"
-        TODO: "cantUploadReplaySent" - nie można wgrać pliku po zgłoszeniu odpowiedzi
-        TODO: "fileTooBig" - jeden z wgrywanych plików jest za duży
-        TODO: "extNotAllowed" - niedozwolone rozszerzenie
-        TODO: "fileUpdateSuccess" - przesyłanie plików zakończone powodzeniem
-        TODO: "noFilesInReply" - Nie można przesłać rozwiązania bez plików
-        TODO: "replyAlreadySent" - Rozwiązanie już zgłoszone
-        TODO: "noMainFile" - Brak głównego pliku main.c lub main.cpp
-        TODO: "replySent" - Rozwiązanie wysłane
+    if req.query.msg === 'fileUpdateSuccess' || req.query.msg === 'replySent' || req.query.msg === 'fileUploadSuccess'
+        .alert.alert-success
+            case req.query.msg
+                when 'fileUpdateSuccess'
+                    span=i18n('student.task.files.updatesuccess')
+                when 'replySent'
+                    span=i18n('student.task.reply.sent')
+                when 'fileUploadSuccess'
+                    span=i18n('student.task.files.uploadsuccess')
+    else if req.query.msg
+        .alert.alert-danger
+            case req.query.msg
+                when 'cantUploadReplaySent'
+                    span=i18n('student.task.files.replyalreadysent')
+                when 'fileTooBig'
+                    span=i18n('student.task.files.toobig')
+                when 'extNotAllowed'
+                    span=i18n('student.task.files.extnotallowed')
+                when 'noFilesInReply'
+                    span=i18n('student.task.reply.nofiles')
+                when 'replyAlreadySent'
+                    span=i18n('student.task.reply.replyalreadysent')
+                when 'noMainFile'
+                    span=i18n('student.task.reply.nomainfile')
+                default
+                    span=i18n('error')
 
     #fileContentModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='fileContentModalTitle', aria-hidden='true')
         .modal-dialog.modal-lg(role='document')
@@ -81,7 +97,7 @@ block content
     script#tmplReplaceModal(type='text/x-jsrender')
         #replaceModal.replaceModal.modal.fade
             .modal-dialog(role='document')
-                form.modal-content(action='reply/{{:reply}}/updateFile/{{:id}}', enctype='multipart/form-data', method='post')
+                form.modal-content(action='/reply/{{:reply}}/updateFile/{{:id}}', enctype='multipart/form-data', method='post')
                     .modal-header
                         h5.modal-title=i18n('student.task.modal.replace.title.%s', '{{:name}}')
                         button.close(type='button', data-dismiss='modal', aria-label=i18n('student.task.modal.cancel'))
@@ -135,9 +151,9 @@ block content
         .card-header
             ul.nav.nav-tabs.nav-fill.task-tab
                 li.nav-item
-                    a.nav-link.active(data-toggle='tab', href='#task', aria-expanded='true')=i18n('student.task.tab.task')
+                    a.nav-link(class=(req.query.msg ? '' : 'active'), data-toggle='tab', href='#task', aria-expanded=(req.query.msg ? 'false' : 'true'))=i18n('student.task.tab.task')
                 li.nav-item
-                    a.nav-link(data-toggle='tab', href='#files', aria-expanded='false')=i18n('student.task.tab.files')
+                    a.nav-link(class=(req.query.msg ? 'active' : ''), data-toggle='tab', href='#files', aria-expanded=(req.query.msg ? 'true' : 'false'))=i18n('student.task.tab.files')
                 li.nav-item
                     a.nav-link(data-toggle='tab', href='#comments', aria-expanded='false')=i18n('student.task.tab.comments')
                         if taskComments && taskComments.length > 0
@@ -145,7 +161,7 @@ block content
 
         .card-block
             #myTabContent.tab-content
-                #task.tab-pane.fade.in.active.show(aria-expanded='true')
+                #task.tab-pane.fade(class=(req.query.msg ? '' : 'in active show'), aria-expanded=(req.query.msg ? 'false' : 'true'))
                     //-h1 Topic: #{topic.id}
                     - let teacherStatus = [i18n('student.task.ts.none'), i18n('student.task.ts.pass'), i18n('student.task.ts.fail')]
                     - let machineStatus = [i18n('student.task.ms.notstarted'), i18n('student.task.ms.inqueue'), i18n('student.task.ms.super'), i18n('student.task.ms.note'), i18n('student.task.ms.notices'), i18n('student.task.ms.errors')]
@@ -175,7 +191,7 @@ block content
                     .card
                         #task-content.card-block!= task.description
 
-                #files.tab-pane.fade(aria-expanded='false')
+                #files.tab-pane.fade(class=(req.query.msg ? 'in active show' : ''),aria-expanded=(req.query.msg ? 'true' : 'false'))
                         .card.text-center
                             if taskReply
                                 .card-header
@@ -198,7 +214,6 @@ block content
                                         form(action='/topic/' + topic.id + '/task/' + task.id + '/uploadFile/', enctype='multipart/form-data', method='post')
                                             label.custom-task-file
                                                 input#file.custom-task-file-input(type='file', name='files', accept='.c,.cpp,.h,.hpp,.inc,.txt,.bmp,.png', multiple)
-                                                // todo: i18n tutaj trzeba bedzie wykombinowac bo te stringi sa w scssie lul
                                                 span.custom-task-file-control(lang=req.i18n.locale)
                                             | &nbsp;
                                             input.btn.btn-primary(type='submit', value=i18n('student.task.files.send'))
