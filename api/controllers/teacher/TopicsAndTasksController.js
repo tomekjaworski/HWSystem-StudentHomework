@@ -142,6 +142,9 @@ const TopicsAndTasksController = module.exports = {
       ard = ard === 'ok'
       com = com === 'ok'
       Topics.findOne({id: topic}).populate('tasks').exec(function (err, topics) {
+        if (err) {
+          return res.serverError(err)
+        }
         let place
         let allPlace = []
         for (let i = 0; i < topics.tasks.length; i++) {
