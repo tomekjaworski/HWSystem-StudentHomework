@@ -169,7 +169,7 @@ const StudentController = module.exports = {
 
               task.description = task.description[0].description
 
-              pdc(task.description, 'markdown_github', 'html5', function (err, result) {
+              pdc(task.description, 'markdown_github-raw_html', 'html5', function (err, result) {
                 if (err) {
                   return res.serverError(err)
                 }
@@ -350,7 +350,7 @@ const StudentController = module.exports = {
               })
             }
             content = '```' + type + '\n' + file.file + '\n```'
-            pdc(content, 'markdown_github', 'html5', function (err, result) {
+            pdc(content, 'markdown_github-raw_html', 'html5', function (err, result) {
               if (err) {
                 return res.serverError(err)
               }

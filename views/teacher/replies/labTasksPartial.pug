@@ -76,26 +76,33 @@ div.d-flex
                                     hr
                                     div
                                         h6 Pliki
-                                        each file in student.reply.files
-                                            div(style='border:1px solid black; margin-bottom:10px;background-color:white;')
-                                                div='Nazwa: ' + file.fileName + '.' + file.fileExt
-                                                div='Rozmiar: ' + file.fileSize
-                                                div='MimeType: ' + file.fileMimeType
-                                                div
-                                                    h7 Tresc:
-                                                    div
-                                                        if file.file.err
-                                                            div(style='border:1px solid black;margin:1px;padding:1px;overflow: auto;white-space: normal;')
-                                                                b BŁĄD
-                                                                | Brak zawartości pliku, najpewniej został źle przesłany
-                                                        else if file.fileMimeType.includes('text/')
-                                                            div(style='border:1px solid black;margin:1px;padding:1px;') !{file.file}
-                                                        else if file.fileMimeType === 'image/png'
-                                                            img.img-fluid(src='data:image/pmg;base64,' + file.file)
-                                                        else if file.fileMimeType === 'image/bmp'
-                                                            img.img-fluid(src='data:image/bmp;base64,' + file.file)
-                                                        else
-                                                            p Nieobsługiwane rozszerzenie
+                                        ul.list-group
+                                            each file in student.reply.files
+                                                //div(style='border:1px solid black; margin-bottom:10px;background-color:white;')
+                                                li.list-group-item
+                                                    .w-100
+                                                        div='Nazwa: ' + file.fileName + '.' + file.fileExt
+                                                        div='Rozmiar: ' + file.fileSize
+
+                                                        div='MimeType: ' + file.fileMimeType
+
+                                                        h7 Tresc:
+                                                        div
+                                                            if file.file.err
+                                                                pre(style='border:1px solid black;margin:1px;padding:1px;overflow: auto;white-space: normal;')
+                                                                    b BŁĄD
+                                                                    | Brak zawartości pliku, najpewniej został źle przesłany
+                                                            else if file.fileMimeType.includes('text/')
+                                                                if ['h', 'c', 'hpp', 'cpp'].includes(file.fileExt)
+                                                                    pre !{file.file}
+                                                                else
+                                                                    pre=file.file
+                                                            else if file.fileMimeType === 'image/png'
+                                                                img.img-fluid(src='data:image/pmg;base64,' + file.file)
+                                                            else if file.fileMimeType === 'image/bmp'
+                                                                img.img-fluid(src='data:image/bmp;base64,' + file.file)
+                                                            else
+                                                                pre Nieobsługiwane rozszerzenie
                                 div
                                     h6 Komentarze:
                                     - let comment = _.last(student.comments)
