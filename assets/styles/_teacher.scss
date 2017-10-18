@@ -69,3 +69,8 @@
 .nav-header-inner {
   background-color: transparent;
 }
+
+.studentCardMaxHeight {
+  max-height: 400px;
+  overflow-y: scroll;
+}

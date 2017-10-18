@@ -371,7 +371,8 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
               comment: c.comment,
               viewed: c.viewed,
               name: c.user.name,
-              surname: c.user.surname
+              surname: c.user.surname,
+              teacher: c.user.isTeacher
             }
           } catch (err) {
             return res.serverError(err)
