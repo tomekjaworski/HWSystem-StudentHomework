@@ -10,7 +10,7 @@ html(lang=req.i18n.locale)
         else
             title= brand
         include styles
-    body.mb-5
+    body
         noscript
             .container
                 .alert.alert-danger(role='alert')
@@ -31,7 +31,8 @@ html(lang=req.i18n.locale)
 
             block content
 
-            .mb-5.pt-5
+        .container-fluid
+            block fluid
 
         #modalContainer
 

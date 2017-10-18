@@ -333,7 +333,7 @@ const StudentController = module.exports = {
         if (file.reply.student !== req.localUser.id) {
           return res.forbidden()
         }
-        let content = 'ni mo'
+        let content = 'ni mo' // todo: ni mo czego? wut?
         if (file.file) {
           if (file.fileMimeType.includes('text/')) {
             let type = ''

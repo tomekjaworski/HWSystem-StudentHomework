@@ -1,16 +1,9 @@
 /**
- * `less`
+ * `standard`
  *
  * ---------------------------------------------------------------
  *
- * Compile your LESS files into a CSS stylesheet.
- *
- * By default, only the `assets/styles/importer.less` is compiled.
- * This allows you to control the ordering yourself, i.e. import your
- * dependencies, mixins, variables, resets, etc. before other stylesheets)
- *
- * For usage docs see:
- *   https://github.com/gruntjs/grunt-contrib-less
+ * Check standard compliance
  *
  */
 module.exports = function (grunt) {
@@ -19,21 +12,33 @@ module.exports = function (grunt) {
       options: {
         fix: true,
         globals: [
+          '$',
           '_',
+          'hljs',
+          'jsLocale',
           'LabGroups',
-          'Users',
-          'sails',
+          'LabGroupTopicDeadline',
+          'ManageReplies',
+          'MySqlFile',
+          'RecentAction',
+          'RecentTeacherActions',
           'Roles',
-          'Topics',
-          'Tasks',
-          'TaskComments',
+          'sails',
+          'SimpleMDE',
+          'Sortable',
+          'StudentCustomDeadlines',
           'StudentsLabGroups',
           'StudentsLabGroups',
-          'TaskReplies',
-          'TaskDescription',
           'Subjects',
+          'TaskComments',
+          'TaskDescription',
+          'TaskReplies',
+          'TaskReplyFileContent',
           'TaskReplyFiles',
-          'TaskReplyFileContent'
+          'Tasks',
+          'Topics',
+          'TopicsAndTasksController',
+          'Users'
         ]
       },
       app: {

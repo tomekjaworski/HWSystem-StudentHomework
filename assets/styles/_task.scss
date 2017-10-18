@@ -43,6 +43,17 @@
   border-color: #175fdd;
 }
 
+.task-c-comment {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+  max-width: 100%;
+  // for the really annoying pricks
+  overflow: hidden;
+  //white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 #task-content {
   table {
     font-size: 14px;
