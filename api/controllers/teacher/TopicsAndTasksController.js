@@ -10,7 +10,7 @@ const pdc = require('pdc')
 const dateFormat = require('dateformat')
 
 const TopicsAndTasksController = module.exports = {
-  listTopicsAndTasks: function (req, res) {
+  listTopicsAndTasks (req, res) {
     Topics.find().populate('tasks', {sort: 'place ASC'}).exec(function (err, topics) {
       if (err) {
         return res.serverError(err)
@@ -30,7 +30,7 @@ const TopicsAndTasksController = module.exports = {
     })
   },
 
-  taskView: function (req, res) {
+  taskView (req, res) {
     let id = req.param('id')
     Tasks.findOne(id).populate('topic').exec(function (err, task) {
       if (err) {
@@ -59,7 +59,7 @@ const TopicsAndTasksController = module.exports = {
     })
   },
 
-  addTopic: function (req, res) {
+  addTopic (req, res) {
     let a = (msg) => Users.find({isTeacher: true}).exec((err, users) => {
       if (err) {
         return res.serverError(err)
@@ -104,7 +104,7 @@ const TopicsAndTasksController = module.exports = {
     }
   },
 
-  addTask: function (req, res) {
+  addTask (req, res) {
     let a = (msg) => Users.find({isTeacher: true}).exec((err, users) => {
       if (err) {
         return res.serverError(err)
@@ -189,7 +189,7 @@ const TopicsAndTasksController = module.exports = {
     }
   },
 
-  editTask: function (req, res) {
+  editTask (req, res) {
     let id = req.param('id')
     let a = (attr, msg) => Users.find({isTeacher: true}).exec((err, users) => {
       if (err) {
@@ -261,7 +261,7 @@ const TopicsAndTasksController = module.exports = {
       a()
     }
   },
-  ajaxPlace: function (req, res) {
+  ajaxPlace (req, res) {
     // todo: usunąć console logi i wogole co to za 'ops coś się zepsuło'
     if (req.method === 'POST') {
       let topic = req.param('topic')
@@ -311,7 +311,7 @@ const TopicsAndTasksController = module.exports = {
     }
   },
 
-  taskDelete: function (req, res) {
+  taskDelete (req, res) {
     let id = req.param('taskId')
     Tasks.destroy({id: id}).exec(function (err) {
       if (err) {
@@ -321,7 +321,7 @@ const TopicsAndTasksController = module.exports = {
     })
   },
 
-  topicDelete: function (req, res) {
+  topicDelete (req, res) {
     let id = req.param('topicId')
     Topics.findOne({id: id}).populate('tasks').exec(function (err, topic) {
       if (err) {
@@ -341,7 +341,7 @@ const TopicsAndTasksController = module.exports = {
     })
   },
 
-  editTopic: function (req, res) {
+  editTopic (req, res) {
     let id = req.param('id')
     let a = (attr, msg) => {
       return Users.find({isTeacher: true}).exec((err, users) => {

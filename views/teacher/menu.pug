@@ -1,7 +1,7 @@
 .card.p-3
     .list-group.w-100
-        a.list-group-item.list-group-item-action(href=sails.getUrlFor('TeacherController.index'), class=(menuItem === 'index' ? 'active' : '')) Dashboard
-        a.list-group-item.list-group-item-action(href=sails.getUrlFor('teacher/LabsController.listLabGroups'), class=(menuItem === 'labgroups' ? 'active' : '')) Lab Groups
-        a.list-group-item.list-group-item-action(href=sails.getUrlFor('teacher/TopicsAndTasksController.listTopicsAndTasks'), class=(menuItem === 'topics' ? 'active' : '')) Topics & Tasks
-        a.list-group-item.list-group-item-action(href=sails.getUrlFor('teacher/RepliesController.selectTaskReplies'), class=(menuItem === 'replies' ? 'active' : '')) Task Replies
-        a.list-group-item.list-group-item-action(href=sails.getUrlFor('teacher/UserController.listUser'), class=(menuItem === 'users' ? 'active' : '')) Users
+        a.list-group-item.list-group-item-action(href=sails.getUrlFor('TeacherController.index'), class=(menuItem === 'index' ? 'active' : ''))=i18n('breadcrumbs.dashboard')
+        a.list-group-item.list-group-item-action(href=sails.getUrlFor('teacher/LabsController.listLabGroups'), class=(menuItem === 'labgroups' ? 'active' : ''))=i18n('breadcrumbs.labgroups')
+        a.list-group-item.list-group-item-action(href=sails.getUrlFor('teacher/TopicsAndTasksController.listTopicsAndTasks'), class=(menuItem === 'topics' ? 'active' : ''))=i18n('breadcrumbs.tt')
+        a.list-group-item.list-group-item-action(href=sails.getUrlFor('teacher/RepliesController.selectTaskReplies'), class=(menuItem === 'replies' ? 'active' : ''))=i18n('breadcrumbs.replies')
+        a.list-group-item.list-group-item-action(href=sails.getUrlFor('teacher/UserController.listUser'), class=(menuItem === 'users' ? 'active' : ''))=i18n('breadcrumbs.users')

@@ -10,24 +10,30 @@ block content
             include ../menu
 
         .col-md-12.col-lg-8
-            h1 Edycja Topic
-            form(method='post')
-                label numer
-                br
-                input(value=topic.number name="topicNumber")
-                br
-                label tytuł
-                br
-                input(value=topic.title name="topicTitle")
-                br
-                label Widoczne
-                br
-                input(type='checkbox' checked name="topicVisible")
-                br
-                label Deadline
-                br
-                input(value=topic.deadline name="topicDeadline")
-                br
-                br
-                input(type='submit' value='zatwierdź')
+            .card
+                .card-header.text-center
+                    strong=i18n('breadcrumbs.tt.edittopic')
+                .card-block
+                    form(method='post')
+                        .form-group
+                            label(for='inputNumber')=i18n('teacher.tt.number')
+                            input.form-control#inputNumber(name='topicNumber', value=topic.number)
+                        .form-group
+                            label(for='inputTitle')=i18n('teacher.tt.title')
+                            input.form-control#inputTitle(name='topicTitle', value=topic.title)
+                        .form-group
+                            label(for='inputVisible')=i18n('teacher.tt.visibility')
+                            label.custom-control.custom-checkbox.col-12#inputVisible
+                                if topic.visible
+                                    input.custom-control-input(type='checkbox' name='topicVisible' checked)
+                                else
+                                    input.custom-control-input(type='checkbox' name='topicVisible' )
+                                span.custom-control-indicator
+                                span.custom-control-description=i18n('teachet.tt.visiblestudents.topic')
+
+                        .form-group
+                            label(for='inputDeadline')=i18n('teacher.tt.deadline')
+                            input.form-control#inputDeadline(name='topicDeadline', type='date' value=topic.deadline)
+
+                        input.btn.btn-primary(type='submit')
 
