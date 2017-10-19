@@ -1,6 +1,11 @@
 extends ../../includes/layout
 
 block content
+    if (message !== undefined && message && message.message && (message.message.length > 0 ))
+        .alert(class='alert-' + message.attribute, role='alert')
+            strong Wiadomość:
+            |  #{message.message}
+
     .row
         .col-md-12.col-lg-4
             include ../menu
@@ -8,19 +13,36 @@ block content
             //-include tasks
         .col-md-12.col-lg-8
             form(method="post")
-                input(placeholder="Imię" name="name")
+                input(placeholder="Imię" name="name", value=(param ? param('name') : ''))
                 br
-                input(placeholder="Nazwisko" name="sur")
+                input(placeholder="Nazwisko" name="sur", value=(param ? param('sur') : ''))
                 br
-                input(placeholder="Nr albumu" name="album")
-                br
-                label Admin
-                input(type="checkbox" name="admin")
+                input(placeholder="Nr albumu" name="album", value=(param ? param('album') : ''))
                 br
                 label Teacher
-                input(type="checkbox" name="teacher")
+                if param && param('teacher')
+                    input(id='teacher', type="checkbox" name="teacher", checked)
+                else
+                    input(id='teacher', type="checkbox" name="teacher")
                 br
-                input(placeholder="email" name="email")
+                div#notTeacher(style=(param && param('teacher') ? 'display: none' : ''))
+                    label Labgrupa
+                        select(name='groupl')
+                            option(value=0) Brak
+                            each l in labs
+                                if param && param('groupl') === l.id.toString()
+                                    option(value=l.id, selected)= l.name + l.owner.fullName()
+                                else
+                                    option(value=l.id)= l.name + l.owner.fullName()
+                    br
+                div#isTeacher(style=(param && param('teacher') ? '' : 'display: none'))
+                    label Admin
+                    if param && param('admin')
+                        input(type="checkbox" name="admin", checked)
+                    else
+                        input(type="checkbox" name="admin")
+                    br
+                input(placeholder="email" name="email", value=(param ? param('email') : ''))
                 br
                 label Hasło
                 input(type="password" name="pass")
@@ -29,11 +51,21 @@ block content
                 input(type="password" name="repass")
                 br
                 label Aktywny
-                input(type="checkbox" checked name="active")
-                br
-                br
-                select(name='groupl')
-                    each l in labs
-                        option(value=l.id)= l.name + l.owner.fullName()
+                if param && !param('active')
+                    input(type="checkbox" name="active")
+                else
+                    input(type="checkbox" checked name="active")
                 br
                 input(type="submit" value="stwórz")
+
+block scripts
+    script.
+        $('#teacher').on('change', function () {
+          if ($(this).is(':checked')) {
+            $('#isTeacher').show()
+            $('#notTeacher').hide()
+          } else {
+            $('#isTeacher').hide()
+            $('#notTeacher').show()
+          }
+        })

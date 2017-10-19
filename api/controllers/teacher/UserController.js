@@ -27,7 +27,7 @@ const UserController = module.exports = {
   },
 
   addUser: function (req, res) {
-    let a = (msg) => Users.find({ isTeacher: true }).exec((err, users) => {
+    let a = (attr, msg, param) => Users.find({ isTeacher: true }).exec((err, users) => {
       if (err) {
         return res.serverError(err)
       }
@@ -39,7 +39,7 @@ const UserController = module.exports = {
           return res.serverError(err)
         }
         return res.view('teacher/user/add',
-          {title: req.i18n.__('teacher.users.title'), users: users, labs: labs, message: msg, menuItem: 'users'})
+          {title: req.i18n.__('teacher.users.title'), users: users, labs: labs, message: {message: msg, attribute: attr}, param: param, menuItem: 'users'})
       })
     })
     if (req.method === 'POST') {
@@ -54,27 +54,43 @@ const UserController = module.exports = {
       let active = req.param('active')
       let lab = req.param('groupl')
       let st = crypto.randomBytes(20).toString('hex')
-      if (!name || !surname || !album || !email || !pass || !repass || !lab) {
-        return a(req.i18n.__('teacher.labs.fillall'))
+      if (!name || !surname || !email || !pass || !repass) {
+        return a('danger', req.i18n.__('teacher.labs.fillall'), req.param)
       }
       if (pass !== repass) {
-        return a(req.i18n.__('teacher.users.repass.fail'))
+        return a('danger', req.i18n.__('teacher.users.repass.fail'), req.param)
       }
       admin = !!(admin)
       teacher = !!(teacher)
       active = !!(active)
 
+      if (admin && !teacher) {
+        return res.badRequest('Admin musi być prowadzącym')
+      }
+      if (album && teacher) {
+        return res.badRequest('Prowadzący nie powiniem posiadać albumu')
+      }
+      else if (!album && !teacher) {
+        return a('danger', req.i18n.__('teacher.labs.fillall'), req.param)
+      }
+      if ((lab && lab !== '0') && teacher) {
+        return res.badRequest('Prowadzący nie powiniem znajdować się w labgrupie')
+      }
+      else if ((!lab || lab === '0') && !teacher) {
+        return a('danger', req.i18n.__('teacher.labs.fillall'), req.param)
+      }
+
       Users.create({
         name: name,
         surname: surname,
-        album: album,
+        album: album==='' ? null : album,
         isTeacher: teacher,
         isAdmin: admin,
         email: email,
         password: UserController.hashPassword(pass, st),
         salt: st,
         activated: active,
-        labGroups: lab
+        labGroups: lab===0 ? null : lab
       }).exec(function (err) {
         if (err) {
           return res.serverError(err)
