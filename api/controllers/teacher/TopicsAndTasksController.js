@@ -156,8 +156,7 @@ const TopicsAndTasksController = module.exports = {
           let max = Math.max(...allPlace)
           place = max + 1
         }
-        // console.log(allPlace)
-        // console.log(topics.tasks.length)
+
         Tasks.create({
           number: number,
           title: title,
@@ -294,16 +293,31 @@ const TopicsAndTasksController = module.exports = {
           console.log('Place === 1')
         }
       } else if (value === 'down') {
-        Tasks.update({id: idUp}, {place: place + 1}).meta({fetch: true}).exec(function (err, task) {
-          if (err) {
-            return res.serverError(err)
+        Topics.findOne({id: topic}).populate('tasks').exec(function (err, topics) {
+          let allPlace = []
+          for (let i = 0; i < topics.tasks.length; i++) {
+            allPlace.push(topics.tasks[i].place)
           }
-          Tasks.update({topic: topic, place: place + 1, id: {'!=': idUp}}, {place: placeNx}).meta({fetch: true}).exec(function (err) {
-            if (err) {
-              return res.serverError(err)
-            }
-            return res.json('Task Down')
-          })
+          let max = Math.max(...allPlace)
+          if (place != max) {
+            Tasks.update({id: idUp}, {place: place + 1}).meta({fetch: true}).exec(function (err, task) {
+              if (err) {
+                return res.serverError(err)
+              }
+              Tasks.update({
+                topic: topic,
+                place: place + 1,
+                id: {'!=': idUp}
+              }, {place: placeNx}).meta({fetch: true}).exec(function (err) {
+                if (err) {
+                  return res.serverError(err)
+                }
+                return res.json('Task Down')
+              })
+            })
+          } else if (place === max) {
+            console.log('place === max')
+          }
         })
       } else {
         return res.serverError('ops coś się zepsuło')

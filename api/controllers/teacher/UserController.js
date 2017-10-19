@@ -16,7 +16,7 @@ const UserController = module.exports = {
     crypto.randomBytes(20).toString('hex')
   },
 
-  listUser (req, res) {
+  listUser: function (req, res) {
     Users.find().exec(function (err, users) {
       if (err) {
         return res.serverError(err)
@@ -26,7 +26,7 @@ const UserController = module.exports = {
     })
   },
 
-  addUser (req, res) {
+  addUser: function (req, res) {
     let a = (msg) => Users.find({ isTeacher: true }).exec((err, users) => {
       if (err) {
         return res.serverError(err)
@@ -85,5 +85,8 @@ const UserController = module.exports = {
     } else {
       a()
     }
+  },
+  editUser: function (req, res) {
+    let id = req.param('id')
   }
 }
