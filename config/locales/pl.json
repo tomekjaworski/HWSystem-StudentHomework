@@ -186,5 +186,7 @@
 	"teacher.tt.visibility": "Widoczność:",
 	"teachet.tt.visiblestudents.topic": "Temat jest widoczny dla studentów",
 	"teachet.tt.visiblestudents.task": "Zadanie jest widoczne dla studentów",
-	"teacher.tt.deadline": "Termin:"
+	"teacher.tt.deadline": "Termin:",
+	"stundent.task.file.browse": "Przeglądaj",
+	"stundent.task.file.choose": "Wybierz plik..."
 }

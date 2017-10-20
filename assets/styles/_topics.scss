@@ -28,7 +28,7 @@
   width: 100%;
 }
 @for $i from 3 through 7 {
-  .table-tasklist > thead > tr > th:nth-child(#{$i}) { min-width: 48px; }
+  .table-tasklist > thead > tr > th:nth-child(#{$i}) { min-width: 48px; cursor: help;}
 }
 
 .table-tasklist > thead > tr > th:nth-child(8) {

@@ -57,12 +57,14 @@ block content
                             // Twitter Emoji (Twemoji)
                             // Copyright 2017 Twitter, Inc and other contributors
                             // Graphics licensed under CC-BY 4.0: https://creativecommons.org/licenses/by/4.0/
-                            .col-6.text-center
+                            .col-4.text-center
                                 img(src='/images/pol.png').img-fluid
-                            .col-6.text-center
+                            .col-4.text-center
                                 img(src='/images/eng.png').img-fluid
+                            .col-4.text-center
+                                img(src='/images/ukr.png').img-fluid
                         .form-group.row
-                            .col-6.text-center
+                            .col-4.text-center
                                 label.custom-control.custom-radio
                                     if (req.i18n.locale === 'pl')
                                         input#inputLanguage1.custom-control-input(name='language', type='radio', value='pl' checked)
@@ -70,7 +72,7 @@ block content
                                         input#inputLanguage1.custom-control-input(name='language', type='radio', value='pl')
                                     span.custom-control-indicator
                                     span.custom-control-description PL
-                            .col-6.text-center
+                            .col-4.text-center
                                 label.custom-control.custom-radio
                                     if (req.i18n.locale === 'en')
                                         input#inputLanguage2.custom-control-input(name='language', type='radio', value='en' checked)
@@ -78,5 +80,13 @@ block content
                                         input#inputLanguage2.custom-control-input(name='language', type='radio', value='en')
                                     span.custom-control-indicator
                                     span.custom-control-description EN
+                            .col-4.text-center
+                                label.custom-control.custom-radio
+                                    if (req.i18n.locale === 'uk')
+                                        input#inputLanguage3.custom-control-input(name='language', type='radio', value='uk' checked)
+                                    else
+                                        input#inputLanguage3.custom-control-input(name='language', type='radio', value='uk')
+                                    span.custom-control-indicator
+                                    span.custom-control-description UA
                         .text-center
                             input.btn.btn-primary.mb-4.mb-md-0(type='submit', value=i18n('settings.language.change'))
