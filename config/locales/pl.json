@@ -180,5 +180,13 @@
 	"teacher.tt.editask.success": "Udało się zaktualizować zadanie",
 	"teacher.users.title": "Użytkownicy :: Panel nauczyciela",
 	"teacher.users.repass.fail": "Hasła nie są identyczne",
-	"teacher.dashboard.title": "Dashboard :: Panel nauczyciela"
+	"teacher.dashboard.title": "Dashboard :: Panel nauczyciela",
+	"teacher.tt.number": "Numer:",
+	"teacher.tt.title": "Tytuł:",
+	"teacher.tt.visibility": "Widoczność:",
+	"teachet.tt.visiblestudents.topic": "Temat jest widoczny dla studentów",
+	"teachet.tt.visiblestudents.task": "Zadanie jest widoczne dla studentów",
+	"teacher.tt.deadline": "Termin:",
+	"stundent.task.file.browse": "Przeglądaj",
+	"stundent.task.file.choose": "Wybierz plik..."
 }
