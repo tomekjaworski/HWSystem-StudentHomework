@@ -210,5 +210,18 @@
 	"teacher.table.teacher": "Prowadzący",
 	"teacher.table.visible": "Widoczna",
 	"teacher.table.invisible": "Niewidoczna",
-	"teacher.tt.task.nodescription": "Brak opisu zadania"
+	"teacher.tt.task.nodescription": "Brak opisu zadania",
+	"teacher.labs.name": "Nazwa:",
+	"teacher.labs.description": "Opis:",
+	"teacher.labs.teacher": "Prowadzący:",
+	"teacher.labs.nolabs.%s": "Brak grup laboratoryjnych, dodaj grupy przechodząc pod zakładkę \"%s\".",
+	"teacher.table.fistlastname": "Imię i Nazwisko",
+	"teacher.users.useris.%s": "Użytkownik jest %s",
+	"teacher.users.teacher": "Nauczyciel",
+	"teacher.users.isteacher": "nauczycielem",
+	"teacher.users.admin": "Administrator",
+	"teacher.users.isadmin": "administratorem",
+	"teacher.users.active": "Aktywny",
+	"teacher.users.isactive": "aktywny",
+	"teacher.users.none": "Brak"
 }

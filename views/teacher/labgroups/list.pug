@@ -39,4 +39,4 @@ block content
                                     td=group.ownerName + ' ' + group.ownerSurname
                         else
                             tr
-                                td.text-center(colspan=6) Brak grup laboratoryjnych w bazie, dodaj jakąś opcjami na górze
+                                td.text-center(colspan=6)=i18n('teacher.labs.nolabs.%s', i18n('teacher.adding'))

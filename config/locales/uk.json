@@ -210,5 +210,18 @@
 	"teacher.table.teacher": "провідний",
 	"teacher.table.visible": "видимий",
 	"teacher.table.invisible": "невидимий",
-	"teacher.tt.task.nodescription": "Ні Опис роботи"
+	"teacher.tt.task.nodescription": "Ні Опис роботи",
+	"teacher.labs.name": "ім'я:",
+	"teacher.labs.description": "опис:",
+	"teacher.labs.teacher": "лектор:",
+	"teacher.labs.nolabs.%s": "Немає лабораторних груп, додати пучки, що проходять під вкладкою \"%s\".",
+	"teacher.table.fistlastname": "Ваше ім'я",
+	"teacher.users.useris.%s": "Користувач %s",
+	"teacher.users.teacher": "учитель",
+	"teacher.users.isteacher": "учитель",
+	"teacher.users.admin": "адміністратор",
+	"teacher.users.isadmin": "адміністратор",
+	"teacher.users.active": "активний",
+	"teacher.users.isactive": "активний",
+	"teacher.users.none": "відсутність"
 }

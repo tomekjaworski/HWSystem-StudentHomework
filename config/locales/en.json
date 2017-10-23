@@ -210,5 +210,18 @@
 	"teacher.table.teacher": "Teacher",
 	"teacher.table.visible": "Visible",
 	"teacher.table.invisible": "Invisible",
-	"teacher.tt.task.nodescription": "No task description"
+	"teacher.tt.task.nodescription": "No task description",
+	"teacher.labs.name": "Name:",
+	"teacher.labs.description": "Description:",
+	"teacher.labs.teacher": "Teacher:",
+	"teacher.labs.nolabs.%s": "No lab groups, add groups under the \"%s\" tab.",
+	"teacher.table.fistlastname": "First and last name",
+	"teacher.users.useris.%s": "User is %s",
+	"teacher.users.teacher": "Teacher",
+	"teacher.users.isteacher": "a teacher",
+	"teacher.users.admin": "Administrator",
+	"teacher.users.isadmin": "an administrator",
+	"teacher.users.active": "Active",
+	"teacher.users.isactive": "active",
+	"teacher.users.none": "None"
 }

@@ -21,22 +21,22 @@ block content
                     .container
                         form(method='post')
                             .form-group.row
-                                label.col-sm-3.col-form-label(for='inputTitle') Nazwa
+                                label.col-sm-3.col-form-label(for='inputTitle')=i18n('teacher.labs.name')
                                 .col-sm-9
                                     input#inputTitle.form-control(type='text', name='title')
                             .form-group.row
-                                label.col-sm-3.col-form-label(for='inputDescription') Opis
+                                label.col-sm-3.col-form-label(for='inputDescription')=i18n('teacher.labs.description')
                                 .col-sm-9
                                     input#inputDescription.form-control(type='text', name='desc')
                             .form-group.row
-                                label.col-sm-3 Status
+                                label.col-sm-3=i18n('teacher.tt.visibility')
                                 .col-sm-9
                                     .form-check
                                         label.form-check-label
                                             input.form-check-input(id='active', type='checkbox', name='active')
-                                            label(for='active') Widoczna
+                                            label(for='active')=i18n('teacher.table.visible')
                             .form-group.row
-                                label.col-sm-3.col-form-label(for='inputOwner') Prowadzący
+                                label.col-sm-3.col-form-label(for='inputOwner')=i18n('teacher.labs.teacher')
                                 .col-sm-9
                                     select.form-control#inputOwner(name='owner')
                                         for user in users
@@ -46,4 +46,4 @@ block content
                                                 option(value=user.id)= user.fullName()
                             .form-group.row
                                 .col-sm-12
-                                    button.btn.btn-primary(type='submit') Dodaj
+                                    button.btn.btn-primary(type='submit')=i18n('teacher.tt.add')
