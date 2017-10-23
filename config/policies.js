@@ -49,17 +49,11 @@ module.exports.policies = {
   // }
   '*': ['localize'],
 
-  TestController: {
-    '*': ['isLoggedIn', 'localize'],
-    'index': true,
-    'login': true,
-    'logout': true
-  },
-
   AccountController: {
     '*': ['isLoggedIn', 'localize'],
     'login': true,
-    'register': true
+    'register': true,
+    'logout': true
   },
 
   TeacherController: {

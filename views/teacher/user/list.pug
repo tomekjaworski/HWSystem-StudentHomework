@@ -10,7 +10,7 @@ block content
         .col-md-12.col-lg-8
             .card
                 .card-header.text-center
-                    strong Tasks and Topics
+                    strong Użytkownicy
                 .card-block
                     a.btn.btn-primary(href="/teacher/users/add") Dodaj użytkownika
 
@@ -18,7 +18,7 @@ block content
                     thead
                         tr
                             th ID
-                            th nazwa
+                            th Imię i Nazwisko
                     tbody#tablebody
                         each user in users
                             -var id= user.id

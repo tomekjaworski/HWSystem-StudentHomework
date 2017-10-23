@@ -10,7 +10,7 @@ block content
         .col-md-12.col-lg-8
             .card
                 .card-header.text-center
-                    strong Tasks and Topics
+                    strong Tematy i Zadania
                 .card-block
                     a.btn.btn-primary(href="/teacher/topics-and-tasks/topic/add") Dodaj temat
 
@@ -19,7 +19,7 @@ block content
                         tr
                             th ID
                             th(colspan=3) Temat
-                            th Deadline
+                            th Termin oddania
                     tbody#tablebody
                         if typeof(data[0]) === "undefined"
                             tr

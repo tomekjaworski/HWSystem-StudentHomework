@@ -188,5 +188,7 @@
 	"teachet.tt.visiblestudents.task": "Zadanie jest widoczne dla studentów",
 	"teacher.tt.deadline": "Termin:",
 	"stundent.task.file.browse": "Przeglądaj",
-	"stundent.task.file.choose": "Wybierz plik..."
+	"stundent.task.file.choose": "Wybierz plik...",
+	"teacher.addtask.title": "teacher.addtask.title",
+	"teacher.tt.edittask.success": "teacher.tt.edittask.success"
 }

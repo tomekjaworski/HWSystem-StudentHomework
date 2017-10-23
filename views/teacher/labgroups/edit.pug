@@ -1,4 +1,4 @@
-zextends ../../includes/layout
+extends ../../includes/layout
 
 block content
 
@@ -46,11 +46,10 @@ block content
                                     .form-check
                                         label.form-check-label
                                         if data.active
-                                            input.form-check-input(type='checkbox', name='active', checked)
-                                            |  Aktywna
+                                            input.form-check-input(id='active', type='checkbox', name='active', checked)
                                         else
-                                            input.form-check-input(type='checkbox', name='active')
-                                            |  Aktywna
+                                            input.form-check-input(id='active', type='checkbox', name='active')
+                                        label(for='active') Widoczna
 
                             .form-group.row
                                 label.col-sm-3.col-form-label(for='inputOwner') Owner

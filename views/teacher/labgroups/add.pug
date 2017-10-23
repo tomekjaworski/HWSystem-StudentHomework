@@ -21,22 +21,22 @@ block content
                     .container
                         form(method='post')
                             .form-group.row
-                                label.col-sm-3.col-form-label(for='inputTitle') Title
+                                label.col-sm-3.col-form-label(for='inputTitle') Nazwa
                                 .col-sm-9
                                     input#inputTitle.form-control(type='text', name='title')
                             .form-group.row
-                                label.col-sm-3.col-form-label(for='inputDescription') Description
+                                label.col-sm-3.col-form-label(for='inputDescription') Opis
                                 .col-sm-9
                                     input#inputDescription.form-control(type='text', name='desc')
                             .form-group.row
-                                label.col-sm-3 Status grupy
+                                label.col-sm-3 Status
                                 .col-sm-9
                                     .form-check
                                         label.form-check-label
-                                            input.form-check-input(type='checkbox', name='active')
-                                            |  Aktywna
+                                            input.form-check-input(id='active', type='checkbox', name='active')
+                                            label(for='active') Widoczna
                             .form-group.row
-                                label.col-sm-3.col-form-label(for='inputOwner') Owner
+                                label.col-sm-3.col-form-label(for='inputOwner') Prowadzący
                                 .col-sm-9
                                     select.form-control#inputOwner(name='owner')
                                         for user in users

@@ -72,7 +72,7 @@ block content
                                         each lab in data.labs
                                             option(value=lab.id)= lab.name + ' - ' + lab.owner.fullName()
                                 .form-group
-                                    input.btn.btn-primary.getLabTasksButton(type='submit' data-id=data.id)
+                                    input.btn.btn-primary.getLabTasksButton(type='submit' data-id=data.id, value='Załaduj odpowiedzi')
 block fluid
     .row.mb-2
         div#labs.col-12

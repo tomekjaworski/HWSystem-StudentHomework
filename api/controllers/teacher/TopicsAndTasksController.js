@@ -60,7 +60,7 @@ const TopicsAndTasksController = module.exports = {
   },
 
   addTopic (req, res) {
-    let a = (msg) => Users.find({isTeacher: true}).exec((err, users) => {
+    let a = (msg, param) => Users.find({isTeacher: true}).exec((err, users) => {
       if (err) {
         return res.serverError(err)
       }
@@ -73,6 +73,7 @@ const TopicsAndTasksController = module.exports = {
           title: req.i18n.__('teacher.tt.addtopic.title'),
           users: users,
           message: msg,
+          param: param,
           menuItem: 'topics',
           breadcrumb: 'addtopic'
         })
@@ -81,10 +82,13 @@ const TopicsAndTasksController = module.exports = {
       const number = req.param('topicNumber')
       const title = req.param('topicTitle')
       const deadline = req.param('topicDeadline')
+      if (!title || !number || !deadline) {
+        return a('Uzupełnij wszystkie pola', req.param)
+      }
       const date = Date.parse(deadline)
-      // if (!_.isString(title) || !_.isString(number) || !deadline) {
-      //   return a('Uzupełnij wszystkie pola')
-      // }
+      if (isNaN(date)) {
+        return a('Niepoprawna data', req.param)
+      }
       Topics.create({
         number: number,
         title: title,
@@ -95,7 +99,7 @@ const TopicsAndTasksController = module.exports = {
           return res.serverError(err)
         }
         if (!topic) {
-          return res.serverError(req.i18n.__('teacher.tt.addtopic.fail'))
+          return res.serverError(req.i18n.__('teacher.tt.addtopic.fail'), req.param)
         }
         return res.redirect('/teacher/topics-and-tasks/')
       })
@@ -105,7 +109,7 @@ const TopicsAndTasksController = module.exports = {
   },
 
   addTask (req, res) {
-    let a = (msg) => Users.find({isTeacher: true}).exec((err, users) => {
+    let a = (msg, param) => Users.find({isTeacher: true}).exec((err, users) => {
       if (err) {
         return res.serverError(err)
       }
@@ -121,6 +125,7 @@ const TopicsAndTasksController = module.exports = {
             title: req.i18n.__('teacher.addtask.title'),
             users: users,
             message: msg,
+            param: param,
             topics: topics,
             menuItem: 'topics',
             breadcrumb: 'addtask'
@@ -135,8 +140,8 @@ const TopicsAndTasksController = module.exports = {
       let vis = req.param('taskVisible')
       let ard = req.param('arduinoCheck')
       let com = req.param('komputerCheck')
-      if (!_.isString(title) || !_.isString(number) || !_.isString(description) || !title) {
-        return a(req.i18n.__('teacher.labs.fillall'))
+      if (!title || !number || !description) {
+        return a(req.i18n.__('teacher.labs.fillall'), req.param)
       }
       vis = vis === 'ok'
       ard = ard === 'ok'
@@ -190,7 +195,7 @@ const TopicsAndTasksController = module.exports = {
 
   editTask (req, res) {
     let id = req.param('id')
-    let a = (attr, msg) => Users.find({isTeacher: true}).exec((err, users) => {
+    let a = (attr, msg, param) => Users.find({isTeacher: true}).exec((err, users) => {
       if (err) {
         return res.serverError(err)
       }
@@ -215,7 +220,9 @@ const TopicsAndTasksController = module.exports = {
             return res.view('teacher/topicsAndTasks/editTask', {
               task: task,
               topics: topics,
+              param: param,
               description: description,
+              message: {message: msg, attribute: attr},
               menuItem: 'topics',
               breadcrumb: 'edittask'
             })
@@ -228,6 +235,9 @@ const TopicsAndTasksController = module.exports = {
       let number = req.param('taskNumber')
       let description = req.param('taskDescription')
       let topic = req.param('taskTopic')
+      if (!title || !number || !description || !topic) {
+        return a('danger', req.i18n.__('teacher.labs.fillall'), req.param)
+      }
       let vis = req.param('taskVisible')
       let ard = req.param('arduinoCheck')
       let com = req.param('komputerCheck')
@@ -243,19 +253,19 @@ const TopicsAndTasksController = module.exports = {
           arduino: ard,
           computer: com
         }).exec(function (err) {
+        if (err) {
+          return res.serverError(err)
+        }
+        TaskDescription.update({task: id},
+          {
+            description: description
+          }).exec(function (err, desc) {
           if (err) {
             return res.serverError(err)
           }
-          TaskDescription.update({task: id},
-            {
-              description: description
-            }).exec(function (err, desc) {
-              if (err) {
-                return res.serverError(err)
-              }
-              return a(req.i18n.__('teacher.tt.edittask.success'))
-            })
+          return a('success', req.i18n.__('teacher.tt.edittask.success'))
         })
+      })
     } else {
       a()
     }
@@ -404,11 +414,11 @@ const TopicsAndTasksController = module.exports = {
             visible: visible,
             deadline: deadline
           }).exec(function (err) {
-            if (err) {
-              return res.serverError(err)
-            }
-            return res.redirect('/teacher/topics-and-tasks')
-          })
+          if (err) {
+            return res.serverError(err)
+          }
+          return res.redirect('/teacher/topics-and-tasks')
+        })
       }
     } else {
       a()

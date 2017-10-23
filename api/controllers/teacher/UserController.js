@@ -22,12 +22,12 @@ const UserController = module.exports = {
         return res.serverError(err)
       }
 
-      return res.view('teacher/user/list', { users: users, menuItem: 'users' })
+      return res.view('teacher/user/list', {users: users, menuItem: 'users'})
     })
   },
 
   addUser: function (req, res) {
-    let a = (attr, msg, param) => Users.find({ isTeacher: true }).exec((err, users) => {
+    let a = (attr, msg, param) => Users.find({isTeacher: true}).exec((err, users) => {
       if (err) {
         return res.serverError(err)
       }
@@ -39,7 +39,14 @@ const UserController = module.exports = {
           return res.serverError(err)
         }
         return res.view('teacher/user/add',
-          {title: req.i18n.__('teacher.users.title'), users: users, labs: labs, message: {message: msg, attribute: attr}, param: param, menuItem: 'users'})
+          {
+            title: req.i18n.__('teacher.users.title'),
+            users: users,
+            labs: labs,
+            message: {message: msg, attribute: attr},
+            param: param,
+            menuItem: 'users'
+          })
       })
     })
     if (req.method === 'POST') {
@@ -83,14 +90,14 @@ const UserController = module.exports = {
       Users.create({
         name: name,
         surname: surname,
-        album: album==='' ? null : album,
+        album: album === '' ? null : album,
         isTeacher: teacher,
         isAdmin: admin,
         email: email,
         password: UserController.hashPassword(pass, st),
         salt: st,
         activated: active,
-        labGroups: lab===0 ? null : lab
+        labGroups: lab === 0 ? null : lab
       }).exec(function (err) {
         if (err) {
           return res.serverError(err)

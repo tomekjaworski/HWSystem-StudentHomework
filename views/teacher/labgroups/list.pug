@@ -22,17 +22,21 @@ block content
                     thead
                         tr
                             th ID
-                            th Name
-                            th Active
-                            th Students
-                            th Students Awaiting
-                            th Teacher
+                            th Nazwa
+                            th Status
+                            th Studentów
+                            th Studentów oczekujących
+                            th Prowadzący
                     tbody
-                        each group in data
-                            tr(onclick='document.location="/teacher/labgroup/view/'+group.id+'"')
-                                th(scope='row')=group.id
-                                td=group.name
-                                td=group.active
-                                td=group.studentsCount
-                                td=group.studentsNotCount
-                                td=group.ownerName + ' ' + group.ownerSurname
+                        if data && data.length !== 0
+                            each group in data
+                                tr(onclick='document.location="/teacher/labgroup/view/'+group.id+'"')
+                                    th(scope='row')=group.id
+                                    td=group.name
+                                    td=group.active ? 'Widoczna' : 'Niewidoczna'
+                                    td=group.studentsCount
+                                    td=group.studentsNotCount
+                                    td=group.ownerName + ' ' + group.ownerSurname
+                        else
+                            tr
+                                td.text-center(colspan=6) Brak grup laboratoryjnych w bazie, dodaj jakąś opcjami na górze

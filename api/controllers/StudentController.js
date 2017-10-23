@@ -158,7 +158,11 @@ const StudentController = module.exports = {
               return res.notFound()
             }
 
-            Tasks.findOne({id: taskparam, topic: topicparam, visible: true}).populate('description').exec(function (err, task) {
+            Tasks.findOne({
+              id: taskparam,
+              topic: topicparam,
+              visible: true
+            }).populate('description').exec(function (err, task) {
               if (err) {
                 return res.badRequest(err)
               }
