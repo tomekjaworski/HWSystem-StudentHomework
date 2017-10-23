@@ -189,6 +189,7 @@
 	"teacher.tt.deadline": "Termin:",
 	"stundent.task.file.browse": "Przeglądaj",
 	"stundent.task.file.choose": "Wybierz plik...",
-	"teacher.addtask.title": "teacher.addtask.title",
-	"teacher.tt.edittask.success": "teacher.tt.edittask.success"
+	"teacher.tt.edittask.success": "Edycja zadania przebiegła pomyślnie",
+	"teacher.tt.fillall": "Należy uzupełnić wszystkie pola",
+	"teacher.tt.invaliddate": "Podana data jest nieprawidłowa"
 }

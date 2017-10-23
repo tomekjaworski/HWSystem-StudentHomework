@@ -76,14 +76,12 @@ const UserController = module.exports = {
       }
       if (album && teacher) {
         return res.badRequest('Prowadzący nie powiniem posiadać albumu')
-      }
-      else if (!album && !teacher) {
+      } else if (!album && !teacher) {
         return a('danger', req.i18n.__('teacher.labs.fillall'), req.param)
       }
       if ((lab && lab !== '0') && teacher) {
         return res.badRequest('Prowadzący nie powiniem znajdować się w labgrupie')
-      }
-      else if ((!lab || lab === '0') && !teacher) {
+      } else if ((!lab || lab === '0') && !teacher) {
         return a('danger', req.i18n.__('teacher.labs.fillall'), req.param)
       }
 
@@ -110,6 +108,7 @@ const UserController = module.exports = {
     }
   },
   editUser: function (req, res) {
+    // eslint-disable-next-line no-unused-vars
     let id = req.param('id')
   }
 }

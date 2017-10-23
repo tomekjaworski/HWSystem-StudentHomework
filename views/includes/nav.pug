@@ -24,9 +24,7 @@
                         a.nav-link=i18n('nav.welcome.%s', localUser.fullName())
                     if localUser.isTeacher
                         li.nav-item.pr-2.pb-2.pb-lg-0
-                            if (notifs >= 30) && (notifs <= 60)
-
-                            else if notifs > 0
+                            if notifs > 0
                                 .teacher-notifcounter-badge
                                     span.badge.badge-pill.badge-danger=(notifs >= 100 ? '+99' : notifs)
 

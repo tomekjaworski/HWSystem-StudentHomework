@@ -83,11 +83,11 @@ const TopicsAndTasksController = module.exports = {
       const title = req.param('topicTitle')
       const deadline = req.param('topicDeadline')
       if (!title || !number || !deadline) {
-        return a('Uzupełnij wszystkie pola', req.param)
+        return a(req.i18n.__('teacher.tt.fillall'), req.param)
       }
       const date = Date.parse(deadline)
       if (isNaN(date)) {
-        return a('Niepoprawna data', req.param)
+        return a(req.i18n.__('teacher.tt.invaliddate'), req.param)
       }
       Topics.create({
         number: number,
@@ -122,7 +122,7 @@ const TopicsAndTasksController = module.exports = {
         }
         return res.view('teacher/topicsAndTasks/add',
           {
-            title: req.i18n.__('teacher.addtask.title'),
+            title: req.i18n.__('breadcrumbs.tt.addtask'),
             users: users,
             message: msg,
             param: param,
@@ -253,19 +253,19 @@ const TopicsAndTasksController = module.exports = {
           arduino: ard,
           computer: com
         }).exec(function (err) {
-        if (err) {
-          return res.serverError(err)
-        }
-        TaskDescription.update({task: id},
-          {
-            description: description
-          }).exec(function (err, desc) {
           if (err) {
             return res.serverError(err)
           }
-          return a('success', req.i18n.__('teacher.tt.edittask.success'))
+          TaskDescription.update({task: id},
+            {
+              description: description
+            }).exec(function (err, desc) {
+              if (err) {
+                return res.serverError(err)
+              }
+              return a('success', req.i18n.__('teacher.tt.edittask.success'))
+            })
         })
-      })
     } else {
       a()
     }
@@ -304,12 +304,15 @@ const TopicsAndTasksController = module.exports = {
         }
       } else if (value === 'down') {
         Topics.findOne({id: topic}).populate('tasks').exec(function (err, topics) {
+          if (err) {
+            return res.serverError(err)
+          }
           let allPlace = []
           for (let i = 0; i < topics.tasks.length; i++) {
             allPlace.push(topics.tasks[i].place)
           }
           let max = Math.max(...allPlace)
-          if (place != max) {
+          if (place !== max) {
             Tasks.update({id: idUp}, {place: place + 1}).meta({fetch: true}).exec(function (err, task) {
               if (err) {
                 return res.serverError(err)
@@ -414,11 +417,11 @@ const TopicsAndTasksController = module.exports = {
             visible: visible,
             deadline: deadline
           }).exec(function (err) {
-          if (err) {
-            return res.serverError(err)
-          }
-          return res.redirect('/teacher/topics-and-tasks')
-        })
+            if (err) {
+              return res.serverError(err)
+            }
+            return res.redirect('/teacher/topics-and-tasks')
+          })
       }
     } else {
       a()

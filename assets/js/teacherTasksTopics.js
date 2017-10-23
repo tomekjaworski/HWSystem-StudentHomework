@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars,no-global-assign */
 
-/* global topics, saved */
+/* global topics, saved, location */
 
 (function () {
   function ttSelectTopic (id) {
@@ -52,7 +52,6 @@
     $('#tablebody').html(saved)
     initTable()
   }
-
 
   function taskDown (idDown, place, topic) {
     console.log('start')
@@ -156,7 +155,7 @@ function taskUp (idUp, place, topic) {
   console.log(b4)
   console.log(a)
   response.done(function () {
-    location.reload();
+    location.reload()
     b4.before(a)
     b4.attr('id', '' + topic + '' + place + '')
     // spanb4.unbind()
@@ -183,7 +182,7 @@ function taskDown (idDown, place, topic) {
   })
 
   response.done(function () {
-    location.reload();
+    location.reload()
     console.log('ok')
   })
 }
