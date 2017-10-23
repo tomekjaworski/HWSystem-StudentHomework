@@ -33,22 +33,22 @@ block content
                         li.nav-item
                             a.nav-link.active() Oczekujący
                                 span.badge.badge-pill.badge-primary=data.students.length
-                .card-block
-                    table.table.table-striped.table-hover.responsive.table-grouplist
-                        thead
+
+                table.table.table-striped.table-hover.responsive.table-grouplist
+                    thead
+                        tr
+                            th ID
+                            th Student
+                            th Album
+                            th Opcje
+                    tbody
+                        if data.students.length === 0
                             tr
-                                th ID
-                                th Student
-                                th Album
-                                th Opcje
-                        tbody
-                            if data.students.length === 0
-                                tr
-                                    td.text-center(colspan='4') Brak studentów do aktywacji
-                            each student in data.students
-                                tr
-                                    th(scope='row')=student.student.id
-                                    td=student.student.fullName()
-                                    td=student.student.album
-                                    td
-                                        a.btn.btn-sm.btn-success(href='?active='+student.student.id) Aktywuj
+                                td.text-center(colspan='4') Brak studentów do aktywacji
+                        each student in data.students
+                            tr
+                                th(scope='row')=student.student.id
+                                td=student.student.fullName()
+                                td=student.student.album
+                                td
+                                    a.btn.btn-sm.btn-success(href='?active='+student.student.id) Aktywuj

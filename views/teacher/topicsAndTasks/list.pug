@@ -19,7 +19,7 @@ block content
                 table.table.table-striped.responsive.table-grouplist
                     thead
                         tr
-                            th(style='width: 50px')=i18n('teacher.table.id')
+                            th.wb-initial(style='width: 50px')=i18n('teacher.table.id')
                             th=i18n('teacher.table.title')
                             th(style='width: 70px')
                             th(style='width: 70px')
@@ -32,7 +32,7 @@ block content
                             each topic in data
                                 -var id= topic.id
                                 tr.ttSelectTopic(data-topicid=topic.id, style='cursor: pointer;')
-                                    td.text-center=topic.id
+                                    th(scope='row').text-center=topic.id
                                     td=topic.number + '. ' + topic.title
                                     td
                                         button.btn.btn-sm.btn-danger.deleteTopicButton(data-id=id)=i18n('teacher.tt.remove')

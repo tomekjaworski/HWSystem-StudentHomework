@@ -44,10 +44,10 @@ mixin commentBlock(com, hidden)
 block content
     style.
         .custom-task-file-control::before {
-            content: "#[=i18n('stundent.task.file.browse')]";
+            content: "#[=i18n('student.task.file.browse')]";
         }
         .custom-task-file-control::after {
-            content: "#[=i18n('stundent.task.file.choose')]";
+            content: "#[=i18n('student.task.file.choose')]";
         }
     if req.query.msg === 'fileUpdateSuccess' || req.query.msg === 'replySent' || req.query.msg === 'fileUploadSuccess'
         .alert.alert-success

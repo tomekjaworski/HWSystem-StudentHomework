@@ -15,25 +15,25 @@ block content
                             a.nav-link(href='/teacher/labgroup/add')=i18n('teacher.adding')
                 .card-block
                     if show
-                        a.btn.btn-primary(href='/teacher/labgroup/list') Pokaż tylko moje grupy
+                        a.btn.btn-primary(href='/teacher/labgroup/list')=i18n('teacher.labs.list.your')
                     else
-                        a.btn.btn-primary(href='/teacher/labgroup/list?show=all') Pokaż wszystkie grupy
+                        a.btn.btn-primary(href='/teacher/labgroup/list?show=all')=i18n('teacher.labs.list.all')
                 table.table.table-striped.table-hover.responsive.table-grouplist
                     thead
                         tr
-                            th ID
-                            th Nazwa
-                            th Status
-                            th Studentów
-                            th Studentów oczekujących
-                            th Prowadzący
+                            th.wb-initial(style='width:50px;')=i18n('teacher.table.id')
+                            th=i18n('teacher.table.name')
+                            th=i18n('teacher.table.status')
+                            th=i18n('teacher.table.students')
+                            th=i18n('teacher.table.students.pending')
+                            th=i18n('teacher.table.teacher')
                     tbody
                         if data && data.length !== 0
                             each group in data
                                 tr(onclick='document.location="/teacher/labgroup/view/'+group.id+'"')
-                                    th(scope='row')=group.id
+                                    th.text-center(scope='row')=group.id
                                     td=group.name
-                                    td=group.active ? 'Widoczna' : 'Niewidoczna'
+                                    td=group.active ? i18n('teacher.table.visible') : i18n('teacher.table.invisible')
                                     td=group.studentsCount
                                     td=group.studentsNotCount
                                     td=group.ownerName + ' ' + group.ownerSurname
