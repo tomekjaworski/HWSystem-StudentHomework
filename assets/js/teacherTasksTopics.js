@@ -15,7 +15,7 @@
         '</td>' +
         '<td>' + topic.number + '. ' + topic.title + '</td>' +
         '<td></td><td></td>' +
-        '<td>' + topic.deadline + '</td>' +
+        '<td class="text-nowrap">' + topic.deadline + '</td>' +
         '</tr>' +
         '<tr>' +
         '<td colspan="5">' +
