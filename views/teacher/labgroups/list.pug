@@ -10,9 +10,9 @@ block content
                 .card-header
                     ul.nav.nav-tabs.nav-fill.task-tab
                         li.nav-item
-                            a.nav-link.active() Wyświetlanie
+                            a.nav-link.active()=i18n('teacher.listing')
                         li.nav-item
-                            a.nav-link(href='/teacher/labgroup/add') Dodawanie
+                            a.nav-link(href='/teacher/labgroup/add')=i18n('teacher.adding')
                 .card-block
                     if show
                         a.btn.btn-primary(href='/teacher/labgroup/list') Pokaż tylko moje grupy

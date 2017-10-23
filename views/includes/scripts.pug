@@ -14,13 +14,13 @@ script(type='text/x-mathjax-config').
         processEscapes: true
       },
       menuSettings: {
-          zoom: "Click",
+          zoom: 'Click',
           mpContext: true,
           mpMouse: true
       }
     });
 
-if sails.config.environment === "production"
+if sails.config.environment === 'production'
     script(src='/min/production.min.js')
 else
     script(src='/js/main.js')

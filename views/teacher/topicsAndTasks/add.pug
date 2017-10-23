@@ -22,28 +22,28 @@ block content
                             label(for='title') Tytuł:
                             input.form-control#title(name='taskTitle', value=(param ? param('taskTitle') : ''))
                         .form-group
-                            label(for="active") Widoczność:
+                            label(for='active') Widoczność:
                             label.custom-control.custom-checkbox.col-12
                                 if param && !param('taskVisible')
-                                    input.custom-control-input#active(type='checkbox', name='taskVisible' value="ok")
+                                    input.custom-control-input#active(type='checkbox', name='taskVisible' value='ok')
                                 else
-                                    input.custom-control-input#active(type='checkbox', name='taskVisible' value="ok" checked)
+                                    input.custom-control-input#active(type='checkbox', name='taskVisible' value='ok' checked)
                                 span.custom-control-indicator
                                 span.custom-control-description Zadanie jest widoczne dla studentów
                         .form-group
-                            label(for="platform") Platforma zadania:
+                            label(for='platform') Platforma zadania:
                             label.custom-control.custom-checkbox.col-12#platform
                                 if param && param('komputerCheck')
-                                    input.custom-control-input#komputerCheck(type='checkbox' name='komputerCheck' value="ok" checked)
+                                    input.custom-control-input#komputerCheck(type='checkbox' name='komputerCheck' value='ok' checked)
                                 else
-                                    input.custom-control-input#komputerCheck(type='checkbox' name='komputerCheck' value="ok")
+                                    input.custom-control-input#komputerCheck(type='checkbox' name='komputerCheck' value='ok')
                                 span.custom-control-indicator
                                 span.custom-control-description Komputer
                             label.custom-control.custom-checkbox.col-12
                                 if param && param('arduinoCheck')
-                                    input.custom-control-input#arduinoCheck(type='checkbox' name='arduinoCheck' value="ok" checked)
+                                    input.custom-control-input#arduinoCheck(type='checkbox' name='arduinoCheck' value='ok' checked)
                                 else
-                                    input.custom-control-input#arduinoCheck(type='checkbox' name='arduinoCheck' value="ok")
+                                    input.custom-control-input#arduinoCheck(type='checkbox' name='arduinoCheck' value='ok')
                                 span.custom-control-indicator
                                 span.custom-control-description Arduino
 

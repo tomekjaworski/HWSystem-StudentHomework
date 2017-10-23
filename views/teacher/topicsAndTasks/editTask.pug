@@ -22,41 +22,41 @@ block content
                             label(for='title') Tytuł:
                             input.form-control#title(name='taskTitle', value=(param ? param('taskTitle') : task.title))
                         .form-group
-                            label(for="select") Temat zadania:
-                            select.form-control#select(name="taskTopic")
+                            label(for='select') Temat zadania:
+                            select.form-control#select(name='taskTopic')
                                 each t in topics
                                     if task.topic === t.id
                                         option(value=t.id, selected)=t.number +' '+ t.title
                                     else
                                         option(value=t.id)=t.number +' '+ t.title
                         .form-group
-                            label(for="active") Widoczność:
+                            label(for='active') Widoczność:
                             label.custom-control.custom-checkbox.col-12
                                 if (param ? param('taskVisible') : task.visible)
-                                    input.custom-control-input#active(type='checkbox', name='taskVisible' value="ok" checked)
+                                    input.custom-control-input#active(type='checkbox', name='taskVisible' value='ok' checked)
                                 else
-                                    input.custom-control-input#active(type='checkbox', name='taskVisible' value="ok")
+                                    input.custom-control-input#active(type='checkbox', name='taskVisible' value='ok')
                                 span.custom-control-indicator
                                 span.custom-control-description Zadanie jest widoczne dla studentów
                         .form-group
-                            label(for="platform") Platforma zadania:
+                            label(for='platform') Platforma zadania:
                             label.custom-control.custom-checkbox.col-12#platform
                                 if (param ? param('komputerCheck') : task.computer)
-                                    input.custom-control-input#komputerCheck(type='checkbox' name='komputerCheck' value="ok" checked)
+                                    input.custom-control-input#komputerCheck(type='checkbox' name='komputerCheck' value='ok' checked)
                                 else
-                                    input.custom-control-input#komputerCheck(type='checkbox' name='komputerCheck' value="ok")
+                                    input.custom-control-input#komputerCheck(type='checkbox' name='komputerCheck' value='ok')
                                 span.custom-control-indicator
                                 span.custom-control-description Komputer
                             label.custom-control.custom-checkbox.col-12
                                 if (param ? param('arduinoCheck') : task.arduino)
-                                    input.custom-control-input#arduinoCheck(type='checkbox' name='arduinoCheck' value="ok" checked)
+                                    input.custom-control-input#arduinoCheck(type='checkbox' name='arduinoCheck' value='ok' checked)
                                 else
-                                    input.custom-control-input#arduinoCheck(type='checkbox' name='arduinoCheck' value="ok")
+                                    input.custom-control-input#arduinoCheck(type='checkbox' name='arduinoCheck' value='ok')
                                 span.custom-control-indicator
                                 span.custom-control-description Arduino
                         .form-group
-                            label(for="taskDescEditor") Opis zadania:
-                            textarea.form-control#taskDescEditor(name="taskDescription")=(param ? param('taskDescription') : description.description)
+                            label(for='taskDescEditor') Opis zadania:
+                            textarea.form-control#taskDescEditor(name='taskDescription')=(param ? param('taskDescription') : description.description)
 
                         input.btn.btn-primary(type='submit', value='Edytuj')
 

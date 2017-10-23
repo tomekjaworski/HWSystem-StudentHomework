@@ -13,7 +13,8 @@
         '<td>' +
         '<i style="cursor: pointer;" class="fa fa-arrow-left fa-lg ttGetBackButton" aria-hidden="true"></i>' +
         '</td>' +
-        '<td class="w-100" colspan="3">' + topic.number + '. ' + topic.title + '</td>' +
+        '<td>' + topic.number + '. ' + topic.title + '</td>' +
+        '<td></td><td></td>' +
         '<td>' + topic.deadline + '</td>' +
         '</tr>' +
         '<tr>' +

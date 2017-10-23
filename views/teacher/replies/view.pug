@@ -40,7 +40,7 @@ block content
                         .row
                             if nextPrev && nextPrev.prevTopicTask
                                 .col-2.text-center
-                                    a.btn.btn-secondary(href="/teacher/replies/view/" + nextPrev.prevTopicTask)
+                                    a.btn.btn-secondary(href='/teacher/replies/view/' + nextPrev.prevTopicTask)
                                         i.fa.fa-arrow-left
                             else
                                 .offset-2
@@ -48,12 +48,12 @@ block content
                                 h2.text-center=data.topic.number + '. ' + data.topic.title
                             if nextPrev && nextPrev.nextTopicTask
                                 .col-2.text-center
-                                    a.btn.btn-secondary(href="/teacher/replies/view/" + nextPrev.nextTopicTask)
+                                    a.btn.btn-secondary(href='/teacher/replies/view/' + nextPrev.nextTopicTask)
                                         i.fa.fa-arrow-right
                         .row
                             if nextPrev && nextPrev.prevTask
                                 .col-2.text-center
-                                    a.btn.btn-secondary(href="/teacher/replies/view/" + nextPrev.prevTask)
+                                    a.btn.btn-secondary(href='/teacher/replies/view/' + nextPrev.prevTask)
                                         i.fa.fa-arrow-left
                             else
                                 .offset-2
@@ -61,7 +61,7 @@ block content
                                 h3.text-center=data.number + '. ' + data.title
                             if nextPrev && nextPrev.nextTask
                                 .col-2.text-center
-                                    a.btn.btn-secondary(href="/teacher/replies/view/" + nextPrev.nextTask)
+                                    a.btn.btn-secondary(href='/teacher/replies/view/' + nextPrev.nextTask)
                                         i.fa.fa-arrow-right
 
                         div.text-center

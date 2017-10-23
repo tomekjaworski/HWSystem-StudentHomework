@@ -6,7 +6,7 @@ mixin topiclist(tooltip, value, color)
         | #{tooltip}
 
 mixin topicentry(id, title, percent, values)
-    .card.list-group-item.list-group-item-hover.flex-column.align-items-start.topic-entry.collapsed(data-toggle='collapse', data-parent='#topics-accordion', href='#topic-collapse-' + id, aria-expanded='false', aria-controls='topic-collapse-' + id, id="topic-a-" + id)
+    .card.list-group-item.list-group-item-hover.flex-column.align-items-start.topic-entry.collapsed(data-toggle='collapse', data-parent='#topics-accordion', href='#topic-collapse-' + id, aria-expanded='false', aria-controls='topic-collapse-' + id, id='topic-a-' + id)
         .w-100(id='topic-entry-' + id, role='tab')
             a
                 //-(href='/account/topics/'+ id + '/tasks')

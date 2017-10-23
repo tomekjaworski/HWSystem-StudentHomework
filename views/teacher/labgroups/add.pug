@@ -14,9 +14,9 @@ block content
                 .card-header
                     ul.nav.nav-tabs.nav-fill.task-tab
                         li.nav-item
-                            a.nav-link(href='/teacher/labgroup/list') Wyświetlanie
+                            a.nav-link(href='/teacher/labgroup/list')=i18n('teacher.listing')
                         li.nav-item
-                            a.nav-link.active() Dodawanie
+                            a.nav-link.active()=i18n('teacher.adding')
                 .card-block
                     .container
                         form(method='post')

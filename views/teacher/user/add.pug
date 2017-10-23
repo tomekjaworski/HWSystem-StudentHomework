@@ -12,18 +12,18 @@ block content
         //.hidden-md-down.col-lg-8#tasks-column
             //-include tasks
         .col-md-12.col-lg-8
-            form(method="post")
-                input(placeholder="Imię" name="name", value=(param ? param('name') : ''))
+            form(method='post')
+                input(placeholder='Imię' name='name', value=(param ? param('name') : ''))
                 br
-                input(placeholder="Nazwisko" name="sur", value=(param ? param('sur') : ''))
+                input(placeholder='Nazwisko' name='sur', value=(param ? param('sur') : ''))
                 br
-                input(placeholder="Nr albumu" name="album", value=(param ? param('album') : ''))
+                input(placeholder='Nr albumu' name='album', value=(param ? param('album') : ''))
                 br
                 label Teacher
                 if param && param('teacher')
-                    input(id='teacher', type="checkbox" name="teacher", checked)
+                    input(id='teacher', type='checkbox' name='teacher', checked)
                 else
-                    input(id='teacher', type="checkbox" name="teacher")
+                    input(id='teacher', type='checkbox' name='teacher')
                 br
                 div#notTeacher(style=(param && param('teacher') ? 'display: none' : ''))
                     label Labgrupa
@@ -38,25 +38,25 @@ block content
                 div#isTeacher(style=(param && param('teacher') ? '' : 'display: none'))
                     label Admin
                     if param && param('admin')
-                        input(type="checkbox" name="admin", checked)
+                        input(type='checkbox' name='admin', checked)
                     else
-                        input(type="checkbox" name="admin")
+                        input(type='checkbox' name='admin')
                     br
-                input(placeholder="email" name="email", value=(param ? param('email') : ''))
+                input(placeholder='email' name='email', value=(param ? param('email') : ''))
                 br
                 label Hasło
-                input(type="password" name="pass")
+                input(type='password' name='pass')
                 br
                 label Powtórz hasło
-                input(type="password" name="repass")
+                input(type='password' name='repass')
                 br
                 label Aktywny
                 if param && !param('active')
-                    input(type="checkbox" name="active")
+                    input(type='checkbox' name='active')
                 else
-                    input(type="checkbox" checked name="active")
+                    input(type='checkbox' checked name='active')
                 br
-                input(type="submit" value="stwórz")
+                input(type='submit' value='stwórz')
 
 block scripts
     script.

@@ -36,7 +36,7 @@ block content
                                     th(scope='row')=topic.id
                                     td=topic.number + '. ' + topic.title
                                     td
-                                        input(autocomplete="off", id='input-topic-' + topic.id, type='date', value=topic.deadline, required="required")
+                                        input(autocomplete='off', id='input-topic-' + topic.id, type='date', value=topic.deadline, required='required')
                                         if topic.custom
                                             div.badge.badge-pill.badge-success(id='badge-topic-' + topic.id) Data ustawiona dla grupy
                                     td
