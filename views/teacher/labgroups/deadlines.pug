@@ -3,7 +3,7 @@ extends ../../includes/layout
 block content
     if (message !== undefined && message && message.message && (message.message.length > 0 ))
         .alert(class='alert-' + message.attribute, role='alert')
-            strong Wiadomość:
+            strong=i18n('settings.message')
             |  #{message.message}
 
     .row

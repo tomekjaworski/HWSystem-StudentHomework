@@ -99,6 +99,9 @@
       "Topics",
       "TopicsAndTasksController",
       "Users"
+    ],
+    "ignore": [
+      "/assets/js/simplemde.js"
     ]
   }
 }

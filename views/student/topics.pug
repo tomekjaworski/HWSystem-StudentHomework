@@ -40,7 +40,7 @@ mixin topicentry(id, title, percent, values)
 script#tmplTableTasks(type='text/x-jsrender')
     table.table.table-striped.table-hover.table-responsive.table-tasklist
         thead
-            tr
+            tr.text-nowrap
                 th=i18n('student.topics.tasknumber')
                 th=i18n('student.topics.tasktitle')
                 th.text-center(data-toggle='tooltip', data-placement='top', title=i18n('student.topics.taskfs'), data-original-title=i18n('student.topics.taskfs')) fS
