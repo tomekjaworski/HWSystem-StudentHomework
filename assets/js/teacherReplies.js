@@ -208,7 +208,19 @@ function repliesGetBack () {
       checkComments(student, task)
     })
   }
+  function renderComment (student, id, name, surname, teacher, commentContent, date, read) {
+    const tmplCommentAjax = $.templates('#tmplCommentAjax')
 
+    return tmplCommentAjax.render({
+      student: student,
+      id: id,
+      teacher: teacher,
+      name: name + ' ' + surname,
+      comment: commentContent,
+      timestamp: date,
+      read: read
+    })
+  }
   function checkComments (student, task) {
     const commentBlock = $('#comments-student-' + student)
     const last = commentBlock.data('last')
@@ -227,8 +239,8 @@ function repliesGetBack () {
       }
       for (let id in data.comments) {
         let comment = data.comments[id]
-        // todo: i18n, + jsRender(?)
-        commentBlock.append('<div id="comments-student-' + data.student + '-comment-' + comment.id + '" style="border:1px solid black;margin:1px;padding:1px;"><div>Autor: ' + comment.name + ' ' + comment.surname + '</div><div>Data: ' + comment.date + '</div><div>Przeczytane: ' + comment.viewed + '</div><div> Treść:<div style="border:1px solid black;margin:1px;padding:1px;background-color:white;">' + comment.comment + '</div></div>')
+        // todo: oznaczenie komentarzy jako read, jezeli ostatni zaladowany jest read
+        commentBlock.append(renderComment(data.student, comment.id, comment.name, comment.surname, comment.teacher, comment.comment, comment.date, comment.viewed))
       }
       commentBlock.data('last', data.last)
       commentBlock.animate({

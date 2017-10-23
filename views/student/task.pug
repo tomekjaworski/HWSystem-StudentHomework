@@ -42,6 +42,13 @@ mixin commentBlock(com, hidden)
                         i.fa.fa-check.fa-inverse.fa-stack-1x
             //=i18n('student.task.read')
 block content
+    style.
+        .custom-task-file-control::before {
+            content: "#[=i18n('stundent.task.file.browse')]";
+        }
+        .custom-task-file-control::after {
+            content: "#[=i18n('stundent.task.file.choose')]";
+        }
     if req.query.msg === 'fileUpdateSuccess' || req.query.msg === 'replySent' || req.query.msg === 'fileUploadSuccess'
         .alert.alert-success
             case req.query.msg
@@ -121,7 +128,7 @@ block content
                         b=i18n('student.task.modal.sendreply.body.bold')
                     .modal-footer
 
-                        a(href='/topic/{{:topic}}/task/{{:task}}/sendReply', type='button').btn.btn-primary=i18n('student.task.modal.sendreply.button')
+                        a(href='/topic/{{:topic}}/task/{{:task}}/sendReply').btn.btn-primary=i18n('student.task.modal.sendreply.button')
                         button.btn.btn-secondary(type='button', data-dismiss='modal')=i18n('student.task.modal.cancel')
     script#tmplCommentAjax(type='text/x-jsrender')
         .list-group-item.list-group-item-action.flex-column.align-items-start#commentFadeIn(style='display: none;')

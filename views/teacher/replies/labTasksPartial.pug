@@ -1,13 +1,41 @@
-div.d-flex
+mixin commentBlock(com, hidden)
+    .list-group-item.list-group-item-action.flex-column.align-items-start(style=(hidden ? 'display: none;': ''))
+        .d-flex.w-100.justify-content-between
+            h5.mb-1
+                if com.user
+                    strong.task-c-author=(com.user ? com.user.fullName() : '')
+                    if com.user.isTeacher
+                        span.badge.badge-primary.ml-2
+                            i.fa.fa-bolt.fa-lg
+                        //- =i18n('student.task.teacher')
+                    span.ml-2=i18n('student.task.wrote')
+                else
+                    strong.task-c-author
+                        span.badge.badge-info=i18n('student.task.sysmsg')
+            //- TODO: @david, tu nie powinno mi zwracac z backendu godziny, tak jak w ajaxowych komentach? dziwne to.
+            small.text-muted.task-c-timestamp=com.createdAt
+        p.mb-1.task-c-comment=com.comment
+        if !com.viewed
+            div.text-right.w-100
+                small.text-muted.task-c-read
+                    span.fa-stack.fa-lg
+                        i.fa.fa-circle-thin.fa-stack-2x
+        else
+            div.text-right.w-100
+                small.text-muted.task-c-read
+                    span.fa-stack.fa-lg.text-primary
+                        i.fa.fa-circle.fa-stack-2x
+                        i.fa.fa-check.fa-inverse.fa-stack-1x
+div.d-flex.labTaskRow.mt-3
     .col-12
         h4=lab.name
         hr
-        .col-12.well.replySortRow(style='overflow-x:scroll;white-space: nowrap;max-height:600px;')
+        .col-12.well.replySortRow
             if !data
                 h5 Brak aktywnych studentów w grupie
             else
                 each student in data
-                    .col-6.studentCard(id='studentCard-'+ student.id, style='display: inline-block;vertical-align:top;float: none;')
+                    .col-12.col-sm-10.col-md-8.col-lg-6.col-xl-4.studentCard(id='studentCard-'+ student.id, style='display: inline-block;vertical-align:top;float: none;')
                         .card.replySortable(id=(student.reply ? 'reply-' + student.reply.id : ''), style=(student.reply ? (student.reply.blocked ? 'background-color:rgba(200,0,0,0.7);' : (!student.reply.newest ? 'background-color:rgba(100,100,100,0.7);' : (student.reply.teacherStatus === 2 ? 'background-color:rgba(200,0,0,0.7);' : (student.reply.teacherStatus === 1 ? 'background-color:lightgreen;' : '')))) : ''))
                             .card-header.d-flex.justify-content-end.p-0.replySortHandle
                                 .mr-auto.p-2.w-100.replySortableTitle
@@ -76,31 +104,45 @@ div.d-flex
                                     hr
                                     div
                                         h6 Pliki
-                                        each file in student.reply.files
-                                            div(style='border:1px solid black; margin-bottom:10px;background-color:white;')
-                                                div='Nazwa: ' + file.fileName + '.' + file.fileExt
-                                                div='Rozmiar: ' + file.fileSize
-                                                div='MimeType: ' + file.fileMimeType
-                                                div
-                                                    h7 Tresc:
-                                                    div
-                                                        if file.file.err
-                                                            div(style='border:1px solid black;margin:1px;padding:1px;overflow: auto;white-space: normal;')
-                                                                b BŁĄD
-                                                                | Brak zawartości pliku, najpewniej został źle przesłany
-                                                        else if file.fileMimeType.includes('text/')
-                                                            div(style='border:1px solid black;margin:1px;padding:1px;') !{file.file}
-                                                        else if file.fileMimeType === 'image/png'
-                                                            img.img-fluid(src='data:image/pmg;base64,' + file.file)
-                                                        else if file.fileMimeType === 'image/bmp'
-                                                            img.img-fluid(src='data:image/bmp;base64,' + file.file)
-                                                        else
-                                                            p Nieobsługiwane rozszerzenie
+                                        .studentCardMaxHeight.mb-3
+                                            ul.list-group
+                                                each file in student.reply.files
+                                                    //div(style='border:1px solid black; margin-bottom:10px;background-color:white;')
+                                                    li.list-group-item
+                                                        .w-100
+                                                            div='Nazwa: ' + file.fileName + '.' + file.fileExt
+                                                            div='Rozmiar: ' + file.fileSize
+
+                                                            div='MimeType: ' + file.fileMimeType
+
+                                                            h7 Tresc:
+                                                            div
+                                                                if file.file.err
+                                                                    pre(style='border:1px solid black;margin:1px;padding:1px;overflow: auto;white-space: normal;')
+                                                                        b BŁĄD
+                                                                        | Brak zawartości pliku, najpewniej został źle przesłany
+                                                                else if file.fileMimeType.includes('text/')
+                                                                    if ['h', 'c', 'hpp', 'cpp'].includes(file.fileExt)
+                                                                        pre !{file.file}
+                                                                    else
+                                                                        pre=file.file
+                                                                else if file.fileMimeType === 'image/png'
+                                                                    img.img-fluid(src='data:image/pmg;base64,' + file.file)
+                                                                else if file.fileMimeType === 'image/bmp'
+                                                                    img.img-fluid(src='data:image/bmp;base64,' + file.file)
+                                                                else
+                                                                    pre Nieobsługiwane rozszerzenie
+                                hr
                                 div
                                     h6 Komentarze:
                                     - let comment = _.last(student.comments)
                                     - comment = (comment? comment.id : 0)
-                                    div(id='comments-student-' + student.id, data-last=comment, style='max-height:400px;overflow:auto')
+                                    .studentCardMaxHeight.mb-3
+                                        .list-group(id='comments-student-' + student.id, data-last=comment)
+                                            if student.comments
+                                                each com in student.comments
+                                                    +commentBlock(com)
+                                    //-div(id='comments-student-' + student.id, data-last=comment, style='max-height:400px;overflow:auto')
                                         if student.comments
                                             each comment in student.comments
                                                 div(id='comments-student-' + student.id + '-comment-' + comment.id, style='border:1px solid black;margin:1px;padding:1px;')

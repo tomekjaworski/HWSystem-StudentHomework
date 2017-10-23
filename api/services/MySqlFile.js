@@ -139,6 +139,78 @@ module.exports = function MySqlStore (globalOpts) {
           // todo: koniecznie, byłem w sali obok, w której były zajęcia z C, i coś podsłuchałem :)
 
         __newFile.pipe(concat((file) => {
+          function afterMimeChecked () {
+            TaskReplyFiles.findOrCreate({id: options.updateFileId}, {
+              reply: options.replyId,
+              fileName: fileFormat.name,
+              fileSize: __newFile.byteCount,
+              fileExt: fileFormat.ext.substring(1),
+              fileMimeType: __newFile.headers['content-type']
+            }).exec((err, createdFile, created) => {
+              if (err) {
+                return done(err)
+              }
+              let file64 = base64.fromByteArray(file)
+              if (!created) {
+                if (createdFile.fileExt !== fileFormat.ext.substring(1)) {
+                  let err = new Error()
+                  err.code = 'E_EXTENSION_NOT_ALLOWED'
+                  err.name = 'Upload Error'
+                  return done(err)
+                }
+                TaskReplyFileContent.findOrCreate({id: createdFile.file, file: createdFile.id}, {file: createdFile.id, content: file64})
+                  .exec((err, createdFileContent, created) => {
+                    if (err) {
+                      return done(err)
+                    }
+                    if (created) {
+                      TaskReplyFiles.update(createdFile.id, {
+                        fileSize: __newFile.byteCount,
+                        file: createdFileContent.id
+                      }).exec((err) => {
+                        if (err) {
+                          return done(err)
+                        }
+                        done()
+                      })
+                    } else {
+                      TaskReplyFileContent.update(createdFile.file, {content: file64}).exec((err) => {
+                        if (err) {
+                          return done(err)
+                        }
+                        TaskReplyFiles.update(createdFile.id, {
+                          fileSize: __newFile.byteCount
+                        }).exec((err) => {
+                          if (err) {
+                            return done(err)
+                          }
+                          done()
+                        })
+                      })
+                    }
+                  })
+              } else {
+                TaskReplyFileContent.create({
+                  file: createdFile.id,
+                  content: file64
+                }).meta({fetch: true})
+                  .exec((err, createdFileContent) => {
+                    if (err) {
+                      return done(err)
+                    }
+                    TaskReplyFiles.update(createdFile.id, {
+                      file: createdFileContent.id,
+                      fileSize: __newFile.byteCount
+                    }).exec((err) => {
+                      if (err) {
+                        return done(err)
+                      }
+                      done()
+                    })
+                  })
+              }
+            })
+          }
           if (__newFile.headers['content-type'] === 'application/octet-stream') {
             let magic = new mmmagic.Magic(mmmagic.MAGIC_MIME_TYPE)
             let buf = Buffer.from(file)
@@ -156,78 +228,10 @@ module.exports = function MySqlStore (globalOpts) {
               } else if (arrayBmp.indexOf(result) > -1) {
                 __newFile.headers['content-type'] = 'image/bmp'
               }
-
-              TaskReplyFiles.findOrCreate({id: options.updateFileId}, {
-                reply: options.replyId,
-                fileName: fileFormat.name,
-                fileSize: __newFile.byteCount,
-                fileExt: fileFormat.ext.substring(1),
-                fileMimeType: __newFile.headers['content-type']
-              }).exec((err, createdFile, created) => {
-                if (err) {
-                  return done(err)
-                }
-                let file64 = base64.fromByteArray(file)
-                if (!created) {
-                  if (createdFile.fileExt !== fileFormat.ext.substring(1)) {
-                    let err = new Error()
-                    err.code = 'E_EXTENSION_NOT_ALLOWED'
-                    err.name = 'Upload Error'
-                    return done(err)
-                  }
-                  TaskReplyFileContent.findOrCreate({id: createdFile.file, file: createdFile.id}, {file: createdFile.id, content: file64})
-                    .exec((err, createdFileContent, created) => {
-                      if (err) {
-                        return done(err)
-                      }
-                      if (created) {
-                        TaskReplyFiles.update(createdFile.id, {
-                          fileSize: __newFile.byteCount,
-                          file: createdFileContent.id
-                        }).exec((err) => {
-                          if (err) {
-                            return done(err)
-                          }
-                          done()
-                        })
-                      } else {
-                        TaskReplyFileContent.update(createdFile.file, {content: file64}).exec((err) => {
-                          if (err) {
-                            return done(err)
-                          }
-                          TaskReplyFiles.update(createdFile.id, {
-                            fileSize: __newFile.byteCount
-                          }).exec((err) => {
-                            if (err) {
-                              return done(err)
-                            }
-                            done()
-                          })
-                        })
-                      }
-                    })
-                } else {
-                  TaskReplyFileContent.create({
-                    file: createdFile.id,
-                    content: file64
-                  }).meta({fetch: true})
-                    .exec((err, createdFileContent) => {
-                      if (err) {
-                        return done(err)
-                      }
-                      TaskReplyFiles.update(createdFile.id, {
-                        file: createdFileContent.id,
-                        fileSize: __newFile.byteCount
-                      }).exec((err) => {
-                        if (err) {
-                          return done(err)
-                        }
-                        done()
-                      })
-                    })
-                }
-              })
+              afterMimeChecked()
             })
+          } else {
+            afterMimeChecked()
           }
         }))
       }

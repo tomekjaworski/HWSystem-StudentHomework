@@ -3,7 +3,7 @@ extends ../../includes/layout
 block content
     if (message !== undefined && message && message.message && (message.message.length > 0 ))
         .alert(class='alert-' + message.attribute, role='alert')
-            strong Wiadomość:
+            strong=i18n('settings.message')
             |  #{message.message}
 
     .row
@@ -25,7 +25,7 @@ block content
                             tr
                                 th ID
                                 th Tytuł
-                                th Deadline
+                                th Termin oddania
                                 th Opcje
                         tbody
                             if data.topics.length === 0
@@ -36,7 +36,7 @@ block content
                                     th(scope='row')=topic.id
                                     td=topic.number + '. ' + topic.title
                                     td
-                                        input(autocomplete="off", id='input-topic-' + topic.id, type='date', value=topic.deadline, required="required")
+                                        input(autocomplete='off', id='input-topic-' + topic.id, type='date', value=topic.deadline, required='required')
                                         if topic.custom
                                             div.badge.badge-pill.badge-success(id='badge-topic-' + topic.id) Data ustawiona dla grupy
                                     td

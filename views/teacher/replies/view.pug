@@ -1,7 +1,29 @@
 extends ../../includes/layout
 
 block content
-
+    script#tmplCommentAjax(type='text/x-jsrender')
+        .list-group-item.list-group-item-action.flex-column.align-items-start
+            .d-flex.w-100.justify-content-between
+                h5.mb-1
+                    strong.task-c-author
+                        span.task-c-author-studentname {{:name}}
+                        | {{if teacher}}
+                        span.badge.badge-primary.ml-2=i18n('student.task.teacher')
+                        | {{/if}}
+                        span.ml-2=i18n('student.task.wrote')
+                small.text-muted.task-c-timestamp {{:timestamp}}
+            p.mb-1.task-c-comment {{:comment}}
+            div.text-right.w-100
+                | {{if read}}
+                small.text-muted.task-c-read
+                    span.fa-stack.fa-lg.text-primary
+                        i.fa.fa-circle.fa-stack-2x
+                        i.fa.fa-check.fa-inverse.fa-stack-1x
+                | {{else}}
+                small.text-muted.task-c-read
+                    span.fa-stack.fa-lg
+                        i.fa.fa-circle-thin.fa-stack-2x
+                | {{/if}}
     .row
         .col-md-12.col-lg-4
             include ../menu
@@ -18,7 +40,7 @@ block content
                         .row
                             if nextPrev && nextPrev.prevTopicTask
                                 .col-2.text-center
-                                    a.btn.btn-secondary(href="/teacher/replies/view/" + nextPrev.prevTopicTask)
+                                    a.btn.btn-secondary(href='/teacher/replies/view/' + nextPrev.prevTopicTask)
                                         i.fa.fa-arrow-left
                             else
                                 .offset-2
@@ -26,12 +48,12 @@ block content
                                 h2.text-center=data.topic.number + '. ' + data.topic.title
                             if nextPrev && nextPrev.nextTopicTask
                                 .col-2.text-center
-                                    a.btn.btn-secondary(href="/teacher/replies/view/" + nextPrev.nextTopicTask)
+                                    a.btn.btn-secondary(href='/teacher/replies/view/' + nextPrev.nextTopicTask)
                                         i.fa.fa-arrow-right
                         .row
                             if nextPrev && nextPrev.prevTask
                                 .col-2.text-center
-                                    a.btn.btn-secondary(href="/teacher/replies/view/" + nextPrev.prevTask)
+                                    a.btn.btn-secondary(href='/teacher/replies/view/' + nextPrev.prevTask)
                                         i.fa.fa-arrow-left
                             else
                                 .offset-2
@@ -39,7 +61,7 @@ block content
                                 h3.text-center=data.number + '. ' + data.title
                             if nextPrev && nextPrev.nextTask
                                 .col-2.text-center
-                                    a.btn.btn-secondary(href="/teacher/replies/view/" + nextPrev.nextTask)
+                                    a.btn.btn-secondary(href='/teacher/replies/view/' + nextPrev.nextTask)
                                         i.fa.fa-arrow-right
 
                         div.text-center
@@ -50,10 +72,7 @@ block content
                                         each lab in data.labs
                                             option(value=lab.id)= lab.name + ' - ' + lab.owner.fullName()
                                 .form-group
-                                    input.btn.btn-primary.getLabTasksButton(type='submit' data-id=data.id)
-    .row.mb-5
+                                    input.btn.btn-primary.getLabTasksButton(type='submit' data-id=data.id, value='Załaduj odpowiedzi')
+block fluid
+    .row.mb-2
         div#labs.col-12
-
-
-    .row.mt-5.mb-5
-        .col-12.mt-5.mb-5

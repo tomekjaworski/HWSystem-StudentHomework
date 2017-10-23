@@ -25,7 +25,13 @@ const LabsController = module.exports = {
         return res.serverError(err)
       }
       return res.view('teacher/labgroups/list',
-        {title: req.i18n.__('teacher.labs.teacherpanel'), menuItem: 'labgroups', data: groups.rows, show: show, breadcrumb: 'list'})
+        {
+          title: req.i18n.__('teacher.labs.teacherpanel'),
+          menuItem: 'labgroups',
+          data: groups.rows,
+          show: show,
+          breadcrumb: 'list'
+        })
     })
   },
 
@@ -153,7 +159,11 @@ const LabsController = module.exports = {
         if (isNaN(date)) {
           return res.badRequest()
         }
-        LabGroupTopicDeadline.findOrCreate({group: id, topic: topic}, {group: id, topic: topic, deadline: date}).exec((err, deadline, created) => {
+        LabGroupTopicDeadline.findOrCreate({group: id, topic: topic}, {
+          group: id,
+          topic: topic,
+          deadline: date
+        }).exec((err, deadline, created) => {
           if (err) {
             return res.serverError(err)
           }
@@ -238,7 +248,13 @@ const LabsController = module.exports = {
         return res.serverError(req.i18n.__('teacher.labs.noteachers'))
       }
       return res.view('teacher/labgroups/add',
-        {title: req.i18n.__('teacher.labs.teacherpanel'), menuItem: 'labgroups', users: users, message: msg, breadcrumb: 'add'})
+        {
+          title: req.i18n.__('teacher.labs.teacherpanel'),
+          menuItem: 'labgroups',
+          users: users,
+          message: msg,
+          breadcrumb: 'add'
+        })
     })
     if (req.method === 'POST') {
       let title = req.param('title')

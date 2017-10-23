@@ -1,4 +1,4 @@
-.container
+.container-fluid
     nav.navbar.navbar-light.bg-faded.rounded.navbar-toggleable-md
         if localUser
             button.navbar-toggler.navbar-toggler-right(type='button', data-toggle='collapse', data-target='#containerNavbar', aria-controls='containerNavbar', aria-expanded='false', aria-label='Toggle navigation')
@@ -23,13 +23,10 @@
                     li.nav-item
                         a.nav-link=i18n('nav.welcome.%s', localUser.fullName())
                     if localUser.isTeacher
-                        -var tempNotifications = Math.floor(Math.random() * 110)
                         li.nav-item.pr-2.pb-2.pb-lg-0
-                            if (tempNotifications >= 30) && (tempNotifications <= 60)
-
-                            else if tempNotifications > 0
+                            if notifs > 0
                                 .teacher-notifcounter-badge
-                                    span.badge.badge-pill.badge-danger=(tempNotifications >= 100 ? '+99' : tempNotifications)
+                                    span.badge.badge-pill.badge-danger=(notifs >= 100 ? '+99' : notifs)
 
                             a(href='/teacher').btn.btn-info.teacher-notifcounter
                                 i.fa.fa-envelope.fa-lg

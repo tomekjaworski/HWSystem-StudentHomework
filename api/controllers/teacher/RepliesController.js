@@ -172,7 +172,7 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
                             return resolve(file)
                           }
                           let content = '```' + type + '\n' + file.file + '\n```'
-                          pdc(content, 'markdown_github', 'html5', function (err, result) {
+                          pdc(content, 'markdown_github-raw_html', 'html5', function (err, result) {
                             if (err) {
                               return reject(err)
                             }
@@ -371,7 +371,8 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
               comment: c.comment,
               viewed: c.viewed,
               name: c.user.name,
-              surname: c.user.surname
+              surname: c.user.surname,
+              teacher: c.user.isTeacher
             }
           } catch (err) {
             return res.serverError(err)

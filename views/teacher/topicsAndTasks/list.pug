@@ -9,32 +9,36 @@ block content
             //-include tasks
         .col-md-12.col-lg-8
             .card
-                .card-header.text-center
-                    strong Tasks and Topics
-                .card-block
-                    a.btn.btn-primary(href="/teacher/topics-and-tasks/topic/add") Dodaj temat
+                .card-header
+                    ul.nav.nav-tabs.nav-fill.task-tab
+                        li.nav-item
+                            a.nav-link.active()=i18n('teacher.listing')
+                        li.nav-item
+                            a.nav-link(href='/teacher/topics-and-tasks/topic/add')=i18n('teacher.adding')
 
                 table.table.table-striped.responsive.table-grouplist
                     thead
                         tr
-                            th ID
-                            th(colspan=3) Temat
-                            th Deadline
+                            th(style='width: 50px')=i18n('teacher.table.id')
+                            th=i18n('teacher.table.title')
+                            th(style='width: 70px')
+                            th(style='width: 70px')
+                            th(style='width: 100px')=i18n('teacher.table.deadline')
                     tbody#tablebody
-                        if typeof(data[0]) === "undefined"
+                        if typeof(data[0]) === 'undefined'
                             tr
-                                td(colspan=5).text-center Brak zadan w bazie, dodaj zadania uzywajac guziku na "Dodaj temat"
+                                td(colspan=5).text-center=i18n('teacher.tt.notopics.%s', i18n('teacher.adding'))
                         else
                             each topic in data
                                 -var id= topic.id
                                 tr.ttSelectTopic(data-topicid=topic.id, style='cursor: pointer;')
                                     td.text-center=topic.id
-                                    td(class='w-100')=topic.number + '. ' + topic.title
+                                    td=topic.number + '. ' + topic.title
                                     td
-                                        button.btn.btn-sm.btn-danger.deleteTopicButton(data-id=id) Usuń
+                                        button.btn.btn-sm.btn-danger.deleteTopicButton(data-id=id)=i18n('teacher.tt.remove')
                                     td
-                                        button.btn.btn-sm.btn-primary.editTopicButton(data-id=id) Edytuj
-                                    td(width="80px")=topic.deadline
+                                        button.btn.btn-sm.btn-primary.editTopicButton(data-id=id)=i18n('teacher.tt.edit')
+                                    td=topic.deadline
 
 
         script.

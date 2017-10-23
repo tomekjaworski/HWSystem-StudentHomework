@@ -80,8 +80,7 @@
         if (data.mimeType.includes('text/')) {
           if (['h', 'c', 'hpp', 'cpp'].includes(data.ext)) {
             $('#fileContentModalBody').html(data.body)
-          }
-          else {
+          } else {
             $('#fileContentModalBody').html('<pre></pre>').find('pre').text(data.body)
           }
         } else if (data.mimeType === 'image/png') {

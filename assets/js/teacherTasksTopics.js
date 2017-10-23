@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars,no-global-assign */
 
-/* global topics, saved */
+/* global topics, saved, location */
 
 (function () {
   function ttSelectTopic (id) {
@@ -13,8 +13,9 @@
         '<td>' +
         '<i style="cursor: pointer;" class="fa fa-arrow-left fa-lg ttGetBackButton" aria-hidden="true"></i>' +
         '</td>' +
-        '<td class="w-100" colspan="3">' + topic.number + '. ' + topic.title + '</td>' +
-        '<td>' + topic.deadline + '</td>' +
+        '<td>' + topic.number + '. ' + topic.title + '</td>' +
+        '<td></td><td></td>' +
+        '<td class="text-nowrap">' + topic.deadline + '</td>' +
         '</tr>' +
         '<tr>' +
         '<td colspan="5">' +
@@ -52,7 +53,6 @@
     $('#tablebody').html(saved)
     initTable()
   }
-
 
   function taskDown (idDown, place, topic) {
     console.log('start')
@@ -156,7 +156,7 @@ function taskUp (idUp, place, topic) {
   console.log(b4)
   console.log(a)
   response.done(function () {
-    location.reload();
+    location.reload()
     b4.before(a)
     b4.attr('id', '' + topic + '' + place + '')
     // spanb4.unbind()
@@ -183,7 +183,7 @@ function taskDown (idDown, place, topic) {
   })
 
   response.done(function () {
-    location.reload();
+    location.reload()
     console.log('ok')
   })
 }

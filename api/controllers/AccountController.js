@@ -42,8 +42,16 @@ const AccountController = module.exports = {
    */
 
   registerError (req, res, error) {
-    LabGroups.find({}).populate('owner').exec(function (err, labs) {
-      return res.view('account/register', {title: req.i18n.__('register.header'), labs: labs, error: err || error})
+    LabGroups.find({select: ['id', 'owner', 'name']}).populate('owner').exec(function (err, labs) {
+      if (err) {
+        return res.serverError(err)
+      }
+      return res.view('account/register', {
+        title: req.i18n.__('register.header'),
+        labs: labs,
+        error: err || error,
+        param: req.param
+      })
     })
   },
 
@@ -78,7 +86,11 @@ const AccountController = module.exports = {
     }
     switch (req.method) {
       case 'GET':
-        return res.view('account/login', {title: req.i18n.__('login.header'), redirect: req.param('redirect'), loginpage: true})
+        return res.view('account/login', {
+          title: req.i18n.__('login.header'),
+          redirect: req.param('redirect'),
+          loginpage: true
+        })
       case 'POST':
         let email = req.param('email')
         let password = req.param('password')
@@ -133,9 +145,12 @@ const AccountController = module.exports = {
    * @route       :: /register
    */
   register (req, res) {
+    if (req.session.authed) {
+      return res.redirect('/')
+    }
     switch (req.method) {
       case 'GET':
-        LabGroups.find({}).populate('owner').exec(function (err, labs) {
+        LabGroups.find({active: true}).populate('owner').exec(function (err, labs) {
           if (err) {
             return res.serverError(err)
           }
@@ -152,48 +167,48 @@ const AccountController = module.exports = {
         let labGroups = req.param('groupl')
         let st = crypto.randomBytes(20).toString('hex')
         if (!name || !surname || !email || !password || !album) {
-          return AccountController.registerError(res, req.i18n.__('register.error.fillall'))
+          return AccountController.registerError(req, res, req.i18n.__('register.error.fillall'))
         }
         if (name.length > 255) {
-          return AccountController.registerError(res, req.i18n.__('register.error.name'))
+          return AccountController.registerError(req, res, req.i18n.__('register.error.name'))
         }
         if (surname.length > 255) {
-          return AccountController.registerError(res, req.i18n.__('register.error.surname'))
+          return AccountController.registerError(req, res, req.i18n.__('register.error.surname'))
         }
         let regexEmail = /^\w+@(p\.lodz\.pl)|\w+@(edu\.p\.lodz\.pl)$/
         if (!regexEmail.test(email)) {
-          return AccountController.registerError(res, req.i18n.__('register.error.email.domain'))
+          return AccountController.registerError(req, res, req.i18n.__('register.error.email.domain'))
         }
         if (email.length > 255) {
-          return AccountController.registerError(res, req.i18n.__('register.error.email.toolong'))
+          return AccountController.registerError(req, res, req.i18n.__('register.error.email.toolong'))
         }
         // todo: może tak być?, parseInt tu dodałem
         if (parseInt(album.length) !== 6) {
-          return AccountController.registerError(res, req.i18n.__('register.error.album'))
+          return AccountController.registerError(req, res, req.i18n.__('register.error.album'))
         }
         if (password !== rePassword) {
-          return AccountController.registerError(res, req.i18n.__('register.error.repassword'))
+          return AccountController.registerError(req, res, req.i18n.__('register.error.repassword'))
         }
         if (password.length > 255) {
-          return AccountController.registerError(res, req.i18n.__('register.error.password.long'))
+          return AccountController.registerError(req, res, req.i18n.__('register.error.password.long'))
         }
         if (password.length < 8) {
-          return AccountController.registerError(res, req.i18n.__('register.error.password.short'))
+          return AccountController.registerError(req, res, req.i18n.__('register.error.password.short'))
         }
 
         switch (Users.validatePassword(password)) {
           case 1:
-            return AccountController.registerError(res, req.i18n.__('register.error.password.short'))
+            return AccountController.registerError(req, res, req.i18n.__('register.error.password.short'))
           case 2:
-            return AccountController.registerError(res, req.i18n.__('register.error.password.reqs'))
+            return AccountController.registerError(req, res, req.i18n.__('register.error.password.reqs'))
         }
 
-        LabGroups.findOne({id: labGroups}).exec(function (err, lab) {
+        LabGroups.findOne({where: {id: labGroups}, select: ['id', 'active']}).exec(function (err, lab) {
           if (err) {
             res.serverError(err)
           }
-          if (!lab) {
-            return AccountController.registerError(res, req.i18n.__('register.error.labgroup'))
+          if (!lab || !lab.active) {
+            return AccountController.registerError(req, res, req.i18n.__('register.error.labgroup'))
           }
           Users.create({
             name: name,
@@ -203,11 +218,11 @@ const AccountController = module.exports = {
             password: AccountController.hashPassword(password, st),
             salt: st,
             activated: true,
-            labGroups: lab[0]
+            labGroups: lab.id
           }).exec(function (err) {
             if (err) {
               if (err.code === 'E_UNIQUE') {
-                return AccountController.registerError(res, req.i18n.__('register.error.unique'))
+                return AccountController.registerError(req, res, req.i18n.__('register.error.unique'))
               }
               return res.serverError(err)
             }
@@ -220,7 +235,7 @@ const AccountController = module.exports = {
   userSettings (req, res) {
     switch (req.method) {
       case 'GET':
-        LabGroups.find().populate('owner').exec(function (err, labs) {
+        LabGroups.find({active: true}).populate('owner').exec(function (err, labs) {
           if (err) {
             return res.serverError(err)
           }
@@ -239,7 +254,7 @@ const AccountController = module.exports = {
         const language = req.param('language')
         let user = req.localUser
 
-        LabGroups.find().populate('owner').exec(function (err, labs) {
+        LabGroups.find({active: true}).populate('owner').exec(function (err, labs) {
           if (err) {
             return res.serverError(err)
           }

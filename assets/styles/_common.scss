@@ -32,4 +32,13 @@
   width: 5.5em;
 }
 
+body {
+  word-break: break-all;
+  //noinspection CssInvalidPropertyValue
+  word-break: break-word;
+}
+
+.wb-initial {
+  word-break: initial
+}
 

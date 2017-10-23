@@ -158,7 +158,11 @@ const StudentController = module.exports = {
               return res.notFound()
             }
 
-            Tasks.findOne({id: taskparam, topic: topicparam, visible: true}).populate('description').exec(function (err, task) {
+            Tasks.findOne({
+              id: taskparam,
+              topic: topicparam,
+              visible: true
+            }).populate('description').exec(function (err, task) {
               if (err) {
                 return res.badRequest(err)
               }
@@ -169,7 +173,7 @@ const StudentController = module.exports = {
 
               task.description = task.description[0].description
 
-              pdc(task.description, 'markdown_github', 'html5', function (err, result) {
+              pdc(task.description, 'markdown_github-raw_html', 'html5', function (err, result) {
                 if (err) {
                   return res.serverError(err)
                 }
@@ -333,7 +337,7 @@ const StudentController = module.exports = {
         if (file.reply.student !== req.localUser.id) {
           return res.forbidden()
         }
-        let content = 'ni mo'
+        let content = 'ni mo' // todo: ni mo czego? wut?
         if (file.file) {
           if (file.fileMimeType.includes('text/')) {
             let type = ''
@@ -350,7 +354,7 @@ const StudentController = module.exports = {
               })
             }
             content = '```' + type + '\n' + file.file + '\n```'
-            pdc(content, 'markdown_github', 'html5', function (err, result) {
+            pdc(content, 'markdown_github-raw_html', 'html5', function (err, result) {
               if (err) {
                 return res.serverError(err)
               }

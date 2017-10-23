@@ -3,7 +3,7 @@ extends ../../includes/layout
 block content
     if (message !== undefined && message && (message.length > 0 ))
         .alert.alert-danger(role='alert')
-            strong Wiadomość:
+            strong=i18n('settings.message')
             |  #{message}
     .row
         .col-md-12.col-lg-4
@@ -17,32 +17,41 @@ block content
                     form(method='post')
                         .form-group
                             label(for='number') Numer:
-                            input.form-control#number(name='taskNumber')
+                            input.form-control#number(name='taskNumber', required, value=(param ? param('taskNumber') : ''))
                         .form-group
                             label(for='title') Tytuł:
-                            input.form-control#title(name='taskTitle')
+                            input.form-control#title(name='taskTitle', value=(param ? param('taskTitle') : ''))
                         .form-group
-                            label(for="active") Widoczność:
+                            label(for='active') Widoczność:
                             label.custom-control.custom-checkbox.col-12
-                                input.custom-control-input#active(type='checkbox', name='taskVisible' value="ok" checked)
+                                if param && !param('taskVisible')
+                                    input.custom-control-input#active(type='checkbox', name='taskVisible' value='ok')
+                                else
+                                    input.custom-control-input#active(type='checkbox', name='taskVisible' value='ok' checked)
                                 span.custom-control-indicator
                                 span.custom-control-description Zadanie jest widoczne dla studentów
                         .form-group
-                            label(for="platform") Platforma zadania:
+                            label(for='platform') Platforma zadania:
                             label.custom-control.custom-checkbox.col-12#platform
-                                input.custom-control-input#komputerCheck(type='checkbox' name='komputerCheck' value="ok")
+                                if param && param('komputerCheck')
+                                    input.custom-control-input#komputerCheck(type='checkbox' name='komputerCheck' value='ok' checked)
+                                else
+                                    input.custom-control-input#komputerCheck(type='checkbox' name='komputerCheck' value='ok')
                                 span.custom-control-indicator
                                 span.custom-control-description Komputer
                             label.custom-control.custom-checkbox.col-12
-                                input.custom-control-input#arduinoCheck(type='checkbox' name='arduinoCheck' value="ok")
+                                if param && param('arduinoCheck')
+                                    input.custom-control-input#arduinoCheck(type='checkbox' name='arduinoCheck' value='ok' checked)
+                                else
+                                    input.custom-control-input#arduinoCheck(type='checkbox' name='arduinoCheck' value='ok')
                                 span.custom-control-indicator
                                 span.custom-control-description Arduino
 
                         .form-group
                             label(for='taskDescEditor') Opis:
-                            textarea#taskDescEditor(name='taskDescription')
+                            textarea#taskDescEditor(name='taskDescription')=(param ? param('taskDescription') : '')
 
-                        input.btn.btn-primary(type='submit')
+                        input.btn.btn-primary(type='submit' value='Dodaj')
 
                         div#mdown
 

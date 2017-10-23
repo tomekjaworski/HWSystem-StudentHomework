@@ -39,6 +39,7 @@ module.exports.http = {
       'compress',
       'localsInject',
       'userInject',
+      'userNotifs',
       'router',
       'favicon'
     ],
@@ -55,7 +56,7 @@ module.exports.http = {
       if (req.session && req.session.authed) {
         Users.findOne({id: req.session.authed}).exec((err, user) => {
           if (err) {
-            return res.jsonx(err)
+            return res.serverError(err)
           }
           if (!user) {
             delete req.session.authed
@@ -66,6 +67,24 @@ module.exports.http = {
         })
       } else {
         next()
+      }
+    },
+
+    userNotifs: function (req, res, next) {
+      if (req.localUser && req.localUser.isTeacher) {
+        LabGroups.find({where: {owner: req.localUser.id}, select: ['id']}).exec((err, labs) => {
+          if (err) return res.serverError(err)
+          if (labs.length === 0) {
+            return next()
+          }
+          RecentTeacherActions.count({labgroup: labs.map(l => l.id), seen: false}).exec((err, actions) => {
+            if (err) return res.serverError(err)
+            req.options.locals.notifs = actions
+            return next()
+          })
+        })
+      } else {
+        return next()
       }
     },
 

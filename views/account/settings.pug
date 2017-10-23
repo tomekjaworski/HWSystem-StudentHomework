@@ -34,7 +34,7 @@ block content
                         form(method='post' action='/settings')
                             .form-group
                                 label(for='inputLabSelect')=i18n('settings.lab.choose')
-                                select#inputLabSelect.selectpicker(name='lab', data-live-search="true")
+                                select#inputLabSelect.selectpicker(name='lab', data-live-search='true')
                                     //- console.log(labs)
                                     each l in labs
                                         option(value=l.name, data-subtext=l.owner.fullName())= l.name
@@ -42,7 +42,7 @@ block content
                                 label(for='inputLabSelectPass')=i18n('settings.lab.confirmpass')
                                 input#inputLabSelectPass.form-control(type='password', name='passlabconf', required)
 
-                            input(type='hidden' name='action' value="newLab")
+                            input(type='hidden' name='action' value='newLab')
 
                             button.btn.btn-primary(type='submit')=i18n('settings.lab.change')
                 .col-sm-6.mb-3
@@ -57,12 +57,14 @@ block content
                             // Twitter Emoji (Twemoji)
                             // Copyright 2017 Twitter, Inc and other contributors
                             // Graphics licensed under CC-BY 4.0: https://creativecommons.org/licenses/by/4.0/
-                            .col-6.text-center
+                            .col-4.text-center
                                 img(src='/images/pol.png').img-fluid
-                            .col-6.text-center
+                            .col-4.text-center
                                 img(src='/images/eng.png').img-fluid
+                            .col-4.text-center
+                                img(src='/images/ukr.png').img-fluid
                         .form-group.row
-                            .col-6.text-center
+                            .col-4.text-center
                                 label.custom-control.custom-radio
                                     if (req.i18n.locale === 'pl')
                                         input#inputLanguage1.custom-control-input(name='language', type='radio', value='pl' checked)
@@ -70,7 +72,7 @@ block content
                                         input#inputLanguage1.custom-control-input(name='language', type='radio', value='pl')
                                     span.custom-control-indicator
                                     span.custom-control-description PL
-                            .col-6.text-center
+                            .col-4.text-center
                                 label.custom-control.custom-radio
                                     if (req.i18n.locale === 'en')
                                         input#inputLanguage2.custom-control-input(name='language', type='radio', value='en' checked)
@@ -78,5 +80,13 @@ block content
                                         input#inputLanguage2.custom-control-input(name='language', type='radio', value='en')
                                     span.custom-control-indicator
                                     span.custom-control-description EN
+                            .col-4.text-center
+                                label.custom-control.custom-radio
+                                    if (req.i18n.locale === 'uk')
+                                        input#inputLanguage3.custom-control-input(name='language', type='radio', value='uk' checked)
+                                    else
+                                        input#inputLanguage3.custom-control-input(name='language', type='radio', value='uk')
+                                    span.custom-control-indicator
+                                    span.custom-control-description UA
                         .text-center
                             input.btn.btn-primary.mb-4.mb-md-0(type='submit', value=i18n('settings.language.change'))

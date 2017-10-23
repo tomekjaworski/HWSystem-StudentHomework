@@ -43,6 +43,17 @@
   border-color: #175fdd;
 }
 
+.task-c-comment {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+  max-width: 100%;
+  // for the really annoying pricks
+  overflow: hidden;
+  //white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 #task-content {
   table {
     font-size: 14px;
@@ -75,8 +86,10 @@
   position: relative;
   display: inline-block;
   max-width: 100%;
-  margin-bottom: 0;
+  margin-bottom: 0.5em;
   cursor: pointer;
+  top: -2px;
+  height: 35px;
 }
 
 .custom-task-file-input {
@@ -123,30 +136,6 @@
   border-color: rgba(0, 0, 0, 0.1);
   border-image: initial;
   border-radius: 0 17.25px 17.25px 0;
-}
-
-.custom-task-file-control::before {
-  content: "Browse";
-}
-
-.custom-task-file-control::after {
-  content: "Choose file...";
-}
-
-.custom-task-file-control:lang(en)::before {
-  content: "Browse";
-}
-
-.custom-task-file-control:lang(pl)::before {
-  content: "Przeglądaj";
-}
-
-.custom-task-file-control:lang(en)::after {
-  content: "Choose file...";
-}
-
-.custom-task-file-control:lang(pl)::after {
-  content: "Wybierz plik...";
 }
 
 .replyFileIcon {

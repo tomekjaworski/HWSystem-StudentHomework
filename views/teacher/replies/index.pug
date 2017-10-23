@@ -13,13 +13,17 @@ block content
                 table.table.table-striped.responsive.table-grouplist
                     thead
                         tr
-                            th ID
+                            th.text-nowrap ID
                             th.w-100 Temat
                     tbody#tablebody
-                        each topic in data
-                            tr(onclick='repliesSelectTopic('+topic.id+')', style='cursor: pointer;')
-                                th(scope='row')=topic.id
-                                td=topic.number + '. ' + topic.title
+                        if data && data.length !== 0
+                            each topic in data
+                                tr(onclick='repliesSelectTopic('+topic.id+')', style='cursor: pointer;')
+                                    th(scope='row')=topic.id
+                                    td=topic.number + '. ' + topic.title
+                        else
+                            tr
+                                td.text-center(colspan=2) Brak tematów w bazie
 
 
 

@@ -18,6 +18,7 @@ const Users = module.exports = {
     album: {
       type: 'string',
       unique: true,
+      allowNull: true,
       minLength: 6,
       maxLength: 6
     },

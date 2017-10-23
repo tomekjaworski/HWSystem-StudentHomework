@@ -39,6 +39,9 @@
   //float: right;
   position: relative;
   //right: .5em;
+  @media (max-width: 991px) {
+    justify-content: left;
+  }
 
   .badge {
     z-index: 8;
@@ -46,6 +49,10 @@
     // safari
     position: relative;
     left: 2em;
+    @media (max-width: 991px) {
+      top: 0.25em;
+      left: 4em;
+    }
   }
 }
 
@@ -68,4 +75,23 @@
 
 .nav-header-inner {
   background-color: transparent;
+}
+
+.studentCardMaxHeight {
+  max-height: 400px;
+  overflow-y: scroll;
+}
+
+.studentCard {
+  white-space: normal;
+}
+
+//.labTaskRow {
+//  height: 100vh;
+//}
+
+.replySortRow {
+  overflow-x:scroll;
+  white-space: nowrap;
+  height: calc( 100vh - 80px );
 }
