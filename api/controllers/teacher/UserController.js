@@ -110,5 +110,34 @@ const UserController = module.exports = {
   editUser: function (req, res) {
     // eslint-disable-next-line no-unused-vars
     let id = req.param('id')
+    Users.findOne({id: id}).populate('labGroups').exec(function (err, user) {
+      if (err) {
+        return res.serverError(err)
+      }
+      LabGroups.find().populate('owner').exec(function (err, labs) {
+        if (err) {
+          return res.serverError(err)
+        }
+        return res.view('teacher/user/editUser', {menuItem: 'users', user: user, labs: labs})
+      })
+    })
+    if (req.method === 'POST') {
+
+    }
+  },
+  userProfile: function (req, res) {
+    let id = req.param('id')
+    Users.findOne({id: id}).populate('labGroups').exec(function (err, user) {
+      if (err) {
+        return res.serverError(err)
+      }
+      LabGroups.find({owner: user.id}).exec(function (err, labs) {
+        if (err) {
+          return res.serverError(err)
+        }
+
+        return res.view('teacher/user/profile', {user: user, labs: labs, menuItem: 'users'})
+      })
+    })
   }
 }

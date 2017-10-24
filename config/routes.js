@@ -104,6 +104,8 @@ module.exports.routes = {
   // User
   '/teacher/users': {action: 'teacher/user/listUser', skipAssets: true},
   '/teacher/users/add': {action: 'teacher/user/addUser', skipAssets: true},
+  '/teacher/users/profile/:id': {action: 'teacher/user/userProfile', skipAssets: true},
+  '/teacher/users/edit/:id': {action: 'teacher/user/editUser', skipAssets: true},
 
   // DEBUG
   '/hw2/enqtest': function (req, res) {
