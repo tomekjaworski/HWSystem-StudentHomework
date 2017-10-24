@@ -19,32 +19,28 @@ block content
                 table.table.table-striped.table-hover.table-responsive.table-grouplist.wb-initial
                     thead
                         tr
-                            th.text-nowrap(style='width:50px')=i18n('teacher.table.id')
-                            th(style="width:72%;")=i18n('teacher.table.fistlastname')
-                            th(style="width:15%;")
-                            th Nauczyciel
-                            th Admin
-                    tbody#tablebody
+                            th.text-nowrap=i18n('teacher.table.id')
+                            th.w-100=i18n('teacher.table.fistlastname')
+                            th
+                            th.text-nowrap Nauczyciel
+                            th.text.nowrap Admin
+                    tbody
                         each user in users
-                            -var id= user.id
-                            tr(onclick='selectTopic(' + user.id + ')', style='cursor: pointer;')
+                            tr.usersSelectUser(data-id=user.id, style='cursor: pointer;')
                                 th(scope='row')=user.id
+                                td=user.fullName()
                                 td
-                                    a(href="#" style="text-decoration:none; color:#373a3c;")=user.fullName()
-                                td
-                                    button.btn.btn-sm.btn-primary.editTopicButton(data-id=id) edytuj
-                                if user.isTeacher
-                                    td
-                                        i.fa.fa-check(style="color:#64DD17;")
-                                else
-                                    td
-                                        i.fa.fa-times(style="color:#d9534f;")
-                                if user.isAdmin
-                                    td
-                                        i.fa.fa-check(style="color:#64DD17;")
-                                else
-                                    td
-                                        i.fa.fa-times(style="color:#d9534f;")
+                                    a.btn.btn-sm.btn-primary.editUserButton(href='#', data-id=user.id) edytuj
+                                td.text-center
+                                    if user.isTeacher
+                                        i.fa.fa-check.text-success
+                                    else
+                                        i.fa.fa-times.text-danger
+                                td.text-center
+                                    if user.isAdmin
+                                        i.fa.fa-check.text-success
+                                    else
+                                        i.fa.fa-times.text-danger
 
 
 
