@@ -223,5 +223,6 @@
 	"teacher.users.isadmin": "an administrator",
 	"teacher.users.active": "Active",
 	"teacher.users.isactive": "active",
-	"teacher.users.none": "None"
+	"teacher.users.none": "None",
+	"teacher.table.description": "Description"
 }

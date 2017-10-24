@@ -223,5 +223,6 @@
 	"teacher.users.isadmin": "адміністратор",
 	"teacher.users.active": "активний",
 	"teacher.users.isactive": "активний",
-	"teacher.users.none": "відсутність"
+	"teacher.users.none": "відсутність",
+	"teacher.table.description": "опис"
 }

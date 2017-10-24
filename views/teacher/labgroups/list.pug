@@ -22,17 +22,21 @@ block content
                     thead
                         tr
                             th(style='width:50px;')=i18n('teacher.table.id')
-                            th.w-100=i18n('teacher.table.name')
+                            th.w-25=i18n('teacher.table.name')
+                            th.w-50=i18n('teacher.table.description')
                             th=i18n('teacher.table.status')
                             th=i18n('teacher.table.students')
                             th=i18n('teacher.table.students.pending')
-                            th=i18n('teacher.table.teacher')
+                            th.w-25=i18n('teacher.table.teacher')
                     tbody
                         if data && data.length !== 0
                             each group in data
                                 tr(onclick='document.location="/teacher/labgroup/view/'+group.id+'"')
                                     th.text-center(scope='row')=group.id
                                     td=group.name
+                                    // todo: placeholder, dajcie mnie to w backendzie czy co
+                                    // todo: td=group.description
+                                    td Czwartek, 17:15-19:00, CTI 407
                                     td=group.active ? i18n('teacher.table.visible') : i18n('teacher.table.invisible')
                                     td=group.studentsCount
                                     td=group.studentsNotCount
