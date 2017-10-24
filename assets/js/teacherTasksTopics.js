@@ -31,7 +31,14 @@
           '<td class="text-center align-middle"><a class="btn btn-sm btn-primary" href="/teacher/topics-and-tasks/task/edit/' + task.id + '">Edytuj</a></td>' +
           '<td class="text-center align-middle"><i class="fa fa-microchip ' + (task.arduino ? 'text-success' : 'text-danger') + '"></i></td>' +
           '<td class="text-center align-middle"><i class="fa fa-desktop ' + (task.computer ? 'text-success' : 'text-danger') + '"></i></td>' +
-          '<td class="text-center"><a class="btn btn-sm btn-link" onclick="taskUp(' + task.id + ',' + task.place + ',' + task.topic + ')"><i class="fa fa-lg fa-arrow-up"></i></a> <a class="btn btn-sm btn-link" onclick="taskDown(' + task.id + ',' + task.place + ',' + task.topic + ')"><i class="fa fa-lg fa-arrow-down"></i></a></td>' +
+          '<td class="text-center">' +
+            '<a class="btn btn-sm btn-link taskUpButton" data-id="' + task.id + '" data-place="' + task.place + '" data-topic="' + task.topic + '">' +
+              '<i class="fa fa-lg fa-arrow-up"></i>' +
+            '</a>' +
+            '<a class="btn btn-sm btn-link taskDownButton" data-id="' + task.id + '" data-place="' + task.place + '" data-topic="' + task.topic + '">' +
+              '<i class="fa fa-lg fa-arrow-down"></i>' +
+            '</a>' +
+          '</td>' +
           '</tr>'
       }
       ret +=
@@ -42,6 +49,24 @@
       tablebody.html(ret)
       $('.ttGetBackButton').on('click', function () {
         ttGetBack()
+      })
+      $('.taskUpButton').on('click', function () {
+        const taskId = $(this).data('id')
+        const taskPlace = $(this).data('place')
+        const taskTopic = $(this).data('topic')
+        alert('up')
+        taskUp(taskId, taskPlace, taskTopic)
+
+        return false
+      })
+      $('.taskDownButton').on('click', function () {
+        const taskId = $(this).data('id')
+        const taskPlace = $(this).data('place')
+        const taskTopic = $(this).data('topic')
+        alert('down')
+        taskDown(taskId, taskPlace, taskTopic)
+
+        return false
       })
     }
   }
@@ -54,6 +79,37 @@
     initTable()
   }
 
+  function taskUp (idUp, place, topic) {
+    console.log('start')
+    let response = $.ajax({
+      url: '/ajax/task/place',
+      method: 'POST',
+      data: {
+        value: 'up',
+        idUp: idUp,
+        place: place,
+        nextPlace: place,
+        topic: topic
+      }
+    })
+    let b4Place = parseInt(place)
+    b4Place = b4Place - 1
+    const b4 = $('#' + topic + b4Place)
+    const a = $('#' + topic + place)
+    // var spanb4 = $('#s' + topic + b4Place)
+    // var spana = $('#s' + topic + place)
+    console.log(b4)
+    console.log(a)
+    response.done(function () {
+      location.reload()
+      b4.before(a)
+      b4.attr('id', '' + topic + '' + place + '')
+      // spanb4.unbind()
+      // spanb4.attr('onclick', taskUp(idUp, place, topic))
+      // spana.attr('onclick', taskUp(idUp, parseInt(place - 1), topic))
+      a.attr('id', '' + topic + '' + b4Place + '')
+    })
+  }
   function taskDown (idDown, place, topic) {
     console.log('start')
     let response = $.ajax({
@@ -72,6 +128,7 @@
     })
 
     response.done(function () {
+      location.reload()
       console.log('ok')
     })
   }
@@ -133,57 +190,3 @@
 
   initTable()
 })()
-
-function taskUp (idUp, place, topic) {
-  console.log('start')
-  let response = $.ajax({
-    url: '/ajax/task/place',
-    method: 'POST',
-    data: {
-      value: 'up',
-      idUp: idUp,
-      place: place,
-      nextPlace: place,
-      topic: topic
-    }
-  })
-  let b4Place = parseInt(place)
-  b4Place = b4Place - 1
-  const b4 = $('#' + topic + b4Place)
-  const a = $('#' + topic + place)
-  // var spanb4 = $('#s' + topic + b4Place)
-  // var spana = $('#s' + topic + place)
-  console.log(b4)
-  console.log(a)
-  response.done(function () {
-    location.reload()
-    b4.before(a)
-    b4.attr('id', '' + topic + '' + place + '')
-    // spanb4.unbind()
-    // spanb4.attr('onclick', taskUp(idUp, place, topic))
-    // spana.attr('onclick', taskUp(idUp, parseInt(place - 1), topic))
-    a.attr('id', '' + topic + '' + b4Place + '')
-  })
-}
-function taskDown (idDown, place, topic) {
-  console.log('start')
-  let response = $.ajax({
-    url: '/ajax/task/place',
-    method: 'POST',
-    data: {
-      value: 'down',
-      idUp: idDown,
-      place: place,
-      nextPlace: place,
-      topic: topic
-    },
-    error: function (request, status, error) {
-      console.log(request.responseText)
-    }
-  })
-
-  response.done(function () {
-    location.reload()
-    console.log('ok')
-  })
-}

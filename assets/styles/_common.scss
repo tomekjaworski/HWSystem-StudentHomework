@@ -47,3 +47,8 @@ body {
   padding-top: 6px;
   user-select: none;
 }
+
+#inputPassword[type='text']:valid,
+#inputRePassword[type='text']:valid {
+  font-family: Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
