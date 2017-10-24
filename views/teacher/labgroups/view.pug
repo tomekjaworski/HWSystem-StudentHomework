@@ -25,6 +25,9 @@ block content
                         input.form-control.mb-2.mr-sm-2.mb-sm-0#message(name='message', value=data.message)
                         input.btn.btn-primary.mb-2.mr-sm-2.mb-sm-0(type='submit', value='Ustaw')
                         a.btn.btn-primary.mb-2.mr-sm-2.mb-sm-0(href='/teacher/labgroup/edit/' + data.id + '/') Edytuj grupę
+                    strong Opis
+                    div=data.description
+
                 .card-header.nav-header-inner
                     ul.nav.nav-tabs.nav-fill.task-tab
                         li.nav-item

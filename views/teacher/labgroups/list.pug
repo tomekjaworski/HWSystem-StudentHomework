@@ -34,9 +34,7 @@ block content
                                 tr(onclick='document.location="/teacher/labgroup/view/'+group.id+'"')
                                     th.text-center(scope='row')=group.id
                                     td=group.name
-                                    // todo: placeholder, dajcie mnie to w backendzie czy co
-                                    // todo: td=group.description
-                                    td Czwartek, 17:15-19:00, CTI 407
+                                    td=group.description
                                     td=group.active ? i18n('teacher.table.visible') : i18n('teacher.table.invisible')
                                     td=group.studentsCount
                                     td=group.studentsNotCount
