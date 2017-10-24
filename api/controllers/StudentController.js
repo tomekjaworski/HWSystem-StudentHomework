@@ -110,8 +110,8 @@ const StudentController = module.exports = {
           'LEFT JOIN topics ON topics.id = tasks.topic\n' +
           'LEFT JOIN studentcustomdeadlines scd ON scd.task = tasks.id AND scd.student = $1 \n' +
           'LEFT JOIN labgrouptopicdeadline groupdeadline ON groupdeadline.group = $2 AND groupdeadline.topic = $3 \n' +
-          'WHERE tasks.topic = $3 \n' +
-          'GROUP BY tasks.id, reply.id, tasks.topic, scd.deadline, groupdeadline.deadline',
+          'WHERE tasks.topic = $3\n' +
+          'GROUP BY tasks.id, reply.id, tasks.topic, scd.deadline, groupdeadline.deadline ORDER BY tasks.place, tasks.id',
           [req.localUser.id, lab.labgroup, topicId]).exec((err, data) => {
             if (err) {
               return res.serverError(err)

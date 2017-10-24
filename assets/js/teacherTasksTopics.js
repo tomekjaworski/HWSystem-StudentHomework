@@ -4,6 +4,9 @@
 
 (function () {
   function ttSelectTopic (id) {
+    if (!topics) {
+      return
+    }
     const topic = topics.filter(topic => topic.id === id)[0]
     const tablebody = $('#ttTableBody')
     if (topic) {
@@ -11,7 +14,12 @@
 
       const tmplTableTT = $.templates('#tmplTableTT')
 
-      const renderedTableTT = tmplTableTT.render({ topicNumber: topic.number, topicTitle: topic.title, topicId: topic.id, task: topic.tasks })
+      const renderedTableTT = tmplTableTT.render({
+        topicNumber: topic.number,
+        topicTitle: topic.title,
+        topicId: topic.id,
+        task: topic.tasks
+      })
 
       tablebody.html(renderedTableTT)
 
@@ -76,6 +84,7 @@
       a.attr('id', '' + topic + '' + b4Place + '')
     })
   }
+
   function taskDown (idDown, place, topic) {
     console.log('start')
     let response = $.ajax({
@@ -114,6 +123,7 @@
       window.location.reload()
     })
   }
+
   function delTask (id) {
     console.log('start')
     let response = $.ajax({
@@ -152,6 +162,12 @@
       window.location = '/teacher/topics-and-tasks/topic/edit/' + $(this).data('id')
       return false
     })
+  }
+
+  let params = {}
+  location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (s, k, v) { params[k] = v })
+  if (params['topic']) {
+    ttSelectTopic(parseInt(params['topic']))
   }
 
   initTable()

@@ -116,6 +116,11 @@ block scripts
             $('#inputAdmin').prop('checked', false)
             showTeacher()
           } else {
+            $('#isTeacher').hide()
+            let inputAlbum = $('#inputAlbum')
+            inputAlbum.prop('required', true)
+            inputAlbum.val('')
+            $('#notTeacher').show()
           }
         })
         $('#inputPassRandom').on('click', function () {
