@@ -224,5 +224,6 @@
 	"teacher.users.active": "Aktywny",
 	"teacher.users.isactive": "aktywny",
 	"teacher.users.none": "Brak",
-	"teacher.table.description": "Opis"
+	"teacher.table.description": "Opis",
+	"teacher.users.email": "jkowalski@p.lodz.pl"
 }

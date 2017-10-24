@@ -85,35 +85,18 @@ const UserController = module.exports = {
         return a('danger', req.i18n.__('teacher.labs.fillall'), req.param)
       }
 
-      // TODO: david zrób to ładniej jeżeli się da, to taki mój dirty fix na szybko
-      let array = {}
-      if (teacher) {
-        array = {
-          name: name,
-          surname: surname,
-          album: album === '' ? null : album,
-          isTeacher: teacher,
-          isAdmin: admin,
-          email: email,
-          password: UserController.hashPassword(pass, st),
-          salt: st,
-          activated: active
-        }
-      } else {
-        array = {
-          name: name,
-          surname: surname,
-          album: album === '' ? null : album,
-          isTeacher: teacher,
-          isAdmin: admin,
-          email: email,
-          password: UserController.hashPassword(pass, st),
-          salt: st,
-          activated: active,
-          labGroups: lab
-        }
-      }
-      Users.create(array).exec(function (err) {
+      Users.create({
+        name: name,
+        surname: surname,
+        album: album === '' ? null : album,
+        isTeacher: teacher,
+        isAdmin: admin,
+        email: email,
+        password: UserController.hashPassword(pass, st),
+        salt: st,
+        activated: active,
+        labGroups: lab === 0 ? [] : lab
+      }).exec(function (err) {
         if (err) {
           return res.serverError(err)
         }
