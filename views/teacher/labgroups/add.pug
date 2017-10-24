@@ -29,12 +29,15 @@ block content
                                 .col-sm-9
                                     input#inputDescription.form-control(type='text', name='desc')
                             .form-group.row
-                                label.col-sm-3=i18n('teacher.tt.visibility')
-                                .col-sm-9
-                                    .form-check
-                                        label.form-check-label
-                                            input.form-check-input(id='active', type='checkbox', name='active')
-                                            label(for='active')=i18n('teacher.table.visible')
+                                label.col-sm-3.col-form-label=i18n('teacher.tt.visibility')
+                                .col-sm-9.form-check-custom
+                                    label.custom-control.custom-checkbox
+                                        if (param && !param('active'))
+                                            input.custom-control-input#inputActive(type='checkbox', name='active')
+                                        else
+                                            input.custom-control-input#inputActive(type='checkbox', name='active' checked)
+                                        span.custom-control-indicator
+                                        span.custom-control-description=i18n('teacher.table.visible')
                             .form-group.row
                                 label.col-sm-3.col-form-label(for='inputOwner')=i18n('teacher.labs.teacher')
                                 .col-sm-9

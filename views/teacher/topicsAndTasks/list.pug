@@ -24,7 +24,7 @@ block content
                             th(style='width: 70px')
                             th(style='width: 70px')
                             th(style='width: 100px')=i18n('teacher.table.deadline')
-                    tbody#tablebody
+                    tbody#ttTableBody
                         if typeof(data[0]) === 'undefined'
                             tr
                                 td(colspan=5).text-center=i18n('teacher.tt.notopics.%s', i18n('teacher.adding'))
@@ -51,13 +51,13 @@ block content
                     td(colspan='5')
                         table.table.table-bordered.table-striped.table-hover.responsive
                             tbody
-                                a.btn.btn-primary.mb-3(href='/teacher/topics-and-tasks/topic/{{:topicId}}/task/add') Dodaj zadanie
+                                a.btn.btn-primary.mb-3(href='/teacher/topics-and-tasks/topic/{{:topicId}}/task/add')=i18n('breadcrumbs.tt.addtask')
                                 | {{for task}}
                                 tr(style='cursor: pointer;')
                                     td {{:id}}
                                     td(onclick="document.location=\'/teacher/topics-and-tasks/view/{{:id}}\'") {{:number}}. {{:title}}
                                     td.text-center.align-middle
-                                        a.btn.btn-sm.btn-primary(href='/teacher/topics-and-tasks/task/edit/{{:id}}') Edytuj
+                                        a.btn.btn-sm.btn-primary(href='/teacher/topics-and-tasks/task/edit/{{:id}}')=i18n('teacher.tt.edit')
                                     td.text-center.align-middle
                                         | {{if arduino}}
                                         i.fa.fa-microchip.text-success

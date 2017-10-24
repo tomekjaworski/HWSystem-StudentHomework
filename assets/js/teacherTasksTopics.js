@@ -5,7 +5,7 @@
 (function () {
   function ttSelectTopic (id) {
     const topic = topics.filter(topic => topic.id === id)[0]
-    const tablebody = $('#tablebody')
+    const tablebody = $('#ttTableBody')
     if (topic) {
       saved = tablebody.html()
 
@@ -41,7 +41,7 @@
     if (saved === '') {
       return
     }
-    $('#tablebody').html(saved)
+    $('#ttTableBody').html(saved)
     initTable()
   }
 

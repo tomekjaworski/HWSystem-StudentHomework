@@ -59,7 +59,7 @@ const UserController = module.exports = {
       let pass = req.param('pass')
       let repass = req.param('repass')
       let active = req.param('active')
-      let lab = req.param('groupl')
+      let lab = parseInt(req.param('groupl'))
       let st = crypto.randomBytes(20).toString('hex')
       if (!name || !surname || !email || !pass || !repass) {
         return a('danger', req.i18n.__('teacher.labs.fillall'), req.param)
@@ -85,18 +85,35 @@ const UserController = module.exports = {
         return a('danger', req.i18n.__('teacher.labs.fillall'), req.param)
       }
 
-      Users.create({
-        name: name,
-        surname: surname,
-        album: album === '' ? null : album,
-        isTeacher: teacher,
-        isAdmin: admin,
-        email: email,
-        password: UserController.hashPassword(pass, st),
-        salt: st,
-        activated: active,
-        labGroups: lab === 0 ? null : lab
-      }).exec(function (err) {
+      // TODO: david zrób to ładniej jeżeli się da, to taki mój dirty fix na szybko
+      let array = {}
+      if (teacher) {
+        array = {
+          name: name,
+          surname: surname,
+          album: album === '' ? null : album,
+          isTeacher: teacher,
+          isAdmin: admin,
+          email: email,
+          password: UserController.hashPassword(pass, st),
+          salt: st,
+          activated: active
+        }
+      } else {
+        array = {
+          name: name,
+          surname: surname,
+          album: album === '' ? null : album,
+          isTeacher: teacher,
+          isAdmin: admin,
+          email: email,
+          password: UserController.hashPassword(pass, st),
+          salt: st,
+          activated: active,
+          labGroups: lab
+        }
+      }
+      Users.create(array).exec(function (err) {
         if (err) {
           return res.serverError(err)
         }
