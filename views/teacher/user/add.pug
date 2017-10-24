@@ -12,60 +12,139 @@ block content
         //.hidden-md-down.col-lg-8#tasks-column
             //-include tasks
         .col-md-12.col-lg-8
-            form(method='post')
-                input(placeholder='Imię' name='name', value=(param ? param('name') : ''))
-                br
-                input(placeholder='Nazwisko' name='sur', value=(param ? param('sur') : ''))
-                br
-                input(placeholder='Nr albumu' name='album', value=(param ? param('album') : ''))
-                br
-                label Teacher
-                if param && param('teacher')
-                    input(id='teacher', type='checkbox' name='teacher', checked)
-                else
-                    input(id='teacher', type='checkbox' name='teacher')
-                br
-                div#notTeacher(style=(param && param('teacher') ? 'display: none' : ''))
-                    label Labgrupa
-                        select(name='groupl')
-                            option(value=0) Brak
-                            each l in labs
-                                if param && param('groupl') === l.id.toString()
-                                    option(value=l.id, selected)= l.name + l.owner.fullName()
-                                else
-                                    option(value=l.id)= l.name + l.owner.fullName()
-                    br
-                div#isTeacher(style=(param && param('teacher') ? '' : 'display: none'))
-                    label Admin
-                    if param && param('admin')
-                        input(type='checkbox' name='admin', checked)
-                    else
-                        input(type='checkbox' name='admin')
-                    br
-                input(placeholder='email' name='email', value=(param ? param('email') : ''))
-                br
-                label Hasło
-                input(type='password' name='pass')
-                br
-                label Powtórz hasło
-                input(type='password' name='repass')
-                br
-                label Aktywny
-                if param && !param('active')
-                    input(type='checkbox' name='active')
-                else
-                    input(type='checkbox' checked name='active')
-                br
-                input(type='submit' value='stwórz')
+            .card
+                .card-header
+                    ul.nav.nav-tabs.nav-fill.task-tab
+                        li.nav-item
+                            a.nav-link(href='/teacher/users')=i18n('teacher.listing')
+                        li.nav-item
+                            a.nav-link.active()=i18n('teacher.adding')
+                .card-block
+                    form(method='post')
+                        .form-group.row
+                            label.col-sm-4.col-form-label(for='inputFirstName')=i18n('register.firstname')
+                            .col-sm-8
+                                input#inputFirstName.form-control(type='text', placeholder=i18n('register.firstname.placeholder'), name='name', required, autofocus, value=(param ? param('name') : ''))
+                        .form-group.row
+                            label.col-sm-4.col-form-label(for='inputLastName')=i18n('register.lastname')
+                            .col-sm-8
+                                input#inputLastName.form-control(type='text', placeholder=i18n('register.lastname.placeholder'), name='sur', required, value=(param ? param('sur') : ''))
+                        .form-group.row
+                            label.col-sm-4.col-form-label=i18n('teacher.users.teacher')
+                            .col-sm-8.form-check-custom
+                                label.custom-control.custom-checkbox
+                                    if (param && param('teacher'))
+                                        input.custom-control-input#inputTeacher(type='checkbox', name='teacher' checked)
+                                    else
+                                        input.custom-control-input#inputTeacher(type='checkbox', name='teacher')
+                                    span.custom-control-indicator
+                                    span.custom-control-description=i18n('teacher.users.useris.%s', i18n('teacher.users.isteacher'))
+                        div#notTeacher(style=(param && param('teacher') ? 'display: none' : ''))
+                            .form-group.row
+                                label.col-sm-4.col-form-label(for='inputGroupL')=i18n('register.labgroup')
+                                .col-sm-8
+                                    select#inputGroupL.custom-select(name='groupl', required)
+                                        option(value='0')=i18n('teacher.users.none')
+                                        each l in labs
+                                            if param && param('groupl') === l.id.toString()
+                                                option(value=l.id, selected)= l.name + l.owner.fullName()
+                                            else
+                                                option(value=l.id)= l.name + l.owner.fullName()
+                            .form-group.row
+                                label.col-sm-4.col-form-label(for='inputAlbum')=i18n('register.album')
+                                .col-sm-8
+                                    input#inputAlbum.form-control(type='text', placeholder=i18n('register.album.placeholder'), name='album', required, value=(param ? param('album') : ''))
+                        div#isTeacher(style=(param && param('teacher') ? '' : 'display: none'))
+                            .form-group.row
+                                label.col-sm-4.col-form-label=i18n('teacher.users.admin')
+                                .col-sm-8.form-check-custom
+                                    label.custom-control.custom-checkbox
+                                        if (param && param('admin'))
+                                            input.custom-control-input#inputAdmin(type='checkbox', name='admin' checked)
+                                        else
+                                            input.custom-control-input#inputAdmin(type='checkbox', name='admin')
+                                        span.custom-control-indicator
+                                        span.custom-control-description=i18n('teacher.users.useris.%s', i18n('teacher.users.isadmin'))
+                        .form-group.row
+                            label.col-sm-4.col-form-label(for='inputEmail')=i18n('register.email')
+                            .col-sm-8
+                                input#inputEmail.form-control(type='email', placeholder=i18n('teacher.users.email'), name='email', required, value=(param ? param('email') : ''))
+                        .form-group.row
+                            label.col-sm-4.col-form-label(for='inputPassword')=i18n('register.password')
+                            .col-sm-8
+                                .input-group
+                                    input#inputPassword.form-control(type='password', placeholder=i18n('register.password.placeholder'), name='pass', required)
+                                    span.input-group-btn
+                                        button.btn.btn-primary#inputPassShow(data-visible='invisible')
+                                            i.fa.fa-eye.fa-lg
+                        .form-group.row
+                            label.col-sm-4.col-form-label(for='inputRePassword')=i18n('register.repassword')
+                            .col-sm-8
+                                .input-group
+                                    input#inputRePassword.form-control(type='password', placeholder=i18n('register.repassword.placeholder'), name='repass', required)
+                                    span.input-group-btn
+                                        button.btn.btn-primary#inputPassRandom
+                                            i.fa.fa-key.fa-lg
+                        .form-group.row
+                            label.col-sm-4.col-form-label=i18n('teacher.users.active')
+                            .col-sm-8.form-check-custom
+                                label.custom-control.custom-checkbox
+                                    if (param && !param('active'))
+                                        input.custom-control-input#inputActive(type='checkbox', name='active')
+                                    else
+                                        input.custom-control-input#inputActive(type='checkbox', name='active' checked)
+                                    span.custom-control-indicator
+                                    span.custom-control-description=i18n('teacher.users.useris.%s', i18n('teacher.users.isactive'))
+                        input.btn.btn-primary(type='submit' value=i18n('teacher.tt.add'))
 
 block scripts
     script.
-        $('#teacher').on('change', function () {
+        let inputTeacher = $('#inputTeacher')
+        if (inputTeacher.is(':checked')){
+          showTeacher()
+        }
+        function showTeacher () {
+          $('#isTeacher').show()
+          let inputAlbum = $('#inputAlbum')
+          inputAlbum.prop('required', false)
+          inputAlbum.val('')
+          $('#inputGroupL').val('0')
+          $('#notTeacher').hide()
+        }
+        inputTeacher.on('change', function () {
           if ($(this).is(':checked')) {
-            $('#isTeacher').show()
-            $('#notTeacher').hide()
+            $('#inputAdmin').prop('checked', false)
+            showTeacher()
           } else {
-            $('#isTeacher').hide()
-            $('#notTeacher').show()
           }
+        })
+        $('#inputPassRandom').on('click', function () {
+          var chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+          var pass = "";
+          for (x = 0; x < 10; x++) {
+            i = Math.floor(Math.random() * 62);
+            pass += chars.charAt(i);
+          }
+          $('#inputPassword').val(pass)
+          $('#inputRePassword').val(pass)
+          let inputPassShow = $('#inputPassShow')
+          inputPassShow.data('visible', 'invisible')
+          inputPassShow.click()
+          return false
+        })
+        $('#inputPassShow').on('click', function () {
+          if ($(this).data('visible') === 'invisible') {
+            $('#inputPassword').prop('type', 'text')
+            $('#inputRePassword').prop('type', 'text')
+            $(this).data('visible', 'visible')
+            $(this).removeClass('btn-primary')
+            $(this).addClass('btn-danger')
+          } else {
+            $('#inputPassword').prop('type', 'password')
+            $('#inputRePassword').prop('type', 'password')
+            $(this).data('visible', 'invisible')
+            $(this).removeClass('btn-danger')
+            $(this).addClass('btn-primary')
+          }
+          return false
         })

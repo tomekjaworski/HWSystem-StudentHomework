@@ -10,7 +10,7 @@ const dateFormat = require('dateformat')
 const LabsController = module.exports = {
   listLabGroups: function (req, res) {
     let show = req.param('show')
-    let cond = 'SELECT `labgroups`.`id`, `labgroups`.`active`, `labgroups`.`name`, COUNT(DISTINCT `sa`.`id`) `studentsCount`, COUNT(DISTINCT `sna`.`id`) `studentsNotCount`, `users`.`name` as ownerName, `users`.`surname` as ownerSurname FROM `labgroups` \n' +
+    let cond = 'SELECT `labgroups`.`id`, `labgroups`.`active`, `labgroups`.`name`, `labgroups`.`description`, COUNT(DISTINCT `sa`.`id`) `studentsCount`, COUNT(DISTINCT `sna`.`id`) `studentsNotCount`, `users`.`name` as ownerName, `users`.`surname` as ownerSurname FROM `labgroups` \n' +
       'LEFT JOIN `studentslabgroups` `sa` ON `sa`.`labgroup` = `labgroups`.`id` AND `sa`.`active`=1\n' +
       'LEFT JOIN `studentslabgroups` `sna` ON `sna`.`labgroup` = `labgroups`.`id` AND `sna`.`active`=0\n' +
       'LEFT JOIN `users` ON `users`.`id` = `labgroups`.`owner`'

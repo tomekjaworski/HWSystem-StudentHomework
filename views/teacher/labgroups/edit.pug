@@ -33,15 +33,15 @@ block content
                     .container
                         form(method='post')
                             .form-group.row
-                                label.col-sm-3.col-form-label(for='inputTitle') Title
+                                label.col-sm-3.col-form-label(for='inputTitle')=i18n('teacher.labs.name')
                                 .col-sm-9
                                     input#inputTitle.form-control(type='text', name='title', value=data.name)
                             .form-group.row
-                                label.col-sm-3.col-form-label(for='inputDescription') Description
+                                label.col-sm-3.col-form-label(for='inputDescription')=i18n('teacher.labs.description')
                                 .col-sm-9
                                     input#inputDescription.form-control(type='text', name='desc', value=data.description)
                             .form-group.row
-                                label.col-sm-3 Status grupy
+                                label.col-sm-3=i18n('teacher.tt.visibility')
                                 .col-sm-9
                                     .form-check
                                         label.form-check-label
@@ -49,10 +49,10 @@ block content
                                             input.form-check-input(id='active', type='checkbox', name='active', checked)
                                         else
                                             input.form-check-input(id='active', type='checkbox', name='active')
-                                        label(for='active') Widoczna
+                                        label(for='active')=i18n('teacher.table.visible')
 
                             .form-group.row
-                                label.col-sm-3.col-form-label(for='inputOwner') Owner
+                                label.col-sm-3.col-form-label(for='inputOwner')=i18n('teacher.labs.teacher')
                                 .col-sm-9
                                     select.form-control#inputOwner(name='owner')
                                         for user in users
@@ -62,9 +62,9 @@ block content
                                                 option(value=user.id)= user.fullName()
                             .form-group.row
                                 .col-sm-10
-                                    button.btn.btn-primary(type='submit') Edytuj
+                                    button.btn.btn-primary(type='submit')=i18n('teacher.tt.add')
                                 .col-sm-2
-                                    button.btn.btn-danger(id='delete-confirm', type='button') Skasuj
+                                    button.btn.btn-danger(id='delete-confirm', type='button')=i18n('teacher.tt.remove')
 
 block scripts
     script.

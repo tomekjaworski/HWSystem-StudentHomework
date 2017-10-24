@@ -17,25 +17,25 @@ block content
                 .card-header.text-center
                     strong Ostatnie wiadomości
 
-                table.table.table-striped.responsive.table-bordered.table-grouplist
-                    form(method='post', action='/teacher/markAsRead')
-                        table.table.table-striped.table-hover.responsive.table-grouplist
-                            thead
-                                tr
-                                    th
-                                        input(type='checkbox' id='setAllAsRead')
-                                    th Wiadomość
-                                    th Data
-                            tbody
-                                if actions && actions.length!==0
-                                    each action in actions
-                                        tr
-                                            th
-                                                input(type='checkbox' class='checks' name='actions' value=action.id)
-                                            td !{action.message}
-                                            td.wb-initial.text-center=action.updatedAt
-                                else
+
+                form(method='post', action='/teacher/markAsRead')
+                    table.table.table-striped.table-hover.table-responsive.table-grouplist.wb-initial
+                        thead
+                            tr
+                                th
+                                    input(type='checkbox' id='setAllAsRead')
+                                th.w-100 Wiadomość
+                                th.text-center Data
+                        tbody
+                            if actions && actions.length!==0
+                                each action in actions
                                     tr
-                                        td.text-center(colspan=4) Brak danych
-                        .card-block
-                            input.btn.btn-primary.btn-block(type='submit' value='Oznacz przeczytane')
+                                        th
+                                            input(type='checkbox' class='checks' name='actions' value=action.id)
+                                        td !{action.message}
+                                        td.text-center=action.updatedAt
+                            else
+                                tr
+                                    td.text-center(colspan=4) Brak danych
+                    .card-block
+                        input.btn.btn-primary.btn-block(type='submit' value='Oznacz przeczytane')

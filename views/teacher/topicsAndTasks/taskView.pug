@@ -8,12 +8,18 @@ block content
 
         .col-md-12.col-lg-8
             -var id = task.id
-            button.deleteTaskButton.btn.btn-danger(data-id=id) Usuń
-            h1= task.topic.number + '. ' + task.topic.title
-            h2= task.number + '. ' + task.title
             .card
-                if description
-                    #task-content.card-block!= description
-                else
-                    .card-block
-                        p Nie ma opisu zadania
+                .card-header.d-flex.justify-content-between
+                    a.btn.btn-primary.btn-sm(href='/teacher/topics-and-tasks/task/edit/' + id)=i18n('teacher.tt.edit')
+                    strong=i18n('breadcrumbs.tt.previewtask')
+                    button.deleteTaskButton.btn.btn-danger.btn-sm(data-id=id)=i18n('teacher.tt.remove')
+
+                .card-block
+                    h1.text-center= task.topic.number + '. ' + task.topic.title
+                    h2.text-center= task.number + '. ' + task.title
+                    .card
+                        if description
+                            #task-content.card-block!= description
+                        else
+                            .card-block
+                                p=i18n('teacher.tt.task.nodescription')

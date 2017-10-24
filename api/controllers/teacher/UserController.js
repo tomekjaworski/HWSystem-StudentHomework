@@ -59,7 +59,7 @@ const UserController = module.exports = {
       let pass = req.param('pass')
       let repass = req.param('repass')
       let active = req.param('active')
-      let lab = req.param('groupl')
+      let lab = parseInt(req.param('groupl'))
       let st = crypto.randomBytes(20).toString('hex')
       if (!name || !surname || !email || !pass || !repass) {
         return a('danger', req.i18n.__('teacher.labs.fillall'), req.param)
@@ -95,7 +95,7 @@ const UserController = module.exports = {
         password: UserController.hashPassword(pass, st),
         salt: st,
         activated: active,
-        labGroups: lab === 0 ? null : lab
+        labGroups: lab === 0 ? [] : lab
       }).exec(function (err) {
         if (err) {
           return res.serverError(err)

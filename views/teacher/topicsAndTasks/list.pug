@@ -16,15 +16,15 @@ block content
                         li.nav-item
                             a.nav-link(href='/teacher/topics-and-tasks/topic/add')=i18n('teacher.adding')
 
-                table.table.table-striped.responsive.table-grouplist
+                table.table.table-striped.table-hover.table-responsive.table-grouplist.wb-initial
                     thead
                         tr
-                            th(style='width: 50px')=i18n('teacher.table.id')
-                            th=i18n('teacher.table.title')
+                            th.wb-initial(style='width: 50px')=i18n('teacher.table.id')
+                            th.w-100=i18n('teacher.table.title')
                             th(style='width: 70px')
                             th(style='width: 70px')
                             th(style='width: 100px')=i18n('teacher.table.deadline')
-                    tbody#tablebody
+                    tbody#ttTableBody
                         if typeof(data[0]) === 'undefined'
                             tr
                                 td(colspan=5).text-center=i18n('teacher.tt.notopics.%s', i18n('teacher.adding'))
@@ -32,14 +32,50 @@ block content
                             each topic in data
                                 -var id= topic.id
                                 tr.ttSelectTopic(data-topicid=topic.id, style='cursor: pointer;')
-                                    td.text-center=topic.id
+                                    th.text-center(scope='row')=topic.id
                                     td=topic.number + '. ' + topic.title
                                     td
                                         button.btn.btn-sm.btn-danger.deleteTopicButton(data-id=id)=i18n('teacher.tt.remove')
                                     td
                                         button.btn.btn-sm.btn-primary.editTopicButton(data-id=id)=i18n('teacher.tt.edit')
                                     td=topic.deadline
-
+            script#tmplTableTT(type='text/x-jsrender')
+                tr
+                    td
+                        i.fa.fa-arrow-left.fa-lg.ttGetBackButton(style='cursor: pointer;', aria-hidden='true')
+                    td {{:topicNumber}}. {{:topicTitle}}
+                    td
+                    td
+                    td.text-nowrap {{:topicDeadline}}
+                tr
+                    td(colspan='5')
+                        table.table.table-bordered.table-striped.table-hover.responsive
+                            tbody
+                                a.btn.btn-primary.mb-3(href='/teacher/topics-and-tasks/topic/{{:topicId}}/task/add')=i18n('breadcrumbs.tt.addtask')
+                                | {{for task}}
+                                tr(style='cursor: pointer;')
+                                    td {{:id}}
+                                    td(onclick="document.location=\'/teacher/topics-and-tasks/view/{{:id}}\'") {{:number}}. {{:title}}
+                                    td.text-center.align-middle
+                                        a.btn.btn-sm.btn-primary(href='/teacher/topics-and-tasks/task/edit/{{:id}}')=i18n('teacher.tt.edit')
+                                    td.text-center.align-middle
+                                        | {{if arduino}}
+                                        i.fa.fa-microchip.text-success
+                                        | {{else}}
+                                        i.fa.fa-microchip.text-danger
+                                        | {{/if}}
+                                    td.text-center.align-middle
+                                        | {{if computer}}
+                                        i.fa.fa-desktop.text-success
+                                        | {{else}}
+                                        i.fa.fa-desktop.text-danger
+                                        | {{/if}}
+                                    td.text-center
+                                        a.btn.btn-sm.btn-link.taskUpButton(data-id='{{:id}}', data-place='{{:place}}', data-topic='{{:topic}}')
+                                            i.fa.fa-lg.fa-arrow-up
+                                        a.btn.btn-sm.btn-link.taskDownButton(data-id='{{:id}}', data-place='{{:place}}', data-topic='{{:topic}}')
+                                            i.fa.fa-lg.fa-arrow-down
+                                | {{/for}}
 
         script.
           var topics = !{JSON.stringify(data).replace(/<\//g, '<\\/')}

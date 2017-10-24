@@ -32,7 +32,9 @@ mixin form
                 select#inputGroupL.custom-select(name='groupl', required)
                     each l in labs
                         if param && param('groupl') === l.id.toString()
-                        option(value=l.id)= l.name + ' - ' + l.owner.fullName()
+                            option(value=l.id, selected)= l.name + ' - ' + l.owner.fullName()
+                        else
+                            option(value=l.id)= l.name + ' - ' + l.owner.fullName()
 
         if error
             input.btn.btn-lg.btn-danger.btn-block(type='submit' value=i18n('register.register'))

@@ -20,11 +20,11 @@ block content
                         li.nav-item
                             a.nav-link.active() Tematy
                 .card-block
-                    table.table.table-striped.table-hover.responsive.table-grouplist
+                    table.table.table-striped.table-hover.table-responsive.table-grouplist.wb-initial
                         thead
                             tr
                                 th ID
-                                th Tytuł
+                                th.w-100 Tytuł
                                 th Termin oddania
                                 th Opcje
                         tbody
@@ -39,7 +39,7 @@ block content
                                         input(autocomplete='off', id='input-topic-' + topic.id, type='date', value=topic.deadline, required='required')
                                         if topic.custom
                                             div.badge.badge-pill.badge-success(id='badge-topic-' + topic.id) Data ustawiona dla grupy
-                                    td
+                                    td.text-nowrap
                                         button.btn.btn-success.dateSave.date(data-topic=topic.id, data-lab=data.id) Zapisz
                                         button.btn.btn-danger.dateErase.date(data-topic=topic.id, data-lab=data.id) Skasuj
 
