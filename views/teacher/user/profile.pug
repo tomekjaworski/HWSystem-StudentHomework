@@ -1,0 +1,49 @@
+extends ../../includes/layout
+
+block content
+    if (message !== undefined && message && message.message && (message.message.length > 0 ))
+        .alert(class='alert-' + message.attribute, role='alert')
+            strong=i18n('settings.message')
+            |  #{message.message}
+
+    .row
+        .col-md-12.col-lg-4
+            include ../menu
+        //.hidden-md-down.col-lg-8#tasks-column
+            //-include tasks
+        .col-md-12.col-lg-8
+            .card
+                .card-header.d-flex.justify-content-between
+                    a.btn.btn-primary.btn-sm(href='/teacher/topics-and-tasks/task/edit/' + id)=i18n('teacher.tt.edit')
+                    strong Podgląd użytkownika
+                    button.deleteTaskButton.btn.btn-danger.btn-sm(data-id=id)=i18n('teacher.tt.remove')
+
+                .card-block
+                    h1.text-center= user.fullName()
+                    h2.text-center= user.email
+                    ul
+                        if user.isTeacher
+                            li
+                                b Nauczyciel:
+                                i.fa.fa-check(style="color:#64DD17;")
+                            if user.isAdmin
+                                li
+                                    b Admin:
+                                    i.fa.fa-check(style="color:#64DD17;")
+                            else
+                                li
+                                    b Admin:
+                                    i.fa.fa-times(style="color:#d9534f;")
+                            li
+                                b Labs Grupy:
+                                for l in labs
+                                    b= l.name+','
+                        else
+                            li
+                                b Nauczyciel:
+                                i.fa.fa-times(style="color:#d9534f;")
+                            li
+                                b Nr. albumu: #{user.album}
+                            li
+                                b Lab grupa: #{user.labGroups[0].name}
+

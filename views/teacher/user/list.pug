@@ -20,13 +20,31 @@ block content
                     thead
                         tr
                             th.text-nowrap(style='width:50px')=i18n('teacher.table.id')
-                            th.w-100=i18n('teacher.table.fistlastname')
+                            th(style="width:72%;")=i18n('teacher.table.fistlastname')
+                            th(style="width:15%;")
+                            th Nauczyciel
+                            th Admin
                     tbody#tablebody
                         each user in users
                             -var id= user.id
                             tr(onclick='selectTopic(' + user.id + ')', style='cursor: pointer;')
                                 th(scope='row')=user.id
-                                td= user.fullName()
+                                td
+                                    a(href="#" style="text-decoration:none; color:#373a3c;")=user.fullName()
+                                td
+                                    button.btn.btn-sm.btn-primary.editTopicButton(data-id=id) edytuj
+                                if user.isTeacher
+                                    td
+                                        i.fa.fa-check(style="color:#64DD17;")
+                                else
+                                    td
+                                        i.fa.fa-times(style="color:#d9534f;")
+                                if user.isAdmin
+                                    td
+                                        i.fa.fa-check(style="color:#64DD17;")
+                                else
+                                    td
+                                        i.fa.fa-times(style="color:#d9534f;")
 
 
 
