@@ -8,7 +8,7 @@
     const tablebody = $('#tablebody')
     if (topic) {
       saved = tablebody.html()
-      let ret =
+      /* let ret =
         '<tr>' +
         '<td>' +
         '<i style="cursor: pointer;" class="fa fa-arrow-left fa-lg ttGetBackButton" aria-hidden="true"></i>' +
@@ -45,8 +45,13 @@
         '</tbody>' +
         '</table>' +
         '</td>' +
-        '</tr>'
-      tablebody.html(ret)
+        '</tr>' */
+      const tmplTableTT = $.templates('#tmplTableTT')
+
+      const renderedTableTT = tmplTableTT.render({ topicNumber: topic.number, topicTitle: topic.title, topicId: topic.id, task })
+
+      $('#tablebody').html(renderedTableTT)
+
       $('.ttGetBackButton').on('click', function () {
         ttGetBack()
       })
@@ -54,7 +59,6 @@
         const taskId = $(this).data('id')
         const taskPlace = $(this).data('place')
         const taskTopic = $(this).data('topic')
-        alert('up')
         taskUp(taskId, taskPlace, taskTopic)
 
         return false
@@ -63,7 +67,6 @@
         const taskId = $(this).data('id')
         const taskPlace = $(this).data('place')
         const taskTopic = $(this).data('topic')
-        alert('down')
         taskDown(taskId, taskPlace, taskTopic)
 
         return false

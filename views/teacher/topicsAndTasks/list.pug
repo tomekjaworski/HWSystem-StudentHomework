@@ -39,7 +39,35 @@ block content
                                     td
                                         button.btn.btn-sm.btn-primary.editTopicButton(data-id=id)=i18n('teacher.tt.edit')
                                     td=topic.deadline
-
+            script#tmplTableTT(type='text/x-jsrender')
+                tr
+                    td
+                        i.fa.fa-arrow-left.fa-lg.ttGetBackButton(style='cursor: pointer;', aria-hidden='true')
+                    td {{:topicNumber}}. {{:topicTitle}}
+                    td
+                    td
+                    td.text-nowrap {{:topicDeadline}}
+                tr
+                    td(colspan='5')
+                        table.table.table-bordered.table-striped.table-hover.responsive
+                            tbody
+                                a.btn.btn-primary.mb-3(href='/teacher/topics-and-tasks/topic/{{:topicId}}/task/add') Dodaj zadanie
+                                | {{for task}}
+                                tr(style='cursor: pointer;')
+                                    td {{:id}}
+                                    td(onclick="document.location=\'/teacher/topics-and-tasks/view/{{:id}}\'") {{:number}}. {{:title}}
+                                    td.text-center.align-middle
+                                        a.btn.btn-sm.btn-primary(href='/teacher/topics-and-tasks/task/edit/{{:id}}') Edytuj
+                                    td.text-center.align-middle
+                                        i.fa.fa-microchip
+                                    td.text-center.align-middle
+                                        i.fa.fa-desktop
+                                    td.text-center
+                                        a.btn.btn-sm.btn-link.taskUpButton(data-id='{{:id}}', data-place='{{:place}}', data-topic='{{:topic}}')
+                                            i.fa.fa-lg.fa-arrow-up
+                                        a.btn.btn-sm.btn-link.taskDownButton(data-id='{{:id}}', data-place='{{:place}}', data-topic='{{:topic}}')
+                                            i.fa.fa-lg.fa-arrow-down
+                                | {{/for}}
 
         script.
           var topics = !{JSON.stringify(data).replace(/<\//g, '<\\/')}
