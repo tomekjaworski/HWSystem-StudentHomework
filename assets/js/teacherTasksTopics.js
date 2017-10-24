@@ -8,49 +8,12 @@
     const tablebody = $('#tablebody')
     if (topic) {
       saved = tablebody.html()
-      /* let ret =
-        '<tr>' +
-        '<td>' +
-        '<i style="cursor: pointer;" class="fa fa-arrow-left fa-lg ttGetBackButton" aria-hidden="true"></i>' +
-        '</td>' +
-        '<td>' + topic.number + '. ' + topic.title + '</td>' +
-        '<td></td><td></td>' +
-        '<td class="text-nowrap">' + topic.deadline + '</td>' +
-        '</tr>' +
-        '<tr>' +
-        '<td colspan="5">' +
-        '<table class="table table-bordered table-striped table-hover responsive">' +
-        '<tbody id="tablebody">' +
-        '<a class="btn btn-primary mb-3" href="/teacher/topics-and-tasks/topic/' + topic.id + '/task/add">Dodaj zadanie</a>'
-      for (let taskn in topic.tasks) {
-        const task = topic.tasks[taskn]
-        ret +=
-          '<tr style="cursor: pointer;">' +
-          '<td>' + task.id + '</td>' +
-          '<td onclick="document.location=\'/teacher/topics-and-tasks/view/' + task.id + '\'">' + task.number + '. ' + task.title + '</td>' +
-          '<td class="text-center align-middle"><a class="btn btn-sm btn-primary" href="/teacher/topics-and-tasks/task/edit/' + task.id + '">Edytuj</a></td>' +
-          '<td class="text-center align-middle"><i class="fa fa-microchip ' + (task.arduino ? 'text-success' : 'text-danger') + '"></i></td>' +
-          '<td class="text-center align-middle"><i class="fa fa-desktop ' + (task.computer ? 'text-success' : 'text-danger') + '"></i></td>' +
-          '<td class="text-center">' +
-            '<a class="btn btn-sm btn-link taskUpButton" data-id="' + task.id + '" data-place="' + task.place + '" data-topic="' + task.topic + '">' +
-              '<i class="fa fa-lg fa-arrow-up"></i>' +
-            '</a>' +
-            '<a class="btn btn-sm btn-link taskDownButton" data-id="' + task.id + '" data-place="' + task.place + '" data-topic="' + task.topic + '">' +
-              '<i class="fa fa-lg fa-arrow-down"></i>' +
-            '</a>' +
-          '</td>' +
-          '</tr>'
-      }
-      ret +=
-        '</tbody>' +
-        '</table>' +
-        '</td>' +
-        '</tr>' */
+
       const tmplTableTT = $.templates('#tmplTableTT')
 
-      const renderedTableTT = tmplTableTT.render({ topicNumber: topic.number, topicTitle: topic.title, topicId: topic.id, task })
+      const renderedTableTT = tmplTableTT.render({ topicNumber: topic.number, topicTitle: topic.title, topicId: topic.id, task: topic.tasks })
 
-      $('#tablebody').html(renderedTableTT)
+      tablebody.html(renderedTableTT)
 
       $('.ttGetBackButton').on('click', function () {
         ttGetBack()

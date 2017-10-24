@@ -59,9 +59,17 @@ block content
                                     td.text-center.align-middle
                                         a.btn.btn-sm.btn-primary(href='/teacher/topics-and-tasks/task/edit/{{:id}}') Edytuj
                                     td.text-center.align-middle
-                                        i.fa.fa-microchip
+                                        | {{if arduino}}
+                                        i.fa.fa-microchip.text-success
+                                        | {{else}}
+                                        i.fa.fa-microchip.text-danger
+                                        | {{/if}}
                                     td.text-center.align-middle
-                                        i.fa.fa-desktop
+                                        | {{if computer}}
+                                        i.fa.fa-desktop.text-success
+                                        | {{else}}
+                                        i.fa.fa-desktop.text-danger
+                                        | {{/if}}
                                     td.text-center
                                         a.btn.btn-sm.btn-link.taskUpButton(data-id='{{:id}}', data-place='{{:place}}', data-topic='{{:topic}}')
                                             i.fa.fa-lg.fa-arrow-up
