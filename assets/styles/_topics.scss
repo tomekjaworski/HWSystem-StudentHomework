@@ -14,8 +14,28 @@
   cursor: zoom-out;
   border-radius: 0;
 }
+
 .topic-entry.collapsed {
   cursor: zoom-in;
+}
+
+// fucking ios safari
+@media not all and (min-resolution:.001dpcm)
+{ @supports (-webkit-appearance:none) {
+
+  .topic-entry,
+  .topic-entry.collapsed {
+    cursor: pointer;
+  }
+}}
+// now, to roll this back on chrome
+@media all and (-webkit-min-device-pixel-ratio:0) and (min-resolution: .001dpcm) {
+  .topic-entry {
+    cursor: zoom-out;
+  }
+  .topic-entry.collapsed {
+    cursor: zoom-in;
+  }
 }
 
 .list-group-item-hover:hover {

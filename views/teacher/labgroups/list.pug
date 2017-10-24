@@ -18,11 +18,11 @@ block content
                         a.btn.btn-primary(href='/teacher/labgroup/list')=i18n('teacher.labs.list.your')
                     else
                         a.btn.btn-primary(href='/teacher/labgroup/list?show=all')=i18n('teacher.labs.list.all')
-                table.table.table-striped.table-hover.responsive.table-grouplist
+                table.table.table-striped.table-hover.table-responsive.table-grouplist.wb-initial
                     thead
                         tr
-                            th.wb-initial(style='width:50px;')=i18n('teacher.table.id')
-                            th=i18n('teacher.table.name')
+                            th(style='width:50px;')=i18n('teacher.table.id')
+                            th.w-100=i18n('teacher.table.name')
                             th=i18n('teacher.table.status')
                             th=i18n('teacher.table.students')
                             th=i18n('teacher.table.students.pending')

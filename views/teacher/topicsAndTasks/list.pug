@@ -16,11 +16,11 @@ block content
                         li.nav-item
                             a.nav-link(href='/teacher/topics-and-tasks/topic/add')=i18n('teacher.adding')
 
-                table.table.table-striped.responsive.table-grouplist
+                table.table.table-striped.table-hover.table-responsive.table-grouplist.wb-initial
                     thead
                         tr
                             th.wb-initial(style='width: 50px')=i18n('teacher.table.id')
-                            th=i18n('teacher.table.title')
+                            th.w-100=i18n('teacher.table.title')
                             th(style='width: 70px')
                             th(style='width: 70px')
                             th(style='width: 100px')=i18n('teacher.table.deadline')
