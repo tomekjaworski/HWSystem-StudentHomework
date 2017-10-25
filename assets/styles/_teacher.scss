@@ -93,7 +93,7 @@
 .replySortRow {
   overflow-x:scroll;
   white-space: nowrap;
-  height: calc( 100vh - 80px );
+  height: calc( 100vh - 93px );
 }
 
 .custom-checkbox-notifications {
@@ -116,4 +116,14 @@
 .ttSelectTopic,
 .usersSelectUser {
   cursor: pointer
+}
+
+.sendCommentButton {
+  border-top-right-radius: 17.25px !important;
+}
+.checkCommentsButton {
+  border-top-right-radius: 0 !important;
+}
+.task-comment-textarea {
+  min-height: 70px;
 }

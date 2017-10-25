@@ -27,7 +27,13 @@ mixin commentBlock(com, hidden)
                         i.fa.fa-check.fa-inverse.fa-stack-1x
 div.d-flex.labTaskRow.mt-3
     .col-12
-        h4=lab.name
+        .form-inline
+            h4.mt-1=lab.name
+            .input-group.ml-4
+                .input-group-addon
+                    i.fa.fa-search
+                input.form-control(placeholder="Search // todo: 😉 ")
+
         hr
         .col-12.well.replySortRow
             if !data
@@ -157,5 +163,5 @@ div.d-flex.labTaskRow.mt-3
                                     .input-group
                                         textarea.form-control.task-comment-textarea(id='commentTextArea-' + student.id, type='text', placeholder='Komentarz', name='comment', rows='1')
                                         span.input-group-btn
-                                            button.btn.btn-primary.sendCommentButton(data-studentid=student.id, data-taskid=task.id, type='button') Wyślij
-                                            button.btn.btn-primary.checkCommentsButton(data-studentid=student.id, data-taskid=task.id, type='button') Odśwież
+                                            button.sendCommentButton.btn.btn-primary(data-studentid=student.id, data-taskid=task.id, type='button') Wyślij
+                                            button.checkCommentsButton.btn.btn-primary(data-studentid=student.id, data-taskid=task.id, type='button') Odśwież
