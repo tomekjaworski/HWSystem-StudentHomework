@@ -356,7 +356,7 @@ const TopicsAndTasksController = module.exports = {
       }
       let tasksCount = topic.tasks
       if (tasksCount.length !== 0) {
-        return res.json('hasTasks')
+        return res.status(400).json('hasTasks')
       } else {
         Topics.destroy({id: topic.id}).exec(function (err) {
           if (err) {

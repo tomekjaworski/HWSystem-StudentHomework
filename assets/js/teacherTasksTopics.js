@@ -107,23 +107,94 @@
       console.log('ok')
     })
   }
+  function delTopicModal (id) {
+    let removeTTModal = $('.removeTTModal')
 
+    if (removeTTModal.length > 0) {
+      return false
+    }
+
+    const tmplRemoveTTModal = $.templates('#tmplRemoveTTModal')
+
+    const renderedRemoveTTModal = tmplRemoveTTModal.render({id: id})
+
+    $('#modalContainer').html(renderedRemoveTTModal)
+
+    removeTTModal = $('#removeTTModal')
+    removeTTModal.modal()
+
+    removeTTModal.on('hidden.bs.modal', function () {
+      $(this).remove()
+    })
+
+    $('.deleteTopicButton').on('click', function () {
+      const deleteId = $(this).data('id')
+      delTopic(deleteId)
+      removeTTModal.modal('hide')
+      return false
+    })
+  }
   function delTopic (id) {
     console.log('start')
-    let response = $.ajax({
+    $.ajax({
       url: '/ajax/topic/deleted',
       method: 'POST',
       data: {
         topicId: id
+      },
+      success: function () {
+        window.location = '/teacher/topics-and-tasks/'
+      },
+      error: function () {
+        let removeTTModalFail = $('.removeTTModal')
+
+        if (removeTTModalFail.length > 0) {
+          return false
+        }
+
+        const tmplRemoveTTModalFail = $.templates('#tmplRemoveTTModal')
+
+        const renderedRemoveTTModalFail = tmplRemoveTTModalFail.render({id: id, error: true})
+
+        $('.modal-backdrop').remove()
+        $('#modalContainer').html(renderedRemoveTTModalFail)
+
+        removeTTModalFail = $('#removeTTModal')
+        removeTTModalFail.modal()
+
+        removeTTModalFail.on('hidden.bs.modal', function () {
+          $(this).remove()
+        })
       }
     })
+  }
+  function delTaskModal (id) {
+    let removeTTModal = $('.removeTTModal')
 
-    response.done(function () {
-      console.log('done')
-      window.location.reload()
+    if (removeTTModal.length > 0) {
+      return false
+    }
+
+    const tmplRemoveTTModal = $.templates('#tmplRemoveTTModal')
+
+    const renderedRemoveTTModal = tmplRemoveTTModal.render({id: id})
+
+    $('#modalContainer').html(renderedRemoveTTModal)
+
+    removeTTModal = $('#removeTTModal')
+    removeTTModal.modal()
+
+    removeTTModal.on('hidden.bs.modal', function () {
+      $(this).remove()
+    })
+
+    $('.deleteTaskButton').on('click', function () {
+      const deleteId = $(this).data('id')
+      delTask(deleteId)
+      removeTTModal.modal('hide')
+      return false
     })
   }
-
   function delTask (id) {
     console.log('start')
     let response = $.ajax({
@@ -146,15 +217,15 @@
       ttSelectTopic($(this).data('topicid'))
     })
 
-    $('.deleteTopicButton').on('click', function () {
+    $('.deleteTopicModalButton').on('click', function () {
       const deleteId = $(this).data('id')
-      delTopic(deleteId)
+      delTopicModal(deleteId)
       return false
     })
 
-    $('.deleteTaskButton').on('click', function () {
+    $('.deleteTaskModalButton').on('click', function () {
       const deleteId = $(this).data('id')
-      delTask(deleteId)
+      delTaskModal(deleteId)
       return false
     })
 

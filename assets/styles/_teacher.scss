@@ -95,3 +95,16 @@
   white-space: nowrap;
   height: calc( 100vh - 80px );
 }
+
+.custom-checkbox-notifications {
+  min-height: 16px;
+  height: 16px;
+  margin: 0;
+  padding: 0;
+  width: 16px;
+  position: relative;
+  top: 2px;
+  .custom-control-indicator {
+    margin-top: -4px;
+  }
+}

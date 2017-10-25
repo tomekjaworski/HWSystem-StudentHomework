@@ -225,5 +225,19 @@
 	"teacher.users.isactive": "aktywny",
 	"teacher.users.none": "Brak",
 	"teacher.table.description": "Opis",
-	"teacher.users.email": "jkowalski@p.lodz.pl"
+	"teacher.users.email": "jkowalski@p.lodz.pl",
+	"teacher.table.message": "Wiadomość",
+	"teacher.table.date": "Data",
+	"teacher.dashboard.nomessages": "Brak wiadomości",
+	"teacher.messages": "Wiadomości",
+	"teacher.tt.removingtopic.title.error": "Błąd usuwania",
+	"teacher.tt.removingtopic.title": "Usuwanie tematu",
+	"teacher.tt.removingtopic.%s": "Czy na pewno chcesz usunąć temat o ID %s?",
+	"teacher.tt.removingtopic.error": "Wystąpił błąd podczas usuwania tematu, sprawdź czy temat posiada zadania. Nie można usuwać tematów które nie są puste.",
+	"teacher.tt.removingtopic.ok": "OK",
+	"teacher.save": "Zapisz",
+	"teacher.tt.removingtask.title.error": "Błąd usuwania",
+	"teacher.tt.removingtask.title": "Usuwanie zadania",
+	"teacher.tt.removingtask.error": "Wystąpił błąd podczas usuwania zadania",
+	"teacher.tt.removingtask.%s": "Czy na pewno chcesz usunąć zadanie o ID %s?"
 }

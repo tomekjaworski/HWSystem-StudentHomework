@@ -10,11 +10,42 @@ block content
             include ../menu
 
         .col-md-12.col-lg-8
-            .card
-                .card-header.text-center
-                    strong Edycja Zadania - #{task.title}
-                .card-block
-                    form(method='post')
+            script#tmplRemoveTTModal(type='text/x-jsrender')
+                #removeTTModal.removeModal.modal.fade
+                    .modal-dialog(role='document')
+                        .modal-content
+                            .modal-header
+                                h5.modal-title
+                                    | {{if error}}
+                                    =i18n('teacher.tt.removingtask.title.error')
+                                    | {{else}}
+                                    =i18n('teacher.tt.removingtask.title')
+                                    | {{/if}}
+                                button.close(type='button', data-dismiss='modal', aria-label=i18n('student.task.modal.cancel'))
+                                    span(aria-hidden='true') ×
+                            .modal-body
+                                | {{if error}}
+                                =i18n('teacher.tt.removingtask.error')
+                                | {{else}}
+                                =i18n('teacher.tt.removingtask.%s', '{{:id}}')
+                                | {{/if}}
+
+                            .modal-footer
+                                | {{if !error}}
+                                button.btn.btn-danger.deleteTaskButton(type='button', data-id='{{:id}}')=i18n('student.task.modal.remove')
+                                | {{/if}}
+                                | {{if !error}}
+                                button.btn.btn-secondary(type='button', data-dismiss='modal')=i18n('student.task.modal.cancel')
+                                | {{else}}
+                                button.btn.btn-warning(type='button', data-dismiss='modal')=i18n('teacher.tt.removingtopic.ok')
+                                | {{/if}}
+            form(method='post')
+                .card
+                    .card-header.text-center.d-flex.justify-content-between.align-items-start
+                        input.btn.btn-primary.btn-sm(type='submit', value=i18n('teacher.save'))
+                        strong.mr-2.ml-2 Edycja Zadania - #{task.title}
+                        button.deleteTaskModalButton.btn.btn-sm.btn-danger(data-id=task.id)=i18n('teacher.tt.remove')
+                    .card-block
                         .form-group
                             label(for='number') Numer:
                             input.form-control#number(name='taskNumber', value=(param ? param('taskNumber') : task.number))
@@ -58,7 +89,8 @@ block content
                             label(for='taskDescEditor') Opis zadania:
                             textarea.form-control#taskDescEditor(name='taskDescription')=(param ? param('taskDescription') : description.description)
 
-                        input.btn.btn-primary(type='submit', value='Edytuj')
+                        input.btn.btn-primary(type='submit', value=i18n('teacher.save'))
+
 
                         script.
 
