@@ -235,5 +235,9 @@
 	"teacher.tt.removingtopic.%s": "Ви впевнені, що хочете видалити тему з ID %s?",
 	"teacher.tt.removingtopic.error": "Сталася помилка під час видалення теми, перевірте, чи має суб'єкт роботу. Ви не можете видаляти теми, які не є порожніми.",
 	"teacher.tt.removingtopic.ok": "добре",
-	"teacher.save": "зберегти"
+	"teacher.save": "зберегти",
+	"teacher.tt.removingtask.title.error": "Помилка при видаленні",
+	"teacher.tt.removingtask.title": "видалення завдання",
+	"teacher.tt.removingtask.error": "Сталася помилка під час видалення завдання",
+	"teacher.tt.removingtask.%s": "Ви впевнені, що хочете видалити завдання з ID %s?"
 }

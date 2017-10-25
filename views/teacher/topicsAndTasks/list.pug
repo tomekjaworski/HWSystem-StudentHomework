@@ -31,7 +31,7 @@ block content
                             each topic in data
                                 -var id= topic.id
                                 tr.ttSelectTopic(data-topicid=topic.id, style='cursor: pointer;')
-                                    th.text-center(scope='row')=topic.id
+                                    th.wb-initial.text-center(scope='row')=topic.id
                                     td=topic.number + '. ' + topic.title
                                     td
                                         button.btn.btn-sm.btn-primary.editTopicButton(data-id=id)=i18n('teacher.tt.edit')

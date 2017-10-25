@@ -232,8 +232,12 @@
 	"teacher.messages": "Messages",
 	"teacher.tt.removingtopic.title.error": "Deletion error",
 	"teacher.tt.removingtopic.title": "Deleting a topic",
-	"teacher.tt.removingtopic.%s": "Are you sure you want to delete a topic with ID %s?",
-	"teacher.tt.removingtopic.error": "There was an error deleting the topic, check whether the topic has a task. You can not delete topics that are not empty.",
+	"teacher.tt.removingtopic.%s": "Are you sure you want to delete the topic with ID %s?",
+	"teacher.tt.removingtopic.error": "An error occurred while deleting the task, check whether the topic has a task. You can not delete topics that are not empty.",
 	"teacher.tt.removingtopic.ok": "OK",
-	"teacher.save": "Save"
+	"teacher.save": "Save",
+	"teacher.tt.removingtask.title.error": "Deletion error",
+	"teacher.tt.removingtask.title": "Deleting a task",
+	"teacher.tt.removingtask.error": "An error occurred while deleting the task",
+	"teacher.tt.removingtask.%s": "Are you sure you want to delete the task with ID %s?"
 }

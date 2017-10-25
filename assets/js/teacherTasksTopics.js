@@ -168,7 +168,33 @@
       }
     })
   }
+  function delTaskModal (id) {
+    let removeTTModal = $('.removeTTModal')
 
+    if (removeTTModal.length > 0) {
+      return false
+    }
+
+    const tmplRemoveTTModal = $.templates('#tmplRemoveTTModal')
+
+    const renderedRemoveTTModal = tmplRemoveTTModal.render({id: id})
+
+    $('#modalContainer').html(renderedRemoveTTModal)
+
+    removeTTModal = $('#removeTTModal')
+    removeTTModal.modal()
+
+    removeTTModal.on('hidden.bs.modal', function () {
+      $(this).remove()
+    })
+
+    $('.deleteTaskButton').on('click', function () {
+      const deleteId = $(this).data('id')
+      delTask(deleteId)
+      removeTTModal.modal('hide')
+      return false
+    })
+  }
   function delTask (id) {
     console.log('start')
     let response = $.ajax({
@@ -197,9 +223,9 @@
       return false
     })
 
-    $('.deleteTaskButton').on('click', function () {
+    $('.deleteTaskModalButton').on('click', function () {
       const deleteId = $(this).data('id')
-      delTask(deleteId)
+      delTaskModal(deleteId)
       return false
     })
 
