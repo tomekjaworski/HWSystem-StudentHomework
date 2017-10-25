@@ -7,13 +7,12 @@ mixin commentBlock(com, hidden)
                     if com.user.isTeacher
                         span.badge.badge-primary.ml-2
                             i.fa.fa-bolt.fa-lg
-                        //- =i18n('student.task.teacher')
                     span.ml-2=i18n('student.task.wrote')
                 else
                     strong.task-c-author
                         span.badge.badge-info=i18n('student.task.sysmsg')
-            //- TODO: @david, tu nie powinno mi zwracac z backendu godziny, tak jak w ajaxowych komentach? dziwne to.
-            small.text-muted.task-c-timestamp=com.createdAt
+            //- TODO: @david, tu nie powinno mi zwracac z backendu godziny, tak jak w ajaxowych komentach? dziwne to. !!
+            small.text-muted.task-c-timestamp.text-nowrap=com.createdAt
         p.mb-1.task-c-comment=com.comment
         if !com.viewed
             div.text-right.w-100

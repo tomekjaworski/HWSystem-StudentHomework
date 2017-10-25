@@ -4,14 +4,15 @@ block content
     script#tmplCommentAjax(type='text/x-jsrender')
         .list-group-item.list-group-item-action.flex-column.align-items-start
             .d-flex.w-100.justify-content-between
-                h5.mb-1
+                h6.mb-1
                     strong.task-c-author
                         span.task-c-author-studentname {{:name}}
                         | {{if teacher}}
-                        span.badge.badge-primary.ml-2=i18n('student.task.teacher')
+                        span.badge.badge-primary.ml-2
+                            i.fa.fa-bolt.fa-lg
                         | {{/if}}
                         span.ml-2=i18n('student.task.wrote')
-                small.text-muted.task-c-timestamp {{:timestamp}}
+                small.text-muted.task-c-timestamp.text-nowrap {{:timestamp}}
             p.mb-1.task-c-comment {{:comment}}
             div.text-right.w-100
                 | {{if read}}
