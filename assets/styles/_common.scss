@@ -73,3 +73,19 @@ blockquote {
   font-size: 1.32875rem;
   border-left: 0.25rem solid #ddd;
 }
+
+.mw-100px {
+  min-width: 100px;
+}
+
+.mw-200px {
+  min-width: 200px;
+}
+
+.mw-300px {
+  min-width: 300px;
+}
+// weird colspan fix
+.table thead th {
+  border-bottom: 2px solid #d0d0d0;
+}

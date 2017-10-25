@@ -7,12 +7,12 @@ function repliesSelectTopic (id) {
   const topic = topics.filter(topic => topic.id === id)[0]
   if (topic) {
     saved = document.getElementById('tablebody').innerHTML
-    let ret = '<tr><th><i onclick="repliesGetBack()" class="repliesGetBack fa fa-arrow-left fa-lg"></i></th><td>' + topic.number + '. ' + topic.title + '</td></tr><tr><td colspan="2"><table class="table table-bordered table-striped table-hover responsive"><tbody id="tablebody">'
+    let ret = '<tr><th><i onclick="repliesGetBack()" class="repliesGetBack fa fa-arrow-left fa-lg"></i></th><td class="wb-breakword">' + topic.number + '. ' + topic.title + '</td><td></td></tr><tr><td colspan="3"><div class="table-responsive"><table class="table table-striped table-hover"><tbody id="tablebody">'
     for (let taskn in topic.tasks) {
       const task = topic.tasks[taskn]
-      ret += '<tr class="repliesTaskEntry" onclick="document.location=\'/teacher/replies/view/' + task.id + '\'"><td>' + task.id + '</td><td class="w-100">' + task.number + '. ' + task.title + '</td></tr>'
+      ret += '<tr class="repliesTaskEntry" onclick="document.location=\'/teacher/replies/view/' + task.id + '\'"><td>' + task.id + '</td><td class="w-100 wb-breakword">' + task.number + '. ' + task.title + '</td><td></td></tr>'
     }
-    ret += '</tbody></table></td></tr>'
+    ret += '</tbody></table></div></td></tr>'
     document.getElementById('tablebody').innerHTML = ret
   }
 }

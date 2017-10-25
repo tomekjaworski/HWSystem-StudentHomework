@@ -18,27 +18,28 @@ block content
                         a.btn.btn-primary(href='/teacher/labgroup/list')=i18n('teacher.labs.list.your')
                     else
                         a.btn.btn-primary(href='/teacher/labgroup/list?show=all')=i18n('teacher.labs.list.all')
-                table.table.table-striped.table-hover.table-responsive.table-grouplist.wb-initial
-                    thead
-                        tr
-                            th(style='width:50px;')=i18n('teacher.table.id')
-                            th.w-25=i18n('teacher.table.name')
-                            th.w-50=i18n('teacher.table.description')
-                            th=i18n('teacher.table.status')
-                            th=i18n('teacher.table.students')
-                            th=i18n('teacher.table.students.pending')
-                            th.w-25=i18n('teacher.table.teacher')
-                    tbody
-                        if data && data.length !== 0
-                            each group in data
-                                tr(onclick='document.location="/teacher/labgroup/view/'+group.id+'"')
-                                    th.text-center(scope='row')=group.id
-                                    td=group.name
-                                    td=group.description
-                                    td=group.active ? i18n('teacher.table.visible') : i18n('teacher.table.invisible')
-                                    td=group.studentsCount
-                                    td=group.studentsNotCount
-                                    td=group.ownerName + ' ' + group.ownerSurname
-                        else
+                .table-responsive
+                    table.table.table-striped.table-hover.table-grouplist.wb-initial
+                        thead
                             tr
-                                td.text-center(colspan=6)=i18n('teacher.labs.nolabs.%s', i18n('teacher.adding'))
+                                th(style='width:50px;')=i18n('teacher.table.id')
+                                th.w-25=i18n('teacher.table.name')
+                                th.w-50=i18n('teacher.table.description')
+                                th=i18n('teacher.table.status')
+                                th=i18n('teacher.table.students')
+                                th=i18n('teacher.table.students.pending')
+                                th.w-25=i18n('teacher.table.teacher')
+                        tbody
+                            if data && data.length !== 0
+                                each group in data
+                                    tr(onclick='document.location="/teacher/labgroup/view/'+group.id+'"')
+                                        th.text-center(scope='row')=group.id
+                                        td.wb-breakword.mw-100px=group.name
+                                        td.wb-breakword.mw-100px=group.description
+                                        td=group.active ? i18n('teacher.table.visible') : i18n('teacher.table.invisible')
+                                        td=group.studentsCount
+                                        td=group.studentsNotCount
+                                        td=group.ownerName + ' ' + group.ownerSurname
+                            else
+                                tr
+                                    td.text-center(colspan=6)=i18n('teacher.labs.nolabs.%s', i18n('teacher.adding'))

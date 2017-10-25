@@ -17,6 +17,7 @@
       const renderedTableTT = tmplTableTT.render({
         topicNumber: topic.number,
         topicTitle: topic.title,
+        topicDeadline: topic.deadline,
         topicId: topic.id,
         task: topic.tasks
       })

@@ -3,31 +3,33 @@ extends ../../includes/layout
 block content
 
     .row
-        .col-md-12.col-lg-4
+        .hidden-md-down.col-lg-4
             include ../menu
         .col-md-12.col-lg-8
             .card
                 .card-header.text-center
                     strong Wybierz temat i zadanie do wyświetlenia odpowiedzi
-
-                table.table.table-striped.table-hover.table-responsive.table-grouplist
-                    thead
-                        tr
-                            th.text-nowrap ID
-                            th.w-100 Temat
-                    tbody#tablebody
-                        if data && data.length !== 0
-                            each topic in data
-                                tr.repliesSelectTopic(onclick='repliesSelectTopic('+topic.id+')')
-                                    th(scope='row')=topic.id
-                                    td=topic.number + '. ' + topic.title
-                        else
+                .table-responsive
+                    table.table.table-striped.table-hover.table-grouplist.wb-initial
+                        thead
                             tr
-                                td.text-center(colspan=2) Brak tematów w bazie
+                                th ID
+                                th.w-100 Temat
+                                th
+                        tbody#tablebody
+                            if data && data.length !== 0
+                                each topic in data
+                                    tr.repliesSelectTopic(onclick='repliesSelectTopic('+topic.id+')')
+                                        th(scope='row')=topic.id
+                                        td.wb-breakword=topic.number + '. ' + topic.title
+                                        td
+                            else
+                                tr
+                                    td.text-center(colspan=2) Brak tematów w bazie
 
 
 
-                    script.
-                        var topics = !{JSON.stringify(data).replace(/<\//g, '<\\/')}
-                        var saved = '';
+                        script.
+                            var topics = !{JSON.stringify(data).replace(/<\//g, '<\\/')}
+                            var saved = '';
 

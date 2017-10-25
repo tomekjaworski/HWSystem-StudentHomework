@@ -7,7 +7,7 @@ block content
             |  #{message.message}
 
     .row
-        .col-md-12.col-lg-4
+        .hidden-md-down.col-lg-4
             include ../menu
         .col-md-12.col-lg-8
             .card
@@ -19,8 +19,9 @@ block content
                             a.nav-link(href='/teacher/labgroup/view/' + data.id) Studenci
                         li.nav-item
                             a.nav-link.active() Tematy
-                .card-block
-                    table.table.table-striped.table-hover.table-responsive.table-grouplist.wb-initial
+
+                .table-responsive
+                    table.table.table-striped.table-hover.table-grouplist.wb-initial
                         thead
                             tr
                                 th ID
@@ -34,7 +35,7 @@ block content
                             each topic in data.topics
                                 tr
                                     th(scope='row')=topic.id
-                                    td=topic.number + '. ' + topic.title
+                                    td.wb-breakword.mw-200px=topic.number + '. ' + topic.title
                                     td
                                         input(autocomplete='off', id='input-topic-' + topic.id, type='date', value=topic.deadline, required='required')
                                         if topic.custom

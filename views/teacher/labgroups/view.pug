@@ -7,7 +7,7 @@ block content
             |  #{message.message}
 
     .row
-        .col-md-12.col-lg-4
+        .hidden-md-down.col-lg-4
             include ../menu
         .col-md-12.col-lg-8
             .card
@@ -36,22 +36,22 @@ block content
                         li.nav-item
                             a.nav-link(href='/teacher/labgroup/view/' + data.id + '/new') Oczekujący
                                 span.badge.badge-pill.badge-primary=data.notActive
-
-                table.table.table-striped.table-hover.table-responsive.table-grouplist.wb-initial
-                    thead
-                        tr
-                            th ID
-                            th.w-100 Student
-                            th Album
-                            th Opcje
-                    tbody
-                        if data.students.length === 0
+                .table-responsive
+                    table.table.table-striped.table-hover.table-grouplist.wb-initial
+                        thead
                             tr
-                                td.text-center(colspan='4') Brak studentów w grupie
-                        each student in data.students
-                            tr
-                                th(scope='row')=student.student.id
-                                td=student.student.fullName()
-                                td=student.student.album
-                                td
-                                    a.btn.btn-sm.btn-danger(href='?deactive=' + student.student.id) Deaktywuj
+                                th ID
+                                th.w-100 Student
+                                th Album
+                                th Opcje
+                        tbody
+                            if data.students.length === 0
+                                tr
+                                    td.text-center(colspan='4') Brak studentów w grupie
+                            each student in data.students
+                                tr
+                                    th(scope='row')=student.student.id
+                                    td.wb-breakword.mw-200px=student.student.fullName()
+                                    td=student.student.album
+                                    td
+                                        a.btn.btn-sm.btn-danger(href='?deactive=' + student.student.id) Deaktywuj
