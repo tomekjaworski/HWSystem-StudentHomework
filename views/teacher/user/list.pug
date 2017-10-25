@@ -26,7 +26,7 @@ block content
                             th.text.nowrap Admin
                     tbody
                         each user in users
-                            tr.usersSelectUser(data-id=user.id, style='cursor: pointer;')
+                            tr.usersSelectUser(data-id=user.id)
                                 th(scope='row')=user.id
                                 td=user.fullName()
                                 td

@@ -18,7 +18,7 @@ block content
                     tbody#tablebody
                         if data && data.length !== 0
                             each topic in data
-                                tr(onclick='repliesSelectTopic('+topic.id+')', style='cursor: pointer;')
+                                tr.repliesSelectTopic(onclick='repliesSelectTopic('+topic.id+')')
                                     th(scope='row')=topic.id
                                     td=topic.number + '. ' + topic.title
                         else

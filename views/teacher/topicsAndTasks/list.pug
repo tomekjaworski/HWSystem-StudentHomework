@@ -30,7 +30,7 @@ block content
                         else
                             each topic in data
                                 -var id= topic.id
-                                tr.ttSelectTopic(data-topicid=topic.id, style='cursor: pointer;')
+                                tr.ttSelectTopic(data-topicid=topic.id)
                                     th.wb-initial.text-center(scope='row')=topic.id
                                     td=topic.number + '. ' + topic.title
                                     td
@@ -39,7 +39,7 @@ block content
             script#tmplTableTT(type='text/x-jsrender')
                 tr
                     td
-                        i.fa.fa-arrow-left.fa-lg.ttGetBackButton(style='cursor: pointer;', aria-hidden='true')
+                        i.fa.fa-arrow-left.fa-lg.ttGetBackButton(aria-hidden='true')
                     td {{:topicNumber}}. {{:topicTitle}}
                     td
                     td
@@ -50,7 +50,7 @@ block content
                             tbody
                                 a.btn.btn-primary.mb-3(href='/teacher/topics-and-tasks/topic/{{:topicId}}/task/add')=i18n('breadcrumbs.tt.addtask')
                                 | {{for task}}
-                                tr(style='cursor: pointer;')
+                                tr.ttTaskEntry
                                     td {{:id}}
                                     td(onclick="document.location=\'/teacher/topics-and-tasks/view/{{:id}}\'", style='min-width: 200px') {{:number}}. {{:title}}
                                     td.text-center.align-middle

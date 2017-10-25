@@ -7,10 +7,10 @@
   }
   $('.usersSelectUser').on('click', function () {
     usersSelectUser($(this).data('id'))
-    return false;
+    return false
   })
   $('.editUserButton').on('click', function () {
     editUser($(this).data('id'))
-    return false;
+    return false
   })
 })()
