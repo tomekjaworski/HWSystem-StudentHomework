@@ -224,5 +224,16 @@
 	"teacher.users.active": "Active",
 	"teacher.users.isactive": "active",
 	"teacher.users.none": "None",
-	"teacher.table.description": "Description"
+	"teacher.table.description": "Description",
+	"teacher.users.email": "jkowalski@p.lodz.pl",
+	"teacher.table.message": "Message",
+	"teacher.table.date": "Date",
+	"teacher.dashboard.nomessages": "No messages",
+	"teacher.messages": "Messages",
+	"teacher.tt.removingtopic.title.error": "Deletion error",
+	"teacher.tt.removingtopic.title": "Deleting a topic",
+	"teacher.tt.removingtopic.%s": "Are you sure you want to delete a topic with ID %s?",
+	"teacher.tt.removingtopic.error": "There was an error deleting the topic, check whether the topic has a task. You can not delete topics that are not empty.",
+	"teacher.tt.removingtopic.ok": "OK",
+	"teacher.save": "Save"
 }

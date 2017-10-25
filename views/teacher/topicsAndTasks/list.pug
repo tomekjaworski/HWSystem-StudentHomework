@@ -16,14 +16,13 @@ block content
                         li.nav-item
                             a.nav-link(href='/teacher/topics-and-tasks/topic/add')=i18n('teacher.adding')
 
-                table.table.table-striped.table-hover.table-responsive.table-grouplist.wb-initial
+                table.table.table-striped.table-hover.table-responsive.table-grouplist
                     thead
                         tr
                             th.wb-initial(style='width: 50px')=i18n('teacher.table.id')
-                            th.w-100=i18n('teacher.table.title')
+                            th.w-100(style='min-width: 200px;')=i18n('teacher.table.title')
                             th(style='width: 70px')
-                            th(style='width: 70px')
-                            th(style='width: 100px')=i18n('teacher.table.deadline')
+                            th.wb-initial(style='width: 100px')=i18n('teacher.table.deadline')
                     tbody#ttTableBody
                         if typeof(data[0]) === 'undefined'
                             tr
@@ -35,10 +34,8 @@ block content
                                     th.text-center(scope='row')=topic.id
                                     td=topic.number + '. ' + topic.title
                                     td
-                                        button.btn.btn-sm.btn-danger.deleteTopicButton(data-id=id)=i18n('teacher.tt.remove')
-                                    td
                                         button.btn.btn-sm.btn-primary.editTopicButton(data-id=id)=i18n('teacher.tt.edit')
-                                    td=topic.deadline
+                                    td.text-nowrap=topic.deadline
             script#tmplTableTT(type='text/x-jsrender')
                 tr
                     td
@@ -49,13 +46,13 @@ block content
                     td.text-nowrap {{:topicDeadline}}
                 tr
                     td(colspan='5')
-                        table.table.table-bordered.table-striped.table-hover.responsive
+                        table.table.table-bordered.table-striped.table-hover.table-responsive
                             tbody
                                 a.btn.btn-primary.mb-3(href='/teacher/topics-and-tasks/topic/{{:topicId}}/task/add')=i18n('breadcrumbs.tt.addtask')
                                 | {{for task}}
                                 tr(style='cursor: pointer;')
                                     td {{:id}}
-                                    td(onclick="document.location=\'/teacher/topics-and-tasks/view/{{:id}}\'") {{:number}}. {{:title}}
+                                    td(onclick="document.location=\'/teacher/topics-and-tasks/view/{{:id}}\'", style='min-width: 200px') {{:number}}. {{:title}}
                                     td.text-center.align-middle
                                         a.btn.btn-sm.btn-primary(href='/teacher/topics-and-tasks/task/edit/{{:id}}')=i18n('teacher.tt.edit')
                                     td.text-center.align-middle

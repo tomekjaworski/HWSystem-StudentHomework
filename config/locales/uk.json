@@ -224,5 +224,16 @@
 	"teacher.users.active": "активний",
 	"teacher.users.isactive": "активний",
 	"teacher.users.none": "відсутність",
-	"teacher.table.description": "опис"
+	"teacher.table.description": "опис",
+	"teacher.users.email": "jkowalski@p.lodz.pl",
+	"teacher.table.message": "повідомлення",
+	"teacher.table.date": "дата",
+	"teacher.dashboard.nomessages": "немає новин",
+	"teacher.messages": "повідомлень",
+	"teacher.tt.removingtopic.title.error": "Помилка при видаленні",
+	"teacher.tt.removingtopic.title": "видалення теми",
+	"teacher.tt.removingtopic.%s": "Ви впевнені, що хочете видалити тему з ID %s?",
+	"teacher.tt.removingtopic.error": "Сталася помилка під час видалення теми, перевірте, чи має суб'єкт роботу. Ви не можете видаляти теми, які не є порожніми.",
+	"teacher.tt.removingtopic.ok": "добре",
+	"teacher.save": "зберегти"
 }

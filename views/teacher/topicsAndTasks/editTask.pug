@@ -10,11 +10,13 @@ block content
             include ../menu
 
         .col-md-12.col-lg-8
-            .card
-                .card-header.text-center
-                    strong Edycja Zadania - #{task.title}
-                .card-block
-                    form(method='post')
+            form(method='post')
+                .card
+                    .card-header.text-center.d-flex.justify-content-between.align-items-start
+                        input.btn.btn-primary.btn-sm(type='submit', value=i18n('teacher.save'))
+                        strong.mr-2.ml-2 Edycja Zadania - #{task.title}
+                        button.deleteTaskButton.btn.btn-sm.btn-danger(data-id=task.id)=i18n('teacher.tt.remove')
+                    .card-block
                         .form-group
                             label(for='number') Numer:
                             input.form-control#number(name='taskNumber', value=(param ? param('taskNumber') : task.number))
@@ -58,7 +60,8 @@ block content
                             label(for='taskDescEditor') Opis zadania:
                             textarea.form-control#taskDescEditor(name='taskDescription')=(param ? param('taskDescription') : description.description)
 
-                        input.btn.btn-primary(type='submit', value='Edytuj')
+                        input.btn.btn-primary(type='submit', value=i18n('teacher.save'))
+
 
                         script.
 

@@ -37,6 +37,11 @@ body {
   word-break: break-word;
   overflow-wrap: break-word;
 }
+.wb-breakword {
+  //noinspection CssInvalidPropertyValue
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
 
 .wb-initial {
   word-break: initial
@@ -60,4 +65,11 @@ body {
   height: 100vh !important;
   top: 0 !important;
   left: 0 !important;
+}
+
+blockquote {
+  padding: 0.5rem 1rem;
+  margin-bottom: 1rem;
+  font-size: 1.32875rem;
+  border-left: 0.25rem solid #ddd;
 }

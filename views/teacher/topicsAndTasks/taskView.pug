@@ -7,12 +7,11 @@ block content
             include ../menu
 
         .col-md-12.col-lg-8
-            -var id = task.id
             .card
                 .card-header.d-flex.justify-content-between
-                    a.btn.btn-primary.btn-sm(href='/teacher/topics-and-tasks/task/edit/' + id)=i18n('teacher.tt.edit')
+                    a.btn.btn-primary.btn-sm(href='/teacher/topics-and-tasks/task/edit/' + task.id)=i18n('teacher.tt.edit')
                     strong=i18n('breadcrumbs.tt.previewtask')
-                    button.deleteTaskButton.btn.btn-danger.btn-sm(data-id=id)=i18n('teacher.tt.remove')
+                    button.deleteTaskButton.btn.btn-danger.btn-sm(data-id=task.id)=i18n('teacher.tt.remove')
 
                 .card-block
                     h1.text-center= task.topic.number + '. ' + task.topic.title

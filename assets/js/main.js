@@ -86,6 +86,7 @@
       method: 'GET',
       dataType: 'json',
       statusCode: {
+        // todo
         404: function () {
           taskscolumn.html('<h2>Nie znaleziono podanego tematu</h2>')
         },

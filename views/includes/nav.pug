@@ -19,6 +19,10 @@
                             a.dropdown-item(href='#') Action
                             a.dropdown-item(href='#') Another action
                             a.dropdown-item(href='#') Something else here
+                    if localUser.isTeacher
+                        li.nav-item.hidden-lg-up
+                            .nav-link
+                                include ../teacher/menu
                 ul.navbar-nav.navbar-right#nav-loggedin
                     li.nav-item
                         a.nav-link=i18n('nav.welcome.%s', localUser.fullName())
