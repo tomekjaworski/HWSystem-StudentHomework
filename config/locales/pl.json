@@ -239,5 +239,6 @@
 	"teacher.tt.removingtask.title.error": "Błąd usuwania",
 	"teacher.tt.removingtask.title": "Usuwanie zadania",
 	"teacher.tt.removingtask.error": "Wystąpił błąd podczas usuwania zadania",
-	"teacher.tt.removingtask.%s": "Czy na pewno chcesz usunąć zadanie o ID %s?"
+	"teacher.tt.removingtask.%s": "Czy na pewno chcesz usunąć zadanie o ID %s?",
+	"teacher.tt.notasks.%s": "Brak zadań, dodaj tematy używając przycisku \"%s\"."
 }

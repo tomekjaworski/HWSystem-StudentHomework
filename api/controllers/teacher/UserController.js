@@ -108,7 +108,6 @@ const UserController = module.exports = {
     }
   },
   editUser: function (req, res) {
-    // eslint-disable-next-line no-unused-vars
     let id = req.param('id')
     Users.findOne({id: id}).populate('labGroups').exec(function (err, user) {
       if (err) {

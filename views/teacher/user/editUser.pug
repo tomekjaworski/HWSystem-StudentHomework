@@ -31,33 +31,33 @@ block content
                             label.col-sm-4.col-form-label=i18n('teacher.users.teacher')
                             .col-sm-8.form-check-custom
                                 label.custom-control.custom-checkbox
-                                    if (param && param('teacher'))
+                                    if user.isTeacher
                                         input.custom-control-input#inputTeacher(type='checkbox', name='teacher' checked)
                                     else
                                         input.custom-control-input#inputTeacher(type='checkbox', name='teacher')
                                     span.custom-control-indicator
                                     span.custom-control-description=i18n('teacher.users.useris.%s', i18n('teacher.users.isteacher'))
-                        div#notTeacher(style=(param && param('teacher') ? 'display: none' : ''))
+                        div#notTeacher(style=(user.isTeacher ? 'display: none' : ''))
                             .form-group.row
                                 label.col-sm-4.col-form-label(for='inputGroupL')=i18n('register.labgroup')
                                 .col-sm-8
                                     select#inputGroupL.custom-select(name='groupl', required)
                                         option(value='0')=i18n('teacher.users.none')
                                         each l in labs
-                                            if param && param('groupl') === l.id.toString()
+                                            if (!user.isTeacher && ( user.labGroups && (user.labGroups[0] && (user.labGroups[0].id === l.id))))
                                                 option(value=l.id, selected)= l.name + l.owner.fullName()
                                             else
                                                 option(value=l.id)= l.name + l.owner.fullName()
                             .form-group.row
                                 label.col-sm-4.col-form-label(for='inputAlbum')=i18n('register.album')
                                 .col-sm-8
-                                    input#inputAlbum.form-control(type='text', placeholder=i18n('register.album.placeholder'), name='album', required, value=(param ? param('album') : ''))
-                        div#isTeacher(style=(param && param('teacher') ? '' : 'display: none'))
+                                    input#inputAlbum.form-control(type='text', placeholder=i18n('register.album.placeholder'), name='album', required, value=user.album)
+                        div#isTeacher(style=(user.isTeacher ? '' : 'display: none'))
                             .form-group.row
                                 label.col-sm-4.col-form-label=i18n('teacher.users.admin')
                                 .col-sm-8.form-check-custom
                                     label.custom-control.custom-checkbox
-                                        if (param && param('admin'))
+                                        if (user.isAdmin)
                                             input.custom-control-input#inputAdmin(type='checkbox', name='admin' checked)
                                         else
                                             input.custom-control-input#inputAdmin(type='checkbox', name='admin')
@@ -66,9 +66,9 @@ block content
                         .form-group.row
                             label.col-sm-4.col-form-label(for='inputEmail')=i18n('register.email')
                             .col-sm-8
-                                input#inputEmail.form-control(type='email', placeholder=i18n('teacher.users.email'), name='email', required, value=(param ? param('email') : ''))
+                                input#inputEmail.form-control(type='email', placeholder=i18n('teacher.users.email'), name='email', required, value=user.email)
                         .form-group.row
-                            label.col-sm-4.col-form-label(for='inputPassword')=i18n('register.password')
+                            label.col-sm-4.col-form-label(for='inputPassword')=i18n('settings.password.password')
                             .col-sm-8
                                 .input-group
                                     input#inputPassword.form-control(type='password', placeholder=i18n('register.password.placeholder'), name='pass', required)
@@ -76,7 +76,7 @@ block content
                                         button.btn.btn-primary#inputPassShow(data-visible='invisible')
                                             i.fa.fa-eye.fa-lg
                         .form-group.row
-                            label.col-sm-4.col-form-label(for='inputRePassword')=i18n('register.repassword')
+                            label.col-sm-4.col-form-label(for='inputRePassword')=i18n('settings.password.repassword')
                             .col-sm-8
                                 .input-group
                                     input#inputRePassword.form-control(type='password', placeholder=i18n('register.repassword.placeholder'), name='repass', required)
@@ -87,7 +87,7 @@ block content
                             label.col-sm-4.col-form-label=i18n('teacher.users.active')
                             .col-sm-8.form-check-custom
                                 label.custom-control.custom-checkbox
-                                    if (param && !param('active'))
+                                    if user.active
                                         input.custom-control-input#inputActive(type='checkbox', name='active')
                                     else
                                         input.custom-control-input#inputActive(type='checkbox', name='active' checked)
@@ -98,11 +98,11 @@ block content
 block scripts
     script.
       let inputTeacher = $('#inputTeacher')
-      if (inputTeacher.is(':checked')){
-        showTeacher()
-      }
+      let inputEmail = $('#inputEmail')
+
       function showTeacher () {
         $('#isTeacher').show()
+        inputEmail.prop('placeholder', inputEmail.data('ph-teacher'))
         let inputAlbum = $('#inputAlbum')
         inputAlbum.prop('required', false)
         inputAlbum.val('')
@@ -110,12 +110,23 @@ block scripts
         $('#notTeacher').hide()
       }
       inputTeacher.on('change', function () {
-        if ($(this).is(':checked')) {
+        if ($(this).prop('checked')) {
           $('#inputAdmin').prop('checked', false)
           showTeacher()
         } else {
+          $('#isTeacher').hide()
+          inputEmail.prop('placeholder', inputEmail.data('ph-student'))
+          let inputAlbum = $('#inputAlbum')
+          inputAlbum.prop('required', true)
+          inputAlbum.val('')
+          $('#notTeacher').show()
         }
       })
+      if (inputTeacher.prop('checked')) {
+        showTeacher()
+      } else {
+        inputEmail.prop('placeholder', inputEmail.data('ph-student'))
+      }
       $('#inputPassRandom').on('click', function () {
         var chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
         var pass = "";

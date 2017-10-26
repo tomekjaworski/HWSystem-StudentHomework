@@ -27,12 +27,11 @@ block content
                                     td(colspan=5).text-center=i18n('teacher.tt.notopics.%s', i18n('teacher.adding'))
                             else
                                 each topic in data
-                                    -var id= topic.id
                                     tr.ttSelectTopic(data-topicid=topic.id)
                                         th.text-center(scope='row')=topic.id
                                         td.wb-breakword=topic.number + '. ' + topic.title
                                         td
-                                            button.btn.btn-sm.btn-primary.editTopicButton(data-id=id)=i18n('teacher.tt.edit')
+                                            button.btn.btn-sm.btn-primary.editTopicButton(data-id=topic.id)=i18n('teacher.tt.edit')
                                         td.text-nowrap=topic.deadline
             script#tmplTableTT(type='text/x-jsrender')
                 tr
@@ -48,7 +47,7 @@ block content
                                     a.btn.btn-primary.mb-3(href='/teacher/topics-and-tasks/topic/{{:topicId}}/task/add')=i18n('breadcrumbs.tt.addtask')
                                     | {{for task}}
                                     tr.ttTaskEntry
-                                        td.text-nowrap {{:id}}
+                                        td.text-nowrap.align-middle {{:id}}
                                         td.wb-breakword(onclick="document.location=\'/teacher/topics-and-tasks/view/{{:id}}\'", style='min-width: 200px') {{:number}}. {{:title}}
                                         td.text-center.align-middle
                                             a.btn.btn-sm.btn-primary(href='/teacher/topics-and-tasks/task/edit/{{:id}}')=i18n('teacher.tt.edit')
@@ -64,12 +63,17 @@ block content
                                             | {{else}}
                                             i.fa.fa-desktop.text-danger
                                             | {{/if}}
-                                        td.text-center
+                                        td.text-center.align-middle
                                             a.btn.btn-sm.btn-link.taskUpButton(data-id='{{:id}}', data-place='{{:place}}', data-topic='{{:topic}}')
                                                 i.fa.fa-lg.fa-arrow-up
                                             a.btn.btn-sm.btn-link.taskDownButton(data-id='{{:id}}', data-place='{{:place}}', data-topic='{{:topic}}')
                                                 i.fa.fa-lg.fa-arrow-down
                                     | {{/for}}
+                                    | {{if !task[0]}}
+                                    tr
+                                        td(colspan=6)
+                                            .text-center=i18n('teacher.tt.notasks.%s', i18n('breadcrumbs.tt.addtask'))
+                                    | {{/if}}
 
         script.
           var topics = !{JSON.stringify(data).replace(/<\//g, '<\\/')}
