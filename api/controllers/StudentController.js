@@ -643,10 +643,6 @@ const StudentController = module.exports = {
             if (replyFiles.length === 0) {
               return res.redirect('/topic/' + topicid + '/task/' + taskid + '?msg=noFilesInReply')
             }
-            let mainFile = _.find(replyFiles, function (e) { return (e.fileName === 'main') && (e.fileExt === 'c' || e.fileExt === 'cpp') })
-            if (!mainFile) {
-              return res.redirect('/topic/' + topicid + '/task/' + taskid + '?msg=noMainFile')
-            }
             TaskReplies.update({
               task: taskid,
               student: req.localUser.id,

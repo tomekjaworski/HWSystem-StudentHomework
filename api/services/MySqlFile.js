@@ -107,12 +107,6 @@ module.exports = function MySqlStore (globalOpts) {
         objectMode: true
       })
       receiver__._write = function onFile (__newFile, encoding, done) {
-        if (__newFile.byteCount > options.maxBytes) {
-          let err = new Error()
-          err.code = 'E_EXCEEDS_UPLOAD_LIMIT'
-          err.name = 'Upload Error'
-          return done(err)
-        }
         let fileFormat = path.parse(__newFile.filename)
 
         if (!options.extensions.includes(fileFormat.ext.substring(1))) {
@@ -139,11 +133,17 @@ module.exports = function MySqlStore (globalOpts) {
           // todo: koniecznie, byłem w sali obok, w której były zajęcia z C, i coś podsłuchałem :)
 
         __newFile.pipe(concat((file) => {
+          if (file.length > options.maxBytes) {
+            let err = new Error()
+            err.code = 'E_EXCEEDS_UPLOAD_LIMIT'
+            err.name = 'Upload Error'
+            return done(err)
+          }
           function afterMimeChecked () {
             TaskReplyFiles.findOrCreate({id: options.updateFileId}, {
               reply: options.replyId,
               fileName: fileFormat.name,
-              fileSize: __newFile.byteCount,
+              fileSize: file.length,
               fileExt: fileFormat.ext.substring(1),
               fileMimeType: __newFile.headers['content-type']
             }).exec((err, createdFile, created) => {
@@ -165,7 +165,7 @@ module.exports = function MySqlStore (globalOpts) {
                     }
                     if (created) {
                       TaskReplyFiles.update(createdFile.id, {
-                        fileSize: __newFile.byteCount,
+                        fileSize: file.length,
                         file: createdFileContent.id
                       }).exec((err) => {
                         if (err) {
@@ -200,7 +200,7 @@ module.exports = function MySqlStore (globalOpts) {
                     }
                     TaskReplyFiles.update(createdFile.id, {
                       file: createdFileContent.id,
-                      fileSize: __newFile.byteCount
+                      fileSize: file.length
                     }).exec((err) => {
                       if (err) {
                         return done(err)

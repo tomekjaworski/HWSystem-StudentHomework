@@ -22,20 +22,20 @@ const ApiController = module.exports = {
    */
   changeMachineStatus: function (req, res) {
     if (!req.is('json')) {
-      return res.badRequest('Only support json data')
+      return res.status(400).send('Only support json data')
     }
     let data = req.body
     if (!_.isInteger(data.tid) || !_.isInteger(data.reply) || !_.isInteger(data.status) || !_.isBoolean(data.passed) ||
       !_.isString(data.report) || !_.isString(data.message) || !_.isString(data.rk)) {
-      return res.badRequest({'error': 'E_PARAM_EMPTY'})
+      return res.status(400).json({'error': 'E_PARAM_EMPTY'})
     }
     if (data.status < 0 || data.status > 3) {
-      return res.badRequest({'error': 'E_INVALID_STATUS'})
+      return res.status(400).json({'error': 'E_INVALID_STATUS'})
     }
 
     let generatedRk = md5(data.tid.toString() + data.reply.toString() + data.status.toString() + data.passed.toString() + data.report + data.message + ManageReplies.machine.apiKey)
     if (data.rk !== generatedRk) {
-      return res.badRequest({'error': 'E_INVALID_REQUEST_KEY'})
+      return res.status(400).json({'error': 'E_INVALID_REQUEST_KEY'})
     }
     ManageReplies.machine.changeStatus(data.tid, data.reply, data.status, data.passed, data.report, data.message, (err) => {
       if (err) {
@@ -44,7 +44,7 @@ const ApiController = module.exports = {
           case 'E_REPLY_BLOCKED':
           case 'E_REPLY_NOT_SENT':
           case 'E_REPLY_OLD':
-            return res.badRequest({'error': err.code})
+            return res.status(400).json({'error': err.code})
           default:
             sails.log.error(err)
             return res.serverError()
