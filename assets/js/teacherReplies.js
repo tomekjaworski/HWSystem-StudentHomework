@@ -27,8 +27,8 @@ function repliesGetBack () {
   $('.getLabTasksButton').on('click', function () {
     getLabTasks($(this).data('id'))
   })
-  function getLabTasks (dataid) {
-    const selected = $('#selectLab').val()
+  function getLabTasks (dataid, loaded) {
+    const selected = loaded || $('#selectLab').val()
     $('#labs').html('<h3 id="labSpinner">Ładowanie <i class=\'fa fa-spinner fa-spin\'></i></h3>')
     let gets = []
     for (let s in selected) {
@@ -92,11 +92,27 @@ function repliesGetBack () {
     }
     $.when.apply($, gets).then(function () {
       $('#labSpinner').remove()
+      let buttons = $('a.btn.btn-secondary.next-prev')
+      for (let btn of buttons) {
+        let href = btn.href.split('?')
+        btn.href = href[0] + '?labs=' + selected.join()
+      }
     }, function (jqXHR, textStatus, errorThrown) {
       alert('Nie udało się pobrać danych:  ' + textStatus + ' - ' + errorThrown) // todo: i18n
       $('#labSpinner').remove()
     })
     return false
+  }
+
+  let params = {}
+  location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (s, k, v) { params[k] = v })
+  if (params['labs']) {
+    let labs = params['labs'].split(',')
+    let select = $('#selectLab')
+    for (let l of labs) {
+      select.find(`option[value=${l}]`).prop('selected', true)
+    }
+    getLabTasks($('.getLabTasksButton').data('id'), labs)
   }
 
   function saveDeadline (student, task, del) {

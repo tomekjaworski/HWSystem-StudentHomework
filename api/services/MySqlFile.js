@@ -5,8 +5,7 @@
 const Writable = require('stream').Writable
 const _ = require('lodash')
 const concat = require('concat-stream')
-const base64 = require('base64-js')
-const cs = require('convert-string')
+const utf8 = require('to-utf-8')
 const path = require('path')
 const mmmagic = require('mmmagic')
 
@@ -55,13 +54,12 @@ module.exports = function MySqlStore (globalOpts) {
           }
           if (globalOpts.convert) {
             if (file.fileMimeType.includes('text/')) {
-              file.file = _.values(base64.toByteArray(file.file.content))
-              file.file = cs.UTF8.bytesToString(file.file)
+              file.file = Buffer.from(file.file.content, 'base64').toString()
             } else {
               file.file = file.file.content
             }
           } else {
-            file.file = _.values(base64.toByteArray(file.file.content))
+            file.file = _.values(Buffer.from(file.file.content, 'base64'))
           }
           return cb(null, file)
         })
@@ -82,13 +80,12 @@ module.exports = function MySqlStore (globalOpts) {
               file.file = {err: err}
             } else if (globalOpts.convert) {
               if (file.fileMimeType.includes('text/')) {
-                file.file = _.values(base64.toByteArray(file.file.content))
-                file.file = cs.UTF8.bytesToString(file.file)
+                file.file = Buffer.from(file.file.content, 'base64').toString()
               } else {
                 file.file = file.file.content
               }
             } else {
-              file.file = _.values(base64.toByteArray(file.file.content))
+              file.file = _.values(Buffer.from(file.file.content, 'base64'))
             }
           })
           return cb(null, files)
@@ -132,7 +129,8 @@ module.exports = function MySqlStore (globalOpts) {
           // todo: linuxa, mimetype istnieje, lecz gdy ktoś ma np. dev-c++ portable, to już nie
           // todo: koniecznie, byłem w sali obok, w której były zajęcia z C, i coś podsłuchałem :)
 
-        __newFile.pipe(concat((file) => {
+        __newFile.pipe(utf8())
+          .pipe(concat((file) => {
           if (file.length > options.maxBytes) {
             let err = new Error()
             err.code = 'E_EXCEEDS_UPLOAD_LIMIT'
@@ -150,7 +148,7 @@ module.exports = function MySqlStore (globalOpts) {
               if (err) {
                 return done(err)
               }
-              let file64 = base64.fromByteArray(file)
+              let file64 = file.toString('base64')
               if (!created) {
                 if (createdFile.fileExt !== fileFormat.ext.substring(1)) {
                   let err = new Error()
@@ -213,8 +211,7 @@ module.exports = function MySqlStore (globalOpts) {
           }
           if (__newFile.headers['content-type'] === 'application/octet-stream') {
             let magic = new mmmagic.Magic(mmmagic.MAGIC_MIME_TYPE)
-            let buf = Buffer.from(file)
-            magic.detect(buf, function (err, result) {
+            magic.detect(file, function (err, result) {
               if (err) {
                 throw new Error(err)
               }

@@ -8,8 +8,6 @@
  * For more information on bootstrapping your app, check out:
  * http://sailsjs.org/#!/documentation/reference/sails.config/sails.config.bootstrap.html
  */
-const base64 = require('base64-js')
-const cs = require('convert-string')
 
 module.exports.bootstrap = function (cb) {
   // It's very important to trigger this callback method when you are finished
@@ -294,13 +292,13 @@ module.exports.bootstrap = function (cb) {
                                         trfc.push({
                                           id: file.file,
                                           file: file.id,
-                                          content: base64.fromByteArray(cs.UTF8.stringToBytes('int main(){\n\treturn 0;\n}'))
+                                          content: Buffer.from('int main(){\n\treturn 0;\n}').toString('base64')
                                         })
                                       } else {
                                         trfc.push({
                                           id: file.file,
                                           file: file.id,
-                                          content: base64.fromByteArray(cs.UTF8.stringToBytes('int main();'))
+                                          content: Buffer.from('int main();').toString('base64')
                                         })
                                       }
                                     }

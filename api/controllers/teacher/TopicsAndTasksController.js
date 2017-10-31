@@ -44,15 +44,17 @@ const TopicsAndTasksController = module.exports = {
         if (err) {
           return res.serverError(err)
         }
-        pdc(description.description, 'markdown_github-raw_html', 'html5', function (err, result) {
+        pdc(description.description, 'markdown_github-raw_html', 'html5',async function (err, result) {
           if (err) {
             return res.serverError(err)
           }
-          return res.view('teacher/topicsAndTasks/taskView', {
-            task: task,
-            description: result,
-            menuItem: 'topics',
-            breadcrumb: 'view'
+          CustomCodes.formatText(result, true, result => {
+            return res.view('teacher/topicsAndTasks/taskView', {
+              task: task,
+              description: result,
+              menuItem: 'topics',
+              breadcrumb: 'view'
+            })
           })
         })
       })
@@ -263,7 +265,8 @@ const TopicsAndTasksController = module.exports = {
               if (err) {
                 return res.serverError(err)
               }
-              return a('success', req.i18n.__('teacher.tt.edittask.success'))
+              return res.redirect(`/teacher/topics-and-tasks/view/${id}`)
+              //return a('success', req.i18n.__('teacher.tt.edittask.success'))
             })
         })
     } else {

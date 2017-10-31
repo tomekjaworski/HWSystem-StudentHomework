@@ -38,6 +38,7 @@ module.exports = function (grunt) {
           'Tasks',
           'Topics',
           'TopicsAndTasksController',
+          'CustomCodes',
           'Users'
         ]
       },

@@ -177,74 +177,76 @@ const StudentController = module.exports = {
                 if (err) {
                   return res.serverError(err)
                 }
-                task.description = result
-                ManageReplies.getStudentDeadline(taskparam, req.localUser.id, (err, deadline) => {
-                  if (err) {
-                    return res.serverError(err)
-                  }
-                  if (!deadline) {
-                    return res.forbidden(req.i18n.__('student.inactive'))
-                  }
-
-                  let deadlineCanSend = deadline > Date.now()
-
-                  TaskComments.find({
-                    task: task.id,
-                    taskStudent: req.localUser.id
-                  }).populate('user').exec(function (err, taskComments) {
+                CustomCodes.formatText(result, false, result => {
+                  task.description = result
+                  ManageReplies.getStudentDeadline(taskparam, req.localUser.id, (err, deadline) => {
                     if (err) {
                       return res.serverError(err)
                     }
-
-                    if (taskComments.length > 0) {
-                      taskComments = _.forEach(taskComments, (comment) => {
-                        try {
-                          comment.createdAt = dateFormat(comment.createdAt, 'HH:MM dd/mm/yyyy')
-                        } catch (err) {
-                          return res.serverError(err)
-                        }
-                      })
+                    if (!deadline) {
+                      return res.forbidden(req.i18n.__('student.inactive'))
                     }
 
-                    TaskReplies.findOne({student: req.localUser.id, task: task.id, newest: true})
-                      .exec(function (err, taskReply) {
-                        if (err) {
-                          return res.badRequest(err)
-                        }
-                        if (!taskReply) {
+                    let deadlineCanSend = deadline > Date.now()
+
+                    TaskComments.find({
+                      task: task.id,
+                      taskStudent: req.localUser.id
+                    }).populate('user').exec(function (err, taskComments) {
+                      if (err) {
+                        return res.serverError(err)
+                      }
+
+                      if (taskComments.length > 0) {
+                        taskComments = _.forEach(taskComments, (comment) => {
                           try {
-                            return res.view('student/task', {
-                              topic: topic,
-                              task: task,
-                              taskReply: taskReply,
-                              taskReplyFiles: null,
-                              deadline: dateFormat(deadline, 'dd/mm/yyyy'),
-                              deadlineCanSend: deadlineCanSend,
-                              taskComments: taskComments
-                            })
-                          } catch (err) {
-                            return res.serverError(err)
-                          }
-                        }
-                        MySqlFile().ls(taskReply.id, (err, taskReplyFiles) => {
-                          if (err) {
-                            return res.badRequest(err)
-                          }
-                          try {
-                            return res.view('student/task', {
-                              topic: topic,
-                              task: task,
-                              taskReply: taskReply,
-                              taskReplyFiles: taskReplyFiles,
-                              deadline: dateFormat(deadline, 'dd/mm/yyyy'),
-                              deadlineCanSend: deadlineCanSend,
-                              taskComments: taskComments
-                            })
+                            comment.createdAt = dateFormat(comment.createdAt, 'HH:MM dd/mm/yyyy')
                           } catch (err) {
                             return res.serverError(err)
                           }
                         })
-                      })
+                      }
+
+                      TaskReplies.findOne({student: req.localUser.id, task: task.id, newest: true})
+                        .exec(function (err, taskReply) {
+                          if (err) {
+                            return res.badRequest(err)
+                          }
+                          if (!taskReply) {
+                            try {
+                              return res.view('student/task', {
+                                topic: topic,
+                                task: task,
+                                taskReply: taskReply,
+                                taskReplyFiles: null,
+                                deadline: dateFormat(deadline, 'dd/mm/yyyy'),
+                                deadlineCanSend: deadlineCanSend,
+                                taskComments: taskComments
+                              })
+                            } catch (err) {
+                              return res.serverError(err)
+                            }
+                          }
+                          MySqlFile().ls(taskReply.id, (err, taskReplyFiles) => {
+                            if (err) {
+                              return res.badRequest(err)
+                            }
+                            try {
+                              return res.view('student/task', {
+                                topic: topic,
+                                task: task,
+                                taskReply: taskReply,
+                                taskReplyFiles: taskReplyFiles,
+                                deadline: dateFormat(deadline, 'dd/mm/yyyy'),
+                                deadlineCanSend: deadlineCanSend,
+                                taskComments: taskComments
+                              })
+                            } catch (err) {
+                              return res.serverError(err)
+                            }
+                          })
+                        })
+                    })
                   })
                 })
               })

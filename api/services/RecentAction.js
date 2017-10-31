@@ -23,7 +23,7 @@ const RecentAction = module.exports = {
               taskTitle += '[...]'
             }
             // todo: przebudowac to zeby bylo mozna przetlumaczyc w layoucie
-            cb(null, `Student ${student.fullName()} napisał komentarz do zadania <a href='/teacher/replies/view/${task.id}'>[${task.topic.number}. ${topicTitle}/${task.number}. ${taskTitle}]</a> w grupie laboratoryjnej ${labgroup.name}`)
+            cb(null, `Student ${student.fullName()} napisał komentarz do zadania <a href='/teacher/replies/view/${task.id}?labs=${labgroup.id}'>[${task.topic.number}. ${topicTitle}/${task.number}. ${taskTitle}]</a> w grupie laboratoryjnej ${labgroup.name}`)
           })
         })
       })
@@ -49,7 +49,7 @@ const RecentAction = module.exports = {
             if (task.title.length > 20) {
               taskTitle += '[...]'
             }
-            cb(null, `Student ${student.fullName()} wysłał ${(again ? '<u>KOLEJNĄ</u> ' : '')}odpowiedź do zadania <a href='/teacher/replies/view/${task.id}'>[${task.topic.number}. ${topicTitle}/${task.number}. ${taskTitle}]</a> w grupie laboratoryjnej ${labgroup.name}`)
+            cb(null, `Student ${student.fullName()} wysłał ${(again ? '<u>KOLEJNĄ</u> ' : '')}odpowiedź do zadania <a href='/teacher/replies/view/${task.id}?labs=${labgroup.id}'>[${task.topic.number}. ${topicTitle}/${task.number}. ${taskTitle}]</a> w grupie laboratoryjnej ${labgroup.name}`)
           })
         })
       })
