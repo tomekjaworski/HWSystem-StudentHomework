@@ -37,13 +37,10 @@ const RepliesController = module.exports = {
           return res.serverError(req.i18n.__('teacher.replies.nolabgroups'))
         }
         task.labs = labs
-        sails.sendNativeQuery(`SELECT \`prevTopicTask\`.\`id\` \`prevTopicTask\`, \`nextTopicTask\`.\`id\` \`nextTopicTask\`, \`prevTask\`.\`id\` \`prevTask\`, \`nextTask\`.\`id\` \`nextTask\` FROM \`tasks\`
-LEFT JOIN \`tasks\` \`nextTopicTask\` ON \`nextTopicTask\`.\`topic\` > $1
-LEFT JOIN \`tasks\` \`prevTopicTask\` ON \`prevTopicTask\`.\`topic\` < $1
-LEFT JOIN \`tasks\` \`prevTask\` ON \`prevTask\`.\`topic\` = $1 AND \`prevTask\`.\`id\` < $2
-LEFT JOIN \`tasks\` \`nextTask\` ON \`nextTask\`.\`topic\` = $1 AND \`nextTask\`.\`id\` > $2
-ORDER BY \`prevTask\`.\`id\` DESC, \`prevTopicTask\`.\`id\` DESC, \`nextTask\`.\`id\` ASC, \`nextTopicTask\`.\`id\` ASC
-LIMIT 1`, [task.topic.id, task.id]).exec((err, nextPrev) => {
+        sails.sendNativeQuery(`SELECT (SELECT \`id\` FROM \`tasks\` WHERE \`tasks\`.\`topic\` < $1 ORDER BY \`topic\` DESC, \`place\` DESC LIMIT 1) \`prevTopicTask\`, 
+(SELECT \`id\` FROM \`tasks\` WHERE \`tasks\`.\`topic\` > $1 ORDER BY \`topic\` ASC, \`place\` ASC LIMIT 1) \`nextTopicTask\`, 
+(SELECT \`id\` FROM \`tasks\` WHERE \`tasks\`.\`topic\` = $1 AND \`tasks\`.place < $2 ORDER BY \`place\` DESC LIMIT 1) \`prevTask\`,
+(SELECT \`id\` FROM \`tasks\` WHERE \`tasks\`.\`topic\` = $1 AND \`tasks\`.place > $2 ORDER BY \`place\` ASC LIMIT 1) \`nextTask\``, [task.topic.id, task.place]).exec((err, nextPrev) => {
           if (err) {
             return res.serverError(err)
           }
