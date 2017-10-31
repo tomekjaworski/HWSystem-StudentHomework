@@ -44,7 +44,7 @@ const TopicsAndTasksController = module.exports = {
         if (err) {
           return res.serverError(err)
         }
-        pdc(description.description, 'markdown_github-raw_html', 'html5',async function (err, result) {
+        pdc(description.description, 'markdown_github-raw_html', 'html5', function (err, result) {
           if (err) {
             return res.serverError(err)
           }
