@@ -85,7 +85,7 @@ const ManageReplies = module.exports = {
         status += 2
         TaskReplies.update(replyId, {
           machineStatus: status,
-          machineTestid: testId,
+          machineTestId: testId,
           machineOk: passed,
           machineReport: report,
           machineMessage: message
