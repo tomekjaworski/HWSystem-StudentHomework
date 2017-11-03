@@ -131,32 +131,32 @@ module.exports = function MySqlStore (globalOpts) {
 
         __newFile.pipe(utf8())
           .pipe(concat((file) => {
-          if (file.length > options.maxBytes) {
-            let err = new Error()
-            err.code = 'E_EXCEEDS_UPLOAD_LIMIT'
-            err.name = 'Upload Error'
-            return done(err)
-          }
-          function afterMimeChecked () {
-            TaskReplyFiles.findOrCreate({id: options.updateFileId}, {
-              reply: options.replyId,
-              fileName: fileFormat.name,
-              fileSize: file.length,
-              fileExt: fileFormat.ext.substring(1),
-              fileMimeType: __newFile.headers['content-type']
-            }).exec((err, createdFile, created) => {
-              if (err) {
-                return done(err)
-              }
-              let file64 = file.toString('base64')
-              if (!created) {
-                if (createdFile.fileExt !== fileFormat.ext.substring(1)) {
-                  let err = new Error()
-                  err.code = 'E_EXTENSION_NOT_ALLOWED'
-                  err.name = 'Upload Error'
+            if (file.length > options.maxBytes) {
+              let err = new Error()
+              err.code = 'E_EXCEEDS_UPLOAD_LIMIT'
+              err.name = 'Upload Error'
+              return done(err)
+            }
+            function afterMimeChecked () {
+              TaskReplyFiles.findOrCreate({id: options.updateFileId}, {
+                reply: options.replyId,
+                fileName: fileFormat.name,
+                fileSize: file.length,
+                fileExt: fileFormat.ext.substring(1),
+                fileMimeType: __newFile.headers['content-type']
+              }).exec((err, createdFile, created) => {
+                if (err) {
                   return done(err)
                 }
-                TaskReplyFileContent.findOrCreate({id: createdFile.file, file: createdFile.id}, {file: createdFile.id, content: file64})
+                let file64 = file.toString('base64')
+                if (!created) {
+                  if (createdFile.fileExt !== fileFormat.ext.substring(1)) {
+                    let err = new Error()
+                    err.code = 'E_EXTENSION_NOT_ALLOWED'
+                    err.name = 'Upload Error'
+                    return done(err)
+                  }
+                  TaskReplyFileContent.findOrCreate({id: createdFile.file, file: createdFile.id}, {file: createdFile.id, content: file64})
                   .exec((err, createdFileContent, created) => {
                     if (err) {
                       return done(err)
@@ -187,11 +187,11 @@ module.exports = function MySqlStore (globalOpts) {
                       })
                     }
                   })
-              } else {
-                TaskReplyFileContent.create({
-                  file: createdFile.id,
-                  content: file64
-                }).meta({fetch: true})
+                } else {
+                  TaskReplyFileContent.create({
+                    file: createdFile.id,
+                    content: file64
+                  }).meta({fetch: true})
                   .exec((err, createdFileContent) => {
                     if (err) {
                       return done(err)
@@ -206,31 +206,31 @@ module.exports = function MySqlStore (globalOpts) {
                       done()
                     })
                   })
-              }
-            })
-          }
-          if (__newFile.headers['content-type'] === 'application/octet-stream') {
-            let magic = new mmmagic.Magic(mmmagic.MAGIC_MIME_TYPE)
-            magic.detect(file, function (err, result) {
-              if (err) {
-                throw new Error(err)
-              }
-              const arrayPng = ['application/png', 'application/x-png', 'image/png', 'image/x-png']
-              const arrayBmp = ['application/bmp', 'application/preview', 'application/x-bmp', 'application/x-win-bitmap', 'image/bmp', 'image/ms-bmp', 'image/x-bitmap', 'image/x-bmp', 'image/x-ms-bmp', 'image/x-win-bitmap', 'image/x-windows-bmp', 'image/x-xbitmap']
+                }
+              })
+            }
+            if (__newFile.headers['content-type'] === 'application/octet-stream') {
+              let magic = new mmmagic.Magic(mmmagic.MAGIC_MIME_TYPE)
+              magic.detect(file, function (err, result) {
+                if (err) {
+                  throw new Error(err)
+                }
+                const arrayPng = ['application/png', 'application/x-png', 'image/png', 'image/x-png']
+                const arrayBmp = ['application/bmp', 'application/preview', 'application/x-bmp', 'application/x-win-bitmap', 'image/bmp', 'image/ms-bmp', 'image/x-bitmap', 'image/x-bmp', 'image/x-ms-bmp', 'image/x-win-bitmap', 'image/x-windows-bmp', 'image/x-xbitmap']
 
-              if (result.includes('text/')) {
-                __newFile.headers['content-type'] = 'text/plain'
-              } else if (arrayPng.indexOf(result) > -1) {
-                __newFile.headers['content-type'] = 'image/png'
-              } else if (arrayBmp.indexOf(result) > -1) {
-                __newFile.headers['content-type'] = 'image/bmp'
-              }
+                if (result.includes('text/')) {
+                  __newFile.headers['content-type'] = 'text/plain'
+                } else if (arrayPng.indexOf(result) > -1) {
+                  __newFile.headers['content-type'] = 'image/png'
+                } else if (arrayBmp.indexOf(result) > -1) {
+                  __newFile.headers['content-type'] = 'image/bmp'
+                }
+                afterMimeChecked()
+              })
+            } else {
               afterMimeChecked()
-            })
-          } else {
-            afterMimeChecked()
-          }
-        }))
+            }
+          }))
       }
       return receiver__
     }

@@ -201,7 +201,7 @@ const AccountController = module.exports = {
             return AccountController.registerError(req, res, req.i18n.__('register.error.password.short'))
           case 2:
             return AccountController.registerError(req, res, req.i18n.__('register.error.password.reqs'))
-        }*/
+        } */
 
         LabGroups.findOne({where: {id: labGroups}, select: ['id', 'active']}).exec(function (err, lab) {
           if (err) {

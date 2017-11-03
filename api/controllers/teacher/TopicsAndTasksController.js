@@ -266,7 +266,7 @@ const TopicsAndTasksController = module.exports = {
                 return res.serverError(err)
               }
               return res.redirect(`/teacher/topics-and-tasks/view/${id}`)
-              //return a('success', req.i18n.__('teacher.tt.edittask.success'))
+              // return a('success', req.i18n.__('teacher.tt.edittask.success'))
             })
         })
     } else {
