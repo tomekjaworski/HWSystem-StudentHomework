@@ -14,7 +14,8 @@
  * always omit, customize, or replace this behavior with SASS, SCSS,
  * or any other Grunt tasks you like.)
  */
-@import 'bootstrap-select.scss';
+@import 'bootstrap-4alpha6/bootstrap';
+@import 'bootstrap-select';
 @import 'common';
 @import 'login';
 @import 'register';
