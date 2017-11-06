@@ -56,7 +56,17 @@ const AccountController = module.exports = {
   },
 
   settingsMessage (req, res, message, labs) {
-    return res.view('account/settings', {title: req.i18n.__('settings.title'), message: message, labs: labs})
+    StudentsLabGroups.findOne({student: req.localUser.id}).exec((err, lab)=>{
+      if (err) {
+        return res.serverError(err)
+      }
+      labs = labs.forEach(l => {
+        if (l.id === lab.labgroup){
+          l.active = true
+        }
+      })
+      return res.view('account/settings', {title: req.i18n.__('settings.title'), message: message, labs: labs})
+    })
   },
 
   // Controller Actions

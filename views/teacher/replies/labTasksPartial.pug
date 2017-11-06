@@ -77,17 +77,39 @@ div.d-flex.labTaskRow.mt-3
                                             div.form-group.row
                                                 label.col-4.col-form-label Ocena
                                                 .col-8
-                                                    select.form-control.setTeacherStatus(data-studentreplyid=student.reply.id)
-                                                        each option in [{'id':0, 'name':'Nieocenione'}, {'id':1, 'name': 'Zaliczone'}, {'id':2, 'name':'Niezaliczone'}]
+                                                    .input-group
+                                                        button.btn.btn-success(style='border-bottom-right-radius: 0;border-top-right-radius: 0;')
+                                                            i.fa.fa-check
+                                                        button.btn.btn-danger(style='border-radius: 0;')
+                                                            i.fa.fa-times
+                                                        button.btn.btn-primary(style='border-top-left-radius: 0;border-bottom-left-radius: 0;')
+                                                            i.fa.fa-minus
+                                                    //select.form-control.setTeacherStatus(data-studentreplyid=student.reply.id)
+                                                        // each option in [{'id':0, 'name':'Nieocenione'}, {'id':1, 'name': 'Zaliczone'}, {'id':2, 'name':'Niezaliczone'}]
                                                             if student.reply.teacherStatus === option.id
                                                                 option(value=option.id, selected)=option.name
                                                             else
                                                                 option(value=option.id)=option.name
                                         - var tests = {'0':'Nierozpoczęte', '1':'W kolejce', '2':'Zaliczone', '3':'Niezaliczone'}
+                                        - let machineFix = ['', i18n('student.task.ts.pass'), i18n('student.task.ts.fail')]
                                         div.form-group.row
                                             label.col-4.col-form-label Testy Maszynowe
                                             .col-8
                                                 span.form-control #{tests[student.reply.machineStatus]}
+                                                    if student.reply.machineOk !== 0
+                                                        | &nbsp;/&nbsp;
+                                                        =machineFix[student.reply.machineOk]
+                                        if student.reply.machineMessage
+                                            div.form-group.row
+                                                label.col-4.col-form-label=i18n('student.task.ms.machinemessage.%s', '')
+                                                .col-8
+                                                    span.form-control=student.reply.machineMessage
+                                        if student.reply.machineReport
+                                            div.form-group.row
+                                                label.col-4.col-form-label=i18n('student.task.ms.machinereport')
+                                                .col-8
+                                                    span.form-control
+                                                        a(href = 'http://' + student.reply.machineReport target='_blank') Raport
                                         div.form-group.row
                                             label.col-4.col-form-label Status
                                             .col-8
