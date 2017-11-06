@@ -60,9 +60,9 @@ function repliesGetBack () {
           const taskid = $(this).data('taskid')
           saveDeadline(studentid, taskid, true)
         })
-        $('.setTeacherStatus').on('change', function () {
+        $('.setTeacherStatus').find('button').on('click', function () {
           const studentreplyid = $(this).data('studentreplyid')
-          const value = parseInt($(this).val())
+          const value = parseInt($(this).data('val'))
           setTeacherStatus(studentreplyid, value)
         })
         $('.setBlocked').on('change', function () {
@@ -146,12 +146,22 @@ function repliesGetBack () {
       }
     }).done(function () {
       let task = $('#reply-' + id)
+      let buttons = $('.setTeacherStatus[data-studentreplyid=' + id + ']')
       if (value === 0) {
         task.css('background-color', '')
+        buttons.find('.acc').removeClass('btn-success').addClass('btn-outline-success')
+        buttons.find('.dec').removeClass('btn-danger').addClass('btn-outline-danger')
+        buttons.find('.non').removeClass('btn-outline-primary').addClass('btn-primary')
       } else if (value === 1) {
         task.css('background-color', 'lightgreen')
+        buttons.find('.acc').removeClass('btn-outline-success').addClass('btn-success')
+        buttons.find('.dec').removeClass('btn-danger').addClass('btn-outline-danger')
+        buttons.find('.non').removeClass('btn-primary').addClass('btn-outline-primary')
       } else if (value === 2) {
-        task.css('background-color', 'rgba(200,0,0,0.7)')
+        task.css('background-color', 'rgba(150,0,0,0.5)')
+        buttons.find('.acc').removeClass('btn-success').addClass('btn-outline-success')
+        buttons.find('.dec').removeClass('btn-outline-danger').addClass('btn-danger')
+        buttons.find('.non').removeClass('btn-primary').addClass('btn-outline-primary')
       }
     }).fail(function (jqXHR, textStatus, errorThrown) {
       alert('Nie udało się zmienić oceny:  ' + textStatus + ' - ' + errorThrown) // todo: i18n

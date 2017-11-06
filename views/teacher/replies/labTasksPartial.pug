@@ -41,7 +41,7 @@ div.d-flex.labTaskRow.mt-3
             else
                 each student in data
                     .col-12.col-sm-10.col-md-8.col-lg-6.col-xl-4.studentCard(id='studentCard-'+ student.id, style='display: inline-block;vertical-align:top;float: none;')
-                        .card.replySortable(id=(student.reply ? 'reply-' + student.reply.id : ''), style=(student.reply ? (student.reply.blocked ? 'background-color:rgba(200,0,0,0.7);' : (!student.reply.newest ? 'background-color:rgba(100,100,100,0.7);' : (student.reply.teacherStatus === 2 ? 'background-color:rgba(200,0,0,0.7);' : (student.reply.teacherStatus === 1 ? 'background-color:lightgreen;' : '')))) : ''))
+                        .card.replySortable(id=(student.reply ? 'reply-' + student.reply.id : ''), style=(student.reply ? (student.reply.blocked ? 'background-color:rgba(150,0,0,0.5);' : (!student.reply.newest ? 'background-color:rgba(100,100,100,0.7);' : (student.reply.teacherStatus === 2 ? 'background-color:rgba(150,0,0,0.5);' : (student.reply.teacherStatus === 1 ? 'background-color:lightgreen;' : '')))) : ''))
                             .card-header.d-flex.justify-content-end.p-0.replySortHandle
                                 .mr-auto.p-2.w-100.replySortableTitle
                                     .btn.btn-sm
@@ -72,17 +72,17 @@ div.d-flex.labTaskRow.mt-3
                                         h6 Odpowiedź:
                                         if !student.reply.newest
                                             div
-                                                b Odpowiedź nie jest ostateczna
+                                                b Odpowiedź nie jest ostateczna, student musi przesłać odpowiedź ponownie! Ukazane pliki mogą nie być najnowsze.
                                         else
                                             div.form-group.row
                                                 label.col-4.col-form-label Ocena
                                                 .col-8
-                                                    .input-group
-                                                        button.btn.btn-success(style='border-bottom-right-radius: 0;border-top-right-radius: 0;')
+                                                    .input-group.setTeacherStatus(data-studentreplyid=student.reply.id)
+                                                        button.btn.acc(class=(student.reply.teacherStatus === 1 ? 'btn-success' : 'btn-outline-success') data-studentreplyid=student.reply.id data-val='1' style='border-bottom-right-radius: 0;border-top-right-radius: 0;')
                                                             i.fa.fa-check
-                                                        button.btn.btn-danger(style='border-radius: 0;')
+                                                        button.btn.dec(class=(student.reply.teacherStatus === 2 ? 'btn-danger' : 'btn-outline-danger') data-studentreplyid=student.reply.id data-val='2' style='border-radius: 0;')
                                                             i.fa.fa-times
-                                                        button.btn.btn-primary(style='border-top-left-radius: 0;border-bottom-left-radius: 0;')
+                                                        button.btn.non(class=(student.reply.teacherStatus === 0 ? 'btn-primary' : 'btn-outline-primary') data-studentreplyid=student.reply.id data-val='0' style='border-top-left-radius: 0;border-bottom-left-radius: 0;')
                                                             i.fa.fa-minus
                                                     //select.form-control.setTeacherStatus(data-studentreplyid=student.reply.id)
                                                         // each option in [{'id':0, 'name':'Nieocenione'}, {'id':1, 'name': 'Zaliczone'}, {'id':2, 'name':'Niezaliczone'}]
@@ -90,8 +90,8 @@ div.d-flex.labTaskRow.mt-3
                                                                 option(value=option.id, selected)=option.name
                                                             else
                                                                 option(value=option.id)=option.name
-                                        - var tests = {'0':'Nierozpoczęte', '1':'W kolejce', '2':'Zaliczone', '3':'Niezaliczone'}
-                                        - let machineFix = ['', i18n('student.task.ts.pass'), i18n('student.task.ts.fail')]
+                                        - var tests = [i18n('student.task.ms.notstarted'), i18n('student.task.ms.inqueue'), i18n('student.task.ms.super'), i18n('student.task.ms.note'), i18n('student.task.ms.notices'), i18n('student.task.ms.errors')]
+                                        - var machineFix = ['', i18n('student.task.ts.pass'), i18n('student.task.ts.fail')]
                                         div.form-group.row
                                             label.col-4.col-form-label Testy Maszynowe
                                             .col-8

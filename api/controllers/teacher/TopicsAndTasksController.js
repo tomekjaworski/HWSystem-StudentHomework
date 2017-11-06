@@ -48,12 +48,21 @@ const TopicsAndTasksController = module.exports = {
           if (err) {
             return res.serverError(err)
           }
-          CustomCodes.formatText(result, true, result => {
-            return res.view('teacher/topicsAndTasks/taskView', {
-              task: task,
-              description: result,
-              menuItem: 'topics',
-              breadcrumb: 'view'
+          sails.sendNativeQuery(`SELECT (SELECT \`id\` FROM \`tasks\` WHERE \`tasks\`.\`topic\` < $1 ORDER BY \`topic\` DESC, \`place\` DESC LIMIT 1) \`prevTopicTask\`, 
+(SELECT \`id\` FROM \`tasks\` WHERE \`tasks\`.\`topic\` > $1 ORDER BY \`topic\` ASC, \`place\` ASC LIMIT 1) \`nextTopicTask\`, 
+(SELECT \`id\` FROM \`tasks\` WHERE \`tasks\`.\`topic\` = $1 AND \`tasks\`.place < $2 ORDER BY \`place\` DESC LIMIT 1) \`prevTask\`,
+(SELECT \`id\` FROM \`tasks\` WHERE \`tasks\`.\`topic\` = $1 AND \`tasks\`.place > $2 ORDER BY \`place\` ASC LIMIT 1) \`nextTask\``, [task.topic.id, task.place]).exec((err, nextPrev) => {
+            if (err) {
+              return res.serverError(err)
+            }
+            CustomCodes.formatText(result, true, result => {
+              return res.view('teacher/topicsAndTasks/taskView', {
+                task: task,
+                description: result,
+                menuItem: 'topics',
+                breadcrumb: 'view',
+                nextPrev: nextPrev.rows[0]
+              })
             })
           })
         })

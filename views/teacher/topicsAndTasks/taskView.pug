@@ -42,8 +42,33 @@ block content
                     button.deleteTaskModalButton.btn.btn-danger.btn-sm(data-id=task.id)=i18n('teacher.tt.remove')
 
                 .card-block
-                    h1.text-center= task.topic.number + '. ' + task.topic.title
-                    h2.text-center= task.number + '. ' + task.title
+                    .col-12
+                        .row
+                            if nextPrev && nextPrev.prevTopicTask
+                                .col-2.text-center
+                                    a.btn.btn-secondary.next-prev(href='/teacher/topics-and-tasks/view/' + nextPrev.prevTopicTask)
+                                        i.fa.fa-arrow-left
+                            else
+                                .offset-2
+                            .col-8
+                                h2.text-center=task.topic.number + '. ' + task.topic.title
+                            if nextPrev && nextPrev.nextTopicTask
+                                .col-2.text-center
+                                    a.btn.btn-secondary.next-prev(href='/teacher/topics-and-tasks/view/' + nextPrev.nextTopicTask)
+                                        i.fa.fa-arrow-right
+                        .row
+                            if nextPrev && nextPrev.prevTask
+                                .col-2.text-center
+                                    a.btn.btn-secondary.next-prev(href='/teacher/topics-and-tasks/view/' + nextPrev.prevTask)
+                                        i.fa.fa-arrow-left
+                            else
+                                .offset-2
+                            .col-8
+                                h3.text-center=task.number + '. ' + task.title
+                            if nextPrev && nextPrev.nextTask
+                                .col-2.text-center
+                                    a.btn.btn-secondary.next-prev(href='/teacher/topics-and-tasks/view/' + nextPrev.nextTask)
+                                        i.fa.fa-arrow-right
                     .card
                         if description
                             #task-content.card-block!= description

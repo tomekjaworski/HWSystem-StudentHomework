@@ -12,7 +12,7 @@ block content
         .col-md-12.col-lg-8
             .card
                 .card-header.d-flex.justify-content-between
-                    a.btn.btn-primary.btn-sm(href='/teacher/topics-and-tasks/task/edit/' + user.id)=i18n('teacher.tt.edit')
+                    a.btn.btn-primary.btn-sm(href='/teacher/users/edit/' + user.id)=i18n('teacher.tt.edit')
                     strong Podgląd użytkownika
                     button.deleteTaskButton.btn.btn-danger.btn-sm(data-id=user.id)=i18n('teacher.tt.remove')
 
