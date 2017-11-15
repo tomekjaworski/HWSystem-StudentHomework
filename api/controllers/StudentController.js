@@ -31,7 +31,7 @@ const StudentController = module.exports = {
     StudentsLabGroups.findOne({
       student: req.localUser.id,
       active: true
-    }).exec(function (err, lab) {
+    }).populate('labgroup').exec(function (err, lab) {
       if (err) {
         return res.serverError(err)
       }
