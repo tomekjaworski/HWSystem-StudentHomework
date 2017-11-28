@@ -113,6 +113,7 @@ const ManageReplies = module.exports = {
                 msg = 'W Twoim rozwiązaniu występują poważne błędy' + (passed ? ' ale mimo to testy zostały zaliczone. Zalecane jest sprawdzenie raportu z testów.' : ' i testy nie zostały zaliczone! Sprawdź raport testów.')
                 break
             }
+            msg += ` Raport z testów: ${reply.machineMessage}. Pełna wersja: ${reply.machineReport}`
             TaskComments.create({
               taskStudent: reply.student,
               task: reply.task,

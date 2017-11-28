@@ -55,12 +55,13 @@ div.d-flex.labTaskRow.mt-3
                                         .fa.fa-times
                             //.card-block.collapse(id=(student.reply ? 'replyCollapse-' + student.reply.id : ''))
                             .card-block.collapse.show(id='replyCollapse-' + student.id)
-                                .form-group
-                                    label Czas na odpowiedź:
-                                    .input-group.replySortDate
-                                        input.form-control.dateInput(id='deadline-student-' + student.id + '-task-' + task.id, type='date', value=student.deadline)
-                                        button.btn.btn-success.dateSave(data-studentid=student.id, data-taskid=task.id) Zapisz
-                                        button.btn.btn-danger.dateErase(data-studentid=student.id, data-taskid=task.id) Skasuj
+                                .form-group.row
+                                    label.col-4.col-form-label Czas na odpowiedź:
+                                    .col-8
+                                        .input-group.replySortDate
+                                            input.form-control.dateInput(id='deadline-student-' + student.id + '-task-' + task.id, type='date', value=student.deadline)
+                                            button.btn.btn-success.dateSave(data-studentid=student.id, data-taskid=task.id) Zapisz
+                                            button.btn.btn-danger.dateErase(data-studentid=student.id, data-taskid=task.id) Skasuj
                                 hr
 
                                 if !student.reply
@@ -69,7 +70,6 @@ div.d-flex.labTaskRow.mt-3
                                         p Brak
                                 else
                                     div
-                                        h6 Odpowiedź:
                                         if !student.reply.newest
                                             div
                                                 b Odpowiedź nie jest ostateczna, student musi przesłać odpowiedź ponownie! Ukazane pliki mogą nie być najnowsze.
@@ -122,12 +122,13 @@ div.d-flex.labTaskRow.mt-3
                                                         span.custom-control-indicator
                                                         span.custom-control-description Zablokowane
 
-                                        div Odpowiedź po raz: #{student.reply.count}
-                                        if student.reply.newest
-                                            div
+                                        div.form-group.row
+                                            label.col-5.col-form-label Odpowiedź po raz: #{student.reply.count}
+                                            if student.reply.newest
                                                 // TODO: Seba dodaj jakieś potwierdzenie czy aby napewno chce się to zrobić
                                                     // todo: ok
-                                                button.btn.btn-danger.repostTask(id='repost-reply-' + student.reply.id, data-studentid=student.id, data-taskid=task.id, data-studentreplyid=student.reply.id, style=(student.reply.blocked ? 'display:none' : '')) Przydziel zadanie ponownie
+                                                .col-7
+                                                    button.btn.btn-danger.repostTask(id='repost-reply-' + student.reply.id, data-studentid=student.id, data-taskid=task.id, data-studentreplyid=student.reply.id, style=(student.reply.blocked ? 'display:none' : '')) Przydziel zadanie ponownie
                                     hr
                                     div
                                         h6 Pliki

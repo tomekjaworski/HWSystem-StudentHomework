@@ -130,6 +130,7 @@
     response.done(function (msg) {
       $('.task-c-read').html(commenticons.read)
       markAsReadButton.hide()
+      $('.commentsNotViewed').text('0')
     })
   }
 

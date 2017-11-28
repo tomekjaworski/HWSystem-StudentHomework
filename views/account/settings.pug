@@ -36,8 +36,9 @@ block content
                                 label(for='inputLabSelect')=i18n('settings.lab.choose')
                                 select#inputLabSelect.selectpicker(name='lab', data-live-search='true')
                                     //- console.log(labs)
+
                                     each l in labs
-                                        if l.active
+                                        if l.id === studentLab
                                             option(value=l.name, data-subtext=l.owner.fullName() selected)= l.name
                                         else
                                             option(value=l.name, data-subtext=l.owner.fullName())= l.name

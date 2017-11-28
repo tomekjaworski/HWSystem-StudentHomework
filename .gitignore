@@ -87,3 +87,4 @@ gen
 config/connections\.js
 
 .DS_Store
+\.tool-versions

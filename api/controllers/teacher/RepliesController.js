@@ -37,10 +37,10 @@ const RepliesController = module.exports = {
           return res.serverError(req.i18n.__('teacher.replies.nolabgroups'))
         }
         task.labs = labs
-        sails.sendNativeQuery(`SELECT (SELECT \`id\` FROM \`tasks\` WHERE \`tasks\`.\`topic\` < $1 ORDER BY \`topic\` DESC, \`place\` DESC LIMIT 1) \`prevTopicTask\`, 
-(SELECT \`id\` FROM \`tasks\` WHERE \`tasks\`.\`topic\` > $1 ORDER BY \`topic\` ASC, \`place\` ASC LIMIT 1) \`nextTopicTask\`, 
-(SELECT \`id\` FROM \`tasks\` WHERE \`tasks\`.\`topic\` = $1 AND \`tasks\`.place < $2 ORDER BY \`place\` DESC LIMIT 1) \`prevTask\`,
-(SELECT \`id\` FROM \`tasks\` WHERE \`tasks\`.\`topic\` = $1 AND \`tasks\`.place > $2 ORDER BY \`place\` ASC LIMIT 1) \`nextTask\``, [task.topic.id, task.place]).exec((err, nextPrev) => {
+        sails.sendNativeQuery(`SELECT (SELECT \`id\` FROM \`tasks\` WHERE \`tasks\`.\`topic\` < $1 ORDER BY \`topic\` DESC, CAST(\`number\` AS UNSIGNED) DESC LIMIT 1) \`prevTopicTask\`, 
+(SELECT \`id\` FROM \`tasks\` WHERE \`tasks\`.\`topic\` > $1 ORDER BY \`topic\` ASC, CAST(\`number\` AS UNSIGNED) ASC LIMIT 1) \`nextTopicTask\`, 
+(SELECT \`id\` FROM \`tasks\` WHERE \`tasks\`.\`topic\` = $1 AND \`tasks\`.number < $2 ORDER BY CAST(\`number\` AS UNSIGNED) DESC LIMIT 1) \`prevTask\`,
+(SELECT \`id\` FROM \`tasks\` WHERE \`tasks\`.\`topic\` = $1 AND \`tasks\`.number > $2 ORDER BY CAST(\`number\` AS UNSIGNED) ASC LIMIT 1) \`nextTask\``, [task.topic.id, task.number]).exec((err, nextPrev) => {
           if (err) {
             return res.serverError(err)
           }
@@ -52,6 +52,240 @@ const RepliesController = module.exports = {
               breadcrumb: 'view',
               nextPrev: nextPrev.rows[0]
             })
+        })
+      })
+    })
+  },
+
+  viewOneReply: function (req, res) {
+    let replyId = parseInt(req.param('replyId'), '10')
+    if (!_.isInteger(replyId)) {
+      return res.notFound()
+    }
+    TaskReplies.findOne(replyId).populate('task').populate('student').exec((err,reply)=>{
+      if (err) {
+        return res.serverError(err)
+      }
+      if (!reply) {
+        return res.notFound()
+      }
+      StudentsLabGroups.findOne({student: reply.student.id}).populate('labgroup').exec((err,lab)=>{
+        if (err) {
+          return res.serverError(err)
+        }
+        if (!lab) {
+          return res.notFound()
+        }
+        let student = reply.student
+        student.reply = reply
+        sails.sendNativeQuery(`SELECT slb.student,
+(case when scdl.task IS NOT NULL then scdl.deadline else
+ (case when lbtd.deadline IS NOT NULL then lbtd.deadline else topic.deadline end) end) deadline
+FROM studentslabgroups slb
+LEFT JOIN tasks task ON task.id = $1
+LEFT JOIN topics topic ON task.topic = topic.id
+LEFT JOIN labgrouptopicdeadline lbtd ON lbtd.group = slb.labgroup AND lbtd.topic = task.topic
+LEFT JOIN studentcustomdeadlines scdl ON scdl.student = slb.student AND scdl.task = task.id
+WHERE slb.student =$2 AND slb.active=1`, [reply.task.id, student.id]).exec((err, result) => {
+          if (err) {
+            return res.serverError(err)
+          }
+          let deadline = result.rows[0]
+          try {
+            student.deadline = dateFormat(deadline.deadline, 'yyyy-mm-dd')
+          } catch (err) {
+            return res.serverError(err)
+          }
+          TaskComments.find({
+            task: reply.task.id,
+            taskStudent: student.id,
+            user: {'!=': null}
+          }).populate('user').exec((err, comments) => {
+            if (err) {
+              return res.serverError(err)
+            }
+            if (comments && comments.length && comments.length > 0) {
+              _.forEach(comments, (c) => {
+                try {
+                  c.createdAt = dateFormat(c.createdAt, 'dd/mm/yyyy')
+                } catch (err) {
+                  return res.serverError(err)
+                }
+              })
+              student.comments = comments
+            }
+            MySqlFile().readManyByReply(reply.id, (err, files) => {
+              if (err) {
+                return res.serverError(err)
+              }
+
+              let promises = files.map(function (file) {
+                return new Promise(function (resolve, reject) {
+                  file.fileSize = bytes(file.fileSize, {unitSeparator: ' '})
+                  if (file.fileMimeType.includes('text/')) {
+                    let type = ''
+                    if (['h', 'c'].includes(file.fileExt)) {
+                      type = 'c'
+                    } else if (['hpp', 'cpp'].includes(file.fileExt)) {
+                      type = 'c++'
+                    } else {
+                      return resolve(file)
+                    }
+                    if (file.file.err) {
+                      return resolve(file)
+                    }
+                    let content = '```' + type + '\n' + file.file + '\n```'
+                    pdc(content, 'markdown_github-raw_html', 'html5', function (err, result) {
+                      if (err) {
+                        return reject(err)
+                      }
+                      file.file = result
+                      return resolve(file)
+                    })
+                  } else {
+                    return resolve(file)
+                  }
+                })
+              })
+
+              Promise.all(promises).then((files) => {
+                student.reply.files = files
+                return res.view('teacher/replies/viewOneReply',
+                  {
+                    lab: lab.labgroup,
+                    task: reply.task,
+                    student: student
+                  })
+              })
+            })
+          })
+        })
+      })
+    })
+  },
+
+  viewOneLatestReply: function (req, res) {
+    let taskId = parseInt(req.param('taskId'), '10')
+    let studentId = parseInt(req.param('studentId'), '10')
+    if (!_.isInteger(taskId) || !_.isInteger(studentId)) {
+      return res.notFound()
+    }
+    Tasks.findOne(taskId).exec((err, task) => {
+      if (err) {
+        return res.serverError(err)
+      }
+      if (!task) {
+        return res.notFound()
+      }
+      StudentsLabGroups.findOne({student: studentId}).populate('student').populate('labgroup').exec((err, lab) => {
+        if (err) {
+          return res.serverError(err)
+        }
+        if (!lab) {
+          return res.notFound()
+        }
+        let student = lab.student
+        sails.sendNativeQuery(`SELECT slb.student,
+(case when scdl.task IS NOT NULL then scdl.deadline else
+ (case when lbtd.deadline IS NOT NULL then lbtd.deadline else topic.deadline end) end) deadline
+FROM studentslabgroups slb
+LEFT JOIN tasks task ON task.id = $1
+LEFT JOIN topics topic ON task.topic = topic.id
+LEFT JOIN labgrouptopicdeadline lbtd ON lbtd.group = slb.labgroup AND lbtd.topic = task.topic
+LEFT JOIN studentcustomdeadlines scdl ON scdl.student = slb.student AND scdl.task = task.id
+WHERE slb.student =$2 AND slb.active=1`, [task.id, student.id]).exec((err, result) => {
+          if (err) {
+            return res.serverError(err)
+          }
+          let deadline = result.rows[0]
+          try {
+            student.deadline = dateFormat(deadline.deadline, 'yyyy-mm-dd')
+          } catch (err) {
+            return res.serverError(err)
+          }
+          TaskComments.find({
+            task: task.id,
+            taskStudent: student.id,
+            user: {'!=': null}
+          }).populate('user').exec((err, comments) => {
+            if (err) {
+              return res.serverError(err)
+            }
+            if (comments && comments.length && comments.length > 0) {
+              _.forEach(comments, (c) => {
+                try {
+                  c.createdAt = dateFormat(c.createdAt, 'dd/mm/yyyy')
+                } catch (err) {
+                  return res.serverError(err)
+                }
+              })
+              student.comments = comments
+            }
+            TaskReplies.findOne({
+              task: task.id,
+              student: student.id,
+              lastSent: true
+            }).populate('files').exec((err, reply) => {
+              if (err) {
+                return res.serverError(err)
+              }
+
+              if (!reply) {
+                return res.view('teacher/replies/viewOne',
+                  {
+                    lab: lab.labgroup,
+                    task: task,
+                    student: student
+                  })
+              } else {
+                MySqlFile().readManyByReply(reply.id, (err, files) => {
+                  if (err) {
+                    return res.serverError(err)
+                  }
+
+                  let promises = files.map(function (file) {
+                    return new Promise(function (resolve, reject) {
+                      file.fileSize = bytes(file.fileSize, {unitSeparator: ' '})
+                      if (file.fileMimeType.includes('text/')) {
+                        let type = ''
+                        if (['h', 'c'].includes(file.fileExt)) {
+                          type = 'c'
+                        } else if (['hpp', 'cpp'].includes(file.fileExt)) {
+                          type = 'c++'
+                        } else {
+                          return resolve(file)
+                        }
+                        if (file.file.err) {
+                          return resolve(file)
+                        }
+                        let content = '```' + type + '\n' + file.file + '\n```'
+                        pdc(content, 'markdown_github-raw_html', 'html5', function (err, result) {
+                          if (err) {
+                            return reject(err)
+                          }
+                          file.file = result
+                          return resolve(file)
+                        })
+                      } else {
+                        return resolve(file)
+                      }
+                    })
+                  })
+
+                  Promise.all(promises).then((files) => {
+                    student.reply = reply
+                    student.reply.files = files
+                    return res.view('teacher/replies/viewOne',
+                      {
+                        lab: lab.labgroup,
+                        task: task,
+                        student: student
+                      })
+                  })
+                })
+              }
+            })
+          })
         })
       })
     })

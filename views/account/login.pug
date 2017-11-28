@@ -20,12 +20,16 @@ mixin form
 
 
 block content
+    if req.query.msg && req.query.msg === 'registerSuccess'
+        .alert.alert-success
+            span=i18n('login.registerSuccess')
+            script.
+                window.history.replaceState('','','/login')
     if error
         .card.card-outline-danger
             .card-block
                 div.alert.alert-danger(role='alert')
                     strong= error
-                +form
     else
         .card
             .card-block

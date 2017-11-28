@@ -146,11 +146,11 @@
 
         if (msg[i].machineStatus === 1) {
           msg[i].machineStatus = '<i class="fa fa-spinner fa-pulse sfa-lg fa-fw text-primary"></i>'
-        } else if (msg[i].machineOk === 0) {
+        } else if (msg[i].machineStatus === 0) {
           msg[i].machineStatus = '-'
         } else if (msg[i].machineOk === 1) {
           msg[i].machineStatus = '<i class="fa fa-check-circle fa-lg fa-fw text-success"></i>'
-        } else if (msg[i].machineOk === 2) {
+        } else if (msg[i].machineOk === 0) {
           msg[i].machineStatus = '<i class="fa fa-times-circle fa-lg fa-fw text-danger"></i>'
         }
 

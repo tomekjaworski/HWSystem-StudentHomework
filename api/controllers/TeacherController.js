@@ -13,6 +13,12 @@ const TeacherController = module.exports = {
    * `TeacherController.index()`
    */
   index: function (req, res) {
+    let m = parseInt(req.param('m'), '10')
+    let show = req.param('show') === 'all'
+    let param = {}
+    if (_.isInteger(m)) {
+      param.type = m
+    }
     LabGroups.find({where: {owner: req.localUser.id}, select: ['id']}).exec((err, labs) => {
       if (err) {
         return res.serverError(err)
@@ -20,10 +26,12 @@ const TeacherController = module.exports = {
       if (labs.length === 0) {
         return res.view('teacher/index', {title: req.i18n.__('teacher.dashboard.title'), menuItem: 'index'})
       }
-      RecentTeacherActions.find({
-        labgroup: labs.map(l => l.id),
-        seen: false
-      }).sort('updatedAt DESC').exec((err, actions) => {
+      if (!show) {
+        param.labgroup = labs.map(l => l.id)
+      }
+      RecentTeacherActions.find(_.merge({
+        seen: false,
+      }, param)).sort('updatedAt DESC').exec((err, actions) => {
         if (err) {
           return res.serverError(err)
         }

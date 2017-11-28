@@ -236,7 +236,7 @@ const AccountController = module.exports = {
               }
               return res.serverError(err)
             }
-            return res.redirect(sails.getUrlFor('AccountController.login'))
+            return res.redirect(sails.getUrlFor('AccountController.login') + '?msg=registerSuccess')
           })
         })
     }
@@ -245,12 +245,20 @@ const AccountController = module.exports = {
   userSettings (req, res) {
     switch (req.method) {
       case 'GET':
+        if (req.localUser.isTeacher) {
+          return res.view('account/settings')
+        }
         LabGroups.find({active: true}).populate('owner').exec(function (err, labs) {
           if (err) {
             return res.serverError(err)
           }
+          StudentsLabGroups.findOne({student:req.localUser.id}).exec((err,lab)=>{
+            if (err) {
+              return res.serverError(err)
+            }
 
-          return res.view('account/settings', {labs: labs})
+            return res.view('account/settings', {labs: labs, studentLab: lab.labgroup})
+          })
         })
         break
       case 'POST':

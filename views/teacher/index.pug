@@ -15,8 +15,43 @@ block content
             //-include tasks
             .card
                 .card-header.text-center
+                    if req.query.show && req.query.show === 'all'
+                        if req.query.m
+                            a.btn.btn-primary.btn-sm.float-right(href='/teacher?m=' + req.query.m) Do mnie
+                        else
+                            a.btn.btn-primary.btn-sm.float-right(href='/teacher') Do mnie
+                    else
+                        if req.query.m
+                            a.btn.btn-primary.btn-sm.float-right(href='/teacher?show=all&m=' + req.query.m) Do wszystkich
+                        else
+                            a.btn.btn-primary.btn-sm.float-right(href='/teacher?show=all') Do wszystkich
                     strong=i18n('teacher.messages')
-
+                .card-header.nav-header-inner
+                    ul.nav.nav-tabs.nav-fill.task-tab
+                        li.nav-item
+                            if !req.query.m
+                                a.nav-link.active Wszystkie
+                            else
+                                if req.query.show && req.query.show === 'all'
+                                    a.nav-link(href='/teacher?show=all') Wszystkie
+                                else
+                                    a.nav-link(href='/teacher') Wszystkie
+                        li.nav-item
+                            if req.query.m && req.query.m === '1'
+                                a.nav-link.active Komentarze
+                            else
+                                if req.query.show && req.query.show === 'all'
+                                    a.nav-link(href='/teacher?show=all&m=1') Komentarze
+                                else
+                                    a.nav-link(href='/teacher?m=1') Komentarze
+                        li.nav-item
+                            if req.query.m && req.query.m === '2'
+                                a.nav-link.active Odpowiedzi
+                            else
+                                if req.query.show && req.query.show === 'all'
+                                    a.nav-link(href='/teacher?show=all&m=2') Odpowiedzi
+                                else
+                                    a.nav-link(href='/teacher?m=2') Odpowiedzi
 
                 form(method='post', action='/teacher/markAsRead')
                     table.table.table-striped.table-hover.table-responsive.table-grouplist.wb-initial

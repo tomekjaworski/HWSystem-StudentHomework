@@ -58,6 +58,8 @@ block content
                     span=i18n('student.task.reply.sent')
                 when 'fileUploadSuccess'
                     span=i18n('student.task.files.uploadsuccess')
+        script.
+          window.history.replaceState('', '', location.pathname)
     else if req.query.msg
         .alert.alert-danger
             case req.query.msg
@@ -75,6 +77,8 @@ block content
                     span=i18n('student.task.reply.nomainfile')
                 default
                     span=i18n('error')
+        script.
+          window.history.replaceState('', '', location.pathname)
 
     #fileContentModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='fileContentModalTitle', aria-hidden='true')
         .modal-dialog.modal-lg(role='document')
@@ -164,7 +168,7 @@ block content
                 li.nav-item
                     a.nav-link(data-toggle='tab', href='#comments', aria-expanded='false')=i18n('student.task.tab.comments')
                         if taskComments && taskComments.length > 0
-                            span.badge.badge-pill.badge-primary= taskComments.length
+                            span.badge.badge-pill.badge-primary.commentsNotViewed= taskComments.filter(function (c) { return c.viewed === false }).length
 
         .card-block
             #myTabContent.tab-content
@@ -233,7 +237,7 @@ block content
                                         small.form-text.text-muted=i18n('student.task.files.afterdeadline')
 
                 #comments.tab-pane.fade(aria-expanded='false')
-                    .list-group.mb-3#commentArea
+                    .list-group.mb-3#commentArea(style='max-height:500px;overflow-y:auto;')
                         - var allviewed = true
                         - var lastid = 1
                         - var i = 1

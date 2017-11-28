@@ -63,11 +63,6 @@ block content
                                             | {{else}}
                                             i.fa.fa-desktop.text-danger
                                             | {{/if}}
-                                        td.text-center.align-middle
-                                            a.btn.btn-sm.btn-link.taskUpButton(data-id='{{:id}}', data-place='{{:place}}', data-topic='{{:topic}}')
-                                                i.fa.fa-lg.fa-arrow-up
-                                            a.btn.btn-sm.btn-link.taskDownButton(data-id='{{:id}}', data-place='{{:place}}', data-topic='{{:topic}}')
-                                                i.fa.fa-lg.fa-arrow-down
                                     | {{/for}}
                                     | {{if !task[0]}}
                                     tr

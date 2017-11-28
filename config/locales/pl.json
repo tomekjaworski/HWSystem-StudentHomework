@@ -122,7 +122,7 @@
 	"student.task.blocked": "Rozwiązywanie zadania zostało zablokowane przez prowadzącego",
 	"student.task.description": "Opis zadania:",
 	"student.task.files.reqs": "Dopuszczalne rozszerzenia: c, cpp, h, hpp, inc, txt, bmp, png. Wielkość pliku nie może przekraczać 100 KB.",
-	"student.task.files.send": "Wyślij pliki",
+	"student.task.files.send": "Dodaj pliki do odpowiedzi",
 	"student.task.files.confirm": "Zatwierdź rozwiązanie",
 	"student.task.files.afterdeadline": "Upłynął termin przesyłania odpowiedzi",
 	"student.task.files.updatesuccess": "Zmiana pliku zakończona powodzeniem",
@@ -240,5 +240,6 @@
 	"teacher.tt.removingtask.title": "Usuwanie zadania",
 	"teacher.tt.removingtask.error": "Wystąpił błąd podczas usuwania zadania",
 	"teacher.tt.removingtask.%s": "Czy na pewno chcesz usunąć zadanie o ID %s?",
-	"teacher.tt.notasks.%s": "Brak zadań, dodaj tematy używając przycisku \"%s\"."
+	"teacher.tt.notasks.%s": "Brak zadań, dodaj tematy używając przycisku \"%s\".",
+	"login.registerSuccess": "Pomyślnie zarejestrowano"
 }

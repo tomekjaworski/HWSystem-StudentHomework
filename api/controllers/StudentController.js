@@ -54,7 +54,7 @@ const StudentController = module.exports = {
         'LEFT JOIN taskreplies AS replies ON replies.task = tasks.id AND replies.student = $1 AND replies.lastSent = 1 AND replies.newest = 1 \n' +
         'LEFT JOIN ( SELECT task, taskStudent FROM taskcomments GROUP BY task, taskStudent ) comments ON comments.task = tasks.id AND comments.taskStudent = $1\n' +
         'WHERE topics.visible = 1\n' +
-        'GROUP BY topics.id', [req.localUser.id]).exec((err, data) => {
+        'GROUP BY topics.id ORDER BY CAST(topics.number AS UNSIGNED)', [req.localUser.id]).exec((err, data) => {
           if (err) {
             return res.serverError(err)
           }
@@ -111,7 +111,7 @@ const StudentController = module.exports = {
           'LEFT JOIN studentcustomdeadlines scd ON scd.task = tasks.id AND scd.student = $1 \n' +
           'LEFT JOIN labgrouptopicdeadline groupdeadline ON groupdeadline.group = $2 AND groupdeadline.topic = $3 \n' +
           'WHERE tasks.topic = $3\n' +
-          'GROUP BY tasks.id, reply.id, tasks.topic, scd.deadline, groupdeadline.deadline ORDER BY tasks.place, tasks.id',
+          'GROUP BY tasks.id, reply.id, tasks.topic, scd.deadline, groupdeadline.deadline ORDER BY CAST(tasks.number AS UNSIGNED), tasks.id',
           [req.localUser.id, lab.labgroup, topicId]).exec((err, data) => {
             if (err) {
               return res.serverError(err)
@@ -210,7 +210,7 @@ const StudentController = module.exports = {
                       TaskReplies.findOne({student: req.localUser.id, task: task.id, newest: true})
                         .exec(function (err, taskReply) {
                           if (err) {
-                            return res.badRequest(err)
+                            return res.serverError(err)
                           }
                           if (!taskReply) {
                             try {
@@ -221,7 +221,8 @@ const StudentController = module.exports = {
                                 taskReplyFiles: null,
                                 deadline: dateFormat(deadline, 'dd/mm/yyyy'),
                                 deadlineCanSend: deadlineCanSend,
-                                taskComments: taskComments
+                                taskComments: taskComments,
+                                title: task.title
                               })
                             } catch (err) {
                               return res.serverError(err)
@@ -229,7 +230,7 @@ const StudentController = module.exports = {
                           }
                           MySqlFile().ls(taskReply.id, (err, taskReplyFiles) => {
                             if (err) {
-                              return res.badRequest(err)
+                              return res.serverError(err)
                             }
                             try {
                               return res.view('student/task', {
@@ -239,7 +240,8 @@ const StudentController = module.exports = {
                                 taskReplyFiles: taskReplyFiles,
                                 deadline: dateFormat(deadline, 'dd/mm/yyyy'),
                                 deadlineCanSend: deadlineCanSend,
-                                taskComments: taskComments
+                                taskComments: taskComments,
+                                title: task.title
                               })
                             } catch (err) {
                               return res.serverError(err)
