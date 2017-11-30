@@ -1,5 +1,38 @@
 extends ../../includes/layout
 
+mixin topicentry(id, title, percent, values)
+    .card.list-group-item.list-group-item-hover.flex-column.align-items-start.topic-entry.collapsed(data-toggle='collapse', data-parent='#topics-accordion', href='#topic-collapse-' + id, aria-expanded='false', aria-controls='topic-collapse-' + id, id='topic-a-' + id)
+        .w-100(id='topic-entry-' + id, role='tab')
+            a
+                //-(href='/account/topics/'+ id + '/tasks')
+                .d-flex.w-100.justify-content-between.mb-2
+                    h5.mb-2.mr-2.topic-title=title
+                    button.btn.btn-secondary.align-self-start.button-topicview(id='button-topicview-' + id, data-topicid=id)
+                        i.fa.fa-arrow-right(aria-hidden='true')
+
+
+
+                small.text-muted
+
+                .progress.w-100
+                    if percent < 37
+                        .progress-bar.bg-danger(role='progressbar', aria-valuenow=percent, aria-valuemin='0', aria-valuemax='100', style='width: ' + percent + '%')
+                    else if percent < 75
+                        .progress-bar.bg-warning(role='progressbar', aria-valuenow=percent, aria-valuemin='0', aria-valuemax='100', style='width: ' + percent + '%')
+                    else
+                        .progress-bar.bg-success(role='progressbar', aria-valuenow=percent, aria-valuemin='0', aria-valuemax='100', style='width: ' + percent + '%')
+
+        .collapse.w-100(id='topic-collapse-' + id, role='tabpanel', aria-labelledby='topic-entry-' + id)
+            ul.list-group.w-100.mt-2
+                +topiclist(i18n('student.topics.available'), values[0])
+                +topiclist(i18n('student.topics.sent'), values[1], 'info')
+                +topiclist(i18n('student.topics.accepted'), values[2],'success')
+                +topiclist(i18n('student.topics.rejected'), values[3] , 'danger')
+                +topiclist(i18n('student.topics.warning'), values[4], 'warning')
+                +topiclist(i18n('student.topics.ms.pass'), values[5], 'success')
+                +topiclist(i18n('student.topics.ms.fail'), values[6], 'danger')
+                +topiclist(i18n('student.topics.passed'), values[7], 'success')
+
 block content
     if (message !== undefined && message && message.message && (message.message.length > 0 ))
         .alert(class='alert-' + message.attribute, role='alert')
@@ -19,8 +52,8 @@ block content
                 .card-block
                     h1.text-center= user.fullName()
                     h2.text-center= user.email
-                    ul
-                        if user.isTeacher
+                    if user.isTeacher
+                        ul
                             li
                                 b Nauczyciel:
                                 i.fa.fa-check(style="color:#64DD17;")
@@ -34,9 +67,9 @@ block content
                                     i.fa.fa-times(style="color:#d9534f;")
                             li
                                 b Labs Grupy:
-                                for l in labs
-                                    b= l.name+','
-                        else
+                                strong=labs.map(l => l.name).join(', ')
+                    else
+                        ul
                             li
                                 b Nauczyciel:
                                 i.fa.fa-times(style="color:#d9534f;")
@@ -44,4 +77,9 @@ block content
                                 b Nr. albumu: #{user.album}
                             li
                                 b Lab grupa: #{user.labGroups[0].name}
+                        .list-group#topics-accordion(role='tablist', aria-multiselectable='true')
+                            each t in topics
+                                +topicentry(t.topicId, t.topicNumber + '. ' + t.topicTitle, t.repliesAccepted / t.taskCount * 100, [t.taskCount, t.repliesCount, t.repliesTeacherAccepted, t.repliesTeacherRejected + t.repliesBlocked, t.repliesCommented, t.repliesMachineAccepted, t.repliesMachineRejected, t.repliesAccepted])
+
+                            
 

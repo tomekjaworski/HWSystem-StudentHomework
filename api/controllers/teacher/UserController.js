@@ -135,7 +135,31 @@ const UserController = module.exports = {
           return res.serverError(err)
         }
 
-        return res.view('teacher/user/profile', {user: user, labs: labs, menuItem: 'users'})
+        if (req.localUser.isTeacher) {
+          return res.view('teacher/user/profile', {user: user, labs: labs, menuItem: 'users'})
+        }
+
+        sails.sendNativeQuery('SELECT topics.id topicId, topics.number topicNumber, topics.title topicTitle, topics.deadline topicDeadline, \n' +
+        '    COUNT(tasks.id) taskCount, \n' +
+        '    COUNT(replies.id) repliesCount, \n' +
+        '    sum(case when replies.teacherStatus = 1 then 1 else 0 end) repliesTeacherAccepted,\n' +
+        '    sum(case when replies.teacherStatus = 2 then 1 else 0 end) repliesTeacherRejected,\n' +
+        '    sum(case when replies.blocked = 1 then 1 else 0 end) repliesBlocked,\n' +
+        '    COUNT(DISTINCT comments.task) repliesCommented,\n' +
+        '    sum(case when replies.machineOk = 1 then 1 else 0 end) repliesMachineAccepted,\n' +
+        '    sum(case when replies.machineOk = 2 then 1 else 0 end) repliesMachineRejected,\n' +
+        '    sum(case when (replies.machineOk = 1 and replies.teacherStatus = 1 AND replies.blocked = 0) then 1 else 0 end) repliesAccepted\n' +
+        '    FROM topics\n' +
+        'LEFT JOIN tasks ON tasks.topic = topics.id\n' +
+        'LEFT JOIN taskreplies AS replies ON replies.task = tasks.id AND replies.student = $1 AND replies.lastSent = 1 AND replies.newest = 1 \n' +
+        'LEFT JOIN ( SELECT task, taskStudent FROM taskcomments GROUP BY task, taskStudent ) comments ON comments.task = tasks.id AND comments.taskStudent = $1\n' +
+        'WHERE topics.visible = 1\n' +
+        'GROUP BY topics.id ORDER BY CAST(topics.number AS UNSIGNED)', [id]).exec((err, data) => {
+          if (err) {
+            return res.serverError(err)
+          }
+          return res.view('teacher/user/profile', {user: user, labs: labs, topics: data.rows, menuItem: 'users'})
+        })
       })
     })
   }
