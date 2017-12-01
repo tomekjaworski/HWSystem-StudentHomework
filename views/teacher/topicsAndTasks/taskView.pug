@@ -37,9 +37,9 @@ block content
                                 | {{/if}}
             .card
                 .card-header.d-flex.justify-content-between
-                    a.btn.btn-primary.btn-sm(href='/teacher/topics-and-tasks/task/edit/' + task.id)=i18n('teacher.tt.edit')
+                    a.btn.btn-primary.btn-sm(href='/teacher/topics-and-tasks/?topic=' + task.topic.id) Powrót
                     strong=i18n('breadcrumbs.tt.previewtask')
-                    button.deleteTaskModalButton.btn.btn-danger.btn-sm(data-id=task.id)=i18n('teacher.tt.remove')
+                    a.btn.btn-primary.btn-sm(href='/teacher/topics-and-tasks/task/edit/' + task.id)=i18n('teacher.tt.edit')
 
                 .card-block
                     .col-12

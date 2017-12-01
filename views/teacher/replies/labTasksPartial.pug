@@ -46,11 +46,19 @@ div.d-flex.labTaskRow.mt-3
                                 .mr-auto.p-2.w-100.replySortableTitle
                                     .btn.btn-sm
                                         .fa.fa-bars.fa-lg
-                                    strong(title=student.name + ' ' + student.surname)=student.name + ' ' + student.surname
+                                    strong(title=student.fullName(true))=student.fullName(true)
+                                        a(href='/teacher/users/profile/' + student.id)  (@#{student.id})
                                 .pt-2.pb-2
                                     button.btn.btn-info.btn-sm(type='button', data-toggle='collapse', data-target='#replyCollapse-' + student.id, aria-expanded='true', aria-controls='#replyCollapse-' + student.id)
                                         .fa.fa-window-minimize
-                                .p-2
+                                .pt-2.pb-2
+                                    if student.reply
+                                        a.btn.btn-primary.btn-sm(href='/teacher/replies/reply/' + student.reply.id, target='_blank')
+                                            .fa.fa-window-maximize
+                                    else
+                                        a.btn.btn-primary.btn-sm(href='/teacher/replies/view/' + task.id + '/student/' + student.id, target='_blank')
+                                            .fa.fa-window-maximize
+                                .pt-2
                                     button.btn.btn-danger.btn-sm.replySortableClose(data-closecard=student.id)
                                         .fa.fa-times
                             //.card-block.collapse(id=(student.reply ? 'replyCollapse-' + student.reply.id : ''))
@@ -62,7 +70,6 @@ div.d-flex.labTaskRow.mt-3
                                             input.form-control.dateInput(id='deadline-student-' + student.id + '-task-' + task.id, type='date', value=student.deadline)
                                             button.btn.btn-success.dateSave(data-studentid=student.id, data-taskid=task.id) Zapisz
                                             button.btn.btn-danger.dateErase(data-studentid=student.id, data-taskid=task.id) Skasuj
-                                hr
 
                                 if !student.reply
                                     div
@@ -94,22 +101,19 @@ div.d-flex.labTaskRow.mt-3
                                         - var machineFix = ['', i18n('student.task.ts.pass'), i18n('student.task.ts.fail')]
                                         div.form-group.row
                                             label.col-4.col-form-label Testy Maszynowe
-                                            .col-8
+                                            .col-6
                                                 span.form-control #{tests[student.reply.machineStatus]}
                                                     if student.reply.machineOk !== 0
                                                         | &nbsp;/&nbsp;
                                                         =machineFix[student.reply.machineOk]
+                                            if student.reply.machineReport
+                                                    a(href = 'http://' + student.reply.machineReport target='_blank') Raport
                                         if student.reply.machineMessage
                                             div.form-group.row
                                                 label.col-4.col-form-label=i18n('student.task.ms.machinemessage.%s', '')
                                                 .col-8
                                                     span.form-control=student.reply.machineMessage
-                                        if student.reply.machineReport
-                                            div.form-group.row
-                                                label.col-4.col-form-label=i18n('student.task.ms.machinereport')
-                                                .col-8
-                                                    span.form-control
-                                                        a(href = 'http://' + student.reply.machineReport target='_blank') Raport
+
                                         div.form-group.row
                                             label.col-4.col-form-label Status
                                             .col-8
@@ -129,7 +133,6 @@ div.d-flex.labTaskRow.mt-3
                                                     // todo: ok
                                                 .col-7
                                                     button.btn.btn-danger.repostTask(id='repost-reply-' + student.reply.id, data-studentid=student.id, data-taskid=task.id, data-studentreplyid=student.reply.id, style=(student.reply.blocked ? 'display:none' : '')) Przydziel zadanie ponownie
-                                    hr
                                     div
                                         h6 Pliki
                                         .studentCardMaxHeight.mb-3
@@ -139,11 +142,7 @@ div.d-flex.labTaskRow.mt-3
                                                     li.list-group-item
                                                         .w-100
                                                             div='Nazwa: ' + file.fileName + '.' + file.fileExt
-                                                            div='Rozmiar: ' + file.fileSize
-
-                                                            div='MimeType: ' + file.fileMimeType
-
-                                                            h7 Tresc:
+                                                                a(href='/teacher/replies/downloadFile/'+file.id)  Pobierz
                                                             div
                                                                 if file.file.err
                                                                     pre(style='border:1px solid black;margin:1px;padding:1px;overflow: auto;white-space: normal;')
@@ -160,7 +159,7 @@ div.d-flex.labTaskRow.mt-3
                                                                     img.img-fluid(src='data:image/bmp;base64,' + file.file)
                                                                 else
                                                                     pre Nieobsługiwane rozszerzenie
-                                hr
+
                                 div
                                     h6 Komentarze:
                                     - let comment = _.last(student.comments)

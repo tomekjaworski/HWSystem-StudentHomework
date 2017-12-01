@@ -81,6 +81,7 @@ module.exports.routes = {
   '/teacher/replies/view/:taskId/student/:studentId': {action: 'teacher/replies/viewOneLatestReply', skipAssets: true},
   '/teacher/replies/reply/:replyId': {action: 'teacher/replies/viewOneReply', skipAssets: true},
   '/ajax/teacher/replies/view/:taskId/lab/:labId': {action: 'teacher/replies/viewTaskOfLab', skipAssets: true},
+  'GET /teacher/replies/downloadFile/:fileid': {action: 'teacher/replies/downloadTaskFile', skipAssets: true},
   'POST /ajax/teacher/replies/setTeacherStatus/:replyid': {action: 'teacher/replies/ajaxSetTeacherStatus', skipAssets: true},
   'POST /ajax/teacher/replies/setBlocked/': {action: 'teacher/replies/ajaxSetBlocked', skipAssets: true},
   'POST /ajax/teacher/replies/repostTask/': {action: 'teacher/replies/ajaxRepostTask', skipAssets: true},
@@ -99,7 +100,6 @@ module.exports.routes = {
   '/teacher/topics-and-tasks/task/edit/:id': {action: 'teacher/topicsandtasks/editTask', skipAssets: true},
   '/teacher/topics-and-tasks/topic/edit/:id': {action: 'teacher/topicsandtasks/editTopic', skipAssets: true},
 
-  '/ajax/task/place': 'teacher/topicsandtasks/ajaxPlace',
   'POST /ajax/task/deleted': 'teacher/topicsandtasks/taskDelete',
   'POST /ajax/topic/deleted': 'teacher/topicsandtasks/topicDelete',
 

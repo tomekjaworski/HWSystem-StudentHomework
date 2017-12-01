@@ -134,7 +134,7 @@
 	"student.task.reply.nofiles": "Nie można przesłać rozwiązania bez plików",
 	"student.task.reply.replyalreadysent": "Rozwiązanie zostało już wysłane",
 	"student.task.reply.nomainfile": "Brak głównego pliku main.c lub main.cpp",
-	"student.task.comment.markasread": "Oznacz wybrane jako przeczytane",
+	"student.task.comment.markasread": "Oznacz wszystkie jako przeczytane",
 	"student.task.comment": "Komentarz",
 	"student.task.comment.send": "Wyślij",
 	"student.task.error.emptyfile": "Plik nie posiada treści. Prawdopodobnie wystąpił błąd podczas wysyłania. Proszę spróbować przesłać plik ponownie",
@@ -241,5 +241,8 @@
 	"teacher.tt.removingtask.error": "Wystąpił błąd podczas usuwania zadania",
 	"teacher.tt.removingtask.%s": "Czy na pewno chcesz usunąć zadanie o ID %s?",
 	"teacher.tt.notasks.%s": "Brak zadań, dodaj tematy używając przycisku \"%s\".",
-	"login.registerSuccess": "Pomyślnie zarejestrowano"
+	"login.registerSuccess": "Pomyślnie zarejestrowano",
+	"student.topics.blocked": "Odpowiedzi zablokowane",
+	"teacher.edit": "Edycja",
+	"actions.markasread": "Oznacz wybrane jako przeczytane"
 }

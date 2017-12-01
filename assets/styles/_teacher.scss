@@ -92,8 +92,8 @@
 
 .replySortRow {
   overflow-x:scroll;
+  overflow-y:hidden;
   white-space: nowrap;
-  height: calc( 100vh - 93px );
 }
 
 .custom-checkbox-notifications {

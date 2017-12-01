@@ -148,10 +148,10 @@
           msg[i].machineStatus = '<i class="fa fa-spinner fa-pulse sfa-lg fa-fw text-primary"></i>'
         } else if (msg[i].machineStatus === 0) {
           msg[i].machineStatus = '-'
-        } else if (msg[i].machineOk === 1) {
-          msg[i].machineStatus = '<i class="fa fa-check-circle fa-lg fa-fw text-success"></i>'
         } else if (msg[i].machineOk === 0) {
           msg[i].machineStatus = '<i class="fa fa-times-circle fa-lg fa-fw text-danger"></i>'
+        } else if (msg[i].machineOk === 1) {
+          msg[i].machineStatus = '<i class="fa fa-check-circle fa-lg fa-fw text-success"></i>'
         }
 
         $('#tasks-tbody').append('<tr class="taskentry" data-taskid="' + msg[i].id + '"><th><a href="/topic/' + topicid + '/task/' + msg[i].id + '">' + msg[i].number + '</a></th><td>' + msg[i].title + '</td><td>' + msg[i].hasReply + '</td><td>' + msg[i].hasComments + '</td><td>' + msg[i].teacherStatus + '</td><td>' + msg[i].machineStatus + '</td><td>' + msg[i].blocked + '</td><td>' + msg[i].deadline + '</td></tr>')

@@ -60,142 +60,143 @@ block content
 
             //-include tasks
             .card
-                .card-header.text-center
-                    strong(title=student.name + ' ' + student.surname)=student.name + ' ' + student.surname
+                .card-header.d-flex.justify-content-between
+                    a
+                    strong(title=student.fullName(true))=student.fullName(true)
+                        a(href='/teacher/users/profile/' + student.id)  (@#{student.id})
+                    a.btn.btn-primary.btn-sm(href='/teacher/replies/view/' + task.id + '?labs=' + lab.id) Odpowiedzi grupy
 
                 .card-block
                     .col-12(id='studentCard-' + student.id)
-                        replySortable(id=(student.reply ? 'reply-' + student.reply.id : ''), style=(student.reply ? (student.reply.blocked ? 'background-color:rgba(150,0,0,0.5);' : (!student.reply.newest ? 'background-color:rgba(100,100,100,0.7);' : (student.reply.teacherStatus === 2 ? 'background-color:rgba(150,0,0,0.5);' : (student.reply.teacherStatus === 1 ? 'background-color:lightgreen;' : '')))) : ''))
-                            .form-group
-                                label Czas na odpowiedź:
+                        if !student.reply.newest
+                            div.alert.alert-danger
+                                strong Uwaga!&nbsp;
+                                | Przeglądasz teraz&nbsp;
+                                b wybraną wersję (po ID)
+                                |  odpowiedzi, jednak to nie jest najnowsza wersja tego studenta.
+                                br
+                                a.alert-link(href='/teacher/replies/view/' + task.id + '/student/' + student.id) Przejdź tutaj aby mieć podgląd najnowszej wersji.
+                        .form-group.row
+                            label.col-4.col-form-label Czas na odpowiedź:
+                            .col-8
                                 .input-group.replySortDate
                                     input.form-control.dateInput(id='deadline-student-' + student.id + '-task-' + task.id, type='date', value=student.deadline)
                                     button.btn.btn-success.dateSave(data-studentid=student.id, data-taskid=task.id) Zapisz
                                     button.btn.btn-danger.dateErase(data-studentid=student.id, data-taskid=task.id) Skasuj
-                            hr
 
-                            if !student.reply
-                                div
-                                    h6 Odpowiedź:
-                                    p Brak
-                            else
-                                div
-                                    h6 Odpowiedź:
-                                    if !student.reply.newest
-                                        div
-                                            b Odpowiedź nie jest ostateczna, student musi przesłać odpowiedź ponownie! Ukazane pliki mogą nie być najnowsze.
-                                    else
-                                        div.form-group.row
-                                            label.col-4.col-form-label Ocena
-                                            .col-8
-                                                .input-group.setTeacherStatus(data-studentreplyid=student.reply.id)
-                                                    button.btn.acc(class=(student.reply.teacherStatus === 1 ? 'btn-success' : 'btn-outline-success') data-studentreplyid=student.reply.id data-val='1' style='border-bottom-right-radius: 0;border-top-right-radius: 0;')
-                                                        i.fa.fa-check
-                                                    button.btn.dec(class=(student.reply.teacherStatus === 2 ? 'btn-danger' : 'btn-outline-danger') data-studentreplyid=student.reply.id data-val='2' style='border-radius: 0;')
-                                                        i.fa.fa-times
-                                                    button.btn.non(class=(student.reply.teacherStatus === 0 ? 'btn-primary' : 'btn-outline-primary') data-studentreplyid=student.reply.id data-val='0' style='border-top-left-radius: 0;border-bottom-left-radius: 0;')
-                                                        i.fa.fa-minus
-                                                //select.form-control.setTeacherStatus(data-studentreplyid=student.reply.id)
-                                                    // each option in [{'id':0, 'name':'Nieocenione'}, {'id':1, 'name': 'Zaliczone'}, {'id':2, 'name':'Niezaliczone'}]
-                                                        if student.reply.teacherStatus === option.id
-                                                            option(value=option.id, selected)=option.name
-                                                        else
-                                                            option(value=option.id)=option.name
-                                    - var tests = [i18n('student.task.ms.notstarted'), i18n('student.task.ms.inqueue'), i18n('student.task.ms.super'), i18n('student.task.ms.note'), i18n('student.task.ms.notices'), i18n('student.task.ms.errors')]
-                                    - var machineFix = ['', i18n('student.task.ts.pass'), i18n('student.task.ts.fail')]
-                                    div.form-group.row
-                                        label.col-4.col-form-label Testy Maszynowe
-                                        .col-8
-                                            span.form-control #{tests[student.reply.machineStatus]}
-                                                if student.reply.machineOk !== 0
-                                                    | &nbsp;/&nbsp;
-                                                    =machineFix[student.reply.machineOk]
-                                    if student.reply.machineMessage
-                                        div.form-group.row
-                                            label.col-4.col-form-label=i18n('student.task.ms.machinemessage.%s', '')
-                                            .col-8
-                                                span.form-control=student.reply.machineMessage
-                                    if student.reply.machineReport
-                                        div.form-group.row
-                                            label.col-4.col-form-label=i18n('student.task.ms.machinereport')
-                                            .col-8
-                                                span.form-control
-                                                    a(href = 'http://' + student.reply.machineReport target='_blank') Raport
-                                    div.form-group.row
-                                        label.col-4.col-form-label Status
-                                        .col-8
-                                            .mt-1
-                                                label.custom-control.custom-checkbox
-                                                    if student.reply.blocked
-                                                        input.custom-control-input.setBlocked(type='checkbox', name='blocked', data-studentid=student.id, data-taskid=task.id, data-studentreplyid=student.reply.id, checked)
-                                                    else
-                                                        input.custom-control-input.setBlocked(type='checkbox', name='blocked', data-studentid=student.id, data-taskid=task.id, data-studentreplyid=student.reply.id)
-                                                    span.custom-control-indicator
-                                                    span.custom-control-description Zablokowane
-
-                                    div Odpowiedź po raz: #{student.reply.count}
-                                    if student.reply.newest
-                                        div
-                                            // TODO: Seba dodaj jakieś potwierdzenie czy aby napewno chce się to zrobić
-                                                // todo: ok
-                                            button.btn.btn-danger.repostTask(id='repost-reply-' + student.reply.id, data-studentid=student.id, data-taskid=task.id, data-studentreplyid=student.reply.id, style=(student.reply.blocked ? 'display:none' : '')) Przydziel zadanie ponownie
-                                hr
-                                div
-                                    h6 Pliki
-                                    .studentCardMaxHeight.mb-3
-                                        ul.list-group
-                                            each file in student.reply.files
-                                                //div(style='border:1px solid black; margin-bottom:10px;background-color:white;')
-                                                li.list-group-item
-                                                    .w-100
-                                                        div='Nazwa: ' + file.fileName + '.' + file.fileExt
-                                                        div='Rozmiar: ' + file.fileSize
-
-                                                        div='MimeType: ' + file.fileMimeType
-
-                                                        h7 Tresc:
-                                                        div
-                                                            if file.file.err
-                                                                pre(style='border:1px solid black;margin:1px;padding:1px;overflow: auto;white-space: normal;')
-                                                                    b BŁĄD
-                                                                    | Brak zawartości pliku, najpewniej został źle przesłany
-                                                            else if file.fileMimeType.includes('text/')
-                                                                if ['h', 'c', 'hpp', 'cpp'].includes(file.fileExt)
-                                                                    pre !{file.file}
-                                                                else
-                                                                    pre=file.file
-                                                            else if file.fileMimeType === 'image/png'
-                                                                img.img-fluid(src='data:image/pmg;base64,' + file.file)
-                                                            else if file.fileMimeType === 'image/bmp'
-                                                                img.img-fluid(src='data:image/bmp;base64,' + file.file)
-                                                            else
-                                                                pre Nieobsługiwane rozszerzenie
-                            hr
+                        if !student.reply
                             div
-                                h6 Komentarze:
-                                - let comment = _.last(student.comments)
-                                - comment = (comment? comment.id : 0)
+                                h6 Odpowiedź:
+                                p Brak
+                        else
+                            div
+                                if !student.reply.newest
+                                    div
+                                        b Odpowiedź nie jest ostateczna! Ukazane pliki mogą nie być najnowsze.
+                                else
+                                    div.form-group.row
+                                        label.col-4.col-form-label Ocena
+                                        .col-8
+                                            .input-group.setTeacherStatus(data-studentreplyid=student.reply.id)
+                                                button.btn.acc(class=(student.reply.teacherStatus === 1 ? 'btn-success' : 'btn-outline-success') data-studentreplyid=student.reply.id data-val='1' style='border-bottom-right-radius: 0;border-top-right-radius: 0;')
+                                                    i.fa.fa-check
+                                                button.btn.dec(class=(student.reply.teacherStatus === 2 ? 'btn-danger' : 'btn-outline-danger') data-studentreplyid=student.reply.id data-val='2' style='border-radius: 0;')
+                                                    i.fa.fa-times
+                                                button.btn.non(class=(student.reply.teacherStatus === 0 ? 'btn-primary' : 'btn-outline-primary') data-studentreplyid=student.reply.id data-val='0' style='border-top-left-radius: 0;border-bottom-left-radius: 0;')
+                                                    i.fa.fa-minus
+                                            //select.form-control.setTeacherStatus(data-studentreplyid=student.reply.id)
+                                                // each option in [{'id':0, 'name':'Nieocenione'}, {'id':1, 'name': 'Zaliczone'}, {'id':2, 'name':'Niezaliczone'}]
+                                                    if student.reply.teacherStatus === option.id
+                                                        option(value=option.id, selected)=option.name
+                                                    else
+                                                        option(value=option.id)=option.name
+                                - var tests = [i18n('student.task.ms.notstarted'), i18n('student.task.ms.inqueue'), i18n('student.task.ms.super'), i18n('student.task.ms.note'), i18n('student.task.ms.notices'), i18n('student.task.ms.errors')]
+                                - var machineFix = ['', i18n('student.task.ts.pass'), i18n('student.task.ts.fail')]
+                                div.form-group.row
+                                    label.col-4.col-form-label Testy Maszynowe
+                                    .col-6
+                                        span.form-control #{tests[student.reply.machineStatus]}
+                                            if student.reply.machineOk !== 0
+                                                | &nbsp;/&nbsp;
+                                                =machineFix[student.reply.machineOk]
+                                    if student.reply.machineReport
+                                        a(href = 'http://' + student.reply.machineReport target='_blank') Raport
+                                if student.reply.machineMessage
+                                    div.form-group.row
+                                        label.col-4.col-form-label=i18n('student.task.ms.machinemessage.%s', '')
+                                        .col-8
+                                            span.form-control=student.reply.machineMessage
+                                div.form-group.row
+                                    label.col-4.col-form-label Status
+                                    .col-8
+                                        .mt-1
+                                            label.custom-control.custom-checkbox
+                                                if student.reply.blocked
+                                                    input.custom-control-input.setBlocked(type='checkbox', name='blocked', data-studentid=student.id, data-taskid=task.id, data-studentreplyid=student.reply.id, checked)
+                                                else
+                                                    input.custom-control-input.setBlocked(type='checkbox', name='blocked', data-studentid=student.id, data-taskid=task.id, data-studentreplyid=student.reply.id)
+                                                span.custom-control-indicator
+                                                span.custom-control-description Zablokowane
+
+                                div.form-group.row
+                                    label.col-5.col-form-label Odpowiedź po raz: #{student.reply.count}
+                                    if student.reply.newest
+                                        // TODO: Seba dodaj jakieś potwierdzenie czy aby napewno chce się to zrobić
+                                            // todo: ok
+                                        .col-7
+                                            button.btn.btn-danger.repostTask(id='repost-reply-' + student.reply.id, data-studentid=student.id, data-taskid=task.id, data-studentreplyid=student.reply.id, style=(student.reply.blocked ? 'display:none' : '')) Przydziel zadanie ponownie
+                                div
+                                h6 Pliki
                                 .studentCardMaxHeight.mb-3
-                                    .list-group(id='comments-student-' + student.id, data-last=comment)
-                                        if student.comments
-                                            each com in student.comments
-                                                +commentBlock(com)
-                                //-div(id='comments-student-' + student.id, data-last=comment, style='max-height:400px;overflow:auto')
+                                    ul.list-group
+                                        each file in student.reply.files
+                                            //div(style='border:1px solid black; margin-bottom:10px;background-color:white;')
+                                            li.list-group-item
+                                                .w-100
+                                                    div='Nazwa: ' + file.fileName + '.' + file.fileExt
+                                                        a(href='/teacher/replies/downloadFile/' + file.id)  Pobierz
+                                                    div
+                                                        if file.file.err
+                                                            pre(style='border:1px solid black;margin:1px;padding:1px;overflow: auto;white-space: normal;')
+                                                                b BŁĄD
+                                                                | Brak zawartości pliku, najpewniej został źle przesłany
+                                                        else if file.fileMimeType.includes('text/')
+                                                            if ['h', 'c', 'hpp', 'cpp'].includes(file.fileExt)
+                                                                pre !{file.file}
+                                                            else
+                                                                pre=file.file
+                                                        else if file.fileMimeType === 'image/png'
+                                                            img.img-fluid(src='data:image/pmg;base64,' + file.file)
+                                                        else if file.fileMimeType === 'image/bmp'
+                                                            img.img-fluid(src='data:image/bmp;base64,' + file.file)
+                                                        else
+                                                            pre Nieobsługiwane rozszerzenie
+
+                        div
+                            h6 Komentarze:
+                            - let comment = _.last(student.comments)
+                            - comment = (comment? comment.id : 0)
+                            .studentCardMaxHeight.mb-3
+                                .list-group(id='comments-student-' + student.id, data-last=comment)
                                     if student.comments
-                                        each comment in student.comments
-                                            div(id='comments-student-' + student.id + '-comment-' + comment.id, style='border:1px solid black;margin:1px;padding:1px;')
-                                                div='Autor: ' + comment.user.name + ' ' + comment.user.surname
-                                                div='Data: ' + comment.createdAt
-                                                div='Przeczytane: ' + comment.viewed
-                                                div Treść:
-                                                    div(style='border:1px solid black;margin:1px;padding:1px;background-color:white;')
-                                                        p(style='overflow: auto;margin: 0;white-space: normal;')=comment.comment
-                                div(id='loading-student-' + student.id, style='display:none')
-                                    | Ładowanie
-                                    i.fa.fa-spinner.fa-spin
-                                .input-group
-                                    textarea.form-control.task-comment-textarea(id='commentTextArea-' + student.id, type='text', placeholder='Komentarz', name='comment', rows='1')
-                                    span.input-group-btn
-                                        button.sendCommentButton.btn.btn-primary(data-studentid=student.id, data-taskid=task.id, type='button') Wyślij
-                                        button.checkCommentsButton.btn.btn-primary(data-studentid=student.id, data-taskid=task.id, type='button') Odśwież
+                                        each com in student.comments
+                                            +commentBlock(com)
+                            //-div(id='comments-student-' + student.id, data-last=comment, style='max-height:400px;overflow:auto')
+                                if student.comments
+                                    each comment in student.comments
+                                        div(id='comments-student-' + student.id + '-comment-' + comment.id, style='border:1px solid black;margin:1px;padding:1px;')
+                                            div='Autor: ' + comment.user.name + ' ' + comment.user.surname
+                                            div='Data: ' + comment.createdAt
+                                            div='Przeczytane: ' + comment.viewed
+                                            div Treść:
+                                                div(style='border:1px solid black;margin:1px;padding:1px;background-color:white;')
+                                                    p(style='overflow: auto;margin: 0;white-space: normal;')=comment.comment
+                            div(id='loading-student-' + student.id, style='display:none')
+                                | Ładowanie
+                                i.fa.fa-spinner.fa-spin
+                            .input-group
+                                textarea.form-control.task-comment-textarea(id='commentTextArea-' + student.id, type='text', placeholder='Komentarz', name='comment', rows='1')
+                                span.input-group-btn
+                                    button.sendCommentButton.btn.btn-primary(data-studentid=student.id, data-taskid=task.id, type='button') Wyślij
+                                    button.checkCommentsButton.btn.btn-primary(data-studentid=student.id, data-taskid=task.id, type='button') Odśwież
 

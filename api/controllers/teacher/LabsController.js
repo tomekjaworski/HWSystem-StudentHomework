@@ -51,7 +51,7 @@ const LabsController = module.exports = {
         if (err) {
           return res.serverError(err)
         }
-        lab.students = students
+        lab.students = students.sort((a, b) => a.student.surname.localeCompare(b.student.surname))
         StudentsLabGroups.count({labgroup: id, active: false}).exec((err, count) => {
           if (err) {
             return res.serverError(err)
@@ -200,7 +200,7 @@ const LabsController = module.exports = {
         if (err) {
           return res.serverError(err)
         }
-        lab.students = students
+        lab.students = students.sort((a, b) => a.student.name.localeCompare(b.student.name))
         StudentsLabGroups.count({labgroup: id, active: true}).exec((err, count) => {
           if (err) {
             return res.serverError(err)

@@ -16,6 +16,7 @@ const TopicsAndTasksController = module.exports = {
         return res.serverError(err)
       }
       topics = _.forEach(topics, (t) => {
+        t.tasks.sort((a, b) => a.number.localeCompare(b.number, {}, {numeric: true}))
         try {
           t.deadline = dateFormat(t.deadline, 'dd/mm/yyyy')
         } catch (err) {
@@ -23,7 +24,7 @@ const TopicsAndTasksController = module.exports = {
         }
       })
       return res.view('teacher/topicsAndTasks/list', {
-        data: topics,
+        data: topics.sort((a, b) => a.number.localeCompare(b.number, {}, {numeric: true})),
         menuItem: 'topics',
         breadcrumb: 'list'
       })

@@ -36,12 +36,15 @@ block content
                                 label(for='inputLabSelect')=i18n('settings.lab.choose')
                                 select#inputLabSelect.selectpicker(name='lab', data-live-search='true')
                                     //- console.log(labs)
-
+                                    - var hasGroup = false
                                     each l in labs
                                         if l.id === studentLab
+                                            - hasGroup = true
                                             option(value=l.name, data-subtext=l.owner.fullName() selected)= l.name
                                         else
                                             option(value=l.name, data-subtext=l.owner.fullName())= l.name
+                                    if !hasGroup
+                                        option(selected, disabled) Brak
                             .form-group
                                 label(for='inputLabSelectPass')=i18n('settings.lab.confirmpass')
                                 input#inputLabSelectPass.form-control(type='password', name='passlabconf', required)

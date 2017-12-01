@@ -13,32 +13,48 @@ block content
                             a.nav-link.active()=i18n('teacher.listing')
                         li.nav-item
                             a.nav-link(href='/teacher/users/add')=i18n('teacher.adding')
-
+                .card-header.nav-header-inner
+                    ul.nav.nav-tabs.nav-fill.task-tab
+                        li.nav-item
+                            if teachers
+                                a.nav-link(href='/teacher/users') Studenci
+                                    span.badge.badge-pill.badge-primary=count
+                            else
+                                a.nav-link.active Studenci
+                                    span.badge.badge-pill.badge-primary=users.length
+                        li.nav-item
+                            if teachers
+                                a.nav-link.active Prowadzący
+                                    span.badge.badge-pill.badge-primary=users.length
+                            else
+                                a.nav-link(href='/teacher/users?teachers=true') Prowadzący
+                                    span.badge.badge-pill.badge-primary=count
                 table.table.table-striped.table-hover.table-responsive.table-grouplist.wb-initial
                     thead
                         tr
                             th.text-nowrap=i18n('teacher.table.id')
                             th.w-100=i18n('teacher.table.fistlastname')
+                            if teachers
+                                th Grup
                             th
-                            th.text-nowrap Nauczyciel
-                            th.text.nowrap Admin
+                            if teachers && localUser.isAdmin
+                                th.text.nowrap Admin
                     tbody
                         each user in users
                             tr.usersSelectUser(data-id=user.id)
                                 th(scope='row')=user.id
-                                td=user.fullName()
+                                td=user.fullName(true)
+                                if teachers
+                                    td=user.labs
                                 td
-                                    a.btn.btn-sm.btn-primary.editUserButton(href='#', data-id=user.id) edytuj
-                                td.text-center
-                                    if user.isTeacher
-                                        i.fa.fa-check.text-success
-                                    else
-                                        i.fa.fa-times.text-danger
-                                td.text-center
-                                    if user.isAdmin
-                                        i.fa.fa-check.text-success
-                                    else
-                                        i.fa.fa-times.text-danger
+                                    if !user.isAdmin || (user.isAdmin && localUser.isAdmin)
+                                        a.btn.btn-sm.btn-primary.editUserButton(href='#', data-id=user.id) edytuj
+                                if teachers && localUser.isAdmin
+                                    td.text-center
+                                        if user.isAdmin
+                                            i.fa.fa-check.text-success
+                                        else
+                                            i.fa.fa-times.text-danger
 
 
 

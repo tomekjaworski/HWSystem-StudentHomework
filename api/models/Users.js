@@ -81,9 +81,13 @@ const Users = module.exports = {
   },
 
   methods: {
-    fullName: function () {
+    fullName: function (inverse) {
       if (this.name && this.surname) {
-        return this.name + ' ' + this.surname
+        if (!inverse) {
+          return this.name + ' ' + this.surname
+        } else {
+          return this.surname + ' ' + this.name
+        }
       }
       return null
     }

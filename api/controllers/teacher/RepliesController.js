@@ -15,8 +15,11 @@ const RepliesController = module.exports = {
       if (err) {
         return res.serverError(err)
       }
+      _.forEach(topics, topic => {
+        topic.tasks.sort((a, b) => a.number.localeCompare(b.number, {}, {numeric: true}))
+      })
       return res.view('teacher/replies/index',
-        {title: req.i18n.__('teacher.replies.teacherpanel'), menuItem: 'replies', data: topics})
+        {title: req.i18n.__('teacher.replies.teacherpanel'), menuItem: 'replies', data: topics.sort((a, b) => a.number.localeCompare(b.number, {}, {numeric: true}))})
     })
   },
 
@@ -323,7 +326,7 @@ WHERE slb.student =$2 AND slb.active=1`, [task.id, student.id]).exec((err, resul
                 data: null
               })
           }
-          let students = lab.map(e => e.student)
+          let students = lab.map(e => e.student).sort((a, b) => a.surname.localeCompare(b.surname))
           let studentsId = lab.map(e => e.student.id)
           sails.sendNativeQuery(`SELECT slb.student,
 (case when scdl.task IS NOT NULL then scdl.deadline else
@@ -439,6 +442,27 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
           })
         })
       })
+    })
+  },
+
+  downloadTaskFile (req, res) {
+    const fileid = parseInt(req.param('fileid'), '10')
+    if (!_.isInteger(fileid)) {
+      return res.badRequest()
+    }
+    MySqlFile({convert: false}).read(fileid, (err, file) => {
+      if (err) {
+        if (err.code === 400) {
+          return res.notFound()
+        }
+        return res.serverError(err)
+      }
+      if (file.file) {
+        res.set('Content-disposition', 'attachment; filename=' + file.fileName + '.' + file.fileExt)
+        return res.end(Buffer.from(file.file))
+      } else {
+        return res.serverError()
+      }
     })
   },
 

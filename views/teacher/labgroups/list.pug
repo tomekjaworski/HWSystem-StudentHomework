@@ -27,7 +27,6 @@ block content
                                 th.w-50=i18n('teacher.table.description')
                                 th=i18n('teacher.table.status')
                                 th=i18n('teacher.table.students')
-                                th=i18n('teacher.table.students.pending')
                                 th.w-25=i18n('teacher.table.teacher')
                         tbody
                             if data && data.length !== 0
@@ -37,8 +36,7 @@ block content
                                         td.wb-breakword.mw-100px=group.name
                                         td.wb-breakword.mw-100px=group.description
                                         td=group.active ? i18n('teacher.table.visible') : i18n('teacher.table.invisible')
-                                        td=group.studentsCount
-                                        td=group.studentsNotCount
+                                        td=group.studentsCount + ' / ' + group.studentsNotCount
                                         td=group.ownerName + ' ' + group.ownerSurname
                             else
                                 tr

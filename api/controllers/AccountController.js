@@ -256,8 +256,9 @@ const AccountController = module.exports = {
             if (err) {
               return res.serverError(err)
             }
+            let labgroup = lab ? lab.labgroup : null
 
-            return res.view('account/settings', {labs: labs, studentLab: lab.labgroup})
+            return res.view('account/settings', {labs: labs, studentLab: labgroup})
           })
         })
         break

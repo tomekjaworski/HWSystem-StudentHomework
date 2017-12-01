@@ -176,7 +176,7 @@ block content
                     //-h1 Topic: #{topic.id}
                     - let teacherStatus = [i18n('student.task.ts.none'), i18n('student.task.ts.pass'), i18n('student.task.ts.fail')]
                     - let machineStatus = [i18n('student.task.ms.notstarted'), i18n('student.task.ms.inqueue'), i18n('student.task.ms.super'), i18n('student.task.ms.note'), i18n('student.task.ms.notices'), i18n('student.task.ms.errors')]
-                    - let machineFix = ['', i18n('student.task.ts.pass'), i18n('student.task.ts.fail')]
+                    - let machineFix = [i18n('student.task.ts.fail'), i18n('student.task.ts.pass')]
                     h3=i18n('student.task.task')
                         span #{topic.number}. #{task.number}. #{task.title}
                     h5=i18n('student.task.deadline.%s', deadline)
@@ -186,7 +186,7 @@ block content
                                 h5=i18n('student.task.lastsent.a')
                             h6=i18n('student.task.ts.status.%s', teacherStatus[taskReply.teacherStatus])
                             h6=i18n('student.task.ms.status.%s', machineStatus[taskReply.machineStatus])
-                                if taskReply.machineOk !== 0
+                                if ![0,1].includes(taskReply.machineStatus)
                                     | &nbsp;/&nbsp;
                                     =machineFix[taskReply.machineOk]
                             if taskReply.machineMessage

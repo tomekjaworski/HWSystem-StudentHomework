@@ -52,17 +52,18 @@ block content
                                 label.col-sm-4.col-form-label(for='inputAlbum')=i18n('register.album')
                                 .col-sm-8
                                     input#inputAlbum.form-control(type='text', placeholder=i18n('register.album.placeholder'), name='album', required, value=(param ? param('album') : ''))
-                        div#isTeacher(style=(param && param('teacher') ? '' : 'display: none'))
-                            .form-group.row
-                                label.col-sm-4.col-form-label=i18n('teacher.users.admin')
-                                .col-sm-8.form-check-custom
-                                    label.custom-control.custom-checkbox
-                                        if (param && param('admin'))
-                                            input.custom-control-input#inputAdmin(type='checkbox', name='admin' checked)
-                                        else
-                                            input.custom-control-input#inputAdmin(type='checkbox', name='admin')
-                                        span.custom-control-indicator
-                                        span.custom-control-description=i18n('teacher.users.useris.%s', i18n('teacher.users.isadmin'))
+                        if localUser.isAdmin
+                            div#isTeacher(style=(param && param('teacher') ? '' : 'display: none'))
+                                .form-group.row
+                                    label.col-sm-4.col-form-label=i18n('teacher.users.admin')
+                                    .col-sm-8.form-check-custom
+                                        label.custom-control.custom-checkbox
+                                            if (param && param('admin'))
+                                                input.custom-control-input#inputAdmin(type='checkbox', name='admin' checked)
+                                            else
+                                                input.custom-control-input#inputAdmin(type='checkbox', name='admin')
+                                            span.custom-control-indicator
+                                            span.custom-control-description=i18n('teacher.users.useris.%s', i18n('teacher.users.isadmin'))
                         .form-group.row
                             label.col-sm-4.col-form-label(for='inputEmail')=i18n('register.email')
                             .col-sm-8

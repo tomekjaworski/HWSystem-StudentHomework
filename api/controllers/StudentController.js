@@ -105,7 +105,7 @@ const StudentController = module.exports = {
           '(case when scd.task IS NOT NULL then scd.deadline else\n' +
           ' (case when groupdeadline.deadline IS NOT NULL then groupdeadline.deadline else topics.deadline end) end) deadline\n' +
           'FROM tasks\n' +
-          'LEFT JOIN taskreplies reply ON reply.task = tasks.id AND reply.student = $1 AND reply.lastSent = 1 AND reply.newest = 1 \n' +
+          'LEFT JOIN taskreplies reply ON reply.task = tasks.id AND reply.student = $1 AND reply.newest = 1 \n' +
           'LEFT JOIN taskcomments comments ON comments.task = tasks.id AND comments.taskStudent = $1 AND comments.viewed = false\n' +
           'LEFT JOIN topics ON topics.id = tasks.topic\n' +
           'LEFT JOIN studentcustomdeadlines scd ON scd.task = tasks.id AND scd.student = $1 \n' +

@@ -1,37 +1,41 @@
 extends ../../includes/layout
 
-mixin topicentry(id, title, percent, values)
-    .card.list-group-item.list-group-item-hover.flex-column.align-items-start.topic-entry.collapsed(data-toggle='collapse', data-parent='#topics-accordion', href='#topic-collapse-' + id, aria-expanded='false', aria-controls='topic-collapse-' + id, id='topic-a-' + id)
-        .w-100(id='topic-entry-' + id, role='tab')
-            a
-                //-(href='/account/topics/'+ id + '/tasks')
-                .d-flex.w-100.justify-content-between.mb-2
-                    h5.mb-2.mr-2.topic-title=title
-                    button.btn.btn-secondary.align-self-start.button-topicview(id='button-topicview-' + id, data-topicid=id)
-                        i.fa.fa-arrow-right(aria-hidden='true')
+mixin topicentry(data, percent)
+    .card.list-group-item
+        .w-100
+            .d-flex.w-100.justify-content-between.mb-2
+                h5.mb-2.mr-2.topic-title=data.topicNumber + '. ' + data.topicTitle +' ('+data.taskCount+')'
 
 
 
-                small.text-muted
+            small.text-muted
 
-                .progress.w-100
-                    if percent < 37
-                        .progress-bar.bg-danger(role='progressbar', aria-valuenow=percent, aria-valuemin='0', aria-valuemax='100', style='width: ' + percent + '%')
-                    else if percent < 75
-                        .progress-bar.bg-warning(role='progressbar', aria-valuenow=percent, aria-valuemin='0', aria-valuemax='100', style='width: ' + percent + '%')
-                    else
-                        .progress-bar.bg-success(role='progressbar', aria-valuenow=percent, aria-valuemin='0', aria-valuemax='100', style='width: ' + percent + '%')
+            .progress.w-100
+                if percent < 37
+                    .progress-bar.bg-danger(role='progressbar', aria-valuenow=percent, aria-valuemin='0', aria-valuemax='100', style='width: ' + percent + '%')
+                else if percent < 75
+                    .progress-bar.bg-warning(role='progressbar', aria-valuenow=percent, aria-valuemin='0', aria-valuemax='100', style='width: ' + percent + '%')
+                else
+                    .progress-bar.bg-success(role='progressbar', aria-valuenow=percent, aria-valuemin='0', aria-valuemax='100', style='width: ' + percent + '%')
 
-        .collapse.w-100(id='topic-collapse-' + id, role='tabpanel', aria-labelledby='topic-entry-' + id)
-            ul.list-group.w-100.mt-2
-                +topiclist(i18n('student.topics.available'), values[0])
-                +topiclist(i18n('student.topics.sent'), values[1], 'info')
-                +topiclist(i18n('student.topics.accepted'), values[2],'success')
-                +topiclist(i18n('student.topics.rejected'), values[3] , 'danger')
-                +topiclist(i18n('student.topics.warning'), values[4], 'warning')
-                +topiclist(i18n('student.topics.ms.pass'), values[5], 'success')
-                +topiclist(i18n('student.topics.ms.fail'), values[6], 'danger')
-                +topiclist(i18n('student.topics.passed'), values[7], 'success')
+        .w-100
+            table.table-bordered.table.table-sm
+                thead
+                    tr
+                        th Przesłane
+                        th Zaakceptowane
+                        th Odrzucone
+                        th Z pozytywnym testem
+                        th Zablokowane
+                        th Zatwierdzone
+                tbody
+                    tr
+                        td=data.repliesCount
+                        td=data.repliesTeacherAccepted
+                        td=data.repliesTeacherRejected
+                        td=data.repliesMachineAccepted
+                        td=data.repliesBlocked
+                        td=data.repliesAccepted
 
 block content
     if (message !== undefined && message && message.message && (message.message.length > 0 ))
@@ -55,31 +59,44 @@ block content
                     if user.isTeacher
                         ul
                             li
-                                b Nauczyciel:
+                                b Nauczyciel:&nbsp;
                                 i.fa.fa-check(style="color:#64DD17;")
                             if user.isAdmin
                                 li
-                                    b Admin:
+                                    b Admin:&nbsp;
                                     i.fa.fa-check(style="color:#64DD17;")
                             else
                                 li
-                                    b Admin:
+                                    b Admin:&nbsp;
                                     i.fa.fa-times(style="color:#d9534f;")
                             li
-                                b Labs Grupy:
-                                strong=labs.map(l => l.name).join(', ')
+                                b LabGrupy:
+                                strong  !{labs.map(l => '<a href=\'/teacher/labgroup/view/' + l.id +'\'>' + l.name + '</a>').join(', ')}
                     else
                         ul
                             li
-                                b Nauczyciel:
-                                i.fa.fa-times(style="color:#d9534f;")
-                            li
                                 b Nr. albumu: #{user.album}
                             li
-                                b Lab grupa: #{user.labGroups[0].name}
-                        .list-group#topics-accordion(role='tablist', aria-multiselectable='true')
-                            each t in topics
-                                +topicentry(t.topicId, t.topicNumber + '. ' + t.topicTitle, t.repliesAccepted / t.taskCount * 100, [t.taskCount, t.repliesCount, t.repliesTeacherAccepted, t.repliesTeacherRejected + t.repliesBlocked, t.repliesCommented, t.repliesMachineAccepted, t.repliesMachineRejected, t.repliesAccepted])
+                                b Lab grupa:&nbsp;
+                                    if user.labGroups[0]
+                                        =user.labGroups[0].name
+                                    else
+                                        | Brak
+                        .card
+                            - var accepted = _.sum(_.values(topics.map(t => t.repliesAccepted)))
+                            - var all = _.sum(_.values(topics.map(t => t.taskCount)))
+                            - var percent = accepted / all * 100
+                            .card-header
+                                strong Ogólny postęp
+                            .card-block
+                                .well Zaakceptowanych #{accepted} odpowiedzi z #{all} zadań
+                                .progress.w-100
+                                    if percent < 37
+                                        .progress-bar.bg-danger(role='progressbar', aria-valuenow=percent, aria-valuemin='0', aria-valuemax='100', style='width: ' + percent + '%')
+                                    else if percent < 75
+                                        .progress-bar.bg-warning(role='progressbar', aria-valuenow=percent, aria-valuemin='0', aria-valuemax='100', style='width: ' + percent + '%')
+                                    else
+                                        .progress-bar.bg-success(role='progressbar', aria-valuenow=percent, aria-valuemin='0', aria-valuemax='100', style='width: ' + percent + '%')
 
-                            
-
+                        each t in topics
+                                +topicentry(t, t.repliesAccepted / t.taskCount * 100)

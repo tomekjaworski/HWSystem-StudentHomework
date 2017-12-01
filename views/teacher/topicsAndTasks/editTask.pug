@@ -41,7 +41,7 @@ block content
             form(method='post')
                 .card
                     .card-header.text-center.d-flex.justify-content-between.align-items-start
-                        input.btn.btn-primary.btn-sm(type='submit', value=i18n('teacher.save'))
+                        a.btn.btn-primary.btn-sm(href='/teacher/topics-and-tasks/?topic=' + task.topic) Powrót do listy
                         strong.mr-2.ml-2 Edycja Zadania - #{task.title}
                         button.deleteTaskModalButton.btn.btn-sm.btn-danger(data-id=task.id)=i18n('teacher.tt.remove')
                     .card-block

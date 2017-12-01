@@ -13,16 +13,14 @@ block content
                     table.table.table-striped.table-hover.table-grouplist.wb-initial
                         thead
                             tr
-                                th ID
                                 th.w-100 Temat
-                                th
+                                th ID
                         tbody#tablebody
                             if data && data.length !== 0
                                 each topic in data
                                     tr.repliesSelectTopic(onclick='repliesSelectTopic('+topic.id+')')
-                                        th(scope='row')=topic.id
                                         td.wb-breakword=topic.number + '. ' + topic.title
-                                        td
+                                        th(scope='row')=topic.id
                             else
                                 tr
                                     td.text-center(colspan=2) Brak tematów w bazie

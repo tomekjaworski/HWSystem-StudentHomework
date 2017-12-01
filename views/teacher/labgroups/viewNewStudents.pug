@@ -49,8 +49,8 @@ block content
                                     td.text-center(colspan='4') Brak studentów do aktywacji
                             each student in data.students
                                 tr
-                                    th(scope='row')=student.student.id
-                                    td.wb-breakword.mw-200px=student.student.fullName()
+                                    th(scope='row', style='cursor: pointer', onclick='window.location="/teacher/users/profile/' + student.student.id + '"')=student.student.id
+                                    td.wb-breakword.mw-200px(style='cursor: pointer', onclick='window.location="/teacher/users/profile/' + student.student.id + '"')=student.student.fullName(true)
                                     td=student.student.album
                                     td
                                         a.btn.btn-sm.btn-success(href='?active='+student.student.id) Aktywuj
