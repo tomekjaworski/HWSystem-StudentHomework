@@ -124,16 +124,21 @@ const ManageReplies = module.exports = {
               if (err) {
                 return cb(err)
               }
-              if (passed) {
-                return cb(null)
-              } else {
-                ManageReplies.repostTask(reply.student, reply.task, null, (err) => {
-                  if (err) {
-                    return cb(err)
-                  }
+              RecentAction.changeMachineStatus(reply.student, reply.task, (err) => {
+                if (err) {
+                  return cb(err)
+                }
+                if (passed) {
                   return cb(null)
-                })
-              }
+                } else {
+                  ManageReplies.repostTask(reply.student, reply.task, null, (err) => {
+                    if (err) {
+                      return cb(err)
+                    }
+                    return cb(null)
+                  })
+                }
+              })
             })
           })
         })
@@ -141,7 +146,7 @@ const ManageReplies = module.exports = {
     }
   },
 
-  repostTask: function (studentId, taskId, teacherName, cb) {
+  repostTask: function (studentId, taskId, teacher, cb) {
     Users.findOne(studentId).populate('labGroups').exec((err, student) => {
       if (err) {
         return cb(err)
@@ -222,7 +227,7 @@ const ManageReplies = module.exports = {
                     return cb(err)
                   }
                   // todo: przebudowac to zeby bylo mozna przetlumaczyc w layoucie
-                  let msg = (teacherName ? 'Prowadzący ' + teacherName : 'System') + ' odblokował zadanie w celu jego edycji i ponownego przesłania'
+                  let msg = (typeof teacher === 'object' ? 'Prowadzący ' + teacher.fullName() : 'System') + ' odblokował zadanie w celu jego edycji i ponownego przesłania'
                   TaskComments.create({
                     taskStudent: studentId,
                     task: taskId,
@@ -233,7 +238,12 @@ const ManageReplies = module.exports = {
                     if (err) {
                       return cb(err)
                     }
-                    cb(null)
+                    RecentAction.repostTask(studentId, taskId, (typeof teacher === 'object' ? teacher.id : null), (err) => {
+                      if (err) {
+                        return cb(err)
+                      }
+                      return cb(null)
+                    })
                   })
                 })
               })

@@ -22,6 +22,7 @@ module.exports = function (grunt) {
           'MySqlFile',
           'RecentAction',
           'RecentTeacherActions',
+          'RecentStudentActions',
           'Roles',
           'sails',
           'SimpleMDE',

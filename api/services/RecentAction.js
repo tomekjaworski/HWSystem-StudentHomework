@@ -82,6 +82,109 @@ const RecentAction = module.exports = {
       })
   },
 
+  repostTask: function (studentId, taskId, teacherId, cb) {
+    RecentStudentActions.findOrCreate({
+      type: 1,
+      student: studentId,
+      teacher: teacherId,
+      task: taskId,
+      seen: false
+    }, {
+      type: 1,
+      student: studentId,
+      teacher: teacherId,
+      task: taskId
+    }).exec((err, action, created) => {
+      if (err) {
+        return cb(err)
+      }
+      if(!created) {
+        RecentStudentActions.update(action.id, {updatedAt: Date.now()}).exec((err) => {
+          if (err) {
+            return cb(err)
+          }
+          return cb(null)
+        })
+      } else {
+        return cb(null)
+      }
+    })
+  },
+
+  changeMachineStatus: function (studentId, taskId, machineOk, raportLink, cb) {
+    RecentStudentActions.create({
+      type: 2,
+      student: studentId,
+      data: raportLink,
+      meta: machineOk,
+      task: taskId
+    }).exec((err) => {
+      if (err) {
+        return cb(err)
+      }
+      return cb(null)
+    })
+  },
+
+  addTeacherComment: function (studentId, taskId, teacherId, cb) {
+    RecentStudentActions.findOrCreate({
+      type: 3,
+      student: studentId,
+      teacher: teacherId,
+      task: taskId,
+      seen: false
+    }, {
+      type: 3,
+      student: studentId,
+      teacher: teacherId,
+      task: taskId
+    }).exec((err, action, created) => {
+      if (err) {
+        return cb(err)
+      }
+      if(!created) {
+        RecentStudentActions.update(action.id, {updatedAt: Date.now()}).exec((err) => {
+          if (err) {
+            return cb(err)
+          }
+          return cb(null)
+        })
+      } else {
+        return cb(null)
+      }
+    })
+  },
+
+  changeBlockedStatus: function (studentId, taskId, teacherId, blocked, cb) {
+    RecentStudentActions.create({
+      type: 4,
+      student: studentId,
+      teacher: teacherId,
+      meta: blocked,
+      task: taskId
+    }).exec((err) => {
+      if (err) {
+        return cb(err)
+      }
+      return cb(null)
+    })
+  },
+
+  changeTeacherStatus: function (studentId, taskId, teacherId, status, cb) {
+    RecentStudentActions.create({
+      type: 5,
+      student: studentId,
+      teacher: teacherId,
+      meta: status,
+      task: taskId
+    }).exec((err) => {
+      if (err) {
+        return cb(err)
+      }
+      return cb(null)
+    })
+  },
+
   addStudentComment: function (studentId, taskId, labgroupId, cb) {
     RecentTeacherActions.findOrCreate({
       student: studentId,

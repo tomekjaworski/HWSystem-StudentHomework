@@ -71,18 +71,32 @@ module.exports.http = {
     },
 
     userNotifs: function (req, res, next) {
-      if (req.localUser && req.localUser.isTeacher) {
-        LabGroups.find({where: {owner: req.localUser.id}, select: ['id']}).exec((err, labs) => {
-          if (err) return res.serverError(err)
-          if (labs.length === 0) {
-            return next()
-          }
-          RecentTeacherActions.count({labgroup: labs.map(l => l.id), seen: false}).exec((err, actions) => {
-            if (err) return res.serverError(err)
+      if (req.localUser) {
+        if (req.localUser.isTeacher) {
+          LabGroups.find({where: {owner: req.localUser.id}, select: ['id']}).exec((err, labs) => {
+            if (err) {
+              return res.serverError(err)
+            }
+            if (labs.length === 0) {
+              return next()
+            }
+            RecentTeacherActions.count({labgroup: labs.map(l => l.id), seen: false}).exec((err, actions) => {
+              if (err) {
+                return res.serverError(err)
+              }
+              req.options.locals.notifs = actions
+              return next()
+            })
+          })
+        } else {
+          RecentStudentActions.count({student: req.localUser.id, seen: false}).exec((err, actions) => {
+            if (err) {
+              return res.serverError(err)
+            }
             req.options.locals.notifs = actions
             return next()
           })
-        })
+        }
       } else {
         return next()
       }

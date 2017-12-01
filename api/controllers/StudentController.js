@@ -63,9 +63,37 @@ const StudentController = module.exports = {
           if (!isNaN(taskView)) {
             ret.taskView = taskView
           }
-          return res.view('student/index', {data: ret})
+          RecentStudentActions.find({seen: false, student: req.localUser.id}).populate('teacher').populate('task').sort('updatedAt DESC').exec((err, actions) => {
+            if (err) {
+              return res.serverError(err)
+            }
+            _.forEach(actions, (a) => {
+              try {
+                a.updatedAt = dateFormat(a.updatedAt, 'HH:MM dd/mm/yyyy')
+              } catch (err) {
+                return res.serverError(err)
+              }
+            })
+            return res.view('student/index', {
+              data: ret,
+              actions: actions
+            })
+          })
         }
       )
+    })
+  },
+
+  markAsRead: function (req, res) {
+    let actions = req.param('actions')
+    if (!actions || !actions.length === 0) {
+      return res.redirect('/topics')
+    }
+    RecentStudentActions.update({id: actions, student: req.localUser.id}, {seen: true}).exec((err) => {
+      if (err) {
+        return res.serverError(err)
+      }
+      return res.redirect('/topics')
     })
   },
 

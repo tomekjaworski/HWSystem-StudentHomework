@@ -17,6 +17,87 @@ block content
                     .col-8
                         script var taskView = #{data.taskView}
                 else
-                    .col-8.text-center.text-muted
-                        i.fa.fa-long-arrow-left.fa-lg.fa-5x.fa-fw.mt-5.mb-3
-                        div=i18n('student.index.dashintro')
+                    .col-12
+                        .card
+                            .card-header.text-center
+                                strong=i18n('teacher.messages')
+
+                            form(method='post', action='/markAsRead')
+                                table.table.table-striped.table-hover.table-responsive.table-grouplist.wb-initial
+                                    thead
+                                        tr
+                                            th.align-middle
+                                                label.custom-control.custom-checkbox.custom-checkbox-notifications
+                                                    input.custom-control-input(type='checkbox', id='setAllAsRead')
+                                                    span.custom-control-indicator
+
+                                            th.w-100=i18n('teacher.table.message')
+                                            th.text-center=i18n('teacher.table.date')
+                                    tbody
+                                        if actions && actions.length !== 0
+                                            each action in actions
+                                                tr
+                                                    th.align-middle
+                                                        label.custom-control.custom-checkbox.custom-checkbox-notifications
+                                                            input.custom-control-input.checks(name='actions' value=action.id, type='checkbox', id='setAllAsRead')
+                                                            span.custom-control-indicator
+                                                    td
+                                                        case action.type
+                                                            when 1
+                                                                if action.teacher
+                                                                    | Prowadzący #{action.teacher.fullName()}
+                                                                else
+                                                                    | System
+                                                                | &nbsp;przydzielił Ci ponownie zadanie&nbsp;
+                                                                a(href='/topic/' + action.task.topic + '/task/' + action.task.id)=action.task.number + '. ' + action.task.title
+                                                            when 2
+                                                                | Twoja odpowiedź na zadanie&nbsp;
+                                                                a(href='/topic/' + action.task.topic + '/task/' + action.task.id)=action.task.number + '. ' + action.task.title
+                                                                if action.meta === 0
+                                                                    b &nbsp;nie przeszła
+                                                                    | &nbsp;testów maszynowych
+                                                                if action.meta === 1
+                                                                    b &nbsp;przeszła
+                                                                    | &nbsp;testy maszynowe
+                                                                | &nbsp;Sprawdź raport&nbsp;
+                                                                a(href='http://' + action.data, target='_blank') tutaj
+                                                            when 3
+                                                                if action.teacher
+                                                                    | Prowadzący #{action.teacher.fullName()}
+                                                                | &nbsp;napisał komentarz do zadania&nbsp;
+                                                                a(href='/topic/' + action.task.topic + '/task/' + action.task.id)=action.task.number + '. ' + action.task.title
+                                                            when 4
+                                                                if action.teacher
+                                                                    | Prowadzący #{action.teacher.fullName()}
+                                                                if action.meta === 1
+                                                                    b &nbsp;zablokował Ci
+                                                                    | &nbsp;możliwość przesłania rozwiązania do zadania&nbsp;
+                                                                if action.meta === 0
+                                                                    b &nbsp;odblokował Ci
+                                                                    | &nbsp;możliwość przesłania rozwiązania do zadania&nbsp;
+                                                                a(href='/topic/' + action.task.topic + '/task/' + action.task.id)=action.task.number + '. ' + action.task.title
+                                                            when 5
+                                                                if action.teacher
+                                                                    | Prowadzący #{action.teacher.fullName()}
+                                                                if action.meta === 1
+                                                                    b &nbsp;zaliczył
+                                                                    | &nbsp;Twoją odpowiedź do zadania&nbsp;
+                                                                if action.meta === 2
+                                                                    b &nbsp;nie zaliczył
+                                                                    | &nbsp;Twojej odpowiedzi do zadania&nbsp;
+                                                                if action.meta === 0
+                                                                    b &nbsp;skasował ocenę
+                                                                    | &nbsp;Twojej odpowiedzi do zadania&nbsp;
+                                                                a(href='/topic/' + action.task.topic + '/task/' + action.task.id)=action.task.number + '. ' + action.task.title
+                                                    td.text-center=action.updatedAt
+                                        else
+                                            tr
+                                                td.text-center(colspan=4)=i18n('teacher.dashboard.nomessages')
+                                .card-block
+                                    input.btn.btn-primary.btn-block(type='submit' value=i18n('actions.markasread'))
+
+block scripts
+    script.
+      $('#setAllAsRead').on('change', function () {
+        $('.checks').prop('checked', this.checked);
+      })

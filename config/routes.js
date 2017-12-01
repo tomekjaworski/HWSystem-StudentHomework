@@ -48,6 +48,7 @@ module.exports.routes = {
   // Students
 
   'GET /topics': 'StudentController.index',
+  'POST /markAsRead': 'StudentController.markAsRead',
 
   'GET /topic/:topicid/tasks': 'StudentController.index',
   'GET /ajax/topic/:id/tasks': 'StudentController.tasks',

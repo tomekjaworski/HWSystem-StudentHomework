@@ -492,7 +492,12 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
         if (err) {
           return res.serverError(err)
         }
-        return res.json({error: false})
+        RecentAction.changeTeacherStatus(reply[0].student, reply[0].task, req.localUser.id, status, (err) => {
+          if (err) {
+            return res.serverError(err)
+          }
+          return res.json({error: false})
+        })
       })
     })
   },
@@ -525,7 +530,12 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
         if (err) {
           return res.serverError(err)
         }
-        return res.json({error: false})
+        RecentAction.changeBlockedStatus(reply[0].student, reply[0].task, req.localUser.id, blocked, (err) => {
+          if (err) {
+            return res.serverError(err)
+          }
+          return res.json({error: false})
+        })
       })
     })
   },
@@ -536,7 +546,7 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
     if (!_.isInteger(studentId) || !_.isInteger(taskId)) {
       return res.badRequest()
     }
-    ManageReplies.repostTask(studentId, taskId, req.localUser.fullName(), (err) => {
+    ManageReplies.repostTask(studentId, taskId, req.localUser, (err) => {
       if (err) {
         switch (err.code) {
           case 'E_USER_NOT_FOUND':
@@ -602,7 +612,12 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
         if (err) {
           return res.serverError(err)
         }
-        return res.json({err: false})
+        RecentAction.addTeacherComment(studentId, taskId, req.localUser.id, (err) => {
+          if (err) {
+            return res.serverError(err)
+          }
+          return res.json({err: false})
+        })
       })
   },
 
