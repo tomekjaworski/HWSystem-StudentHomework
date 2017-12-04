@@ -83,6 +83,7 @@ module.exports.routes = {
   '/teacher/replies/reply/:replyId': {action: 'teacher/replies/viewOneReply', skipAssets: true},
   '/ajax/teacher/replies/view/:taskId/lab/:labId': {action: 'teacher/replies/viewTaskOfLab', skipAssets: true},
   'GET /teacher/replies/downloadFile/:fileid': {action: 'teacher/replies/downloadTaskFile', skipAssets: true},
+  'GET /teacher/replies/history/:taskId/student/:studentId': {action: 'teacher/replies/viewStudentReplyHistory', skipAssets: true},
   'POST /ajax/teacher/replies/setTeacherStatus/:replyid': {action: 'teacher/replies/ajaxSetTeacherStatus', skipAssets: true},
   'POST /ajax/teacher/replies/setBlocked/': {action: 'teacher/replies/ajaxSetBlocked', skipAssets: true},
   'POST /ajax/teacher/replies/repostTask/': {action: 'teacher/replies/ajaxRepostTask', skipAssets: true},

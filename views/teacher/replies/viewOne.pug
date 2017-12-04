@@ -105,12 +105,12 @@ block content
                                                     else
                                                         option(value=option.id)=option.name
                                 - var tests = [i18n('student.task.ms.notstarted'), i18n('student.task.ms.inqueue'), i18n('student.task.ms.super'), i18n('student.task.ms.note'), i18n('student.task.ms.notices'), i18n('student.task.ms.errors')]
-                                - var machineFix = ['', i18n('student.task.ts.pass'), i18n('student.task.ts.fail')]
+                                - var machineFix = [i18n('student.task.ts.pass'), i18n('student.task.ts.fail')]
                                 div.form-group.row
                                     label.col-4.col-form-label Testy Maszynowe
                                     .col-6
                                         span.form-control #{tests[student.reply.machineStatus]}
-                                            if student.reply.machineOk !== 0
+                                            if ![0, 1].includes(student.reply.machineStatus)
                                                 | &nbsp;/&nbsp;
                                                 =machineFix[student.reply.machineOk]
                                     if student.reply.machineReport

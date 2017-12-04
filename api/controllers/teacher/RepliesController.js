@@ -157,11 +157,58 @@ WHERE slb.student =$2 AND slb.active=1`, [reply.task.id, student.id]).exec((err,
                   {
                     lab: lab.labgroup,
                     task: reply.task,
+                    menuItem: 'replies',
                     student: student
                   })
               })
             })
           })
+        })
+      })
+    })
+  },
+
+  viewStudentReplyHistory: function (req, res) {
+    let taskId = parseInt(req.param('taskId'), '10')
+    let studentId = parseInt(req.param('studentId'), '10')
+    if (!_.isInteger(taskId) || !_.isInteger(studentId)) {
+      return res.notFound()
+    }
+    Tasks.findOne(taskId).exec((err, task) => {
+      if (err) {
+        return res.serverError(err)
+      }
+      if (!task) {
+        return res.notFound()
+      }
+      Users.findOne(studentId).exec((err, student) => {
+        if (err) {
+          return res.serverError(err)
+        }
+        if (!student) {
+          return res.notFound()
+        }
+        TaskReplies.find({student: studentId, task: taskId}).exec((err, replies) => {
+          if (err) {
+            return res.serverError(err)
+          }
+          if (!replies || replies.length === 0) {
+            return res.notFound()
+          }
+          _.forEach(replies, reply => {
+            try {
+              reply.createdAt = dateFormat(reply.createdAt, 'yyyy-mm-dd')
+            } catch (err) {
+              return res.serverError(err)
+            }
+          })
+          return res.view('teacher/replies/viewHistory',
+            {
+              student: student,
+              task: task,
+              menuItem: 'replies',
+              replies: replies
+            })
         })
       })
     })
@@ -238,6 +285,7 @@ WHERE slb.student =$2 AND slb.active=1`, [task.id, student.id]).exec((err, resul
                   {
                     lab: lab.labgroup,
                     task: task,
+                    menuItem: 'replies',
                     student: student
                   })
               } else {
@@ -282,6 +330,7 @@ WHERE slb.student =$2 AND slb.active=1`, [task.id, student.id]).exec((err, resul
                       {
                         lab: lab.labgroup,
                         task: task,
+                        menuItem: 'replies',
                         student: student
                       })
                   })

@@ -12,11 +12,11 @@ mixin topicentry(data, percent)
 
             .progress.w-100
                 if percent < 37
-                    .progress-bar.bg-danger(role='progressbar', aria-valuenow=percent, aria-valuemin='0', aria-valuemax='100', style='width: ' + percent + '%')
+                    .progress-bar.bg-danger(role='progressbar', aria-valuenow=percent, aria-valuemin='0', aria-valuemax='100', style='width: ' + percent + '%')=percent+'%'
                 else if percent < 75
-                    .progress-bar.bg-warning(role='progressbar', aria-valuenow=percent, aria-valuemin='0', aria-valuemax='100', style='width: ' + percent + '%')
+                    .progress-bar.bg-warning(role='progressbar', aria-valuenow=percent, aria-valuemin='0', aria-valuemax='100', style='width: ' + percent + '%')=percent+'%'
                 else
-                    .progress-bar.bg-success(role='progressbar', aria-valuenow=percent, aria-valuemin='0', aria-valuemax='100', style='width: ' + percent + '%')
+                    .progress-bar.bg-success(role='progressbar', aria-valuenow=percent, aria-valuemin='0', aria-valuemax='100', style='width: ' + percent + '%')=percent+'%'
 
         .w-100
             table.table-bordered.table.table-sm
