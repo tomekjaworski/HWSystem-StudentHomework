@@ -73,16 +73,34 @@ block content
                                     a.btn.btn-secondary.next-prev(href='/teacher/replies/view/' + nextPrev.nextTask)
                                         i.fa.fa-arrow-right
 
-                        div.text-center
-                            form(onsubmit='return false;')
-                                .form-group
-                                    label(for='selectLab') Wybierz grupy do sprawdzenia
-                                    select.form-control#selectLab(name='labs', size='6', multiple)
-                                        each lab in data.labs
-                                            option(value=lab.id)= lab.name + ' - ' + lab.owner.fullName()
-                                .form-group
-                                    input.btn.btn-primary.getLabTasksButton(type='submit' data-id=data.id, value='Załaduj odpowiedzi')
-                            button.btn.btn-success(data-toggle="modal" data-target="#showContent") Treść zadania
+
+
+                        form(onsubmit='return false;')
+                            .form-group
+                                .card
+                                    table.table.table-striped.table-hover.table-responsive.table-grouplist.wb-initial
+                                        thead
+                                            tr
+                                                th.align-middle
+                                                    label.custom-control.custom-checkbox.custom-checkbox-notifications
+                                                        input.custom-control-input.checks(name='actions', type='checkbox', id='setAllAsRead')
+                                                        span.custom-control-indicator
+                                                th.w-100=i18n('breadcrumbs.labgroups')
+                                        tbody
+                                            each lab in data.labs
+                                                tr
+                                                    td
+                                                        label.custom-control.custom-checkbox.custom-checkbox-notifications
+                                                            input.custom-control-input.checks(name='labs', type='checkbox', value=lab.id)
+                                                            span.custom-control-indicator
+                                                    td
+                                                        span= lab.name + ' - ' + lab.owner.fullName()
+
+
+                            .form-group.text-center
+                                input.btn.btn-primary.getLabTasksButton(type='submit' data-id=data.id, value='Załaduj odpowiedzi')
+                            .form-group.text-center
+                                button.btn.btn-success(data-toggle="modal" data-target="#showContent") Treść zadania
 block fluid
     .row.mb-2
         div#labs.col-12
