@@ -29,6 +29,15 @@ mixin commentBlock(com, hidden)
                         i.fa.fa-check.fa-inverse.fa-stack-1x
 
 block content
+    #showContent.modal.fade
+        .modal-dialog.modal-lg(role='document')
+            .modal-content
+                .modal-header
+                    h5.modal-title=task.number + '. ' + task.title
+                .modal-body
+                    pre(style='white-space: pre-wrap;')=task.description.description
+                .modal-footer
+                    button.btn.btn-primary(type='button', data-dismiss='modal') Ok
     script#tmplCommentAjax(type='text/x-jsrender')
         .list-group-item.list-group-item-action.flex-column.align-items-start
             .d-flex.w-100.justify-content-between
@@ -61,7 +70,7 @@ block content
             //-include tasks
             .card
                 .card-header.d-flex.justify-content-between
-                    a
+                    button.btn.btn-success.btn-sm(data-toggle="modal" data-target="#showContent") Treść zadania
                     strong(title=student.fullName(true))=student.fullName(true)
                         a(href='/teacher/users/profile/' + student.id)  (@#{student.id})
                     a.btn.btn-primary.btn-sm(href='/teacher/replies/view/' + task.id + '?labs=' + lab.id) Odpowiedzi grupy

@@ -10,7 +10,7 @@ const ManageReplies = module.exports = {
     updateTimeout: function (studentId, taskId, replyId, time = 10) {
       setTimeout(function () {
         sails.log.verbose('Executing timeouted machine test API request')
-        TaskReplies.findOne(taskId).exec((err, task) => {
+        TaskReplies.findOne(replyId).exec((err, task) => {
           if (err) {
             sails.log.error('Error getting reply from db')
             return sails.log(err)

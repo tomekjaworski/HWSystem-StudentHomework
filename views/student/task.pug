@@ -205,9 +205,6 @@ block content
                 #files.tab-pane.fade(class=(req.query.msg ? 'in active show' : ''),aria-expanded=(req.query.msg ? 'true' : 'false'))
                         .card.text-center
                             if taskReply
-                                .card-header
-                                    | A: #{taskReply.student} B: #{taskReply.task}
-                                    | C: #{taskReply.teacherStatus} D: #{taskReply.machineStatus}
                                 .card-block
                                     .row
                                         if taskReplyFiles[0]
