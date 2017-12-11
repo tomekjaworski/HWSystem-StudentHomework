@@ -12,11 +12,11 @@ mixin topicentry(data, percent)
 
             .progress.w-100
                 if percent < 37
-                    .progress-bar.bg-danger(role='progressbar', aria-valuenow=percent, aria-valuemin='0', aria-valuemax='100', style='width: ' + percent + '%')=percent+'%'
+                    .progress-bar.bg-danger(role='progressbar', aria-valuenow=percent, aria-valuemin='0', aria-valuemax='100', style='width: ' + percent + '%')=Math.floor(percent)+'%'
                 else if percent < 75
-                    .progress-bar.bg-warning(role='progressbar', aria-valuenow=percent, aria-valuemin='0', aria-valuemax='100', style='width: ' + percent + '%')=percent+'%'
+                    .progress-bar.bg-warning(role='progressbar', aria-valuenow=percent, aria-valuemin='0', aria-valuemax='100', style='width: ' + percent + '%')=Math.floor(percent)+'%'
                 else
-                    .progress-bar.bg-success(role='progressbar', aria-valuenow=percent, aria-valuemin='0', aria-valuemax='100', style='width: ' + percent + '%')=percent+'%'
+                    .progress-bar.bg-success(role='progressbar', aria-valuenow=percent, aria-valuemin='0', aria-valuemax='100', style='width: ' + percent + '%')=Math.floor(percent)+'%'
 
         .w-100
             table.table-bordered.table.table-sm
@@ -92,11 +92,11 @@ block content
                                 .well Zaakceptowanych #{accepted} odpowiedzi z #{all} zadań
                                 .progress.w-100
                                     if percent < 37
-                                        .progress-bar.bg-danger(role='progressbar', aria-valuenow=percent, aria-valuemin='0', aria-valuemax='100', style='width: ' + percent + '%')
+                                        .progress-bar.bg-danger(role='progressbar', aria-valuenow=percent, aria-valuemin='0', aria-valuemax='100', style='width: ' + percent + '%')=Math.floor(percent) + '%'
                                     else if percent < 75
-                                        .progress-bar.bg-warning(role='progressbar', aria-valuenow=percent, aria-valuemin='0', aria-valuemax='100', style='width: ' + percent + '%')
+                                        .progress-bar.bg-warning(role='progressbar', aria-valuenow=percent, aria-valuemin='0', aria-valuemax='100', style='width: ' + percent + '%')=Math.floor(percent) + '%'
                                     else
-                                        .progress-bar.bg-success(role='progressbar', aria-valuenow=percent, aria-valuemin='0', aria-valuemax='100', style='width: ' + percent + '%')
+                                        .progress-bar.bg-success(role='progressbar', aria-valuenow=percent, aria-valuemin='0', aria-valuemax='100', style='width: ' + percent + '%')=Math.floor(percent) + '%'
 
                         each t in topics
                                 +topicentry(t, t.repliesAccepted / t.taskCount * 100)

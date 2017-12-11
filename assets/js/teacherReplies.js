@@ -30,6 +30,123 @@ let setButtons;
   $('.getLabTasksButton').on('click', function () {
     getLabTasks($(this).data('id'))
   })
+  let table = $('#getLabTasks')
+
+  let LabsLoader = new function () {
+    this.labs = []
+    this.renderDOM = $('#labs')
+    this.requests = []
+    this.addLab = (id, task, name, first) => {
+      console.log(first)
+      this.labs.push({id: id, first: first, node: $($.parseHTML('<h3 id="labSpinner">Ładowanie ' + name + '  <i class=\'fa fa-spinner fa-spin\'></i></h3>')), name: name})
+      this.render()
+      let _this = this
+      this.requests.push({
+        id: id,
+        req: $.get('/ajax/teacher/replies/view/' + task + '/lab/' + id, function (data) {
+          if (_this.labs.find(l => l.id === id) === undefined) {
+            return
+          }
+          _this.requests.splice(_this.requests.map(r => r.id).indexOf(id), 1)
+          _this.replaceContent(id, data)
+          _this.setButtons(id)
+          const replySortRows = $('.replySortRow')
+          let sortable = []
+          for (let i = 0; i <= replySortRows.length - 1; i++) {
+            sortable[i] = Sortable.create(replySortRows[i], {
+              animation: 150,
+              forceFallback: true,
+              handle: '.replySortHandle'
+            })
+          }
+        })
+      })
+    }
+    this.replaceContent = (id, html) => {
+      this.labs.find(l => l.id === id).node = $($.parseHTML(html))
+      this.render()
+    }
+    this.setButtons = (id) => {
+      let lab = this.labs.find(l => l.id === id).node
+      lab.find('.replySortableClose').on('click', function () {
+        const closeCardId = $(this).data('closecard')
+        const cardToClose = $('#studentCard-' + closeCardId)
+        cardToClose.hide('slow', function () {
+          cardToClose.remove()
+        })
+      })
+      lab.find('.dateSave').on('click', function () {
+        const studentid = $(this).data('studentid')
+        const taskid = $(this).data('taskid')
+        saveDeadline(studentid, taskid)
+      })
+      lab.find('.dateErase').on('click', function () {
+        const studentid = $(this).data('studentid')
+        const taskid = $(this).data('taskid')
+        saveDeadline(studentid, taskid, true)
+      })
+      lab.find('.setTeacherStatus').find('button').on('click', function () {
+        const studentreplyid = $(this).data('studentreplyid')
+        const value = parseInt($(this).data('val'))
+        setTeacherStatus(studentreplyid, value)
+      })
+      lab.find('.setBlocked').on('change', function () {
+        const studentid = $(this).data('studentid')
+        const taskid = $(this).data('taskid')
+        const studentreplyid = $(this).data('studentreplyid')
+        const value = $(this).prop('checked')
+        setBlocked(studentid, taskid, studentreplyid, value)
+      })
+      lab.find('.repostTask').on('click', function () {
+        const studentid = $(this).data('studentid')
+        const taskid = $(this).data('taskid')
+        const studentreplyid = $(this).data('studentreplyid')
+        repostTask(studentid, taskid, studentreplyid)
+      })
+      lab.find('.sendCommentButton').on('click', function () {
+        const studentid = $(this).data('studentid')
+        const taskid = $(this).data('taskid')
+        sendComment(studentid, taskid)
+      })
+      lab.find('.checkCommentsButton').on('click', function () {
+        const studentid = $(this).data('studentid')
+        const taskid = $(this).data('taskid')
+        checkComments(studentid, taskid)
+      })
+    }
+    this.removeLab = (id) => {
+      this.labs.splice(this.labs.map(l=> l.id).indexOf(id), 1)
+      let req = this.labs.filter(l => l.id === id)
+      if (req.length !== 0) {
+        _.forEach(req, r => r.req.abort())
+      }
+      this.render()
+    }
+    this.render = () => {
+      this.labs.sort((a, b) => a.first && b.first
+        ? a.name.localeCompare(b.name)
+          : a.first ? false
+            : b.first ? true
+              : a.name.localeCompare(b.name))
+      this.renderDOM.html(this.labs.map(l => l.node))
+    }
+  }()
+
+  table.find('tr').on('click', function () {
+    let tr = $(this)
+    if (tr.hasClass('table-info')) {
+      tr.removeClass('table-info')
+      let labId = tr.data('id')
+      LabsLoader.removeLab(labId)
+    } else {
+      tr.addClass('table-info')
+      let labId = tr.data('id')
+      let labName = tr.data('name')
+      let first = !!tr.data('first')
+      let task = table.data('task')
+      LabsLoader.addLab(labId, task, labName, first)
+    }
+  })
 
   setButtons = function () {
     $('.replySortableClose').on('click', function () {
@@ -81,7 +198,7 @@ let setButtons;
 
   function getLabTasks (dataid, loaded) {
     const selected = loaded || $('#selectLab').val()
-    $('#labs').html('<h3 id="labSpinner">Ładowanie <i class=\'fa fa-spinner fa-spin\'></i></h3>')
+    $('#labs').html('')
     let gets = []
     for (let s in selected) {
       gets.push($.get('/ajax/teacher/replies/view/' + dataid + '/lab/' + selected[s], function (data) {
