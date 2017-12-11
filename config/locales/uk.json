@@ -94,7 +94,7 @@
 	"student.task.sysmsg": "повідомлення системи",
 	"student.task.modal.loading": "завантаження",
 	"student.task.modal.close": "близько",
-	"student.task.modal.replace": "своп",
+	"student.task.modal.replace": "замінити вміст",
 	"student.task.modal.download": "скачати",
 	"student.task.modal.remove": "видаляти",
 	"student.task.modal.cancel": "скасувати",
@@ -122,7 +122,7 @@
 	"student.task.blocked": "Рішення задач був заблокований викладачем",
 	"student.task.description": "Опис завдання:",
 	"student.task.files.reqs": "Допустимі розширення C, CPP, H, HPP, INC, TXT, BMP, PNG. Розмір файлу не може перевищувати 100 Кб.",
-	"student.task.files.send": "Відправка файлів",
+	"student.task.files.send": "Додати файли у відповідь",
 	"student.task.files.confirm": "Надіслати рішення",
 	"student.task.files.afterdeadline": "Крайній термін для відповідей",
 	"student.task.files.updatesuccess": "Зміна файлу успішно завершено",
@@ -239,5 +239,10 @@
 	"teacher.tt.removingtask.title.error": "Помилка при видаленні",
 	"teacher.tt.removingtask.title": "видалення завдання",
 	"teacher.tt.removingtask.error": "Сталася помилка під час видалення завдання",
-	"teacher.tt.removingtask.%s": "Ви впевнені, що хочете видалити завдання з ID %s?"
+	"teacher.tt.removingtask.%s": "Ви впевнені, що хочете видалити завдання з ID %s?",
+	"teacher.tt.notasks.%s": "Немає робочих місць, додати теми, використовуючи кнопку \"%s\".",
+	"login.registerSuccess": "успішно зареєстрований",
+	"student.topics.blocked": "відповідь заблокований",
+	"teacher.edit": "видання",
+	"actions.markasread": "Відзначити вибрані повідомлення прочитаними"
 }
