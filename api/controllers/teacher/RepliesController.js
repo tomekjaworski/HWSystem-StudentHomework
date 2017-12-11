@@ -65,23 +65,30 @@ const RepliesController = module.exports = {
     if (!_.isInteger(replyId)) {
       return res.notFound()
     }
-    TaskReplies.findOne(replyId).populate('task').populate('student').exec((err,reply)=>{
+    TaskReplies.findOne({id: replyId, or: [{lastSent: true, newest: true}, {lastSent: false, newest: false}, {lastSent: true, newest: false}]}).populate('task').populate('student').exec((err,reply)=>{
       if (err) {
         return res.serverError(err)
       }
       if (!reply) {
         return res.notFound()
       }
-      StudentsLabGroups.findOne({student: reply.student.id}).populate('labgroup').exec((err,lab)=>{
+      TaskDescription.findOne({task: reply.task.id}).exec((err, desc) => {
         if (err) {
           return res.serverError(err)
         }
-        if (!lab) {
-          return res.notFound()
+        if (desc) {
+          reply.task.description = desc
         }
-        let student = reply.student
-        student.reply = reply
-        sails.sendNativeQuery(`SELECT slb.student,
+        StudentsLabGroups.findOne({student: reply.student.id}).populate('labgroup').exec((err, lab) => {
+          if (err) {
+            return res.serverError(err)
+          }
+          if (!lab) {
+            return res.notFound()
+          }
+          let student = reply.student
+          student.reply = reply
+          sails.sendNativeQuery(`SELECT slb.student,
 (case when scdl.task IS NOT NULL then scdl.deadline else
  (case when lbtd.deadline IS NOT NULL then lbtd.deadline else topic.deadline end) end) deadline
 FROM studentslabgroups slb
@@ -90,76 +97,77 @@ LEFT JOIN topics topic ON task.topic = topic.id
 LEFT JOIN labgrouptopicdeadline lbtd ON lbtd.group = slb.labgroup AND lbtd.topic = task.topic
 LEFT JOIN studentcustomdeadlines scdl ON scdl.student = slb.student AND scdl.task = task.id
 WHERE slb.student =$2 AND slb.active=1`, [reply.task.id, student.id]).exec((err, result) => {
-          if (err) {
-            return res.serverError(err)
-          }
-          let deadline = result.rows[0]
-          try {
-            student.deadline = dateFormat(deadline.deadline, 'yyyy-mm-dd')
-          } catch (err) {
-            return res.serverError(err)
-          }
-          TaskComments.find({
-            task: reply.task.id,
-            taskStudent: student.id,
-            user: {'!=': null}
-          }).populate('user').exec((err, comments) => {
             if (err) {
               return res.serverError(err)
             }
-            if (comments && comments.length && comments.length > 0) {
-              _.forEach(comments, (c) => {
-                try {
-                  c.createdAt = dateFormat(c.createdAt, 'dd/mm/yyyy')
-                } catch (err) {
-                  return res.serverError(err)
-                }
-              })
-              student.comments = comments
+            let deadline = result.rows[0]
+            try {
+              student.deadline = dateFormat(deadline.deadline, 'yyyy-mm-dd')
+            } catch (err) {
+              return res.serverError(err)
             }
-            MySqlFile().readManyByReply(reply.id, (err, files) => {
+            TaskComments.find({
+              task: reply.task.id,
+              taskStudent: student.id,
+              user: {'!=': null}
+            }).populate('user').exec((err, comments) => {
               if (err) {
                 return res.serverError(err)
               }
+              if (comments && comments.length && comments.length > 0) {
+                _.forEach(comments, (c) => {
+                  try {
+                    c.createdAt = dateFormat(c.createdAt, 'dd/mm/yyyy')
+                  } catch (err) {
+                    return res.serverError(err)
+                  }
+                })
+                student.comments = comments
+              }
+              MySqlFile().readManyByReply(reply.id, (err, files) => {
+                if (err) {
+                  return res.serverError(err)
+                }
 
-              let promises = files.map(function (file) {
-                return new Promise(function (resolve, reject) {
-                  file.fileSize = bytes(file.fileSize, {unitSeparator: ' '})
-                  if (file.fileMimeType.includes('text/')) {
-                    let type = ''
-                    if (['h', 'c'].includes(file.fileExt)) {
-                      type = 'c'
-                    } else if (['hpp', 'cpp'].includes(file.fileExt)) {
-                      type = 'c++'
+                let promises = files.map(function (file) {
+                  return new Promise(function (resolve, reject) {
+                    file.fileSize = bytes(file.fileSize, {unitSeparator: ' '})
+                    if (file.fileMimeType.includes('text/')) {
+                      let type = ''
+                      if (['h', 'c'].includes(file.fileExt)) {
+                        type = 'c'
+                      } else if (['hpp', 'cpp'].includes(file.fileExt)) {
+                        type = 'c++'
+                      } else {
+                        return resolve(file)
+                      }
+                      if (file.file.err) {
+                        return resolve(file)
+                      }
+                      let content = '```' + type + '\n' + file.file + '\n```'
+                      pdc(content, 'markdown_github-raw_html', 'html5', function (err, result) {
+                        if (err) {
+                          return reject(err)
+                        }
+                        file.file = result
+                        return resolve(file)
+                      })
                     } else {
                       return resolve(file)
                     }
-                    if (file.file.err) {
-                      return resolve(file)
-                    }
-                    let content = '```' + type + '\n' + file.file + '\n```'
-                    pdc(content, 'markdown_github-raw_html', 'html5', function (err, result) {
-                      if (err) {
-                        return reject(err)
-                      }
-                      file.file = result
-                      return resolve(file)
-                    })
-                  } else {
-                    return resolve(file)
-                  }
-                })
-              })
-
-              Promise.all(promises).then((files) => {
-                student.reply.files = files
-                return res.view('teacher/replies/viewOneReply',
-                  {
-                    lab: lab.labgroup,
-                    task: reply.task,
-                    menuItem: 'replies',
-                    student: student
                   })
+                })
+
+                Promise.all(promises).then((files) => {
+                  student.reply.files = files
+                  return res.view('teacher/replies/viewOneReply',
+                    {
+                      lab: lab.labgroup,
+                      task: reply.task,
+                      menuItem: 'replies',
+                      student: student
+                    })
+                })
               })
             })
           })
@@ -197,7 +205,7 @@ WHERE slb.student =$2 AND slb.active=1`, [reply.task.id, student.id]).exec((err,
           }
           _.forEach(replies, reply => {
             try {
-              reply.createdAt = dateFormat(reply.createdAt, 'yyyy-mm-dd')
+              reply.createdAt = dateFormat(reply.createdAt, 'yyyy-mm-dd HH:MM')
             } catch (err) {
               return res.serverError(err)
             }
@@ -220,7 +228,7 @@ WHERE slb.student =$2 AND slb.active=1`, [reply.task.id, student.id]).exec((err,
     if (!_.isInteger(taskId) || !_.isInteger(studentId)) {
       return res.notFound()
     }
-    Tasks.findOne(taskId).exec((err, task) => {
+    Tasks.findOne(taskId).populate('description').exec((err, task) => {
       if (err) {
         return res.serverError(err)
       }

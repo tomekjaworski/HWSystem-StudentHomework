@@ -2,11 +2,12 @@ extends ../../includes/layout
 
 block content
     #showContent.modal.fade
-        .modal-dialog(role='document')
+        .modal-dialog.modal-lg(role='document')
             .modal-content
                 .modal-header
                     h5.modal-title=data.topic.number + '. ' + data.number + '. ' + data.title
-                .modal-body=data.description[0].description
+                .modal-body
+                    pre(style='white-space: pre-wrap;')=data.description[0].description
                 .modal-footer
                     button.btn.btn-primary(type='button', data-dismiss='modal') Ok
     script#tmplCommentAjax(type='text/x-jsrender')
@@ -73,34 +74,22 @@ block content
                                     a.btn.btn-secondary.next-prev(href='/teacher/replies/view/' + nextPrev.nextTask)
                                         i.fa.fa-arrow-right
 
+                        - data.labs.sort((a, b) => a.name.localeCompare(b.name))
 
+                        div(style='max-height:200px;overflow-y:auto')
+                            table.table.table-striped.table-hover.table-sm#getLabTasks(data-task=data.id)
+                                tbody(style='cursor: pointer')
+                                    each lab in data.labs.filter(l => l.owner.id === localUser.id)
+                                        tr(data-id=lab.id, data-name=lab.name, data-first=1)
+                                            td
+                                                span= lab.name + ' - ' + lab.owner.fullName()
+                                    each lab in data.labs.filter(l => l.owner.id !== localUser.id)
+                                        tr(data-id=lab.id, data-name=lab.name)
+                                            td
+                                                span= lab.name + ' - ' + lab.owner.fullName()
 
-                        form(onsubmit='return false;')
-                            .form-group
-                                .card
-                                    table.table.table-striped.table-hover.table-responsive.table-grouplist.wb-initial
-                                        thead
-                                            tr
-                                                th.align-middle
-                                                    label.custom-control.custom-checkbox.custom-checkbox-notifications
-                                                        input.custom-control-input.checks(name='actions', type='checkbox', id='setAllAsRead')
-                                                        span.custom-control-indicator
-                                                th.w-100=i18n('breadcrumbs.labgroups')
-                                        tbody
-                                            each lab in data.labs
-                                                tr
-                                                    td
-                                                        label.custom-control.custom-checkbox.custom-checkbox-notifications
-                                                            input.custom-control-input.checks(name='labs', type='checkbox', value=lab.id)
-                                                            span.custom-control-indicator
-                                                    td
-                                                        span= lab.name + ' - ' + lab.owner.fullName()
-
-
-                            .form-group.text-center
-                                input.btn.btn-primary.getLabTasksButton(type='submit' data-id=data.id, value='Załaduj odpowiedzi')
-                            .form-group.text-center
-                                button.btn.btn-success(data-toggle="modal" data-target="#showContent") Treść zadania
+                        div.text-center
+                            button.btn.btn-success(data-toggle="modal" data-target="#showContent") Treść zadania
 block fluid
     .row.mb-2
         div#labs.col-12

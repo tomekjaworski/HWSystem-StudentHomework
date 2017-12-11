@@ -10,29 +10,32 @@ block content
             .card
                 .card-header.text-center
                     strong Odpowiedzi #{student.fullName()}
-                .card-body
-                    string=task.number + '. ' + task.title
+                .card-body.text-center
+                    strong=task.number + '. ' + task.title
 
                 - var tests = [i18n('student.task.ms.notstarted'), i18n('student.task.ms.inqueue'), i18n('student.task.ms.super'), i18n('student.task.ms.note'), i18n('student.task.ms.notices'), i18n('student.task.ms.errors')]
                 - var machineFix = [i18n('student.task.ts.pass'), i18n('student.task.ts.fail')]
+                - var teacherStatus = ['Nieocenione', 'Zaliczone', 'Niezaliczone']
 
                 table.table.table-striped.table-hover.table-grouplist
                     thead
                         tr
-                            th ID
+                            th No
                             th sT
                             th sM
                             th sB
                             th Data
+                            th ID
                     tbody
                         if replies && replies.length!==0
                             each reply in replies
                                 tr(onclick='window.location="/teacher/replies/reply/' + reply.id + '"', style='cursor: pointer')
-                                    td=reply.id
-                                    td=reply.teacherStatus
+                                    td=reply.count
+                                    td=teacherStatus[reply.teacherStatus]
                                     td=tests[reply.machineStatus]
                                         if ![0, 1].includes(reply.machineStatus)
                                             | &nbsp;/&nbsp;
                                             =machineFix[reply.machineOk]
                                     td=reply.blocked
                                     td=reply.createdAt
+                                    td=reply.id
