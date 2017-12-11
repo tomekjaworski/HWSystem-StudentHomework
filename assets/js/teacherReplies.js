@@ -23,10 +23,62 @@ function repliesGetBack () {
   }
   document.getElementById('tablebody').innerHTML = saved
 }
+
+let setButtons;
+
 (function () {
   $('.getLabTasksButton').on('click', function () {
     getLabTasks($(this).data('id'))
   })
+
+  setButtons = function () {
+    $('.replySortableClose').on('click', function () {
+      const closeCardId = $(this).data('closecard')
+      const cardToClose = $('#studentCard-' + closeCardId)
+      cardToClose.hide('slow', function () {
+        cardToClose.remove()
+      })
+    })
+    $('.dateSave').on('click', function () {
+      const studentid = $(this).data('studentid')
+      const taskid = $(this).data('taskid')
+      saveDeadline(studentid, taskid)
+    })
+    $('.dateErase').on('click', function () {
+      const studentid = $(this).data('studentid')
+      const taskid = $(this).data('taskid')
+      saveDeadline(studentid, taskid, true)
+    })
+    $('.setTeacherStatus').find('button').on('click', function () {
+      const studentreplyid = $(this).data('studentreplyid')
+      const value = parseInt($(this).data('val'))
+      setTeacherStatus(studentreplyid, value)
+    })
+    $('.setBlocked').on('change', function () {
+      const studentid = $(this).data('studentid')
+      const taskid = $(this).data('taskid')
+      const studentreplyid = $(this).data('studentreplyid')
+      const value = $(this).prop('checked')
+      setBlocked(studentid, taskid, studentreplyid, value)
+    })
+    $('.repostTask').on('click', function () {
+      const studentid = $(this).data('studentid')
+      const taskid = $(this).data('taskid')
+      const studentreplyid = $(this).data('studentreplyid')
+      repostTask(studentid, taskid, studentreplyid)
+    })
+    $('.sendCommentButton').on('click', function () {
+      const studentid = $(this).data('studentid')
+      const taskid = $(this).data('taskid')
+      sendComment(studentid, taskid)
+    })
+    $('.checkCommentsButton').on('click', function () {
+      const studentid = $(this).data('studentid')
+      const taskid = $(this).data('taskid')
+      checkComments(studentid, taskid)
+    })
+  }
+
   function getLabTasks (dataid, loaded) {
     const selected = loaded || $('#selectLab').val()
     $('#labs').html('<h3 id="labSpinner">Ładowanie <i class=\'fa fa-spinner fa-spin\'></i></h3>')
@@ -43,56 +95,12 @@ function repliesGetBack () {
             handle: '.replySortHandle'
           })
         }
-        $('.replySortableClose').on('click', function () {
-          const closeCardId = $(this).data('closecard')
-          const cardToClose = $('#studentCard-' + closeCardId)
-          cardToClose.hide('slow', function () {
-            cardToClose.remove()
-          })
-        })
-        $('.dateSave').on('click', function () {
-          const studentid = $(this).data('studentid')
-          const taskid = $(this).data('taskid')
-          saveDeadline(studentid, taskid)
-        })
-        $('.dateErase').on('click', function () {
-          const studentid = $(this).data('studentid')
-          const taskid = $(this).data('taskid')
-          saveDeadline(studentid, taskid, true)
-        })
-        $('.setTeacherStatus').find('button').on('click', function () {
-          const studentreplyid = $(this).data('studentreplyid')
-          const value = parseInt($(this).data('val'))
-          setTeacherStatus(studentreplyid, value)
-        })
-        $('.setBlocked').on('change', function () {
-          const studentid = $(this).data('studentid')
-          const taskid = $(this).data('taskid')
-          const studentreplyid = $(this).data('studentreplyid')
-          const value = $(this).prop('checked')
-          setBlocked(studentid, taskid, studentreplyid, value)
-        })
-        $('.repostTask').on('click', function () {
-          const studentid = $(this).data('studentid')
-          const taskid = $(this).data('taskid')
-          const studentreplyid = $(this).data('studentreplyid')
-          repostTask(studentid, taskid, studentreplyid)
-        })
-        $('.sendCommentButton').on('click', function () {
-          const studentid = $(this).data('studentid')
-          const taskid = $(this).data('taskid')
-          sendComment(studentid, taskid)
-        })
-        $('.checkCommentsButton').on('click', function () {
-          const studentid = $(this).data('studentid')
-          const taskid = $(this).data('taskid')
-          checkComments(studentid, taskid)
-        })
       }))
     }
     $.when.apply($, gets).then(function () {
       $('#labSpinner').remove()
       let buttons = $('a.btn.btn-secondary.next-prev')
+      setButtons()
       for (let btn of buttons) {
         let href = btn.href.split('?')
         btn.href = href[0] + '?labs=' + selected.join()

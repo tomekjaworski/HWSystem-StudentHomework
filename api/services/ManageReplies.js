@@ -7,18 +7,29 @@ const ManageReplies = module.exports = {
     ip: sails.config.settings.machine.ip,
     port: sails.config.settings.machine.port,
     apiKey: sails.config.settings.machine.apiKey,
-    // TODO: add checking if already received update
     updateTimeout: function (studentId, taskId, replyId, time = 10) {
       setTimeout(function () {
         sails.log.verbose('Executing timeouted machine test API request')
-        ManageReplies.machine.sendUpdate(studentId, taskId, replyId, (err) => {
+        TaskReplies.findOne(taskId).exec((err, task) => {
           if (err) {
-            sails.log.error('Remote machine test API returned error')
-            sails.log.error(`ERROR CODE: ${err.code}`)
-            sails.log.error(err.data)
-            sails.log.error('Scheduling task repeat in 5 minutes from now')
-            ManageReplies.machine.updateTimeout(studentId, taskId, replyId, 5 * 60)
+            sails.log.error('Error getting reply from db')
+            return sails.log(err)
           }
+          if (!task) {
+            return sails.log.error('Error getting reply from db')
+          }
+          if (task.machineStatus !== 0) {
+            return
+          }
+          ManageReplies.machine.sendUpdate(studentId, taskId, replyId, (err) => {
+            if (err) {
+              sails.log.error('Remote machine test API returned error')
+              sails.log.error(`ERROR CODE: ${err.code}`)
+              sails.log.error(err.data)
+              sails.log.error('Scheduling task repeat in 5 minutes from now')
+              ManageReplies.machine.updateTimeout(studentId, taskId, replyId, 5 * 60)
+            }
+          })
         })
       }, time * 1000)
     },

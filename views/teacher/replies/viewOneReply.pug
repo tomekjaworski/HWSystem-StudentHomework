@@ -140,6 +140,7 @@ block content
 
                                 div.form-group.row
                                     label.col-5.col-form-label Odpowiedź po raz: #{student.reply.count}
+                                        a(href='/teacher/replies/history/' + task.id + '/student/' + student.id) [Historia]
                                     if student.reply.newest
                                         // TODO: Seba dodaj jakieś potwierdzenie czy aby napewno chce się to zrobić
                                             // todo: ok
@@ -199,4 +200,6 @@ block content
                                 span.input-group-btn
                                     button.sendCommentButton.btn.btn-primary(data-studentid=student.id, data-taskid=task.id, type='button') Wyślij
                                     button.checkCommentsButton.btn.btn-primary(data-studentid=student.id, data-taskid=task.id, type='button') Odśwież
-
+block scripts
+    script.
+        setButtons();

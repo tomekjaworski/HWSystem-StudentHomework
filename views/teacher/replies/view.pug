@@ -1,6 +1,14 @@
 extends ../../includes/layout
 
 block content
+    #showContent.modal.fade
+        .modal-dialog(role='document')
+            .modal-content
+                .modal-header
+                    h5.modal-title=data.topic.number + '. ' + data.number + '. ' + data.title
+                .modal-body=data.description[0].description
+                .modal-footer
+                    button.btn.btn-primary(type='button', data-dismiss='modal') Ok
     script#tmplCommentAjax(type='text/x-jsrender')
         .list-group-item.list-group-item-action.flex-column.align-items-start
             .d-flex.w-100.justify-content-between
@@ -74,6 +82,7 @@ block content
                                             option(value=lab.id)= lab.name + ' - ' + lab.owner.fullName()
                                 .form-group
                                     input.btn.btn-primary.getLabTasksButton(type='submit' data-id=data.id, value='Załaduj odpowiedzi')
+                            button.btn.btn-success(data-toggle="modal" data-target="#showContent") Treść zadania
 block fluid
     .row.mb-2
         div#labs.col-12

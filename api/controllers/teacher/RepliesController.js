@@ -25,7 +25,7 @@ const RepliesController = module.exports = {
 
   viewTaskReplies: function (req, res) {
     let id = req.param('taskid')
-    Tasks.findOne(id).populate('topic').exec((err, task) => {
+    Tasks.findOne(id).populate('description').populate('topic').exec((err, task) => {
       if (err) {
         return res.serverError(err)
       }
@@ -188,7 +188,7 @@ WHERE slb.student =$2 AND slb.active=1`, [reply.task.id, student.id]).exec((err,
         if (!student) {
           return res.notFound()
         }
-        TaskReplies.find({student: studentId, task: taskId}).exec((err, replies) => {
+        TaskReplies.find({student: studentId, task: taskId, sent: true, or: [{lastSent: true, newest: true}, {lastSent: false, newest: false}, {lastSent: true, newest: false}]}).sort('id DESC').exec((err, replies) => {
           if (err) {
             return res.serverError(err)
           }

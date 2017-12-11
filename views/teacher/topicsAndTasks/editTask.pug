@@ -31,7 +31,7 @@ block content
 
                             .modal-footer
                                 | {{if !error}}
-                                button.btn.btn-danger.deleteTaskButton(type='button', data-id='{{:id}}')=i18n('student.task.modal.remove')
+                                button.btn.btn-danger.deleteTaskButton(type='button', data-id='{{:id}}', data-topic='{{:topic}}')=i18n('student.task.modal.remove')
                                 | {{/if}}
                                 | {{if !error}}
                                 button.btn.btn-secondary(type='button', data-dismiss='modal')=i18n('student.task.modal.cancel')
@@ -43,7 +43,7 @@ block content
                     .card-header.text-center.d-flex.justify-content-between.align-items-start
                         a.btn.btn-primary.btn-sm(href='/teacher/topics-and-tasks/?topic=' + task.topic) Powrót do listy
                         strong.mr-2.ml-2 Edycja Zadania - #{task.title}
-                        button.deleteTaskModalButton.btn.btn-sm.btn-danger(data-id=task.id)=i18n('teacher.tt.remove')
+                        button.deleteTaskModalButton.btn.btn-sm.btn-danger(data-id=task.id, data-topic=task.topic)=i18n('teacher.tt.remove')
                     .card-block
                         .form-group
                             label(for='number') Numer:

@@ -192,8 +192,7 @@ const AccountController = module.exports = {
         if (email.length > 255) {
           return AccountController.registerError(req, res, req.i18n.__('register.error.email.toolong'))
         }
-        // todo: może tak być?, parseInt tu dodałem
-        if (parseInt(album.length) !== 6) {
+        if (album.length !== 6) {
           return AccountController.registerError(req, res, req.i18n.__('register.error.album'))
         }
         if (password !== rePassword) {

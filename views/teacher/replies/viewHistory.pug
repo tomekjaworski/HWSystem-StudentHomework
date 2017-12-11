@@ -11,7 +11,7 @@ block content
                 .card-header.text-center
                     strong Odpowiedzi #{student.fullName()}
                 .card-body
-                    string=task.title
+                    string=task.number + '. ' + task.title
 
                 - var tests = [i18n('student.task.ms.notstarted'), i18n('student.task.ms.inqueue'), i18n('student.task.ms.super'), i18n('student.task.ms.note'), i18n('student.task.ms.notices'), i18n('student.task.ms.errors')]
                 - var machineFix = [i18n('student.task.ts.pass'), i18n('student.task.ts.fail')]

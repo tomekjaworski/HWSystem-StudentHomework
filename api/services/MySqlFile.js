@@ -112,22 +112,6 @@ module.exports = function MySqlStore (globalOpts) {
           err.name = 'Upload Error'
           return done(err)
         }
-        // todo: david weź to zweryfikuj czy ci pasuję, ewentualnie zrób to ładniej :)
-          // todo: w skrócie, jeżeli jest 'application/octet-stream', to sprawdzamy poprzez zawartość
-          // todo: pliku czy jest to ASCII text, lub coś w ten deseń...
-          /*
-            https://tools.ietf.org/pdf/rfc1867.pdf
-
-            3.3 use of multipart/form-data
-            [...]
-            Each part should be labelled with an appropriate content-type if the
-            media type is known (e.g., inferred from the file extension or
-            operating system typing information) or as application/octet-stream.
-          */
-          // todo: przeglądarka wysyła 'application/octet-stream' jeżeli system nie ma przypisanego
-          // todo: rozszerzenia do danego pliku co prawda, jeżeli ma sie jakieś visual studio, albo
-          // todo: linuxa, mimetype istnieje, lecz gdy ktoś ma np. dev-c++ portable, to już nie
-          // todo: koniecznie, byłem w sali obok, w której były zajęcia z C, i coś podsłuchałem :)
 
         __newFile.pipe(utf8())
           .pipe(concat((file) => {

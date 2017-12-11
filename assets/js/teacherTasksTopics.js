@@ -99,7 +99,7 @@
       }
     })
   }
-  function delTaskModal (id) {
+  function delTaskModal (id, topic) {
     let removeTTModal = $('.removeTTModal')
 
     if (removeTTModal.length > 0) {
@@ -108,7 +108,7 @@
 
     const tmplRemoveTTModal = $.templates('#tmplRemoveTTModal')
 
-    const renderedRemoveTTModal = tmplRemoveTTModal.render({id: id})
+    const renderedRemoveTTModal = tmplRemoveTTModal.render({id: id, topic: topic})
 
     $('#modalContainer').html(renderedRemoveTTModal)
 
@@ -121,12 +121,13 @@
 
     $('.deleteTaskButton').on('click', function () {
       const deleteId = $(this).data('id')
-      delTask(deleteId)
+      const deleteTopic = $(this).data('topic')
+      delTask(deleteId, deleteTopic)
       removeTTModal.modal('hide')
       return false
     })
   }
-  function delTask (id) {
+  function delTask (id, topic) {
     console.log('start')
     let response = $.ajax({
       url: '/ajax/task/deleted',
@@ -138,8 +139,7 @@
 
     response.done(function () {
       console.log('done')
-      // todo: zeby zaladowalo tego taska w ktorym byl
-      window.location = '/teacher/topics-and-tasks/'
+      window.location = '/teacher/topics-and-tasks/?topic=' + topic
     })
   }
 
@@ -156,7 +156,8 @@
 
     $('.deleteTaskModalButton').on('click', function () {
       const deleteId = $(this).data('id')
-      delTaskModal(deleteId)
+      const deleteTopic = $(this).data('topic')
+      delTaskModal(deleteId, deleteTopic)
       return false
     })
 

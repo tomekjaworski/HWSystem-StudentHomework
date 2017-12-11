@@ -52,7 +52,8 @@ const TopicsAndTasksController = module.exports = {
           sails.sendNativeQuery(`SELECT (SELECT \`id\` FROM \`tasks\` WHERE \`tasks\`.\`topic\` < $1 ORDER BY \`topic\` DESC, CAST(\`number\` AS UNSIGNED) DESC LIMIT 1) \`prevTopicTask\`, 
 (SELECT \`id\` FROM \`tasks\` WHERE \`tasks\`.\`topic\` > $1 ORDER BY \`topic\` ASC, CAST(\`number\` AS UNSIGNED) ASC LIMIT 1) \`nextTopicTask\`, 
 (SELECT \`id\` FROM \`tasks\` WHERE \`tasks\`.\`topic\` = $1 AND \`tasks\`.number < $2 ORDER BY CAST(\`number\` AS UNSIGNED) DESC LIMIT 1) \`prevTask\`,
-(SELECT \`id\` FROM \`tasks\` WHERE \`tasks\`.\`topic\` = $1 AND \`tasks\`.number > $2 ORDER BY CAST(\`number\` AS UNSIGNED) ASC LIMIT 1) \`nextTask\``, [task.topic.id, task.number]).exec((err, nextPrev) => {
+(SELECT \`id\` FROM \`tasks\` WHERE \`tasks\`.\`topic\` = $1 AND \`tasks\`.number > $2 ORDER BY CAST(\`number\` AS UNSIGNED) ASC LIMIT 1) \`nextTask\``, [task.topic.id, task.number])
+          .exec((err, nextPrev) => {
             if (err) {
               return res.serverError(err)
             }
