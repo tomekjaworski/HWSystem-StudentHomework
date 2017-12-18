@@ -1,19 +1,19 @@
 extends includes/layout
 
 block content
-        //-.main
-            h1 Internal Server Error
-            h2 Something isn't right here.
-            if (typeof data !== 'undefined')
-                pre.error
-                    code= data
-            else
-                p.error
-                    | A team of highly trained sea bass is working on this as we speak.
-                    br
-                    | If the problem persists, please
-                    a(href='mailto://you@your-domain.com') contact the system administrator
-                    |  and inform them of the time that the error occured, and anything you might have done that may have caused the error.
+    //-.main
+        h1 Internal Server Error
+        h2 Something isn't right here.
+        if (typeof data !== 'undefined')
+            pre.error
+                code= data
+        else
+            p.error
+                | A team of highly trained sea bass is working on this as we speak.
+                br
+                | If the problem persists, please
+                a(href='mailto://you@your-domain.com') contact the system administrator
+                |  and inform them of the time that the error occured, and anything you might have done that may have caused the error.
     .card
         .card-block
             .text-center
