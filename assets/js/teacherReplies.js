@@ -308,7 +308,6 @@ let setButtons;
       // e.checked = !e.checked
     })
   }
-
   function repostTask (student, task, id) {
     $.ajax({
       url: '/ajax/teacher/replies/repostTask/',
@@ -318,6 +317,7 @@ let setButtons;
         taskid: task
       }
     }).done(function () {
+      $('#replyTeacherStatus-' + id).html('<b>Odpowiedź nie jest ostateczna, student musi przesłać odpowiedź ponownie! Ukazane pliki mogą nie być najnowsze.</b>')
       $('#reply-' + id).css('background-color', 'rgba(100,100,100,0.7)')
       $('#repost-reply-' + id).remove()
     })

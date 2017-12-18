@@ -60,12 +60,8 @@ const AccountController = module.exports = {
       if (err) {
         return res.serverError(err)
       }
-      labs = labs.forEach(l => {
-        if (l.id === lab.labgroup){
-          l.active = true
-        }
-      })
-      return res.view('account/settings', {title: req.i18n.__('settings.title'), message: message, labs: labs})
+      let labgroup = lab ? lab.labgroup : null
+      return res.view('account/settings', {title: req.i18n.__('settings.title'), message: message, labs: labs, studentLab: labgroup})
     })
   },
 

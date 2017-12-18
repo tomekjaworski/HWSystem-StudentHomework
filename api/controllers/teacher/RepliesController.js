@@ -522,7 +522,6 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
       }
     })
   },
-
   ajaxSetTeacherStatus: function (req, res) {
     let replyId = parseInt(req.param('replyid'), '10')
     let status = parseInt(req.param('status'), '10')
@@ -532,7 +531,7 @@ WHERE slb.labgroup =$2 AND slb.active=1`, [taskId, labId]).exec((err, result) =>
     if (![0, 1, 2].includes(status)) {
       return res.badRequest()
     }
-    TaskReplies.update(replyId, {teacherStatus: status}).meta({fetch: true}).exec((err, reply) => {
+    TaskReplies.update({id: replyId, newest: true, lastSent: true}, {teacherStatus: status}).meta({fetch: true}).exec((err, reply) => {
       if (err) {
         return res.serverError(err)
       }

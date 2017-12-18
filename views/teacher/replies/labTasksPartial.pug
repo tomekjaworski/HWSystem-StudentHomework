@@ -98,7 +98,7 @@ div.d-flex.labTaskRow.mt-3
                                             div
                                                 b Odpowiedź nie jest ostateczna, student musi przesłać odpowiedź ponownie! Ukazane pliki mogą nie być najnowsze.
                                         else
-                                            div.form-group.row
+                                            div.form-group.row(id='replyTeacherStatus-' + student.reply.id)
                                                 label.col-4.col-form-label Ocena
                                                 .col-8
                                                     .input-group.setTeacherStatus(data-studentreplyid=student.reply.id)
