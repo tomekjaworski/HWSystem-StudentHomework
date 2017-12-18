@@ -27,23 +27,72 @@ function repliesGetBack () {
 let setButtons;
 
 (function () {
-  $('.getLabTasksButton').on('click', function () {
-    getLabTasks($(this).data('id'))
-  })
-  let table = $('#getLabTasks')
+  const table = $('#getLabTasks')
+  const filterSelect = $('#getLabTasksMode')
+
+  setButtons = function (node) {
+    node.find('.replySortableClose').on('click', function () {
+      const closeCardId = $(this).data('closecard')
+      const cardToClose = $('#studentCard-' + closeCardId)
+      cardToClose.hide('slow', function () {
+        cardToClose.remove()
+      })
+    })
+    node.find('.dateSave').on('click', function () {
+      const studentid = $(this).data('studentid')
+      const taskid = $(this).data('taskid')
+      saveDeadline(studentid, taskid)
+    })
+    node.find('.dateErase').on('click', function () {
+      const studentid = $(this).data('studentid')
+      const taskid = $(this).data('taskid')
+      saveDeadline(studentid, taskid, true)
+    })
+    node.find('.setTeacherStatus').find('button').on('click', function () {
+      const studentreplyid = $(this).data('studentreplyid')
+      const value = parseInt($(this).data('val'))
+      setTeacherStatus(studentreplyid, value)
+    })
+    node.find('.setBlocked').on('change', function () {
+      const studentid = $(this).data('studentid')
+      const taskid = $(this).data('taskid')
+      const studentreplyid = $(this).data('studentreplyid')
+      const value = $(this).prop('checked')
+      setBlocked(studentid, taskid, studentreplyid, value)
+    })
+    node.find('.repostTask').on('click', function () {
+      const studentid = $(this).data('studentid')
+      const taskid = $(this).data('taskid')
+      const studentreplyid = $(this).data('studentreplyid')
+      repostTask(studentid, taskid, studentreplyid)
+    })
+    node.find('.sendCommentButton').on('click', function () {
+      const studentid = $(this).data('studentid')
+      const taskid = $(this).data('taskid')
+      sendComment(studentid, taskid)
+    })
+    node.find('.checkCommentsButton').on('click', function () {
+      const studentid = $(this).data('studentid')
+      const taskid = $(this).data('taskid')
+      checkComments(studentid, taskid)
+    })
+  }
 
   let LabsLoader = new function () {
     this.labs = []
     this.renderDOM = $('#labs')
+    this.buttons = $('a.btn.btn-secondary.next-prev')
     this.requests = []
-    this.addLab = (id, task, name, first) => {
-      console.log(first)
-      this.labs.push({id: id, first: first, node: $($.parseHTML('<h3 id="labSpinner">Ładowanie ' + name + '  <i class=\'fa fa-spinner fa-spin\'></i></h3>')), name: name})
-      this.render()
+    this.mode = 1
+    this._ajax = (id, task) => {
       let _this = this
+      let req = this.requests.filter(l => l.id === id)
+      if (req.length !== 0) {
+        req.forEach(r => r.req.abort())
+      }
       this.requests.push({
         id: id,
-        req: $.get('/ajax/teacher/replies/view/' + task + '/lab/' + id, function (data) {
+        req: $.get('/ajax/teacher/replies/view/' + task + '/lab/' + id + '/?select=' + this.mode, function (data) {
           if (_this.labs.find(l => l.id === id) === undefined) {
             return
           }
@@ -59,8 +108,40 @@ let setButtons;
               handle: '.replySortHandle'
             })
           }
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+          if (textStatus === 'abort') {
+            return
+          }
+          alert('Nie udało się pobrać danych:  ' + textStatus + ' - ' + errorThrown) // todo: i18n
+          if (_this.labs.find(l => l.id === id) === undefined) {
+            return
+          }
+          _this.replaceContent(id, '<h5>Błąd wczytywania danych</h5>')
         })
       })
+    }
+    this.setMode = (mode) => {
+      this.mode = mode
+      if (this.labs.length > 0) {
+        for (let lab of this.labs) {
+          lab.node = $($.parseHTML('<h3>Ładowanie ' + lab.name + '  <i class=\'fa fa-spinner fa-spin\'></i></h3>'))
+        }
+        this.render()
+        for (let lab of this.labs) {
+          this._ajax(lab.id, lab.task)
+        }
+      }
+    }
+    this.addLab = (id, task, name, first) => {
+      this.labs.push({
+        id: id,
+        first: first,
+        node: $($.parseHTML('<h3>Ładowanie ' + name + '  <i class=\'fa fa-spinner fa-spin\'></i></h3>')),
+        name: name,
+        task: task
+      })
+      this.render()
+      this._ajax(id, task)
     }
     this.replaceContent = (id, html) => {
       this.labs.find(l => l.id === id).node = $($.parseHTML(html))
@@ -68,69 +149,52 @@ let setButtons;
     }
     this.setButtons = (id) => {
       let lab = this.labs.find(l => l.id === id).node
-      lab.find('.replySortableClose').on('click', function () {
-        const closeCardId = $(this).data('closecard')
-        const cardToClose = $('#studentCard-' + closeCardId)
-        cardToClose.hide('slow', function () {
-          cardToClose.remove()
-        })
-      })
-      lab.find('.dateSave').on('click', function () {
-        const studentid = $(this).data('studentid')
-        const taskid = $(this).data('taskid')
-        saveDeadline(studentid, taskid)
-      })
-      lab.find('.dateErase').on('click', function () {
-        const studentid = $(this).data('studentid')
-        const taskid = $(this).data('taskid')
-        saveDeadline(studentid, taskid, true)
-      })
-      lab.find('.setTeacherStatus').find('button').on('click', function () {
-        const studentreplyid = $(this).data('studentreplyid')
-        const value = parseInt($(this).data('val'))
-        setTeacherStatus(studentreplyid, value)
-      })
-      lab.find('.setBlocked').on('change', function () {
-        const studentid = $(this).data('studentid')
-        const taskid = $(this).data('taskid')
-        const studentreplyid = $(this).data('studentreplyid')
-        const value = $(this).prop('checked')
-        setBlocked(studentid, taskid, studentreplyid, value)
-      })
-      lab.find('.repostTask').on('click', function () {
-        const studentid = $(this).data('studentid')
-        const taskid = $(this).data('taskid')
-        const studentreplyid = $(this).data('studentreplyid')
-        repostTask(studentid, taskid, studentreplyid)
-      })
-      lab.find('.sendCommentButton').on('click', function () {
-        const studentid = $(this).data('studentid')
-        const taskid = $(this).data('taskid')
-        sendComment(studentid, taskid)
-      })
-      lab.find('.checkCommentsButton').on('click', function () {
-        const studentid = $(this).data('studentid')
-        const taskid = $(this).data('taskid')
-        checkComments(studentid, taskid)
-      })
+      setButtons(lab)
     }
     this.removeLab = (id) => {
-      this.labs.splice(this.labs.map(l=> l.id).indexOf(id), 1)
-      let req = this.labs.filter(l => l.id === id)
+      this.labs.splice(this.labs.map(l => l.id).indexOf(id), 1)
+      let req = this.requests.filter(l => l.id === id)
       if (req.length !== 0) {
-        _.forEach(req, r => r.req.abort())
+        req.forEach(r => r.req.abort())
       }
       this.render()
     }
     this.render = () => {
       this.labs.sort((a, b) => a.first && b.first
         ? a.name.localeCompare(b.name)
-          : a.first ? false
-            : b.first ? true
-              : a.name.localeCompare(b.name))
+        : a.first ? false
+          : b.first ? true
+            : a.name.localeCompare(b.name))
       this.renderDOM.html(this.labs.map(l => l.node))
+      for (let lab of this.labs) {
+        let scroll1 = lab.node.find('#scroll-' + lab.id)
+        let scroll2 = lab.node.find('#scroll2-' + lab.id)
+        if (scroll1.length && scroll2.length) {
+          scroll1.find('div').css('width', scroll2[0].scrollWidth)
+          scroll1.scroll(function () {
+            scroll2
+              .scrollLeft(scroll1.scrollLeft())
+          })
+          scroll2.scroll(function () {
+            scroll1
+              .scrollLeft(scroll2.scrollLeft())
+          })
+        }
+      }
+      let labHref = ''
+      if (this.labs.length > 0) {
+        labHref = '?labs=' + this.labs.map(l => l.id).join() + '&mode=' + this.mode
+      }
+      for (let btn of this.buttons) {
+        let href = btn.href.split('?')
+        btn.href = href[0] + labHref
+      }
     }
   }()
+
+  filterSelect.on('change', function () {
+    LabsLoader.setMode($(this).val())
+  })
 
   table.find('tr').on('click', function () {
     let tr = $(this)
@@ -148,96 +212,18 @@ let setButtons;
     }
   })
 
-  setButtons = function () {
-    $('.replySortableClose').on('click', function () {
-      const closeCardId = $(this).data('closecard')
-      const cardToClose = $('#studentCard-' + closeCardId)
-      cardToClose.hide('slow', function () {
-        cardToClose.remove()
-      })
-    })
-    $('.dateSave').on('click', function () {
-      const studentid = $(this).data('studentid')
-      const taskid = $(this).data('taskid')
-      saveDeadline(studentid, taskid)
-    })
-    $('.dateErase').on('click', function () {
-      const studentid = $(this).data('studentid')
-      const taskid = $(this).data('taskid')
-      saveDeadline(studentid, taskid, true)
-    })
-    $('.setTeacherStatus').find('button').on('click', function () {
-      const studentreplyid = $(this).data('studentreplyid')
-      const value = parseInt($(this).data('val'))
-      setTeacherStatus(studentreplyid, value)
-    })
-    $('.setBlocked').on('change', function () {
-      const studentid = $(this).data('studentid')
-      const taskid = $(this).data('taskid')
-      const studentreplyid = $(this).data('studentreplyid')
-      const value = $(this).prop('checked')
-      setBlocked(studentid, taskid, studentreplyid, value)
-    })
-    $('.repostTask').on('click', function () {
-      const studentid = $(this).data('studentid')
-      const taskid = $(this).data('taskid')
-      const studentreplyid = $(this).data('studentreplyid')
-      repostTask(studentid, taskid, studentreplyid)
-    })
-    $('.sendCommentButton').on('click', function () {
-      const studentid = $(this).data('studentid')
-      const taskid = $(this).data('taskid')
-      sendComment(studentid, taskid)
-    })
-    $('.checkCommentsButton').on('click', function () {
-      const studentid = $(this).data('studentid')
-      const taskid = $(this).data('taskid')
-      checkComments(studentid, taskid)
-    })
-  }
-
-  function getLabTasks (dataid, loaded) {
-    const selected = loaded || $('#selectLab').val()
-    $('#labs').html('')
-    let gets = []
-    for (let s in selected) {
-      gets.push($.get('/ajax/teacher/replies/view/' + dataid + '/lab/' + selected[s], function (data) {
-        $('#labs').prepend(data)
-        const replySortRows = $('.replySortRow')
-        let sortable = []
-        for (let i = 0; i <= replySortRows.length - 1; i++) {
-          sortable[i] = Sortable.create(replySortRows[i], {
-            animation: 150,
-            forceFallback: true,
-            handle: '.replySortHandle'
-          })
-        }
-      }))
-    }
-    $.when.apply($, gets).then(function () {
-      $('#labSpinner').remove()
-      let buttons = $('a.btn.btn-secondary.next-prev')
-      setButtons()
-      for (let btn of buttons) {
-        let href = btn.href.split('?')
-        btn.href = href[0] + '?labs=' + selected.join()
-      }
-    }, function (jqXHR, textStatus, errorThrown) {
-      alert('Nie udało się pobrać danych:  ' + textStatus + ' - ' + errorThrown) // todo: i18n
-      $('#labSpinner').remove()
-    })
-    return false
-  }
-
   let params = {}
   location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (s, k, v) { params[k] = v })
   if (params['labs']) {
     let labs = params['labs'].split(',')
-    let select = $('#selectLab')
-    for (let l of labs) {
-      select.find(`option[value=${l}]`).prop('selected', true)
+    let mode = parseInt(params['mode'], '10')
+    if (mode >= 1 && mode <= 6) {
+      filterSelect.val(mode)
+      LabsLoader.setMode(mode)
+      for (let lab of labs) {
+        table.find('tr[data-id="' + lab + '"]').click()
+      }
     }
-    getLabTasks($('.getLabTasksButton').data('id'), labs)
   }
 
   function saveDeadline (student, task, del) {
@@ -359,6 +345,7 @@ let setButtons;
       checkComments(student, task)
     })
   }
+
   function renderComment (student, id, name, surname, teacher, commentContent, date, read) {
     const tmplCommentAjax = $.templates('#tmplCommentAjax')
 
@@ -372,6 +359,7 @@ let setButtons;
       read: read
     })
   }
+
   function checkComments (student, task) {
     const commentBlock = $('#comments-student-' + student)
     const last = commentBlock.data('last')

@@ -1,7 +1,6 @@
 extends ../../includes/layout
 
 block content
-
     .row
         .hidden-md-down.col-lg-4
             include ../menu
@@ -29,16 +28,16 @@ block content
                             else
                                 a.nav-link(href='/teacher/users?teachers=true') Prowadzący
                                     span.badge.badge-pill.badge-primary=count
-                table.table.table-striped.table-hover.table-responsive.table-grouplist.wb-initial
+                table.table.table-striped.table-hover.table-responsive.table-grouplist.wb-initial#tabledata
                     thead
                         tr
                             th.text-nowrap=i18n('teacher.table.id')
                             th.w-100=i18n('teacher.table.fistlastname')
                             if teachers
                                 th Grup
-                            th
+                            th.no-sort
                             if teachers && localUser.isAdmin
-                                th.text.nowrap Admin
+                                th.no-sort.text.nowrap Admin
                     tbody
                         each user in users
                             tr.usersSelectUser(data-id=user.id)
@@ -55,7 +54,15 @@ block content
                                             i.fa.fa-check.text-success
                                         else
                                             i.fa.fa-times.text-danger
-
-
-
-
+block scripts
+    script.
+      $(document).ready(function () {
+        $('#tabledata').DataTable({
+          "language": {
+            "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Polish.json"
+          },
+          columnDefs: [
+            {targets: 'no-sort', orderable: false, searchable: false}
+          ]
+        });
+      });

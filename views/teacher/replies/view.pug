@@ -76,6 +76,17 @@ block content
 
                         - data.labs.sort((a, b) => a.name.localeCompare(b.name))
 
+                        div.text-center
+                            label Tryb wyświetlania
+                            select#getLabTasksMode(style='width:200px' autocomplete="off")
+                                option(value='1') Wszyscy studenci
+                                option(value='2') Tylko z przesłanymi programami
+                                option(value='3') Tylko z nieocenionymi programami
+                                option(value='4') Tylko z negatywną oceną wykładowcy
+                                option(value='5') Tylko z negatywną oceną testu maszynowego
+                                option(value='6') Tylko z pozytywną oceną testu maszynowego ale bez oceny wykładowcy
+
+
                         div(style='max-height:200px;overflow-y:auto')
                             table.table.table-striped.table-hover.table-sm#getLabTasks(data-task=data.id)
                                 tbody(style='cursor: pointer')

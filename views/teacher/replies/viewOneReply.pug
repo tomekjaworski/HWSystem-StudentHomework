@@ -75,7 +75,7 @@ block content
                         a(href='/teacher/users/profile/' + student.id)  (@#{student.id})
                     a.btn.btn-primary.btn-sm(href='/teacher/replies/view/' + task.id + '?labs=' + lab.id) Odpowiedzi grupy
 
-                .card-block
+                .card-block#replyBlock
                     .col-12(id='studentCard-' + student.id)
                         if !student.reply.newest
                             div.alert.alert-danger
@@ -211,4 +211,4 @@ block content
                                     button.checkCommentsButton.btn.btn-primary(data-studentid=student.id, data-taskid=task.id, type='button') Odśwież
 block scripts
     script.
-        setButtons();
+        setButtons($('#replyBlock'));
