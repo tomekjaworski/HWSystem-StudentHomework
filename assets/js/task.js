@@ -12,7 +12,7 @@
         id: id
       }
     }).done(function () {
-      window.location.reload()
+      window.location = location.pathname + '?msg=fileRemoveSuccess'
     })
       .fail(function (jqXHR, textStatus, errorThrown) {
         alert('Nie udało się skasować pliku:  ' + textStatus + ' - ' + errorThrown)
@@ -46,7 +46,10 @@
       removeModal.remove()
     })
   }
-
+  $('.fileListRemove').on('click', function () {
+    removeFileConfirm($(this).data('removereply'), $(this).data('removeid'), $(this).data('title'))
+    return false
+  })
   function replaceFile (reply, id, name, ext) {
     let replaceModal = $('.replaceModal')
 

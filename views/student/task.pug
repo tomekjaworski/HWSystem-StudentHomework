@@ -1,6 +1,8 @@
 extends ../includes/layout
 mixin fileIcon(file)
     div.col-6.col-md-4.col-lg-2.mb-4.replyFileIcon(data-filereply=file.reply, data-fileid=file.id)
+        button.btn.btn-sm.btn-danger.fileListRemove(type='button', data-title=file.fileName+'.'+file.fileExt, data-removereply=file.reply, data-removeid=file.id)
+            i.fa.fa-times
         p
             if file.fileExt === 'cpp' || file.fileExt === 'h' || file.fileExt === 'c'
                 i.fa.fa-file-code-o.fa-3x
@@ -49,7 +51,7 @@ block content
         .custom-task-file-control::after {
             content: "#[=i18n('student.task.file.choose')]";
         }
-    if req.query.msg === 'fileUpdateSuccess' || req.query.msg === 'replySent' || req.query.msg === 'fileUploadSuccess'
+    if req.query.msg === 'fileUpdateSuccess' || req.query.msg === 'replySent' || req.query.msg === 'fileUploadSuccess' || req.query.msg === 'fileRemoveSuccess'
         .alert.alert-success
             case req.query.msg
                 when 'fileUpdateSuccess'
@@ -58,6 +60,8 @@ block content
                     span=i18n('student.task.reply.sent')
                 when 'fileUploadSuccess'
                     span=i18n('student.task.files.uploadsuccess')
+                when 'fileRemoveSuccess'
+                    span=i18n('student.task.files.removesuccess')
         script.
           window.history.replaceState('', '', location.pathname)
     else if req.query.msg

@@ -140,4 +140,13 @@
 
 .replyFileIcon {
   cursor: pointer;
+  &:hover > .fileListRemove {
+    opacity: 1;
+  }
+  .fileListRemove {
+    position: absolute;
+    top: -12px;
+    opacity: 0;
+    cursor: pointer;
+  }
 }

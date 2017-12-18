@@ -126,6 +126,7 @@
 	"student.task.files.confirm": "Zatwierdź rozwiązanie",
 	"student.task.files.afterdeadline": "Upłynął termin przesyłania odpowiedzi",
 	"student.task.files.updatesuccess": "Zmiana pliku zakończona powodzeniem",
+	"student.task.files.removesuccess": "Usunięcie pliku zakończone powodzeniem",
 	"student.task.files.uploadsuccess": "Przesyłanie plików zakończone powodzeniem",
 	"student.task.files.replyalreadysent": "Rozwiązanie zostało już wysłane, nie można już dodać plików",
 	"student.task.files.toobig": "Jeden z wysyłanych plików przekracza limit rozmiaru",
