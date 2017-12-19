@@ -75,6 +75,27 @@
     const id = $(this).data('fileid')
     loadFileContent(reply, id)
   })
+  $('#fileReplyInput').on('change', function () {
+    const fileReplyInput = $(this)[0]
+    const fileReplySpan = $('#fileReplySpan')
+    if (fileReplyInput.files) {
+      if (fileReplyInput.files.length === 0) {
+        fileReplySpan.addClass('fileReplyEmpty')
+        fileReplySpan.text('')
+      } else {
+        fileReplySpan.removeClass('fileReplyEmpty')
+        let fileReplySpanText = ''
+        for (let i = 0; i < fileReplyInput.files.length; i++) {
+          fileReplySpanText += (i + 1) + '/' + fileReplyInput.files.length + ': '
+          const file = fileReplyInput.files[i]
+          if (file.name) {
+            fileReplySpanText += file.name + ', '
+          }
+          fileReplySpan.text(fileReplySpanText)
+        }
+      }
+    }
+  })
   function loadFileContent (reply, id) {
     // TODO: Seba dodaj jakiegoś ładnego spinnera ładowania
     $.getJSON('/ajax/reply/' + reply + '/loadFileContent/' + id)
