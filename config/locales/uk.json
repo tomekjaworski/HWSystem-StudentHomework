@@ -126,6 +126,7 @@
 	"student.task.files.confirm": "Надіслати рішення",
 	"student.task.files.afterdeadline": "Крайній термін для відповідей",
 	"student.task.files.updatesuccess": "Зміна файлу успішно завершено",
+	"student.task.files.removesuccess": "Видалити файл успішно завершений",
 	"student.task.files.uploadsuccess": "Передача файлів успішно завершена",
 	"student.task.files.replyalreadysent": "Рішення вже було відправлено, ви більше не можете додавати файли",
 	"student.task.files.toobig": "Одним з файлів, що перевищує граничний розмір",

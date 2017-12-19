@@ -2,7 +2,7 @@ extends ../includes/layout
 mixin fileIcon(file)
     div.col-6.col-md-4.col-lg-2.mb-4.replyFileIcon(data-filereply=file.reply, data-fileid=file.id)
         button.btn.btn-sm.btn-danger.fileListRemove(type='button', data-title=file.fileName+'.'+file.fileExt, data-removereply=file.reply, data-removeid=file.id)
-            i.fa.fa-times
+            i.fa.fa-lg.fa-times
         p
             if file.fileExt === 'cpp' || file.fileExt === 'h' || file.fileExt === 'c'
                 i.fa.fa-file-code-o.fa-3x
