@@ -98,7 +98,7 @@ const RecentAction = module.exports = {
       if (err) {
         return cb(err)
       }
-      if(!created) {
+      if (!created) {
         RecentStudentActions.update(action.id, {updatedAt: Date.now()}).exec((err) => {
           if (err) {
             return cb(err)
@@ -142,7 +142,7 @@ const RecentAction = module.exports = {
       if (err) {
         return cb(err)
       }
-      if(!created) {
+      if (!created) {
         RecentStudentActions.update(action.id, {updatedAt: Date.now()}).exec((err) => {
           if (err) {
             return cb(err)

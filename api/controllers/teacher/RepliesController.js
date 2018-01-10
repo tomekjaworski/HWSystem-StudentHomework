@@ -65,7 +65,7 @@ const RepliesController = module.exports = {
     if (!_.isInteger(replyId)) {
       return res.notFound()
     }
-    TaskReplies.findOne({id: replyId, or: [{lastSent: true, newest: true}, {lastSent: false, newest: false}, {lastSent: true, newest: false}]}).populate('task').populate('student').exec((err,reply)=>{
+    TaskReplies.findOne({id: replyId, or: [{lastSent: true, newest: true}, {lastSent: false, newest: false}, {lastSent: true, newest: false}]}).populate('task').populate('student').exec((err, reply) => {
       if (err) {
         return res.serverError(err)
       }

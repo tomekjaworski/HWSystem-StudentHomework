@@ -56,7 +56,7 @@ const AccountController = module.exports = {
   },
 
   settingsMessage (req, res, message, labs) {
-    StudentsLabGroups.findOne({student: req.localUser.id}).exec((err, lab)=>{
+    StudentsLabGroups.findOne({student: req.localUser.id}).exec((err, lab) => {
       if (err) {
         return res.serverError(err)
       }
@@ -247,7 +247,7 @@ const AccountController = module.exports = {
           if (err) {
             return res.serverError(err)
           }
-          StudentsLabGroups.findOne({student:req.localUser.id}).exec((err,lab)=>{
+          StudentsLabGroups.findOne({student: req.localUser.id}).exec((err, lab) => {
             if (err) {
               return res.serverError(err)
             }

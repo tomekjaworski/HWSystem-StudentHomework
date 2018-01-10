@@ -249,20 +249,20 @@ const TopicsAndTasksController = module.exports = {
           arduino: ard,
           computer: com
         }).exec(function (err) {
-        if (err) {
-          return res.serverError(err)
-        }
-        TaskDescription.update({task: id},
-          {
-            description: description
-          }).exec(function (err, desc) {
           if (err) {
             return res.serverError(err)
           }
-          return res.redirect(`/teacher/topics-and-tasks/view/${id}`)
+          TaskDescription.update({task: id},
+            {
+              description: description
+            }).exec(function (err, desc) {
+              if (err) {
+                return res.serverError(err)
+              }
+              return res.redirect(`/teacher/topics-and-tasks/view/${id}`)
           // return a('success', req.i18n.__('teacher.tt.edittask.success'))
+            })
         })
-      })
     } else {
       a()
     }
@@ -347,11 +347,11 @@ const TopicsAndTasksController = module.exports = {
             visible: visible,
             deadline: deadline
           }).exec(function (err) {
-          if (err) {
-            return res.serverError(err)
-          }
-          return res.redirect('/teacher/topics-and-tasks')
-        })
+            if (err) {
+              return res.serverError(err)
+            }
+            return res.redirect('/teacher/topics-and-tasks')
+          })
       }
     } else {
       a()

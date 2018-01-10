@@ -30,7 +30,7 @@ const TeacherController = module.exports = {
         param.labgroup = labs.map(l => l.id)
       }
       RecentTeacherActions.find(_.merge({
-        seen: false,
+        seen: false
       }, param)).sort('updatedAt DESC').exec((err, actions) => {
         if (err) {
           return res.serverError(err)
