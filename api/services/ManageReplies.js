@@ -118,7 +118,7 @@ const ManageReplies = module.exports = {
                 msg = 'Podczas testów maszynowych pojawiły się pewne notatki' + (passed ? ' ale testy zostały zaliczone. Możesz sprawdzić notatki w raporcie z testu.' : ' i testy nie zostały zaliczone! Sprawdź raport testów.')
                 break
               case 4:
-                msg = 'W Twoim rozwiązaniu występówją ważne uwagi' + (passed ? ' mimo to testy zostały zaliczone. Możesz sprawdzić uwagi w raporcie z testu.' : ' i testy nie zostały zaliczone! Sprawdź raport testów.')
+                msg = 'W Twoim rozwiązaniu występują ważne uwagi' + (passed ? ' mimo to testy zostały zaliczone. Możesz sprawdzić uwagi w raporcie z testu.' : ' i testy nie zostały zaliczone! Sprawdź raport testów.')
                 break
               case 5:
                 msg = 'W Twoim rozwiązaniu występują poważne błędy' + (passed ? ' ale mimo to testy zostały zaliczone. Zalecane jest sprawdzenie raportu z testów.' : ' i testy nie zostały zaliczone! Sprawdź raport testów.')
