@@ -245,5 +245,16 @@
 	"login.registerSuccess": "Pomyślnie zarejestrowano",
 	"student.topics.blocked": "Odpowiedzi zablokowane",
 	"teacher.edit": "Edycja",
-	"actions.markasread": "Oznacz wybrane jako przeczytane"
+	"actions.markasread": "Oznacz wybrane jako przeczytane",
+	"settings.nightmode.title": "Tryb nocny",
+	"settings.nightmode.status": "Włącz tryb nocny",
+	"settings.nightmode.change": "Zastosuj",
+	"settings.chatmode.title": "Tryb wyświetlania czatu",
+	"settings.chatmode.0": "Comfy",
+	"settings.chatmode.1": "IRC",
+	"settings.chatmode.change": "Zastosuj",
+	"settings.message.nightmodechanged": "Tryb nocny został zastosowany",
+	"settings.message.wrongnightmode": "Złe ustawienie trybu nocnego",
+	"settings.message.chatmodechanged": "Tryb wyświetlania czatu został zastosowany",
+	"settings.message.wrongchatmode": "Złe ustawienie trybu wyświetlania czatu"
 }

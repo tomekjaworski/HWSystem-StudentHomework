@@ -5,7 +5,7 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
-const dateFormat = require('dateformat')
+// const dateFormat = require('dateformat')
 // eslint-disable-next-line no-unused-vars
 const TeacherController = module.exports = {
 
@@ -37,7 +37,7 @@ const TeacherController = module.exports = {
         }
         _.forEach(actions, (a) => {
           try {
-            a.updatedAt = dateFormat(a.updatedAt, 'HH:MM dd/mm/yyyy')
+            a.updatedAt = a.updatedAt / 1000
           } catch (err) {
             return res.serverError(err)
           }

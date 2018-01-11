@@ -4,7 +4,7 @@
 a [Sails](http://sailsjs.org) application
 
 ## External Dependencies
- - Node.js v8.9.x or above
+ - Node.js v6.11.x or above
  - Pandoc: https://github.com/jgm/pandoc/releases/tag/2.1
  - Ruby-SASS compiler
  - a Redis session store

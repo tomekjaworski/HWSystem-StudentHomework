@@ -52,6 +52,57 @@ block content
                             input(type='hidden' name='action' value='newLab')
 
                             button.btn.btn-primary(type='submit')=i18n('settings.lab.change')
+            hr
+            .row
+                .col-sm-6.mb-3
+                    h5=i18n('settings.chatmode.title')
+                    form(method='post' action='/settings')
+                        .form-group
+
+                            //-.row
+                                .col-6.text-center
+                                    img(src='/images/pol.png').img-fluid
+                                .col-6.text-center
+                                    img(src='/images/eng.png').img-fluid
+                            .form-group.row
+                                .col-6.text-center
+                                    label.custom-control.custom-radio
+                                        if (localUser.chatMode === 0)
+                                            input#inputChatMode0.custom-control-input(name='chatmode', type='radio', value='0' checked)
+                                        else
+                                            input#inputChatMode0.custom-control-input(name='chatmode', type='radio', value='0')
+                                        span.custom-control-indicator
+                                        span.custom-control-description=i18n('settings.chatmode.0')
+                                .col-6.text-center
+                                    label.custom-control.custom-radio
+                                        if (localUser.chatMode === 1)
+                                            input#inputChatMode1.custom-control-input(name='chatmode', type='radio', value='1' checked)
+                                        else
+                                            input#inputChatMode1.custom-control-input(name='chatmode', type='radio', value='1')
+                                        span.custom-control-indicator
+                                        span.custom-control-description=i18n('settings.chatmode.1')
+
+
+                        input(type='hidden' name='action' value='chatMode')
+
+                        button.btn.btn-primary.mb-4.mb-md-0(type='submit')=i18n('settings.chatmode.change')
+                .col-sm-6.mb-3
+                    h5=i18n('settings.nightmode.title')
+                    form(method='post' action='/settings')
+                        .form-group
+                            label.custom-control.custom-checkbox
+                                if (localUser.nightMode)
+                                    input#inputNightMode.custom-control-input(name='nightmode', type='checkbox', checked)
+                                else
+                                    input#inputNightMode.custom-control-input(name='nightmode', type='checkbox')
+                                span.custom-control-indicator
+                                span.custom-control-description=i18n('settings.nightmode.status')
+
+                        input(type='hidden' name='action' value='nightMode')
+
+                        button.btn.btn-primary.mb-4.mb-md-0(type='submit')=i18n('settings.nightmode.change')
+            hr
+            .row
                 .col-sm-6.mb-3
                     h5=i18n('settings.language.title')
                     form(method='post' action='/settings', name='languagePreference')
@@ -65,11 +116,11 @@ block content
                             // Copyright 2017 Twitter, Inc and other contributors
                             // Graphics licensed under CC-BY 4.0: https://creativecommons.org/licenses/by/4.0/
                             .col-4.text-center
-                                img(src='/images/pol.png').img-fluid
+                                img(src='/images/pol.svg').img-fluid
                             .col-4.text-center
-                                img(src='/images/eng.png').img-fluid
+                                img(src='/images/eng.svg').img-fluid
                             .col-4.text-center
-                                img(src='/images/ukr.png').img-fluid
+                                img(src='/images/ukr.svg').img-fluid
                         .form-group.row
                             .col-4.text-center
                                 label.custom-control.custom-radio
@@ -97,3 +148,4 @@ block content
                                     span.custom-control-description UA
                         .text-center
                             input.btn.btn-primary.mb-4.mb-md-0(type='submit', value=i18n('settings.language.change'))
+

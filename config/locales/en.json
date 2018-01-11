@@ -245,5 +245,16 @@
 	"login.registerSuccess": "You have been successfully registered",
 	"student.topics.blocked": "Replies blocked",
 	"teacher.edit": "Edit",
-	"actions.markasread": "Mark selected as read"
+	"actions.markasread": "Mark selected as read",
+	"settings.nightmode.title": "Night mode",
+	"settings.nightmode.status": "Turn on night mode",
+	"settings.nightmode.change": "Apply",
+	"settings.chatmode.title": "Chat display mode",
+	"settings.chatmode.0": "Comfy",
+	"settings.chatmode.1": "IRC",
+	"settings.chatmode.change": "Apply",
+	"settings.message.nightmodechanged": "Night mode has been applied",
+	"settings.message.wrongnightmode": "Bad night mode setting",
+	"settings.message.chatmodechanged": "The chat display mode has been applied",
+	"settings.message.wrongchatmode": "Bad chat display mode setting"
 }

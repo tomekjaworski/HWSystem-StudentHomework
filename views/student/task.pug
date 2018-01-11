@@ -18,31 +18,55 @@ mixin noFilesInReply
         i.fa.fa-files-o.fa-4x
     .col-12.text-center.text-muted=i18n('student.task.files.nofiles')
 mixin commentBlock(com, hidden)
-    .list-group-item.list-group-item-action.flex-column.align-items-start(style=(hidden ? 'display: none;': ''))
-        .d-flex.w-100.justify-content-between
-            h5.mb-1
-                if com.user
-                    strong.task-c-author=(com.user ? com.user.fullName() : '')
-                    if com.user.isTeacher
-                        span.badge.badge-primary.ml-2=i18n('student.task.teacher')
-                    span.ml-2=i18n('student.task.wrote')
-                else
-                    strong.task-c-author
-                        span.badge.badge-info=i18n('student.task.sysmsg')
-            small.text-muted.task-c-timestamp=com.createdAt
-        p.mb-1.task-c-comment=com.comment
-        if !com.viewed
-            div.text-right.w-100
-                small.text-muted.task-c-read
-                    span.fa-stack.fa-lg
-                        i.fa.fa-circle-thin.fa-stack-2x
-        else
-            div.text-right.w-100
-                small.text-muted.task-c-read
-                    span.fa-stack.fa-lg.text-primary
-                        i.fa.fa-circle.fa-stack-2x
-                        i.fa.fa-check.fa-inverse.fa-stack-1x
-            //=i18n('student.task.read')
+    if localUser.chatMode === 0
+        .list-group-item.list-group-item-action.flex-column.align-items-start(style=(hidden ? 'display: none;': ''))
+            .d-flex.w-100.justify-content-between
+                h5.mb-1
+                    if com.user
+                        strong.task-c-author=(com.user ? com.user.fullName() : '')
+                        if com.user.isTeacher
+                            span.badge.badge-primary.ml-2=i18n('student.task.teacher')
+                        span.ml-2=i18n('student.task.wrote')
+                    else
+                        strong.task-c-author
+                            span.badge.badge-info=i18n('student.task.sysmsg')
+                small.text-muted.task-c-timestamp=com.createdAt
+            p.mb-1.task-c-comment=com.comment
+            if !com.viewed
+                div.text-right.w-100
+                    small.text-muted.task-c-read
+                        span.fa-stack.fa-lg
+                            i.fa.fa-circle-thin.fa-stack-2x
+            else
+                div.text-right.w-100
+                    small.text-muted.task-c-read
+                        span.fa-stack.fa-lg.text-primary
+                            i.fa.fa-circle.fa-stack-2x
+                            i.fa.fa-check.fa-inverse.fa-stack-1x
+    else
+        li.list-group-item.task-c-irc(style=(hidden ? 'display: none;': ''))
+            table
+                tr
+                    td.text-nowrap
+                        small.text-muted.task-c-timestamp=com.createdAt
+                    td.text-nowrap
+                        if com.user
+                            if com.user.isTeacher
+                                strong.task-c-irc-teacher=com.user.fullName() + ':'
+                            else
+                                strong=com.user.fullName() + ': '
+                    td.w-100=com.comment
+                    td
+                        if !com.viewed
+                            small.text-muted.task-c-read-irc
+                                span.fa-stack
+                                    i.fa.fa-circle-thin.fa-stack-2x
+                        else
+                            small.text-muted.task-c-read-irc
+                                span.fa-stack.text-primary
+                                    i.fa.fa-circle.fa-stack-2x
+                                    i.fa.fa-check.fa-inverse.fa-stack-1x
+
 block content
     style.
         .custom-task-file-control::before {
@@ -139,28 +163,44 @@ block content
                         a(href='/topic/{{:topic}}/task/{{:task}}/sendReply').btn.btn-primary=i18n('student.task.modal.sendreply.button')
                         button.btn.btn-secondary(type='button', data-dismiss='modal')=i18n('student.task.modal.cancel')
     script#tmplCommentAjax(type='text/x-jsrender')
-        .list-group-item.list-group-item-action.flex-column.align-items-start#commentFadeIn(style='display: none;')
-            .d-flex.w-100.justify-content-between
-                h5.mb-1
-                    | {{if user}}
-                    strong.task-c-author
-                        span.task-c-author-studentname {{:name}}
-                        | {{if teacher}}
-                        span.badge.badge-primary.ml-2=i18n('student.task.teacher')
+        if localUser.chatMode === 0
+            .list-group-item.list-group-item-action.flex-column.align-items-start#commentFadeIn(style='display: none;')
+                .d-flex.w-100.justify-content-between
+                    h5.mb-1
+                        | {{if user}}
+                        strong.task-c-author
+                            span.task-c-author-studentname {{:name}}
+                            | {{if teacher}}
+                            span.badge.badge-primary.ml-2=i18n('student.task.teacher')
+                            | {{/if}}
+                            span.ml-2=i18n('student.task.wrote')
+                        | {{else}}
+                        strong.task-c-author
+                                span.badge.badge-info=i18n('student.task.sysmsg')
                         | {{/if}}
-                        span.ml-2=i18n('student.task.wrote')
-                    | {{else}}
-                    strong.task-c-author
-                            span.badge.badge-info=i18n('student.task.sysmsg')
-                    | {{/if}}
-                small.text-muted.task-c-timestamp {{:timestamp}}
-            p.mb-1.task-c-comment {{:comment}}
-            div.text-right.w-100
-                small.text-muted.task-c-read
-                    span.fa-stack.fa-lg.text-warning
-                        i.fa.fa-circle-thin.fa-stack-2x
-                        i.fa.fa-spinner.fa-spin.fa-stack-1x
-
+                    small.text-muted.task-c-timestamp {{:timestamp}}
+                p.mb-1.task-c-comment {{:comment}}
+                div.text-right.w-100
+                    small.text-muted.task-c-read
+                        span.fa-stack.fa-lg.text-warning
+                            i.fa.fa-circle-thin.fa-stack-2x
+                            i.fa.fa-spinner.fa-spin.fa-stack-1x
+        else
+            li.list-group-item.task-c-irc#commentFadeIn(style=(hidden ? 'display: none;' : ''))
+                table
+                    tr
+                        td.text-nowrap
+                            small.text-muted.task-c-timestamp {{:timestamp}}
+                        td.text-nowrap
+                            | {{if user}}
+                            strong(class="{{if teacher}}task-c-irc-teacher{{/if}}") {{:name}}:
+                            | {{/if}}
+                        td.w-100 {{:comment}}
+                        td
+                            small.text-muted.task-c-read-irc
+                                span.fa-stack.text-warning
+                                    i.fa.fa-circle-thin.fa-stack-2x
+                                    i.fa.fa-spinner.fa-spin.fa-stack-1x
 
     .card
         .card-header
@@ -238,19 +278,35 @@ block content
                                         small.form-text.text-muted=i18n('student.task.files.afterdeadline')
 
                 #comments.tab-pane.fade(aria-expanded='false')
-                    .list-group.mb-3#commentArea(style='max-height:500px;overflow-y:auto;')
+                    if localUser.chatMode === 0
+                        .list-group.mb-3#commentArea(style='max-height:500px;overflow-y:auto;')
+                            - var allviewed = true
+                            - var lastid = 1
+                            - var i = 1
+                            each com in taskComments
+                                +commentBlock(com)
+                                if i === taskComments.length
+                                    - lastid = com.id
+                                    //- console.log(lastid)
+                                if !com.viewed
+                                    - allviewed = false
+                                - i++
+                            button.list-group-item.list-group-item-action.active.task-comment-markread.justify-content-center#commentMarkAsRead(style=(allviewed ? 'display: none;' : ''))=i18n('student.task.comment.markasread')
+                    else
                         - var allviewed = true
                         - var lastid = 1
                         - var i = 1
-                        each com in taskComments
-                            +commentBlock(com)
-                            if i === taskComments.length
-                                - lastid = com.id
-                                //- console.log(lastid)
-                            if !com.viewed
-                                - allviewed = false
-                            - i++
-                        button.list-group-item.list-group-item-action.active.task-comment-markread.justify-content-center#commentMarkAsRead(style=(allviewed ? 'display: none;' : ''))=i18n('student.task.comment.markasread')
+                        .card
+                            ul.list-group.list-group-flush#commentArea
+                                each com in taskComments
+                                    +commentBlock(com)
+                                    if i === taskComments.length
+                                        - lastid = com.id
+                                        //- console.log(lastid)
+                                    if !com.viewed
+                                        - allviewed = false
+                                    - i++
+                                li.list-group-item.task-c-irc-markasread#commentMarkAsRead(style=(!allviewed ? 'display: none;' : ''))=i18n('student.task.comment.markasread')
                     .input-group
                         // TODO: dodać spinnera w trakcie wysyłania komentarza, obsłużyć dodanie poprawne i błąd dodawania i wyświetlić że się nie dodało, dodać blokadę przycisku aby nie spamować w trakcie wysyłania
                         textarea.form-control.task-comment-textarea#commentTextArea(type='text', placeholder=i18n('student.task.comment'), name='comment', rows='1')
