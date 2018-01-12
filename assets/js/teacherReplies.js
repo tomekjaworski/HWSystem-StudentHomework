@@ -3,6 +3,11 @@
 /* global topics, saved */
 'use strict'
 
+jQuery.expr[':'].icontains = function (a, i, m) {
+  return jQuery(a).text().toUpperCase()
+    .indexOf(m[3].toUpperCase()) >= 0
+}
+
 function repliesSelectTopic (id) {
   const topic = topics.filter(topic => topic.id === id)[0]
   if (topic) {
@@ -108,6 +113,9 @@ let setButtons;
               handle: '.replySortHandle'
             })
           }
+          $('.labTaskSearch').on('input', function () {
+            searchStudents($(this).data('lab'), $(this).val())
+          })
         }).fail(function (jqXHR, textStatus, errorThrown) {
           if (textStatus === 'abort') {
             return
@@ -225,7 +233,13 @@ let setButtons;
       }
     }
   }
-
+  function searchStudents (lab, val) {
+    let studentCardTitle = $('#labTaskRow-' + lab).find('.studentCardTitle:icontains(' + val + ')')
+    $('#labTaskRow-' + lab + ' .studentCard').hide()
+    studentCardTitle.each(function () {
+      $('#studentCard-' + $(this).data('id')).show()
+    })
+  }
   function saveDeadline (student, task, del) {
     const deadline = $('#deadline-student-' + student + '-task-' + task)
     $.ajax({

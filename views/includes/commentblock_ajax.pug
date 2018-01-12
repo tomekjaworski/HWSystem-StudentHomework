@@ -27,17 +27,16 @@ script#tmplCommentAjax(type='text/x-jsrender')
                         i.fa.fa-spinner.fa-spin.fa-stack-1x
     else
         li.list-group-item.task-c-irc#commentFadeIn(style='display: none;')
-            table
-                tr
-                    td.text-nowrap
-                        small.text-muted.task-c-timestamp {{:timestamp}}
-                    td.text-nowrap
-                        | {{if user}}
-                        strong(class="{{if teacher}}task-c-irc-teacher{{/if}}") {{:name}}:
-                        | {{/if}}
-                    td.w-100 {{:comment}}
-                    td
-                        small.text-muted.task-c-read-irc
-                            span.fa-stack.text-warning
-                                i.fa.fa-circle-thin.fa-stack-2x
-                                i.fa.fa-spinner.fa-spin.fa-stack-1x
+            .d-flex.flex-wrap.flex-sm-nowrap.justify-content-start.w-100
+                .text-muted.pr-2.task-c-timestamp-irc
+                    small {{:timestamp}}
+                .pr-2.text-nowrap
+                    | {{if user}}
+                    strong(class="{{if teacher}}task-c-irc-teacher{{/if}}") {{:name}}:
+                    | {{/if}}
+                .pr-2.flex-last.flex-sm-unordered.w-100 {{:comment}}
+                div.ml-auto
+                    small.text-muted.task-c-read-irc
+                        span.fa-stack.text-warning
+                            i.fa.fa-circle-thin.fa-stack-2x
+                            i.fa.fa-spinner.fa-spin.fa-stack-1x

@@ -1,13 +1,13 @@
 include ../../includes/commentblock
 
-div.d-flex.labTaskRow.mt-3
+div.d-flex.labTaskRow.mt-3(id='labTaskRow-' + lab.id)
     .col-12
         .form-inline
             h4.mt-1=lab.name
             .input-group.ml-4
                 .input-group-addon
                     i.fa.fa-search
-                input.form-control(placeholder="Search // todo: 😉 ")
+                input.form-control.labTaskSearch(placeholder="Search", data-lab=lab.id)
 
         hr
         .scrollWrapper(id='scroll-' + lab.id, style='width:100%; overflow-x: auto;')
@@ -37,7 +37,7 @@ div.d-flex.labTaskRow.mt-3
                                 .mr-auto.p-2.w-100.replySortableTitle
                                     .btn.btn-sm
                                         .fa.fa-bars.fa-lg
-                                    strong(title=student.fullName(true))=student.fullName(true)
+                                    strong.studentCardTitle(data-id=student.id, title=student.fullName(true))=student.fullName(true)
                                         a(href='/teacher/users/profile/' + student.id)  (@#{student.id})
                                 .pt-2.pb-2
                                     button.btn.btn-info.btn-sm(type='button', data-toggle='collapse', data-target='#replyCollapse-' + student.id, aria-expanded='true', aria-controls='#replyCollapse-' + student.id)
@@ -150,7 +150,7 @@ div.d-flex.labTaskRow.mt-3
                                     - let comment = _.last(student.comments)
                                     - comment = (comment? comment.id : 0)
                                     .studentCardMaxHeight.mb-3
-                                        .list-group(id='comments-student-' + student.id, data-last=comment)
+                                        ul.list-group(id='comments-student-' + student.id, data-last=comment)
                                             if student.comments
                                                 each com in student.comments
                                                     +commentBlock(com)

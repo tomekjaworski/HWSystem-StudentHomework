@@ -29,24 +29,23 @@ mixin commentBlock(com, hidden)
                             i.fa.fa-check.fa-inverse.fa-stack-1x
     else
         li.list-group-item.task-c-irc(style=(hidden ? 'display: none;': ''))
-            table.table.table-responsive
-                tr
-                    td.text-nowrap
-                        small.text-muted.task-c-timestamp=com.createdAt
-                    td.text-nowrap
-                        if com.user
-                            if com.user.isTeacher
-                                strong.task-c-irc-teacher=com.user.fullName() + ':'
-                            else
-                                strong=com.user.fullName() + ': '
-                    td.w-100=com.comment
-                    td
-                        if !com.viewed
-                            small.text-muted.task-c-read-irc
-                                span.fa-stack
-                                    i.fa.fa-circle-thin.fa-stack-2x
+            .d-flex.flex-wrap.flex-sm-nowrap.justify-content-start.w-100
+                .text-muted.pr-2.task-c-timestamp-irc
+                    small=com.createdAt
+                .pr-2.text-nowrap
+                    if com.user
+                        if com.user.isTeacher
+                            strong.task-c-irc-teacher=com.user.fullName() + ':'
                         else
-                            small.text-muted.task-c-read-irc
-                                span.fa-stack.text-primary
-                                    i.fa.fa-circle.fa-stack-2x
-                                    i.fa.fa-check.fa-inverse.fa-stack-1x
+                            strong=com.user.fullName() + ': '
+                .pr-2.flex-last.flex-sm-unordered.w-100=com.comment
+                div.ml-auto
+                    if !com.viewed
+                        small.text-muted.task-c-read-irc
+                            span.fa-stack
+                                i.fa.fa-circle-thin.fa-stack-2x
+                    else
+                        small.text-muted.task-c-read-irc
+                            span.fa-stack.text-primary
+                                i.fa.fa-circle.fa-stack-2x
+                                i.fa.fa-check.fa-inverse.fa-stack-1x

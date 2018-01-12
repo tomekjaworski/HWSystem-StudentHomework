@@ -154,11 +154,11 @@
     cursor: pointer;
   }
 }
-.task-c-irc {
-  tr {
-    vertical-align: top;
-  }
+
+.task-c-timestamp-irc {
+  min-width: 72px;
 }
+
 .task-c-irc-teacher {
   color: $blue;
 }
