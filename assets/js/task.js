@@ -135,7 +135,7 @@
 
   let newLastComment = null
   let markAsReadButton = $('#commentMarkAsRead')
-  let commenticons = {
+  const commenticons = {
     read: '<span class="fa-stack fa-lg text-primary"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-inverse fa-stack-1x"></i></span>',
     readSmall: '<span class="fa-stack text-primary"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-inverse fa-stack-1x"></i></span>',
     unread: '<span class="fa-stack fa-lg"><i class="fa fa-circle-thin fa-stack-2x"></i></span>',
@@ -172,8 +172,8 @@
       timestamp: date,
       read: read
     })
-
-    markAsReadButton.before(template)
+    $('#commentArea').append(template)
+    // markAsReadButton.before(template)
 
     const comment = $('#commentFadeIn')
 
@@ -198,7 +198,7 @@
     // if (markAsReadButton.style('display') === 'none') {
     //
     // } else {
-    //   $('#commentArea').append(template)
+    //
     // }
 
     comment.fadeIn()

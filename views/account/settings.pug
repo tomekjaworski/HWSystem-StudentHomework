@@ -16,15 +16,15 @@ block content
                     form(method='post' action='/settings')
                         .form-group
                             label(for='inputOldPass')=i18n('settings.password.oldpass')
-                            input#inputOldPass.form-control(type='password', name='oldPass', required)
+                            input#inputOldPass.form-control(type='password', name='oldPass', required, autocomplete='old-password')
 
                         .form-group
                             label(for='inputPassword')=i18n('settings.password.password')
-                            input#inputPassword.form-control(type='password', name='password', required)
+                            input#inputPassword.form-control(type='password', name='password', required, autocomplete='new-password')
 
                         .form-group
                             label(for='inputRePassword')=i18n('settings.password.repassword')
-                            input#inputRePassword.form-control(type='password', name='repassword', required)
+                            input#inputRePassword.form-control(type='password', name='repassword', required, autocomplete='new-password')
                         input(type='hidden' name='action' value='newPassword')
 
                         button.btn.btn-primary.mb-4.mb-md-0(type='submit')=i18n('settings.password.change')
@@ -47,7 +47,7 @@ block content
                                         option(selected, disabled) Brak
                             .form-group
                                 label(for='inputLabSelectPass')=i18n('settings.lab.confirmpass')
-                                input#inputLabSelectPass.form-control(type='password', name='passlabconf', required)
+                                input#inputLabSelectPass.form-control(type='password', name='passlabconf', required, autocomplete='off')
 
                             input(type='hidden' name='action' value='newLab')
 
