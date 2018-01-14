@@ -217,6 +217,8 @@
 	"teacher.labs.teacher": "Teacher:",
 	"teacher.labs.nolabs.%s": "No lab groups, add groups under the \"%s\" tab.",
 	"teacher.table.fistlastname": "First and last name",
+	"teacher.table.groups": "Groups",
+	"teacher.table.admin": "Admin",
 	"teacher.users.useris.%s": "User is %s",
 	"teacher.users.teacher": "Teacher",
 	"teacher.users.isteacher": "a teacher",

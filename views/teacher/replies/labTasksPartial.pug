@@ -1,4 +1,4 @@
-include ../../includes/commentblock
+include ../../includes/commentblock_fs
 
 div.d-flex.labTaskRow.mt-3(id='labTaskRow-' + lab.id)
     .col-12
@@ -49,16 +49,18 @@ div.d-flex.labTaskRow.mt-3(id='labTaskRow-' + lab.id)
                                     else
                                         a.btn.btn-primary.btn-sm(href='/teacher/replies/view/' + task.id + '/student/' + student.id, target='_blank')
                                             .fa.fa-window-maximize
-                                .pt-2
+                                .pt-2.pb-2.pr-2
                                     button.btn.btn-danger.btn-sm.replySortableClose(data-closecard=student.id)
                                         .fa.fa-times
                             //.card-block.collapse(id=(student.reply ? 'replyCollapse-' + student.reply.id : ''))
                             .card-block.collapse.show(id='replyCollapse-' + student.id)
-                                .form-group.row
-                                    label.col-4.col-form-label Czas na odpowiedź:
+                                .form-group.row.justify-content-end
+                                    small.col-4.col-form-label Czas na odpowiedź:
                                     .col-8
                                         .input-group.replySortDate
                                             input.form-control.dateInput(id='deadline-student-' + student.id + '-task-' + task.id, type='date', value=student.deadline)
+                                    .col-8
+                                        .input-group.replySortDate
                                             button.btn.btn-success.dateSave(data-studentid=student.id, data-taskid=task.id) Zapisz
                                             button.btn.btn-danger.dateErase(data-studentid=student.id, data-taskid=task.id) Skasuj
 
@@ -70,7 +72,7 @@ div.d-flex.labTaskRow.mt-3(id='labTaskRow-' + lab.id)
                                     div
                                         if !student.reply.newest
                                             div
-                                                b Odpowiedź nie jest ostateczna, student musi przesłać odpowiedź ponownie! Ukazane pliki mogą nie być najnowsze.
+                                                b Odpowiedź nie jest ostateczna, student musi przesłać odpowiedź ponownie! Wyświetlone pliki mogą nie być najnowsze.
                                         else
                                             div.form-group.row(id='replyTeacherStatus-' + student.reply.id)
                                                 label.col-4.col-form-label Ocena
@@ -84,7 +86,7 @@ div.d-flex.labTaskRow.mt-3(id='labTaskRow-' + lab.id)
                                                             i.fa.fa-minus
                                         div.form-group.row
                                             label.col-4.col-form-label Testy Maszynowe
-                                            .col-6
+                                            .col-8
                                                 span.form-control #{tests[student.reply.machineStatus]}
                                                     if ![0, 1].includes(student.reply.machineStatus)
                                                         | &nbsp;/&nbsp;

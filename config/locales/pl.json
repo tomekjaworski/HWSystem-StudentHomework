@@ -217,6 +217,8 @@
 	"teacher.labs.teacher": "Prowadzący:",
 	"teacher.labs.nolabs.%s": "Brak grup laboratoryjnych, dodaj grupy przechodząc pod zakładkę \"%s\".",
 	"teacher.table.fistlastname": "Imię i Nazwisko",
+	"teacher.table.groups": "Grupy",
+	"teacher.table.admin": "Admin",
 	"teacher.users.useris.%s": "Użytkownik jest %s",
 	"teacher.users.teacher": "Nauczyciel",
 	"teacher.users.isteacher": "nauczycielem",

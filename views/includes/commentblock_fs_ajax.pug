@@ -1,0 +1,42 @@
+script#tmplCommentAjax(type='text/x-jsrender')
+    if localUser.chatMode === 0
+        .list-group-item.list-group-item-action.flex-column.align-items-start#commentFadeIn(style='display: none;')
+            .d-flex.w-100.justify-content-between
+                h6.mb-1
+                    | {{if user}}
+                    strong.task-c-author
+                        span.task-c-author-studentname {{:name}}
+                        | {{if teacher}}
+                        if localUser.isTeacher
+                            span.badge.badge-primary.ml-2
+                                i.fa.fa-bolt.fa-lg
+                        else
+                            span.badge.badge-primary.ml-2=i18n('student.task.teacher')
+                        | {{/if}}
+                        span.ml-2=i18n('student.task.wrote')
+                    | {{else}}
+                    strong.task-c-author
+                        span.badge.badge-info=i18n('student.task.sysmsg')
+                    | {{/if}}
+                small.text-muted.task-c-timestamp {{:timestamp}}
+            p.mb-1.task-c-comment {{:comment}}
+            div.text-right.w-100
+                small.text-muted.task-c-read
+                    span.fa-stack.fa-lg.text-warning
+                        i.fa.fa-circle-thin.fa-stack-2x
+                        i.fa.fa-spinner.fa-spin.fa-stack-1x
+    else
+        li.list-group-item.task-c-irc#commentFadeIn(style='display: none;')
+            .d-flex.flex-wrap.justify-content-start.w-100
+                .text-muted.pr-2.task-c-timestamp-irc
+                    small {{:timestamp}}
+                .pr-2.text-nowrap
+                    | {{if user}}
+                    strong(class="{{if teacher}}task-c-irc-teacher{{/if}}") {{:name}}:
+                    | {{/if}}
+                .pr-2.flex-last.w-100 {{:comment}}
+                div.ml-auto
+                    small.text-muted.task-c-read-irc
+                        span.fa-stack.text-warning
+                            i.fa.fa-circle-thin.fa-stack-2x
+                            i.fa.fa-spinner.fa-spin.fa-stack-1x
