@@ -82,15 +82,21 @@ block content
 
 block scripts
     script.
+      $('#setAllAsRead').on('change', function () {
+        $('.checks').prop('checked', this.checked);
+      })
       $(document).ready(function () {
-        $('#tabledata').DataTable({
-          "language": {
-            "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Polish.json"
-          },
-          columnDefs: [
-            {targets: 'no-sort', orderable: false, searchable: false}
-          ],
-          "order": [[ 2, "desc" ]],
-          "searching": false
-        });
-      });
+        if (parseInt($('#tabledata > tbody > tr > td').attr('colspan')) !== 4) {
+          $('#tabledata').DataTable({
+            language: {
+              url: "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Polish.json"
+            },
+            columnDefs: [
+              {targets: 'no-sort', orderable: false, searchable: false},
+              {targets: [-1], render: $.fn.dataTable.render.moment('X', 'HH:mm, L', $('html').attr('lang'))}
+            ],
+            order: [[2, "desc"]],
+            searching: false
+          })
+        }
+      })

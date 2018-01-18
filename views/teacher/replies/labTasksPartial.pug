@@ -1,39 +1,13 @@
-mixin commentBlock(com, hidden)
-    .list-group-item.list-group-item-action.flex-column.align-items-start(style=(hidden ? 'display: none;': ''))
-        .d-flex.w-100.justify-content-between
-            h6.mb-1
-                if com.user
-                    strong.task-c-author=(com.user ? com.user.fullName() : '')
-                    if com.user.isTeacher
-                        span.badge.badge-primary.ml-2
-                            i.fa.fa-bolt.fa-lg
-                    span.ml-2=i18n('student.task.wrote')
-                else
-                    strong.task-c-author
-                        span.badge.badge-info=i18n('student.task.sysmsg')
-            //- TODO: @david, tu nie powinno mi zwracac z backendu godziny, tak jak w ajaxowych komentach? dziwne to. !!
-            small.text-muted.task-c-timestamp.text-nowrap=com.createdAt
-        p.mb-1.task-c-comment=com.comment
-        if !com.viewed
-            div.text-right.w-100
-                small.text-muted.task-c-read
-                    span.fa-stack.fa-lg
-                        i.fa.fa-circle-thin.fa-stack-2x
-        else
-            div.text-right.w-100
-                small.text-muted.task-c-read
-                    span.fa-stack.fa-lg.text-primary
-                        i.fa.fa-circle.fa-stack-2x
-                        i.fa.fa-check.fa-inverse.fa-stack-1x
+include ../../includes/commentblock_fs
 
-div.d-flex.labTaskRow.mt-3
+div.d-flex.labTaskRow.mt-3(id='labTaskRow-' + lab.id)
     .col-12
         .form-inline
             h4.mt-1=lab.name
             .input-group.ml-4
                 .input-group-addon
                     i.fa.fa-search
-                input.form-control(placeholder="Search // todo: 😉 ")
+                input.form-control.labTaskSearch(placeholder="Search", data-lab=lab.id)
 
         hr
         .scrollWrapper(id='scroll-' + lab.id, style='width:100%; overflow-x: auto;')
@@ -63,7 +37,7 @@ div.d-flex.labTaskRow.mt-3
                                 .mr-auto.p-2.w-100.replySortableTitle
                                     .btn.btn-sm
                                         .fa.fa-bars.fa-lg
-                                    strong(title=student.fullName(true))=student.fullName(true)
+                                    strong.studentCardTitle(data-id=student.id, title=student.fullName(true))=student.fullName(true)
                                         a(href='/teacher/users/profile/' + student.id)  (@#{student.id})
                                 .pt-2.pb-2
                                     button.btn.btn-info.btn-sm(type='button', data-toggle='collapse', data-target='#replyCollapse-' + student.id, aria-expanded='true', aria-controls='#replyCollapse-' + student.id)
@@ -75,16 +49,18 @@ div.d-flex.labTaskRow.mt-3
                                     else
                                         a.btn.btn-primary.btn-sm(href='/teacher/replies/view/' + task.id + '/student/' + student.id, target='_blank')
                                             .fa.fa-window-maximize
-                                .pt-2
+                                .pt-2.pb-2.pr-2
                                     button.btn.btn-danger.btn-sm.replySortableClose(data-closecard=student.id)
                                         .fa.fa-times
                             //.card-block.collapse(id=(student.reply ? 'replyCollapse-' + student.reply.id : ''))
                             .card-block.collapse.show(id='replyCollapse-' + student.id)
-                                .form-group.row
-                                    label.col-4.col-form-label Czas na odpowiedź:
+                                .form-group.row.justify-content-end
+                                    small.col-4.col-form-label Czas na odpowiedź:
                                     .col-8
                                         .input-group.replySortDate
                                             input.form-control.dateInput(id='deadline-student-' + student.id + '-task-' + task.id, type='date', value=student.deadline)
+                                    .col-8
+                                        .input-group.replySortDate
                                             button.btn.btn-success.dateSave(data-studentid=student.id, data-taskid=task.id) Zapisz
                                             button.btn.btn-danger.dateErase(data-studentid=student.id, data-taskid=task.id) Skasuj
 
@@ -96,7 +72,7 @@ div.d-flex.labTaskRow.mt-3
                                     div
                                         if !student.reply.newest
                                             div
-                                                b Odpowiedź nie jest ostateczna, student musi przesłać odpowiedź ponownie! Ukazane pliki mogą nie być najnowsze.
+                                                b Odpowiedź nie jest ostateczna, student musi przesłać odpowiedź ponownie! Wyświetlone pliki mogą nie być najnowsze.
                                         else
                                             div.form-group.row(id='replyTeacherStatus-' + student.reply.id)
                                                 label.col-4.col-form-label Ocena
@@ -110,7 +86,7 @@ div.d-flex.labTaskRow.mt-3
                                                             i.fa.fa-minus
                                         div.form-group.row
                                             label.col-4.col-form-label Testy Maszynowe
-                                            .col-6
+                                            .col-8
                                                 span.form-control #{tests[student.reply.machineStatus]}
                                                     if ![0, 1].includes(student.reply.machineStatus)
                                                         | &nbsp;/&nbsp;
@@ -176,7 +152,7 @@ div.d-flex.labTaskRow.mt-3
                                     - let comment = _.last(student.comments)
                                     - comment = (comment? comment.id : 0)
                                     .studentCardMaxHeight.mb-3
-                                        .list-group(id='comments-student-' + student.id, data-last=comment)
+                                        ul.list-group(id='comments-student-' + student.id, data-last=comment)
                                             if student.comments
                                                 each com in student.comments
                                                     +commentBlock(com)

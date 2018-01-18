@@ -99,6 +99,16 @@ blockquote {
 #tabledata_wrapper {
   margin: 0 !important;
   padding: 0 !important;
+  .row:first-child {
+    padding-top: 0.5em;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+  }
+  .row:last-child {
+    padding-bottom: 0.5em;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+  }
 }
 
 #tabledata {

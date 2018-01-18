@@ -69,7 +69,7 @@ const StudentController = module.exports = {
             }
             _.forEach(actions, (a) => {
               try {
-                a.updatedAt = dateFormat(a.updatedAt, 'HH:MM dd/mm/yyyy')
+                a.updatedAt = a.updatedAt / 1000
               } catch (err) {
                 return res.serverError(err)
               }

@@ -56,7 +56,7 @@
   }
 }
 
-.replySortDate {
+.replyDate {
   .dateInput {
     display: -webkit-box;
     max-height: 40px;
@@ -66,6 +66,24 @@
   }
   .dateSave {
     border-radius: 0;
+  }
+  .dateErase {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+}
+
+
+.replySortDate {
+  .dateInput {
+    display: -webkit-box;
+    max-height: 40px;
+    padding-top: 5px;
+    border-radius: 17.25px;
+  }
+  .dateSave {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
   }
   .dateErase {
     border-top-left-radius: 0;

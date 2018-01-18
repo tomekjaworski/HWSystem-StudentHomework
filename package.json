@@ -45,7 +45,7 @@
   "scripts": {
     "debug": "node debug app.js",
     "start": "node app.js",
-    "test": "node node_modules/standard/bin/cmd.js"
+    "test": "node node_modules/standard/bin/cmd.js --fix"
   },
   "main": "app.js",
   "repository": {
@@ -78,6 +78,7 @@
       "ManageReplies",
       "MySqlFile",
       "RecentAction",
+      "RecentStudentActions",
       "RecentTeacherActions",
       "Roles",
       "sails",
