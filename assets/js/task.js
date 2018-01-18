@@ -172,7 +172,12 @@
       timestamp: date,
       read: read
     })
-    $('#commentArea').append(template)
+    const commentArea = $('#commentArea')
+    if (parseInt(commentArea.data('chatmode')) === 1) {
+      commentArea.append(template)
+    } else {
+      markAsReadButton.before(template)
+    }
     // markAsReadButton.before(template)
 
     const comment = $('#commentFadeIn')
@@ -296,4 +301,9 @@
       checkComments()
     }, 10000)
   }
+
+  $('[href="#comments"][data-toggle="tab"]').on('shown.bs.tab', () => {
+    const commentAreaWrapper = $('#commentAreaWrapper')
+    commentAreaWrapper.scrollTop(commentAreaWrapper[0].scrollHeight)
+  })
 })()

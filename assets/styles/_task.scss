@@ -162,3 +162,8 @@
 .task-c-irc-teacher {
   color: $blue;
 }
+#commentAreaWrapper {
+  min-height: 300px;
+  max-height: calc(100vh - 400px);
+  overflow-y: auto;
+}

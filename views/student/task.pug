@@ -192,26 +192,12 @@ block content
                                         small.form-text.text-muted=i18n('student.task.files.afterdeadline')
 
                 #comments.tab-pane.fade(aria-expanded='false')
-                    if localUser.chatMode === 0
-                        .list-group.mb-3#commentArea(style='max-height:500px;overflow-y:auto;')
-                            - var allviewed = true
-                            - var lastid = 1
-                            - var i = 1
-                            each com in taskComments
-                                +commentBlock(com)
-                                if i === taskComments.length
-                                    - lastid = com.id
-                                    //- console.log(lastid)
-                                if !com.viewed
-                                    - allviewed = false
-                                - i++
-                            button.list-group-item.list-group-item-action.active.task-comment-markread.justify-content-center#commentMarkAsRead(style=(allviewed ? 'display: none;' : ''))=i18n('student.task.comment.markasread')
-                    else
-                        - var allviewed = true
-                        - var lastid = 1
-                        - var i = 1
-                        .card.mb-2
-                            ul.list-group.list-group-flush#commentArea
+                    #commentAreaWrapper
+                        if localUser.chatMode === 0
+                            .list-group#commentArea
+                                - var allviewed = true
+                                - var lastid = 1
+                                - var i = 1
                                 each com in taskComments
                                     +commentBlock(com)
                                     if i === taskComments.length
@@ -220,13 +206,27 @@ block content
                                     if !com.viewed
                                         - allviewed = false
                                     - i++
-                        button.btn.btn-primary.btn-block.task-c-irc-markasread.mb-2#commentMarkAsRead(style=(allviewed ? 'display: none;' : ''))=i18n('student.task.comment.markasread')
-                    .input-group
+                                button.list-group-item.list-group-item-action.active.task-comment-markread.justify-content-center#commentMarkAsRead(style=(allviewed ? 'display: none;' : ''))=i18n('student.task.comment.markasread')
+                        else
+                            - var allviewed = true
+                            - var lastid = 1
+                            - var i = 1
+                            .card.mb-3
+                                ul.list-group.list-group-flush#commentArea(data-chatmode='1')
+                                    each com in taskComments
+                                        +commentBlock(com)
+                                        if i === taskComments.length
+                                            - lastid = com.id
+                                            //- console.log(lastid)
+                                        if !com.viewed
+                                            - allviewed = false
+                                        - i++
+                            button.btn.btn-primary.btn-block.task-c-irc-markasread#commentMarkAsRead(style=(allviewed ? 'display: none;' : ''))=i18n('student.task.comment.markasread')
+                    .input-group.mt-3
                         // TODO: dodać spinnera w trakcie wysyłania komentarza, obsłużyć dodanie poprawne i błąd dodawania i wyświetlić że się nie dodało, dodać blokadę przycisku aby nie spamować w trakcie wysyłania
                         textarea.form-control.task-comment-textarea#commentTextArea(type='text', placeholder=i18n('student.task.comment'), name='comment', rows='1')
                         span.input-group-btn
                             button.btn.btn-primary#commentSendButton(type='button')=i18n('student.task.comment.send')
-
                     //-.form-group.mb-0
                         textarea#exampleTextarea.form-control(rows='1', placeholder='Komentarz')
 
