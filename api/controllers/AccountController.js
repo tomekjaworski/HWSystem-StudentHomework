@@ -56,7 +56,7 @@ const AccountController = module.exports = {
   },
 
   settingsMessage (req, res, message, labs) {
-    StudentsLabGroups.findOne({student: req.localUser.id}).exec((err, lab)=>{
+    StudentsLabGroups.findOne({student: req.localUser.id}).exec((err, lab) => {
       if (err) {
         return res.serverError(err)
       }
@@ -247,7 +247,7 @@ const AccountController = module.exports = {
           if (err) {
             return res.serverError(err)
           }
-          StudentsLabGroups.findOne({student:req.localUser.id}).exec((err,lab)=>{
+          StudentsLabGroups.findOne({student: req.localUser.id}).exec((err, lab) => {
             if (err) {
               return res.serverError(err)
             }
@@ -266,6 +266,9 @@ const AccountController = module.exports = {
         let confpass = req.param('passlabconf')
 
         const language = req.param('language')
+        const chatmode = parseInt(req.param('chatmode'))
+        const nightmode = !!req.param('nightmode')
+
         let user = req.localUser
 
         LabGroups.find({active: true}).populate('owner').exec(function (err, labs) {
@@ -345,6 +348,32 @@ const AccountController = module.exports = {
               })
             } else {
               return AccountController.settingsMessage(req, res, req.i18n.__('settings.message.wronglanguage'), labs)
+              // return res.serverError()
+            }
+          } else if (action === 'chatMode') {
+            if (chatmode === 0 || chatmode === 1) {
+              Users.update(user.id, {chatMode: chatmode}).exec(function (err) {
+                if (err) {
+                  return res.serverError(err)
+                }
+                req.localUser.chatMode = chatmode
+                return AccountController.settingsMessage(req, res, req.i18n.__('settings.message.chatmodechanged'), labs)
+              })
+            } else {
+              return AccountController.settingsMessage(req, res, req.i18n.__('settings.message.wrongchatmode'), labs)
+              // return res.serverError()
+            }
+          } else if (action === 'nightMode') {
+            if (typeof nightmode === 'boolean') {
+              Users.update(user.id, {nightMode: nightmode}).exec(function (err) {
+                if (err) {
+                  return res.serverError(err)
+                }
+                req.localUser.nightMode = nightmode
+                return AccountController.settingsMessage(req, res, req.i18n.__('settings.message.nightmodechanged'), labs)
+              })
+            } else {
+              return AccountController.settingsMessage(req, res, req.i18n.__('settings.message.wrongnightmode'), labs)
               // return res.serverError()
             }
           } else {

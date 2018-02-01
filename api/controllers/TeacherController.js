@@ -5,7 +5,7 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
-const dateFormat = require('dateformat')
+// const dateFormat = require('dateformat')
 // eslint-disable-next-line no-unused-vars
 const TeacherController = module.exports = {
 
@@ -30,14 +30,14 @@ const TeacherController = module.exports = {
         param.labgroup = labs.map(l => l.id)
       }
       RecentTeacherActions.find(_.merge({
-        seen: false,
+        seen: false
       }, param)).sort('updatedAt DESC').exec((err, actions) => {
         if (err) {
           return res.serverError(err)
         }
         _.forEach(actions, (a) => {
           try {
-            a.updatedAt = dateFormat(a.updatedAt, 'HH:MM dd/mm/yyyy')
+            a.updatedAt = a.updatedAt / 1000
           } catch (err) {
             return res.serverError(err)
           }

@@ -3,6 +3,11 @@
 /* global topics, saved */
 'use strict'
 
+jQuery.expr[':'].icontains = function (a, i, m) {
+  return jQuery(a).text().toUpperCase()
+    .indexOf(m[3].toUpperCase()) >= 0
+}
+
 function repliesSelectTopic (id) {
   const topic = topics.filter(topic => topic.id === id)[0]
   if (topic) {
@@ -108,6 +113,9 @@ let setButtons;
               handle: '.replySortHandle'
             })
           }
+          $('.labTaskSearch').on('input', function () {
+            searchStudents($(this).data('lab'), $(this).val())
+          })
         }).fail(function (jqXHR, textStatus, errorThrown) {
           if (textStatus === 'abort') {
             return
@@ -225,7 +233,13 @@ let setButtons;
       }
     }
   }
-
+  function searchStudents (lab, val) {
+    let studentCardTitle = $('#labTaskRow-' + lab).find('.studentCardTitle:icontains(' + val + ')')
+    $('#labTaskRow-' + lab + ' .studentCard').hide()
+    studentCardTitle.each(function () {
+      $('#studentCard-' + $(this).data('id')).show()
+    })
+  }
   function saveDeadline (student, task, del) {
     const deadline = $('#deadline-student-' + student + '-task-' + task)
     $.ajax({
@@ -350,6 +364,7 @@ let setButtons;
     const tmplCommentAjax = $.templates('#tmplCommentAjax')
 
     return tmplCommentAjax.render({
+      user: !!name,
       student: student,
       id: id,
       teacher: teacher,
@@ -380,6 +395,21 @@ let setButtons;
         let comment = data.comments[id]
         // todo: oznaczenie komentarzy jako read, jezeli ostatni zaladowany jest read
         commentBlock.append(renderComment(data.student, comment.id, comment.name, comment.surname, comment.teacher, comment.comment, comment.date, comment.viewed))
+        const commentF = $('#commentFadeIn')
+        const commenticons = {
+          read: '<span class="fa-stack fa-lg text-primary"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-inverse fa-stack-1x"></i></span>',
+          readSmall: '<span class="fa-stack text-primary"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-inverse fa-stack-1x"></i></span>',
+          unread: '<span class="fa-stack fa-lg"><i class="fa fa-circle-thin fa-stack-2x"></i></span>',
+          unreadSmall: '<span class="fa-stack"><i class="fa fa-circle-thin fa-stack-2x"></i></span>'
+        }
+        if ($('.task-c-read')[0]) {
+          commentF.find('.task-c-read').html((comment.viewed ? commenticons.read : commenticons.unread))
+        } else {
+          commentF.find('.task-c-read-irc').html((comment.viewed ? commenticons.readSmall : commenticons.unreadSmall))
+        }
+
+        commentF.fadeIn()
+        commentF.attr('id', '')
       }
       commentBlock.data('last', data.last)
       commentBlock.animate({

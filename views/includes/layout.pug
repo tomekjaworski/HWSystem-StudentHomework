@@ -12,14 +12,13 @@ html(lang=req.i18n.locale)
         include styles
     body
         noscript
-            .container
+            .container.mt-3
                 .alert.alert-danger(role='alert')
                     h4.alert-heading=i18n('noscript.header')
                     p.mb-0=i18n('noscript.body')
 
 
         include nav
-
 
 
         .container

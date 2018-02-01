@@ -56,6 +56,14 @@ const Users = module.exports = {
     languagePreference: {
       type: 'string',
       defaultsTo: 'pl'
+    },
+    nightMode: {
+      type: 'boolean',
+      defaultsTo: false
+    },
+    chatMode: {
+      type: 'number',
+      defaultsTo: 0
     }
 
     // fullName: function () {

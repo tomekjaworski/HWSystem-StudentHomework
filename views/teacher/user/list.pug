@@ -34,10 +34,10 @@ block content
                             th.text-nowrap=i18n('teacher.table.id')
                             th.w-100=i18n('teacher.table.fistlastname')
                             if teachers
-                                th Grup
+                                th=i18n('teacher.table.groups')
                             th.no-sort
                             if teachers && localUser.isAdmin
-                                th.no-sort.text.nowrap Admin
+                                th.no-sort.text.nowrap=i18n('teacher.table.admin')
                     tbody
                         each user in users
                             tr.usersSelectUser(data-id=user.id)
@@ -47,7 +47,7 @@ block content
                                     td=user.labs
                                 td
                                     if !user.isAdmin || (user.isAdmin && localUser.isAdmin)
-                                        a.btn.btn-sm.btn-primary.editUserButton(href='#', data-id=user.id) edytuj
+                                        a.btn.btn-sm.btn-primary.editUserButton(href='#', data-id=user.id)=i18n('teacher.tt.edit')
                                 if teachers && localUser.isAdmin
                                     td.text-center
                                         if user.isAdmin

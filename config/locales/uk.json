@@ -217,6 +217,8 @@
 	"teacher.labs.teacher": "лектор:",
 	"teacher.labs.nolabs.%s": "Немає лабораторних груп, додати пучки, що проходять під вкладкою \"%s\".",
 	"teacher.table.fistlastname": "Ваше ім'я",
+	"teacher.table.groups": "група",
+	"teacher.table.admin": "адмін",
 	"teacher.users.useris.%s": "Користувач %s",
 	"teacher.users.teacher": "учитель",
 	"teacher.users.isteacher": "учитель",
@@ -245,5 +247,16 @@
 	"login.registerSuccess": "успішно зареєстрований",
 	"student.topics.blocked": "відповідь заблокований",
 	"teacher.edit": "видання",
-	"actions.markasread": "Відзначити вибрані повідомлення прочитаними"
+	"actions.markasread": "Відзначити вибрані повідомлення прочитаними",
+	"settings.nightmode.title": "нічний режим",
+	"settings.nightmode.status": "Увімкніть нічний режим",
+	"settings.nightmode.change": "застосовувати",
+	"settings.chatmode.title": "Режим відображення чату",
+	"settings.chatmode.0": "зручний",
+	"settings.chatmode.1": "IRC",
+	"settings.chatmode.change": "застосовувати",
+	"settings.message.nightmodechanged": "Нічний режим використовується",
+	"settings.message.wrongnightmode": "Налаштування режиму Bad ніч",
+	"settings.message.chatmodechanged": "Режим відображення використовується чат",
+	"settings.message.wrongchatmode": "Неправильне налаштування режиму відображення чату"
 }

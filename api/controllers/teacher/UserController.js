@@ -31,7 +31,7 @@ const UserController = module.exports = {
         if (!teachers) {
           return res.view('teacher/user/list', {users: users, count: count, teachers: teachers, menuItem: 'users'})
         }
-        LabGroups.find({where: {owner: users.map(u => u.id)}, select:['owner']}).exec((err, labs) => {
+        LabGroups.find({where: {owner: users.map(u => u.id)}, select: ['owner']}).exec((err, labs) => {
           if (err) {
             return res.serverError(err)
           }
@@ -200,7 +200,7 @@ const UserController = module.exports = {
           isTeacher: teacher,
           isAdmin: admin,
           email: email,
-          activated: active,
+          activated: active
         }
         if (user.labGroups.length === 1) {
           if (user.labGroups[0].id !== lab) {
@@ -209,14 +209,14 @@ const UserController = module.exports = {
         } else {
           update.labGroups = lab === 0 ? [] : lab
         }
-        if (pass){
+        if (pass) {
           if (pass !== repass) {
             return a('danger', req.i18n.__('teacher.users.repass.fail'))
           } else {
             update.password = UserController.hashPassword(pass, user.salt)
           }
         }
-        Users.update(id,update).exec((err) => {
+        Users.update(id, update).exec((err) => {
           if (err) {
             return res.serverError(err)
           }
@@ -270,11 +270,11 @@ const UserController = module.exports = {
           'LEFT JOIN ( SELECT task, taskStudent FROM taskcomments GROUP BY task, taskStudent ) comments ON comments.task = tasks.id AND comments.taskStudent = $1\n' +
           'WHERE topics.visible = 1\n' +
           'GROUP BY topics.id ORDER BY CAST(topics.number AS UNSIGNED)', [id]).exec((err, data) => {
-          if (err) {
-            return res.serverError(err)
-          }
-          return res.view('teacher/user/profile', {user: user, labs: labs, topics: data.rows, menuItem: 'users'})
-        })
+            if (err) {
+              return res.serverError(err)
+            }
+            return res.view('teacher/user/profile', {user: user, labs: labs, topics: data.rows, menuItem: 'users'})
+          })
       })
     })
   }
